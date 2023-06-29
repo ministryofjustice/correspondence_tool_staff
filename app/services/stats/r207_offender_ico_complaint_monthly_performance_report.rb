@@ -1,13 +1,12 @@
 module Stats
   class R207OffenderICOComplaintMonthlyPerformanceReport < R205OffenderSarMonthlyPerformanceReport
-
     class << self
       def title
-        'Monthly report'
+        "Monthly report"
       end
 
       def description
-        'Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month.'
+        "Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month."
       end
     end
 
@@ -20,6 +19,5 @@ module Stats
     def report_type
       ReportType.r207
     end
-
   end
 end

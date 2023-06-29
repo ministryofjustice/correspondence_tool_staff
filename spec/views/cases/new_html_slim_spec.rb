@@ -1,12 +1,11 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/new.html.slim', type: :view do
-
-  context 'FOIs' do
-    it 'displays the new case page' do
+describe "cases/new.html.slim", type: :view do
+  describe "FOIs" do
+    it "displays the new case page" do
       kase = Case::FOI::Standard.new.decorate
-      assign(:case_types, ['Standard', 'ComplianceReview', 'TimelinessReview'])
-      assign(:correspondence_type, 'foi')
+      assign(:case_types, %w[Standard ComplianceReview TimelinessReview])
+      assign(:correspondence_type, "foi")
       assign(:case, kase)
       assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
       render
@@ -30,17 +29,16 @@ describe 'cases/new.html.slim', type: :view do
       expect(page).to have_type_of_requester
       expect(page).to have_case_type
       expect(page).to have_flag_for_disclosure_specialists
-      expect(page.dropzone_container['data-max-filesize-in-mb']).to eq Settings.max_attachment_file_size_in_MB.to_s
+      expect(page.dropzone_container["data-max-filesize-in-mb"]).to eq Settings.max_attachment_file_size_in_MB.to_s
 
       expect(page).to have_submit_button
 
       expect(page.submit_button.value).to eq "Create case"
-
     end
   end
 
-  context 'SARs' do
-    it 'displays the new case page' do
+  describe "SARs" do
+    it "displays the new case page" do
       kase = Case::SAR::Standard.new.decorate
       assign(:case, kase)
       assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
@@ -78,8 +76,8 @@ describe 'cases/new.html.slim', type: :view do
     end
   end
 
-  context 'ICOs' do
-    it 'displays the new case page' do
+  describe "ICOs" do
+    it "displays the new case page" do
       kase = build(:ico_foi_case).decorate
       assign(:case, kase)
       assign(:correspondence_type, kase.correspondence_type)
@@ -109,9 +107,8 @@ describe 'cases/new.html.slim', type: :view do
       expect(form).to have_case_details
 
       expect(form).to have_dropzone_container
-      expect(form.dropzone_container['data-max-filesize-in-mb'])
+      expect(form.dropzone_container["data-max-filesize-in-mb"])
         .to eq Settings.max_attachment_file_size_in_MB.to_s
     end
   end
-
 end

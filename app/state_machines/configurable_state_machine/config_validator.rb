@@ -1,7 +1,5 @@
 module ConfigurableStateMachine
-  #rubocop:disable Metrics/ClassLength
   class ConfigValidator
-
     attr_reader :errors
 
     def initialize(config, filename)
@@ -18,33 +16,31 @@ module ConfigurableStateMachine
       check_for_dupe_keys
       validate_configs
       if errors.any?
-        raise ConfigurationError.new(@errors)
+        raise ConfigurationError, @errors
       end
     end
 
     def validate_configs
-      validate_exact_keys(@config, 'root', :preamble, :case_types)
-      validate_is_hash(@config, 'root', :preamble, :case_types)
-      if @config.preamble.present?
-        if @config.preamble.is_a?(RecursiveOpenStruct)
-          validate_exact_keys(@config.preamble,
-                            'preamble',
+      validate_exact_keys(@config, "root", :preamble, :case_types)
+      validate_is_hash(@config, "root", :preamble, :case_types)
+      if @config.preamble.present? && @config.preamble.is_a?(RecursiveOpenStruct)
+        validate_exact_keys(@config.preamble,
+                            "preamble",
                             :organisation,
                             :organisation_abbreviation,
                             :permitted_case_types)
-          process_permitted_case_types(@config.preamble)
-          validate_case_types
-        end
+        process_permitted_case_types(@config.preamble)
+        validate_case_types
       end
     end
 
-    private
+  private
 
     def check_for_dupe_keys
       detector = DuplicateKeyDetector.new(@filename)
       detector.run
       if detector.dupes?
-        raise ConfigurationError.new(detector.dupe_details)
+        raise ConfigurationError, detector.dupe_details
       end
     end
 
@@ -62,9 +58,9 @@ module ConfigurableStateMachine
 
     def validate_case_types
       validate_exact_keys(@config.case_types,
-                          'case_types',
+                          "case_types",
                           *@case_types)
-      @config.case_types.to_hash.keys.each do |case_type_key|
+      @config.case_types.to_hash.each_key do |case_type_key|
         validate_case_type(case_type_key)
       end
     end
@@ -89,7 +85,7 @@ module ConfigurableStateMachine
         @permitted_workflows = case_type_config.permitted_workflows.map(&:to_sym)
       else
         add_error("case_types/#{case_type_name}/permitted_workflows",
-                    "Expected an array, got #{case_type_config.permitted_workflows.class}")
+                  "Expected an array, got #{case_type_config.permitted_workflows.class}")
       end
     end
 
@@ -113,17 +109,15 @@ module ConfigurableStateMachine
 
     def validate_workflows(case_type_name:, case_type_config:)
       validate_is_hash(case_type_config, "case_types/#{case_type_name}", :workflows)
-      unless case_type_config.workflows.nil?
-        if case_type_config.workflows.is_a?(RecursiveOpenStruct)
-          case_type_config.workflows.to_h.keys.each do |workflow|
-            if workflow_name_is_valid?(workflow_name: workflow)
-              validate_workflow(case_type_name: case_type_name,
-                                workflow_name: workflow,
-                                workflow_config: case_type_config.workflows.__send__(workflow))
-            else
-              add_error("case_types/#{case_type_name}/workflows",
-                        "#{workflow} is not a permitted workflow")
-            end
+      if !case_type_config.workflows.nil? && case_type_config.workflows.is_a?(RecursiveOpenStruct)
+        case_type_config.workflows.to_h.each_key do |workflow|
+          if workflow_name_is_valid?(workflow_name: workflow)
+            validate_workflow(case_type_name:,
+                              workflow_name: workflow,
+                              workflow_config: case_type_config.workflows.__send__(workflow))
+          else
+            add_error("case_types/#{case_type_name}/workflows",
+                      "#{workflow} is not a permitted workflow")
           end
         end
       end
@@ -135,12 +129,12 @@ module ConfigurableStateMachine
 
     def validate_workflow(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.is_a?(RecursiveOpenStruct)
-        validate_initial_state(case_type_name: case_type_name,
-                               workflow_name: workflow_name,
-                               workflow_config: workflow_config)
-        validate_user_roles(case_type_name: case_type_name,
-                            workflow_name: workflow_name,
-                            workflow_config: workflow_config)
+        validate_initial_state(case_type_name:,
+                               workflow_name:,
+                               workflow_config:)
+        validate_user_roles(case_type_name:,
+                            workflow_name:,
+                            workflow_config:)
       else
         add_error("case_types/#{case_type_name}/workflows/#{workflow_name}",
                   "Expected to be a Hash, got #{workflow_config.class}")
@@ -150,10 +144,10 @@ module ConfigurableStateMachine
     def validate_user_roles(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.to_h.keys.include?(:user_roles)
         if workflow_config.user_roles.is_a?(RecursiveOpenStruct)
-          workflow_config.user_roles.to_h.keys.each do |user_role|
-            validate_user_role(case_type_name: case_type_name,
-                               workflow_name: workflow_name,
-                               user_role: user_role,
+          workflow_config.user_roles.to_h.each_key do |user_role|
+            validate_user_role(case_type_name:,
+                               workflow_name:,
+                               user_role:,
                                user_role_config: workflow_config.user_roles.__send__(user_role))
           end
         else
@@ -169,10 +163,10 @@ module ConfigurableStateMachine
     def validate_user_role(case_type_name:, workflow_name:, user_role:, user_role_config:)
       if user_role_config.is_a?(RecursiveOpenStruct)
         if user_role.in?(@permitted_user_roles)
-          validate_user_role_keys(case_type_name: case_type_name,
-                                  workflow_name: workflow_name,
-                                  user_role: user_role,
-                                  user_role_config: user_role_config)
+          validate_user_role_keys(case_type_name:,
+                                  workflow_name:,
+                                  user_role:,
+                                  user_role_config:)
         else
           add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles",
                     "User role #{user_role} is not a permitted user role")
@@ -188,13 +182,11 @@ module ConfigurableStateMachine
                           "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}",
                           :states)
       states_config = user_role_config.states
-      if states_config.present?
-        if states_config.is_a?(RecursiveOpenStruct)
-          validate_states(case_type_name: case_type_name,
-                          workflow_name: workflow_name,
-                          user_role: user_role,
-                          states_config: states_config)
-        end
+      if states_config.present? && states_config.is_a?(RecursiveOpenStruct)
+        validate_states(case_type_name:,
+                        workflow_name:,
+                        user_role:,
+                        states_config:)
       end
     end
 
@@ -202,13 +194,13 @@ module ConfigurableStateMachine
       states = states_config.to_h.keys
       states.each do |state|
         if state.in?(@permitted_states)
-          validate_state(case_type_name: case_type_name,
-                         workflow_name: workflow_name,
-                         user_role: user_role,
-                         state_name: state, states_config: states_config)
+          validate_state(case_type_name:,
+                         workflow_name:,
+                         user_role:,
+                         state_name: state, states_config:)
         else
           add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/",
-                   "State #{state} not a permitted state")
+                    "State #{state} not a permitted state")
         end
       end
     end
@@ -218,10 +210,10 @@ module ConfigurableStateMachine
       if my_state_config.is_a?(RecursiveOpenStruct)
         events = my_state_config.to_h.keys
         events.each do |event|
-          validate_event(case_type_name: case_type_name,
-                         workflow_name: workflow_name,
-                         user_role: user_role,
-                         state_name: state_name,
+          validate_event(case_type_name:,
+                         workflow_name:,
+                         user_role:,
+                         state_name:,
                          event_name: event,
                          event_config: my_state_config.__send__(event))
         end
@@ -231,19 +223,18 @@ module ConfigurableStateMachine
       end
     end
 
-    #rubocop:disable Metrics/ParameterLists
     def validate_event(case_type_name:, workflow_name:, user_role:, state_name:, event_name:, event_config:)
       if event_config.is_a?(RecursiveOpenStruct) || event_config.nil?
         path = "case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states/#{state_name}/#{event_name}"
         validate_keys_in(event_config,
-                        path,
-                        :if,
-                        :transition_to,
-                        :transition_to_using,
-                        :after_transition,
-                        :before_transition,
-                        :switch_workflow,
-                        :switch_workflow_using)
+                         path,
+                         :if,
+                         :transition_to,
+                         :transition_to_using,
+                         :after_transition,
+                         :before_transition,
+                         :switch_workflow,
+                         :switch_workflow_using)
         validate_predicate_config(event_config, path)
         validate_switch_workflow_config(event_config, workflow_name, path)
         validate_switch_workflow_using_config(event_config, path)
@@ -251,10 +242,9 @@ module ConfigurableStateMachine
         validate_after_transition_config(event_config, path)
       else
         add_error("case_types/#{case_type_name}/workflows/#{workflow_name}/user_roles/#{user_role}/states",
-          "Expected #{event_config} to be a Hash, is a #{event_config.class}")
+                  "Expected #{event_config} to be a Hash, is a #{event_config.class}")
       end
     end
-    #rubocop:enable Metrics/ParameterLists
 
     def validate_initial_state(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.to_h.keys.include?(:initial_state)
@@ -273,7 +263,7 @@ module ConfigurableStateMachine
     end
 
     def process_permitted_case_types(preamble)
-      validate_min_keys(preamble.permitted_case_types, 'preamble/permitted_case_types', 1)
+      validate_min_keys(preamble.permitted_case_types, "preamble/permitted_case_types", 1)
       @case_types = preamble.permitted_case_types.to_hash.keys
     end
 
@@ -292,7 +282,7 @@ module ConfigurableStateMachine
     end
 
     def validate_keys_in(config, section_name, *possible_keys)
-      config.to_h.keys.each do |key|
+      config.to_h.each_key do |key|
         unless key.in?(possible_keys)
           add_error section_name, "Unrecognised key: #{key}"
         end
@@ -343,16 +333,14 @@ module ConfigurableStateMachine
 
     def validate_class_and_method(class_and_method)
       result = nil
-      klass, method = class_and_method.split('#')
+      klass, method = class_and_method.split("#")
       if method.nil?
         result = "Invalid predicate or conditional: #{class_and_method}"
+      elsif klass.safe_constantize.nil?
+        result = "No such class: #{klass}"
       else
-        if klass.safe_constantize.nil?
-          result = "No such class: #{klass}"
-        else
-          unless klass.constantize.instance_methods.include?(method.to_sym)
-            result = "No such instance method '#{method}' on class #{klass}"
-          end
+        unless klass.constantize.instance_methods.include?(method.to_sym)
+          result = "No such instance method '#{method}' on class #{klass}"
         end
       end
       result
@@ -379,14 +367,12 @@ module ConfigurableStateMachine
     def validate_switch_workflow_param(event_config, current_workflow, path)
       new_workflow = event_config.switch_workflow.to_sym
       if new_workflow == current_workflow
-        add_error(path, 'Cannot switch workflow to the current workflow')
+        add_error(path, "Cannot switch workflow to the current workflow")
       end
       unless new_workflow.in?(@permitted_workflows)
         add_error(path, "Invalid workflow: #{new_workflow}")
       end
-
     end
-
   end
   # rubocop:enable Metrics/ClassLength
 end

@@ -21,7 +21,7 @@ FactoryBot.define do
     end
 
     sequence(:name) { |n| "Directorate #{n}" }
-    email { name.downcase.gsub(/\W/, '_') + '@localhost' }
+    email { "#{name.downcase.gsub(/\W/, '_')}@localhost" }
     business_group { find_or_create :business_group }
 
     after(:create) do |dir, evaluator|
@@ -30,33 +30,33 @@ FactoryBot.define do
   end
 
   factory :responder_directorate, parent: :directorate do
-    name           { 'Responder Directorate' }
-    email          { 'responder-dir@localhost' }
+    name           { "Responder Directorate" }
+    email          { "responder-dir@localhost" }
     business_group { find_or_create :responder_business_group }
   end
 
   factory :dacu_directorate, parent: :directorate do
-    name           { 'DACU Directorate' }
-    email          { 'dacu@localhost' }
+    name           { "DACU Directorate" }
+    email          { "dacu@localhost" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :press_office_directorate, parent: :directorate do
-    name           { 'Press Office Directorate' }
-    email          { 'press_office@localhost' }
+    name           { "Press Office Directorate" }
+    email          { "press_office@localhost" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :private_office_directorate, parent: :directorate do
-    name           { 'Private Office Directorate' }
-    email          { 'private_office@localhost' }
+    name           { "Private Office Directorate" }
+    email          { "private_office@localhost" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :deactivated_directorate, parent: :directorate do
-    name           { 'Deactivated Directorate' }
-    email          { 'deactivated-dir@localhost' }
+    name           { "Deactivated Directorate" }
+    email          { "deactivated-dir@localhost" }
     business_group { find_or_create :responder_business_group }
-    deleted_at     { Time.now }
+    deleted_at     { Time.zone.now }
   end
 end

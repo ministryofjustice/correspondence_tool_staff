@@ -23,5 +23,4 @@ class AssignmentPolicy < ApplicationPolicy
   check :assign_to_new_team_is_a_permitted_event do
     assignment.case.state_machine.permitted_events(user.id).include?(:assign_to_new_team)
   end
-
 end

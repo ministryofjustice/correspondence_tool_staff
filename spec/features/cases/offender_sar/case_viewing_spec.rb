@@ -1,12 +1,11 @@
 require "rails_helper"
 
-feature 'Viewing for cases' do
-
-  given!(:responder)    { find_or_create :branston_user}
-  given!(:kase_earlier) { create :offender_sar_case, received_date: 3.days.ago}
+feature "Viewing for cases" do
+  given!(:responder)    { find_or_create :branston_user }
+  given!(:kase_earlier) { create :offender_sar_case, received_date: 3.days.ago }
   given!(:kase)         { create :offender_sar_case }
 
-  scenario 'View open-cases tab - choice of ordering the result' do
+  scenario "View open-cases tab - choice of ordering the result" do
     login_as responder
 
     cases_page.load
@@ -21,5 +20,4 @@ feature 'Viewing for cases' do
     expect(cases_page.case_list.first.number).to have_text kase.number
     expect(cases_page.case_list.second.number).to have_text kase_earlier.number
   end
-
 end

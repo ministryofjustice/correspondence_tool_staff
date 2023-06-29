@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'When viewing an offender sar complaint case' do
-  given(:responder)         { find_or_create :branston_user }
+feature "When viewing an offender sar complaint case" do
+  given(:responder) { find_or_create :branston_user }
   given(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
 
-  scenario 'adding a note' do
+  scenario "adding a note" do
     login_as responder
     cases_show_page.load(id: offender_sar_complaint.id)
 

@@ -29,38 +29,36 @@
 #
 
 FactoryBot.define do
-
   factory :compliance_review,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :case do
     identifier { "foi compliance review case" }
   end
 
   factory :accepted_compliance_review,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :accepted_case,
           aliases: [:compliance_review_case_being_drafted] do
     identifier { "accepted foi compliance review case" }
   end
 
   factory :awaiting_responder_compliance_review,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :awaiting_responder_case,
           aliases: [:assigned_compliance_review_case] do
     identifier { "awaiting responder foi compliance review case" }
   end
 
   factory :compliance_review_with_response,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :case_with_response do
     transient do
-
       identifier { "foi compliance review case with response" }
     end
   end
 
   factory :responded_compliance_review,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :responded_case do
     transient do
       identifier { "responded foi compliance review case" }
@@ -68,11 +66,10 @@ FactoryBot.define do
   end
 
   factory :closed_compliance_review,
-          class: Case::FOI::ComplianceReview,
+          class: "Case::FOI::ComplianceReview",
           parent: :closed_case do
     transient do
-      identifier { 'closed foi compliance review case' }
+      identifier { "closed foi compliance review case" }
     end
   end
-
 end

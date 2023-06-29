@@ -5,6 +5,6 @@ class CreateLinkedCases < ActiveRecord::Migration[5.0]
       t.integer :linked_case_id, null: false
     end
     add_index :linked_cases, :case_id
-    add_index :linked_cases, [:case_id, :linked_case_id], unique: true
+    add_index :linked_cases, %i[case_id linked_case_id], unique: true
   end
 end

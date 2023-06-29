@@ -1,4 +1,4 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :have_enum do |name|
   match do
@@ -10,18 +10,16 @@ RSpec::Matchers.define :have_enum do |name|
   end
 
   chain :with_values do |expected_values|
-    begin
-      @expected_values = expected_values.sort!
-      @actual_values = subject.defined_enums[name.to_s]
-      actual_model_values = @actual_values.keys.sort
-      actual_db_values = @actual_values.values.sort
+    @expected_values = expected_values.sort!
+    @actual_values = subject.defined_enums[name.to_s]
+    actual_model_values = @actual_values.keys.sort
+    actual_db_values = @actual_values.values.sort
 
-      @model_values_matched = (actual_model_values == @expected_values)
-      @db_values_matched = (actual_db_values == @expected_values)
-    rescue NoMethodError
-      # this happens if the name does not correspond to the name of an enum
-      @actual_values = false
-    end
+    @model_values_matched = (actual_model_values == @expected_values)
+    @db_values_matched = (actual_db_values == @expected_values)
+  rescue NoMethodError
+    # this happens if the name does not correspond to the name of an enum
+    @actual_values = false
   end
 
   description do

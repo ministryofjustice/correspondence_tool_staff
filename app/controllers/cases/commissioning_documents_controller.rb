@@ -9,13 +9,12 @@ module Cases
 
       if @commissioning_document.valid?
         if FeatureSet.email_commissioning_document.enabled?
-          @commissioning_document.save
+          @commissioning_document.save!
           redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 request document selected"
         else
           send_data(@commissioning_document.document,
-            filename: @commissioning_document.filename,
-            type: @commissioning_document.mime_type,
-          )
+                    filename: @commissioning_document.filename,
+                    type: @commissioning_document.mime_type)
         end
       else
         render :new
@@ -26,7 +25,7 @@ module Cases
       @commissioning_document.template_name = create_params[:template_name].to_sym
 
       if @commissioning_document.valid?
-        @commissioning_document.save
+        @commissioning_document.save!
         @commissioning_document.remove_attachment
         redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 request document updated"
       else
@@ -38,13 +37,12 @@ module Cases
       return unless @commissioning_document.persisted?
 
       send_data(@commissioning_document.document,
-        filename: @commissioning_document.filename,
-        type: @commissioning_document.mime_type,
-      )
+                filename: @commissioning_document.filename,
+                type: @commissioning_document.mime_type)
     end
 
     def replace
-      @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+      @s3_direct_post = S3Uploader.for(@case, "commissioning_document")
     end
 
     def upload
@@ -52,20 +50,20 @@ module Cases
       service = CommissioningDocumentUploaderService.new(
         kase: @case,
         commissioning_document: @commissioning_document,
-        current_user: current_user,
-        uploaded_file: create_params[:upload]
+        current_user:,
+        uploaded_file: create_params[:upload],
       )
       service.upload!
 
       case service.result
       when :ok
-        flash[:notice] = t('notices.commissioning_document_uploaded')
+        flash[:notice] = t("notices.commissioning_document_uploaded")
         redirect_to case_data_request_path(@case, @data_request)
       when :blank
-        flash[:alert] = t('notices.no_commissioning_document_uploaded')
+        flash[:alert] = t("notices.no_commissioning_document_uploaded")
         redirect_to case_data_request_path(@case, @data_request)
       else
-        @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+        @s3_direct_post = S3Uploader.for(@case, "commissioning_document")
         flash.now[:alert] = service.error_message
         render :replace
       end
@@ -74,15 +72,15 @@ module Cases
     def send_email
       service = CommissioningDocumentEmailService.new(
         data_request: @data_request,
-        current_user: current_user,
-        commissioning_document: @commissioning_document
+        current_user:,
+        commissioning_document: @commissioning_document,
       )
       service.send!
 
-      redirect_to case_path(@case), flash: { notice: 'Day 1 commissioning email sent' }
+      redirect_to case_path(@case), flash: { notice: "Day 1 commissioning email sent" }
     end
 
-    private
+  private
 
     def set_case
       @case = Case::Base.find(params[:case_id])

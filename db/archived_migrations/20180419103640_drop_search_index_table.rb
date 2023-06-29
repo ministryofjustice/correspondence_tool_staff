@@ -6,5 +6,4 @@ class DropSearchIndexTable < ActiveRecord::Migration[5.0]
   def down
     raise ActiveRecord::IrreversibleMigration, "Unable to reverse data migration to drop table search_index"
   end
-
 end

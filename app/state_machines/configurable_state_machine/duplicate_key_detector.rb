@@ -1,9 +1,6 @@
 module ConfigurableStateMachine
-
   class DuplicateKeyDetector
-
     class KeyRegister
-
       attr_reader :line_numbers
 
       def initialize
@@ -27,14 +24,13 @@ module ConfigurableStateMachine
       def duplicate?(key)
         key.in?(@keys)
       end
-
     end
 
     TABSIZE = 2
 
     def initialize(filename)
       @filename = filename
-      @current_key = ''
+      @current_key = ""
       @seen_keys = KeyRegister.new
       @duplicate_keys = KeyRegister.new
       @current_indent = -2
@@ -42,11 +38,12 @@ module ConfigurableStateMachine
 
     def run
       line_number = 0
-      File.open(@filename, 'r') do |fp|
-        until fp.eof do
+      File.open(@filename, "r") do |fp|
+        until fp.eof
           line = fp.readline
           line_number += 1
           next if comment_line?(line)
+
           check_key(line, line_number)
         end
       end
@@ -64,7 +61,7 @@ module ConfigurableStateMachine
       lines
     end
 
-    private
+  private
 
     def comment_line?(line)
       line =~ /^\s*#/
@@ -72,8 +69,8 @@ module ConfigurableStateMachine
 
     def check_key(line, line_number)
       if line =~ /^(\s*)(\S+:)/
-        indent = $1.length
-        line_key = $2
+        indent = ::Regexp.last_match(1).length
+        line_key = ::Regexp.last_match(2)
         full_key = full_key_for_line(indent, line_key)
         if @seen_keys.duplicate?(full_key)
           @duplicate_keys.add(full_key, line_number)
@@ -81,7 +78,6 @@ module ConfigurableStateMachine
           @seen_keys.add(full_key, line_number)
         end
       end
-
     end
 
     def full_key_for_line(indent, line_key)
@@ -89,9 +85,9 @@ module ConfigurableStateMachine
         @current_key += line_key
       else
         num_key_segments = indent / TABSIZE
-        key_segments = @current_key.split(':')
-        base_key = key_segments.slice(0, num_key_segments).join(':')
-        @current_key = base_key + ':' + line_key
+        key_segments = @current_key.split(":")
+        base_key = key_segments.slice(0, num_key_segments).join(":")
+        @current_key = "#{base_key}:#{line_key}"
       end
       @current_indent = indent
       @current_key

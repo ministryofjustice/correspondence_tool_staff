@@ -4,21 +4,21 @@ FactoryBot.define do
     association :user
 
     location        { Faker::Company.name }
-    request_type    { 'all_prison_records' }
+    request_type    { "all_prison_records" }
     date_requested  { Date.current }
 
     trait :other do
-      request_type    { 'other' }
-      request_type_note    { 'Lorem ipsum' }
+      request_type { "other" }
+      request_type_note { "Lorem ipsum" }
     end
 
     trait :with_date_range do
-      date_from { Date.new(2018, 01, 01) }
+      date_from { Date.new(2018, 0o1, 0o1) }
       date_to { Date.new(2018, 12, 31) }
     end
 
     trait :with_date_from do
-      date_from { Date.new(2018, 01, 01) }
+      date_from { Date.new(2018, 0o1, 0o1) }
     end
 
     trait :with_date_to do
@@ -30,4 +30,3 @@ FactoryBot.define do
     end
   end
 end
-

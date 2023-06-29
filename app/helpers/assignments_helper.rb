@@ -1,16 +1,16 @@
 module AssignmentsHelper
   def sub_heading(creating_case)
     if creating_case
-      t('assignments.new.new_assignment')
+      t("assignments.new.new_assignment")
     else
-      t('assignments.new.assignment')
+      t("assignments.new.assignment")
     end
   end
 
   def filtered_group_heading(params)
     if params[:business_group_id]
       business_group = BusinessGroup.find(params[:business_group_id])
-      "#{ business_group.name } business units"
+      "#{business_group.name} business units"
     elsif params[:show_all]
       "All business units"
     end
@@ -19,7 +19,7 @@ module AssignmentsHelper
   def filtered_directorate_heading(params)
     if params[:business_group_id]
       business_group = BusinessGroup.find(params[:business_group_id])
-      "#{ business_group.name } directorates"
+      "#{business_group.name} directorates"
     end
   end
 
@@ -29,7 +29,7 @@ module AssignmentsHelper
     else
       link_to("See all business units",
               new_case_assignment_path(kase.id, show_all: true),
-              class: 'bold-small')
+              class: "bold-small")
     end
   end
 
@@ -39,7 +39,7 @@ module AssignmentsHelper
     else
       link_to("See all business units",
               assign_to_new_team_case_assignment_path(kase.id, assignment.id, show_all: true),
-              class: 'bold-small')
+              class: "bold-small")
     end
   end
 
@@ -59,8 +59,7 @@ module AssignmentsHelper
     else
       link_to(business_group.name,
               assign_to_new_team_case_assignment_path(kase.id, assignment.id,
-                                       business_group_id: business_group.id))
+                                                      business_group_id: business_group.id))
     end
   end
-
 end

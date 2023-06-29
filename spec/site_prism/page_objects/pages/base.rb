@@ -10,9 +10,9 @@ module PageObjects
       end
 
       def make_check_box_choice(choice_id)
-        if !find("input##{choice_id}", visible: false).checked?
+        unless find("input##{choice_id}", visible: false).checked?
           if Capybara.current_driver == Capybara.javascript_driver
-          find("input##{choice_id}", visible: false).click
+            find("input##{choice_id}", visible: false).click
           else
             find("input##{choice_id}").set(true)
           end
@@ -32,7 +32,7 @@ module PageObjects
       def method_missing(method, *args)
         if method.match %r{^choose_(.+)}
           choice = args.first
-          make_radio_button_choice("sar_#{$1}_#{choice}")
+          make_radio_button_choice("sar_#{::Regexp.last_match(1)}_#{choice}")
         else
           super
         end
@@ -45,7 +45,7 @@ module PageObjects
       # for use on pages with a case list section
       def case_numbers
         case_list.map do |row|
-          row.number.text.delete('Link to case').delete("\n")
+          row.number.text.delete("Link to case").delete("\n")
         end
       end
     end

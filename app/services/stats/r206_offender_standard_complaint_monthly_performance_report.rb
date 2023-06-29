@@ -1,13 +1,12 @@
 module Stats
   class R206OffenderStandardComplaintMonthlyPerformanceReport < R205OffenderSarMonthlyPerformanceReport
-
     class << self
       def title
-        'Monthly report'
+        "Monthly report"
       end
 
       def description
-        'Includes performance data about standard Offender complaint requests we received and responded to from the beginning of the year by month.'
+        "Includes performance data about standard Offender complaint requests we received and responded to from the beginning of the year by month."
       end
     end
 
@@ -20,6 +19,5 @@ module Stats
     def report_type
       ReportType.r206
     end
-
   end
 end

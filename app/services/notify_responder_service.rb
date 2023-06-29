@@ -1,5 +1,4 @@
 class NotifyResponderService
-
   attr_reader :result, :case
 
   def initialize(kase, mail_type)
@@ -13,7 +12,7 @@ class NotifyResponderService
     @result = :ok
   end
 
-  private
+private
 
   def notify_responders
     ActionNotificationsMailer

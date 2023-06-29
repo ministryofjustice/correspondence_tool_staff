@@ -18,7 +18,7 @@ module SARCasesParams
       :third_party_relationship,
       :reply_method,
       :request_method,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
 
@@ -59,10 +59,11 @@ module SARCasesParams
   end
 
   def missing_info_to_tmm
-    if params[:sar][:missing_info] == "yes"
+    case params[:sar][:missing_info]
+    when "yes"
       @case.missing_info = true
       CaseClosure::RefusalReason.sar_tmm.abbreviation
-    elsif params[:sar][:missing_info] == "no"
+    when "no"
       @case.missing_info = false
     end
   end

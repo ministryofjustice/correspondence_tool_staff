@@ -1,11 +1,9 @@
-require 'csv'
+require "csv"
 
 module Stats
-
   # This class acts as a model to collect statistics in rows and columns for later outputting
   # to a CSV or spreadsheet
   class StatsCollector
-
     attr_accessor :stats
 
     # intitialize with an array of row names, and a hash of column headings keyed by unique identifier
@@ -15,7 +13,7 @@ module Stats
     def initialize(rows, columns)
       @column_hash = columns
       @callback_methods = {
-        before_finalise: []
+        before_finalise: [],
       }
       @stats = {}
       rows.each do |row|
@@ -30,6 +28,7 @@ module Stats
 
     def add_callback(callback_type, meth)
       raise "Invalid callback type " unless callback_type.in?(@callback_methods.keys)
+
       @callback_methods[callback_type] << meth
     end
 
@@ -40,9 +39,7 @@ module Stats
 
     # finalize() will run any :before_finalise callback methods that have been registered with add_callback()
     def finalise
-      @callback_methods[:before_finalise].each do |meth|
-        meth.call
-      end
+      @callback_methods[:before_finalise].each(&:call)
     end
 
     def record_text(row, col, text)
@@ -51,8 +48,8 @@ module Stats
     end
 
     def check_row_and_col_exist(row, col)
-      raise ArgumentError.new("No such row name: '#{row}'") unless @stats.key?(row)
-      raise ArgumentError.new("No such column name: '#{col.inspect}'") unless @stats[row].key?(col)
+      raise ArgumentError, "No such row name: '#{row}'" unless @stats.key?(row)
+      raise ArgumentError, "No such column name: '#{col.inspect}'" unless @stats[row].key?(col)
     end
 
     class StatsEnumerator
@@ -69,20 +66,21 @@ module Stats
       # This is a lazy enumerator for each of the rows in the report.
       # so that we don't sit and timeout the browser waiting to fetch all
       # the rows from the database in a big report.
-      def each #rubocop:disable Metrics/CyclomaticComplexity
+      def each(&block)
         cols = column_names
         cols.unshift @first_column_header if @row_names_as_first_column
-        @superheadings.each { |superheading| yield superheading }
+        @superheadings.each(&block)
         yield cols
         row_names.each do |row_name|
           row_name_str = row_name.to_s
-          if row_name_str =~ /^_SPACER/
-            row = ['']
-          elsif row_name_str =~ /^_/
-            row = [row_name_str.sub(/^_/, '')]
+          case row_name_str
+          when /^_SPACER/
+            row = [""]
+          when /^_/
+            row = [row_name_str.sub(/^_/, "")]
           else
             row = @row_names_as_first_column ? [row_name_str] : []
-            @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
+            @column_hash.each_key { |col_key| row << value(row_name, col_key) }
           end
           yield row
         end
@@ -101,22 +99,22 @@ module Stats
       end
     end
 
-    def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
+    def to_csv(first_column_header: "", superheadings: [], row_names_as_first_column: true)
       StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
     end
 
-    private
+  private
 
     def spacer_or_section_header?(row)
       row.to_s =~ /^_/
     end
 
     def populate_spacer_or_section_header_row(row)
-      @stats[row] = ''
+      @stats[row] = ""
     end
 
     def populate_value_row(row)
-      @column_hash.keys.each do |col_key|
+      @column_hash.each_key do |col_key|
         @stats[row][col_key] = 0
       end
     end

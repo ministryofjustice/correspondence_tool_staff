@@ -1,5 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R006KiloMap do
     before(:all) do
@@ -7,33 +8,34 @@ module Stats
       create_report_type(abbr: :r006)
     end
 
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: true)
+    end
 
-    it 'produces a kilo map as a csv' do
+    it "produces a kilo map as a csv" do
       dacu_disclosure = BusinessUnit.dacu_disclosure
       dacu_disclosure.users.map(&:destroy)
-      dacu_disclosure.team_lead = 'Jeremy Corbyn'
+      dacu_disclosure.team_lead = "Jeremy Corbyn"
       dacu_branston = BusinessUnit.dacu_branston
       dacu_branston.users.map(&:destroy)
-      dacu_disclosure.team_lead = 'David Gauke'
+      dacu_disclosure.team_lead = "David Gauke"
 
+      create :manager, full_name: "Theresa May", email: "tm@pm.gov.uk", managing_teams: [dacu_disclosure]
+      create :manager, full_name: "David Cameron", email: "dc@pm.gov.uk", managing_teams: [dacu_disclosure]
+      create :manager, full_name: "Gordon Brown", email: "gb@pm.gov.uk", managing_teams: [dacu_disclosure]
+      create :manager, full_name: "David Gauke", email: "dg@pm.gov.uk", managing_teams: [dacu_branston]
 
-      create :manager, full_name: 'Theresa May', email: 'tm@pm.gov.uk', managing_teams: [dacu_disclosure]
-      create :manager, full_name: 'David Cameron', email: 'dc@pm.gov.uk', managing_teams: [dacu_disclosure]
-      create :manager, full_name: 'Gordon Brown', email: 'gb@pm.gov.uk', managing_teams: [dacu_disclosure]
-      create :manager, full_name: 'David Gauke', email: 'dg@pm.gov.uk', managing_teams: [dacu_branston]
-
-      map = R006KiloMap.new
+      map = described_class.new
       map.run
 
       expect(map.persist_results?).to eq false
       expect(map.report_type).to eq ReportType.r006
 
       csv_lines = map.to_csv.map { |row| row.map(&:value) }
-      
+
       expect(csv_lines).to eq map.results
 
-      expect(csv_lines.shift).to eq header_line.split(',')
+      expect(csv_lines.shift).to eq header_line.split(",")
       expect(CSV.generate_line(csv_lines.shift).chomp).to match operations_line
       expect(CSV.generate_line(csv_lines.shift).chomp).to match dacu_directorate_line
       expect(CSV.generate_line(csv_lines.shift).chomp).to match disclosure_line_0
@@ -47,12 +49,12 @@ module Stats
       expect(CSV.generate_line(csv_lines.shift).chomp).to match private_office_line
       # expect(csv_lines.shift).to match private_office_second_user_line
 
-      map.set_results([['test']])
-      expect(map.results).to eq [['test']]
+      map.set_results([%w[test]])
+      expect(map.results).to eq [%w[test]]
     end
 
     def header_line
-      %{Business group,Directorate,Business unit,Director General / Director / Deputy Director,Areas covered,Group email,Team member name,Team member email}
+      %(Business group,Directorate,Business unit,Director General / Director / Deputy Director,Areas covered,Group email,Team member name,Team member email)
     end
 
     def operations_line
@@ -68,15 +70,15 @@ module Stats
     end
 
     def disclosure_line_1
-      %{"","",Disclosure,David Gauke,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk}
+      %("","",Disclosure,David Gauke,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk)
     end
 
     def disclosure_line_2
-      %{"","","","","","",Gordon Brown,gb@pm.gov.uk}
+      %("","","","","","",Gordon Brown,gb@pm.gov.uk)
     end
 
     def disclosure_line_3
-      %{"","","","","","",Theresa May,tm@pm.gov.uk}
+      %("","","","","","",Theresa May,tm@pm.gov.uk)
     end
 
     def dacu_line
@@ -104,6 +106,6 @@ module Stats
     def private_office_second_user_line
       /"","","","","",user \d{1,5},/
     end
-
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -11,6 +11,6 @@
 FactoryBot.define do
   factory :feedback do
     comment { Faker::Lorem.paragraph(sentence_count: 1) }
-    email {  Faker::Internet.email }
+    email { Faker::Internet.email }
   end
 end

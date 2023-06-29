@@ -10,7 +10,6 @@ class ResponseUploaderService
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
   # This method already had 8 parameters - it was done with a params hash thus hiding it from rubocop
-  #rubocop:disable Metrics/ParameterLists
   def initialize(kase:, current_user:, action:, uploaded_files:, is_compliant:,
                  upload_comment:, bypass_message:, bypass_further_approval:)
     @case                    = kase
@@ -25,7 +24,6 @@ class ResponseUploaderService
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
   end
-  #rubocop:enable Metrics/ParameterLists
 
   class << self
     # TODO: - this appears to be only used in tests
@@ -48,17 +46,17 @@ class ResponseUploaderService
       end
     rescue Aws::S3::Errors::ServiceError,
            ActiveRecord::RecordInvalid,
-           ActiveRecord::RecordNotUnique => err
-      Rails.logger.error("Error processing uploaded files: #{err.message}")
+           ActiveRecord::RecordNotUnique => e
+      Rails.logger.error("Error processing uploaded files: #{e.message}")
       @result = :error
       @attachments = nil
     end
 
-    notify_next_approver if @result == :ok && @action == 'upload-approve'
+    notify_next_approver if @result == :ok && @action == "upload-approve"
     @attachments
   end
 
-  private
+private
 
   # When approving, always log compliance date because it must be
   # when asking for a re-draft, log compliance date if it is compliant
@@ -70,20 +68,20 @@ class ResponseUploaderService
       filenames = response_attachments.map(&:filename)
 
       case @action
-      when 'upload', 'upload-flagged'
+      when "upload", "upload-flagged"
         @case.state_machine.add_responses!(acting_user: @current_user,
-                                           acting_team: @current_user.case_team_for_event(@case, 'add_responses'),
-                                           filenames: filenames,
+                                           acting_team: @current_user.case_team_for_event(@case, "add_responses"),
+                                           filenames:,
                                            message: @case.upload_comment)
-      when 'upload-approve'
+      when "upload-approve"
         upload_approve(filenames)
         @case.log_compliance_date!
-      when 'upload-redraft'
+      when "upload-redraft"
         @case.state_machine.upload_response_and_return_for_redraft!(
-                             acting_user: @current_user,
-                             acting_team: @case.approving_teams.with_user(@current_user).first,
-                             message: @case.upload_comment,
-                             filenames: filenames
+          acting_user: @current_user,
+          acting_team: @case.approving_teams.with_user(@current_user).first,
+          message: @case.upload_comment,
+          filenames:,
         )
         @case.log_compliance_date! if @is_compliant
       else
@@ -101,12 +99,13 @@ class ResponseUploaderService
   end
 
   def bypass_further_approvals(filenames)
-    further_approval_assignments.each { |asgmt| asgmt.bypassed! }
+    further_approval_assignments.each(&:bypassed!)
     @case.state_machine.upload_response_approve_and_bypass!(
-                        acting_user: @current_user,
-                        acting_team: @case.approving_teams.with_user(@current_user).first,
-                        filenames: filenames,
-                        message: combined_message)
+      acting_user: @current_user,
+      acting_team: @case.approving_teams.with_user(@current_user).first,
+      filenames:,
+      message: combined_message,
+    )
   end
 
   def further_approval_assignments
@@ -125,14 +124,14 @@ class ResponseUploaderService
     @case.state_machine.upload_response_and_approve!(
       acting_user: @current_user,
       acting_team: @case.approving_teams.with_user(@current_user).first,
-      filenames: filenames,
-      message: @case.upload_comment
+      filenames:,
+      message: @case.upload_comment,
     )
   end
 
   def notify_next_approver
     if @case.current_state
-           .in?(%w( pending_press_office_clearance pending_private_office_clearance ))
+           .in?(%w[pending_press_office_clearance pending_private_office_clearance])
 
       current_info = CurrentTeamAndUserService.new(@case)
       assignment = @case.approver_assignments

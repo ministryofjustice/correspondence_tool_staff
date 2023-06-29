@@ -1,8 +1,7 @@
-require 'cts'
+require "cts"
 
 module CTS::Cases
   class Show
-
     def call(kase)
       ap kase
 
@@ -13,10 +12,10 @@ module CTS::Cases
       show_case_transitions(kase)
 
       puts "\nAttachments:"
-      tp kase.attachments, [:id, :type, :key, :preview_key]
+      tp kase.attachments, %i[id type key preview_key]
     end
 
-    private
+  private
 
     def show_case_assignments(kase)
       team_display = team_display_method :team
@@ -39,9 +38,9 @@ module CTS::Cases
           max_width = longest_field(kase.transitions, &display_method)
           {
             field => {
-              display_method: display_method,
-              width: max_width
-            }
+              display_method:,
+              width: max_width,
+            },
           }
         end
       tp kase.transitions.order(:id),
@@ -61,7 +60,7 @@ module CTS::Cases
         if user
           "#{user&.full_name}:#{user&.id}"
         else
-          ''
+          ""
         end
       end
     end
@@ -72,7 +71,7 @@ module CTS::Cases
         if team
           "#{team&.name}:#{team&.id}"
         else
-          ''
+          ""
         end
       end
     end

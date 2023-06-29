@@ -1,3 +1,4 @@
+# rubocop:disable Style/ClassVars
 class ApplicationPolicy
   @@failed_checks = []
 
@@ -22,6 +23,7 @@ class ApplicationPolicy
 
   def initialize(user, record)
     raise Pundit::NotAuthorizedError, "must be logged in" unless user
+
     @user   = user
     @record = record
   end
@@ -39,3 +41,4 @@ class ApplicationPolicy
     user.manager?
   end
 end
+# rubocop:enable Style/ClassVars

@@ -9,26 +9,22 @@
 # Drills down into Directorates
 # Drills down into Business Units
 
-
-require 'rails_helper'
-
-
+require "rails_helper"
 
 feature "Viewing Business Groups/Directorate/Business Units" do
   include CaseDateManipulation
   given(:manager)        { create :manager }
   given(:responder)      { find_or_create :foi_responder }
-  given(:business_unit ) { responder.teams.first }
+  given(:business_unit) { responder.teams.first }
   given(:business_group) { responder.teams.first.business_group }
-  given(:directorate)    { responder.teams.first.directorate}
-
+  given(:directorate)    { responder.teams.first.directorate }
 
   background do
     manager
     responder
   end
 
-  scenario 'Manager wants to find a specific user' do
+  scenario "Manager wants to find a specific user" do
     login_as_manager
     visit_settings_page
     view_business_group
@@ -37,9 +33,7 @@ feature "Viewing Business Groups/Directorate/Business Units" do
     find_information_officer
   end
 
-
-  private
-
+private
 
   def login_as_manager
     login_as manager
@@ -61,7 +55,7 @@ feature "Viewing Business Groups/Directorate/Business Units" do
 
   def view_directorate
     row = teams_show_page.row_for_directorate(directorate.name)
-    #team_lead = row.director.text
+    # team_lead = row.director.text
 
     row.name.click
     expect(teams_show_page).to be_displayed

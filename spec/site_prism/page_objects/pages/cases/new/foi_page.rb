@@ -5,25 +5,25 @@ module PageObjects
         class FOIPage < PageObjects::Pages::Base
           include SitePrism::Support::DropInDropzone
 
-          set_url '/cases/fois/new'
+          set_url "/cases/fois/new"
 
           section :primary_navigation,
-                  PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+                  PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
           section :page_heading,
-                  PageObjects::Sections::PageHeadingSection, '.page-heading'
+                  PageObjects::Sections::PageHeadingSection, ".page-heading"
           element :case_type, :xpath,
                   '//fieldset[contains(.,"Type")]'
 
-          element :date_received_day, '#foi_received_date_dd'
-          element :date_received_month, '#foi_received_date_mm'
-          element :date_received_year, '#foi_received_date_yyyy'
+          element :date_received_day, "#foi_received_date_dd"
+          element :date_received_month, "#foi_received_date_mm"
+          element :date_received_year, "#foi_received_date_yyyy"
 
-          element :subject, '#foi_subject'
-          element :full_request, '#foi_message'
-          element :full_name, '#foi_name'
-          element :email, '#foi_email'
-          element :address, '#foi_postal_address'
+          element :subject, "#foi_subject"
+          element :full_request, "#foi_message"
+          element :full_name, "#foi_name"
+          element :email, "#foi_email"
+          element :address, "#foi_postal_address"
 
           element :type_of_requester, :xpath,
                   '//fieldset[contains(.,"Requester type")]'
@@ -31,18 +31,18 @@ module PageObjects
           element :flag_for_disclosure_specialists, :xpath,
                   '//fieldset[contains(.,"Flag for disclosure specialists")]'
 
-          element :dropzone_container, '.dropzone'
+          element :dropzone_container, ".dropzone"
 
           # only shows up when using drop_in_dropzone
-          element :uploaded_request_file_input, '#uploadedRequestFileInput'
+          element :uploaded_request_file_input, "#uploadedRequestFileInput"
 
-          element :submit_button, '.button'
+          element :submit_button, ".button"
 
           def choose_type_of_requester(requester_type)
             make_radio_button_choice("foi_requester_type_#{requester_type}")
           end
 
-          def choose_flag_for_disclosure_specialists(choice = 'yes')
+          def choose_flag_for_disclosure_specialists(choice = "yes")
             make_radio_button_choice("foi_flag_for_disclosure_specialists_#{choice}")
           end
 
@@ -50,7 +50,7 @@ module PageObjects
             make_radio_button_choice("foi_type_#{choice}")
           end
 
-          def choose_delivery_method(choice = 'sent_by_email')
+          def choose_delivery_method(choice = "sent_by_email")
             make_radio_button_choice("foi_delivery_method_#{choice}")
           end
 
@@ -60,8 +60,8 @@ module PageObjects
             date_received_year.set(received_date.year)
           end
 
-          def fill_in_case_details(params={})
-            type = params.delete(:type) || 'standard'
+          def fill_in_case_details(params = {})
+            type = params.delete(:type) || "standard"
             flag_for_disclosure_specialists = params.delete(:flag_for_disclosure_specialists)
             kase = FactoryBot.build_stubbed :case, params
 
@@ -80,9 +80,7 @@ module PageObjects
             if kase.sent_by_email?
               full_request.set kase.message
             elsif !kase.sent_by_email? && !kase.sent_by_post?
-              raise ArgumentError.new(
-                      "unrecognised case delivery method #{kase.delivery_method}"
-                    )
+              raise ArgumentError, "unrecognised case delivery method #{kase.delivery_method}"
             end
             choose_foi_type(type)
 
@@ -97,22 +95,22 @@ module PageObjects
             if kase.approving_teams.present?
               dacu_disclosure_team_name = Settings.foi_cases.default_clearance_team
               requires_disclosure_clearance = dacu_disclosure_team_name.in?(
-                kase.approving_teams.pluck(:name)
+                kase.approving_teams.pluck(:name),
               )
               if requires_disclosure_clearance
-                choose_flag_for_disclosure_specialists 'yes'
+                choose_flag_for_disclosure_specialists "yes"
               else
-                choose_flag_for_disclosure_specialists 'no'
+                choose_flag_for_disclosure_specialists "no"
               end
             else
-              choose_flag_for_disclosure_specialists 'no'
+              choose_flag_for_disclosure_specialists "no"
             end
           end
 
           def drop_in_dropzone(file_path)
-            super file_path: file_path,
-                  input_name: dropzone_container['data-file-input-name'],
-                  container_selector: '#delivery-method-fields'
+            super file_path:,
+                  input_name: dropzone_container["data-file-input-name"],
+                  container_selector: "#delivery-method-fields"
           end
         end
       end

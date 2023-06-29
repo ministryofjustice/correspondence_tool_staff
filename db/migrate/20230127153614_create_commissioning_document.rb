@@ -1,4 +1,5 @@
 class CreateCommissioningDocument < ActiveRecord::Migration[6.1]
+  # rubocop:disable Rails/ReversibleMigration
   def change
     execute <<-SQL
       CREATE TYPE template_name AS ENUM ('template_name', 'cat_a', 'cctv', 'cross_border', 'mappa', 'pdp', 'prison', 'probation', 'security', 'telephone');
@@ -11,4 +12,5 @@ class CreateCommissioningDocument < ActiveRecord::Migration[6.1]
       t.timestamps
     end
   end
+  # rubocop:enable Rails/ReversibleMigration
 end

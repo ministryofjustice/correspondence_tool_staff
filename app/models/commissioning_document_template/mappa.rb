@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Mappa < CommissioningDocumentTemplate::Base
     def request_type
-      'MAPPA'
+      "MAPPA"
     end
 
     def deadline
@@ -13,7 +13,7 @@ module CommissioningDocumentTemplate
         aliases: kase.subject_aliases,
         pnc: kase.other_subject_ids,
         date_range: data_request.request_dates,
-        deadline: deadline,
+        deadline:,
       )
     end
   end

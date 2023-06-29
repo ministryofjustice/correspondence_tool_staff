@@ -5,18 +5,18 @@ module SarInternalReviewCaseForm
              confirm-sar
              case-details].freeze
 
-  ORIGINAL_SAR_ATTRIBUTES_TO_COPY = [
-    :delivery_method,
-    :email,
-    :name,
-    :postal_address,
-    :requester_type,
-    :subject,
-    :subject_full_name,
-    :subject_type,
-    :third_party,
-    :third_party_relationship,
-    :reply_method
+  ORIGINAL_SAR_ATTRIBUTES_TO_COPY = %i[
+    delivery_method
+    email
+    name
+    postal_address
+    requester_type
+    subject
+    subject_full_name
+    subject_type
+    third_party
+    third_party_relationship
+    reply_method
   ].freeze
 
   def steps
@@ -27,19 +27,19 @@ module SarInternalReviewCaseForm
     ORIGINAL_SAR_ATTRIBUTES_TO_COPY
   end
 
-  private
+private
 
   def validate_link_sar_case(params)
-    original_case_number = (params[:original_case_number] || '').strip
+    original_case_number = (params[:original_case_number] || "").strip
     case_link = LinkedCase.new(
       linked_case_number: original_case_number,
-      type: :original
+      type: :original,
     )
     if case_link.valid?
       original_case = case_link.linked_case
-      if not Pundit.policy(object.creator, original_case).show?
+      if !Pundit.policy(object.creator, original_case).show?
         add_errors_for_original_case(
-          I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.original_case.not_authorised')
+          I18n.t("activerecord.errors.models.case/sar/internal_review.attributes.original_case.not_authorised"),
         )
       else
         object.original_case_id = original_case.id
@@ -64,10 +64,9 @@ module SarInternalReviewCaseForm
   def params_after_step_confirm_sar(params)
     params.merge!(original_case_id: object.original_case_id)
     params.delete(:original_case_number)
-    original_sar_attributes_to_copy.each do | single_field |
+    original_sar_attributes_to_copy.each do |single_field|
       params[single_field] = object.original_case.send(single_field)
     end
     params
   end
-
 end

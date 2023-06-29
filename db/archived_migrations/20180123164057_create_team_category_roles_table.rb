@@ -12,6 +12,6 @@ class CreateTeamCategoryRolesTable < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :team_category_roles, [:category_id, :team_id], unique: true
+    add_index :team_category_roles, %i[category_id team_id], unique: true
   end
 end

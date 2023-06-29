@@ -11,7 +11,7 @@ class CommissioningDocumentUploaderService
 
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
-    @error_message = ''
+    @error_message = ""
   end
 
   def upload!
@@ -23,13 +23,13 @@ class CommissioningDocumentUploaderService
         @attachment = nil
       else
         @attachment = @uploader.process_files(@uploaded_file, REQUEST_TYPE).first
-        @commissioning_document.update(attachment: @attachment)
+        @commissioning_document.update!(attachment: @attachment)
         @result = :ok
       end
     rescue Aws::S3::Errors::ServiceError,
            ActiveRecord::RecordInvalid,
-           ActiveRecord::RecordNotUnique => err
-      @error_message = "Error processing uploaded file: #{err.message}"
+           ActiveRecord::RecordNotUnique => e
+      @error_message = "Error processing uploaded file: #{e.message}"
       Rails.logger.error(@error_message)
       @result = :error
       @attachment = nil

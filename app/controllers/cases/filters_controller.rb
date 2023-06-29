@@ -5,10 +5,10 @@ module Cases
     include AvailableCaseReports
     include RetentionSchedulePageOrdering
 
-    before_action :set_url, only: [:open, :closed, :my_open, :retention]
-    before_action :set_state_selector, only: [:open, :my_open]
+    before_action :set_url, only: %i[open closed my_open retention]
+    before_action :set_state_selector, only: %i[open my_open]
     before_action :set_retention_schedule_order_flag, only: [:retention]
-    before_action :set_cookie_order_flag, only: [:open, :my_open]
+    before_action :set_cookie_order_flag, only: %i[open my_open]
     after_action :reset_default_order_from_retention_schedule_order_flag, only: [:retention]
     before_action :set_non_current_tab_counts, only: [:my_open]
 
@@ -31,7 +31,7 @@ module Cases
           :info_held_status,
           :assignments,
           :cases_exemptions,
-          :exemptions
+          :exemptions,
         )
       service = call_search_service(unpaginated_cases)
       @query = service.query
@@ -39,18 +39,18 @@ module Cases
       if service.error?
         flash.now[:alert] = service.error_message
       else
-        if download_csv_request?
-          @cases = service.result_set.by_last_transitioned_date
-        else
-          @cases = service.result_set.by_last_transitioned_date.page(params[:page]).decorate
-        end
+        @cases = if download_csv_request?
+                   service.result_set.by_last_transitioned_date
+                 else
+                   service.result_set.by_last_transitioned_date.page(params[:page]).decorate
+                 end
       end
 
-      @current_tab_name = 'closed'
+      @current_tab_name = "closed"
       @filter_crumbs = @query.filter_crumbs
       respond_to do |format|
         format.html { render :closed }
-        format.csv { send_csv_cases 'closed' }
+        format.csv { send_csv_cases "closed" }
       end
     end
 
@@ -63,7 +63,7 @@ module Cases
       @cases = Pundit.policy_scope(current_user, cases)
 
       respond_to do |format|
-        format.csv { send_csv_cases 'deleted' }
+        format.csv { send_csv_cases "deleted" }
       end
     end
 
@@ -84,7 +84,7 @@ module Cases
           :message_transitions,
           :responder,
           :responding_team,
-          :approver_assignments
+          :approver_assignments,
         )
 
       service = call_search_service(unpaginated_cases, cookies[:search_result_order])
@@ -96,13 +96,13 @@ module Cases
         prepare_open_cases_collection(service)
       end
 
-      @filter_crumbs = @query.filter_crumbs  
-      @current_tab_name = 'my_cases'
+      @filter_crumbs = @query.filter_crumbs
+      @current_tab_name = "my_cases"
       @can_add_case = policy(Case::Base).can_add_case?
 
       respond_to do |format|
         format.html { render :index }
-        format.csv { send_csv_cases 'my-open' }
+        format.csv { send_csv_cases "my-open" }
       end
     end
 
@@ -115,7 +115,7 @@ module Cases
           :responder,
           :approver_assignments,
           :managing_team,
-          :responding_team
+          :responding_team,
         )
 
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
@@ -128,11 +128,11 @@ module Cases
       end
 
       @filter_crumbs = @query.filter_crumbs
-      @current_tab_name = 'all_cases'
+      @current_tab_name = "all_cases"
       @can_add_case = policy(Case::Base).can_add_case?
       respond_to do |format|
         format.html { render :index }
-        format.csv { send_csv_cases 'open' }
+        format.csv { send_csv_cases "open" }
       end
     end
 
@@ -158,10 +158,10 @@ module Cases
       end
     end
 
-    private
+  private
 
     def set_non_current_tab_counts
-      @global_nav_manager.current_page.tabs.each do |tab| 
+      @global_nav_manager.current_page.tabs.each do |tab|
         tab.set_count(filtered_count_for_tab(tab.cases))
       end
     end
@@ -175,7 +175,7 @@ module Cases
       service = CaseSearchService.new(
         user: current_user,
         query_type: :list,
-        query_params: query_list_params
+        query_params: query_list_params,
       )
       service.call(list_of_cases, order: order_choice)
       service
@@ -183,14 +183,14 @@ module Cases
 
     def set_cookie_order_flag
       if params["order"].present?
-        set_order_cookie(params["order"]) 
+        set_order_cookie(params["order"])
       end
     end
 
     def set_order_cookie(order)
       cookies[:search_result_order] = {
         value: order,
-        secure: true 
+        secure: true,
       }
     end
 
@@ -200,13 +200,13 @@ module Cases
 
     def prepare_open_cases_collection(service)
       @parent_id = @query.id
-      @page = params[:page] || '1'
+      @page = params[:page] || "1"
       @cases = service.result_set.by_deadline.decorate
-      if download_csv_request?
-        @cases = service.result_set.by_deadline
-      else
-        @cases = service.result_set.by_deadline.page(@page).decorate
-      end
+      @cases = if download_csv_request?
+                 service.result_set.by_deadline
+               else
+                 service.result_set.by_deadline.page(@page).decorate
+               end
       flash[:query_id] = @query.id
     end
 
@@ -214,13 +214,13 @@ module Cases
       new_params[:controller] = params[:controller]
       new_params[:action] = params[:orig_action]
 
-      params.keys.each do |key|
+      params.each_key do |key|
         next if key.to_sym.in?(%i[utf8 authenticity_token state_selector states action commit action orig_action page])
+
         new_params[key] = params[key]
       end
 
       url_for(new_params)
     end
-
   end
 end

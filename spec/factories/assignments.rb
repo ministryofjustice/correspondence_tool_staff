@@ -14,11 +14,10 @@
 #
 
 FactoryBot.define do
-
   factory :assignment do
-    state { 'pending' }
+    state { "pending" }
     team { create :responding_team }
-    role { 'responding' }
+    role { "responding" }
     association :case, factory: :case, strategy: :create
 
     factory :approver_assignment do
@@ -27,7 +26,7 @@ FactoryBot.define do
       end
 
       team { create :approving_team }
-      role { 'approving' }
+      role { "approving" }
 
       factory :approved_assignment do
         approved { true }
@@ -40,24 +39,22 @@ FactoryBot.define do
       end
 
       team { create :responding_team }
-      role { 'responding' }
+      role { "responding" }
     end
 
     trait :managing do
       team { create :managing_team }
-      role { 'managing' }
+      role { "managing" }
     end
 
     trait :approving do
       team { create :approving_team }
-      role { 'approving' }
+      role { "approving" }
     end
 
     trait :accepted do
-      state { 'accepted' }
+      state { "accepted" }
       user { team_user }
     end
-
   end
-
 end

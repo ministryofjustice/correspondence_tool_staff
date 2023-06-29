@@ -1,24 +1,23 @@
 FactoryBot.define do
-
   factory :overturned_ico_foi,
           aliases: [:ot_ico_foi_noff_unassigned],
           parent: :foi_case,
-          class: Case::OverturnedICO::FOI do
+          class: "Case::OverturnedICO::FOI" do
     transient do
       creation_time { 4.business_days.ago }
       identifier    { "unassigned overturned ico foi" }
     end
 
     sequence(:message)  { |n| "#{identifier} message #{n}" }
-    current_state       { 'unassigned' }
+    current_state       { "unassigned" }
     original_ico_appeal { create(:closed_ico_foi_case, :overturned_by_ico) }
     original_case       { original_ico_appeal.original_case }
-    received_date       { Date.yesterday }
+    received_date       { Time.zone.yesterday }
     internal_deadline   { 10.days.from_now }
     external_deadline   { 20.days.from_now }
     escalation_deadline { 3.days.from_now }
     ico_officer_name    { original_ico_appeal.ico_officer_name }
-    reply_method        { original_case.sent_by_email? ? :send_by_email : :send_by_post  }
+    reply_method        { original_case.sent_by_email? ? :send_by_email : :send_by_post }
     email               { original_case.email }
     postal_address      { original_case.postal_address }
   end
@@ -29,8 +28,8 @@ FactoryBot.define do
     transient do
       identifier      { "awaiting responder overturned ico foi case" }
 
-      _state_taken_on_by_press_or_private { 'awaiting_responder' }
-      _state_taken_on_by_disclosure       { 'awaiting_responder' }
+      _state_taken_on_by_press_or_private { "awaiting_responder" }
+      _state_taken_on_by_disclosure       { "awaiting_responder" }
     end
 
     created_at    { creation_time }
@@ -41,19 +40,17 @@ FactoryBot.define do
     _taken_on_by_disclosure
     _taken_on_by_press_or_private_in_current_state
 
-    after(:create) do |kase|
-      kase.reload
-    end
+    after(:create, &:reload)
   end
 
   factory :accepted_ot_ico_foi,
           aliases: [:ot_ico_foi_noff_draft],
           parent: :awaiting_responder_ot_ico_foi do
     transient do
-      identifier      { "responder accepted overturned ico foi case" }
+      identifier { "responder accepted overturned ico foi case" }
 
-      _state_taken_on_by_press_or_private { 'drafting' }
-      _state_taken_on_by_disclosure       { 'drafting' }
+      _state_taken_on_by_press_or_private { "drafting" }
+      _state_taken_on_by_disclosure       { "drafting" }
     end
 
     _transition_to_accepted
@@ -65,9 +62,11 @@ FactoryBot.define do
           parent: :accepted_ot_ico_foi do
     transient do
       identifier { "overturned ico foi case with response" }
-      responses  { [build(:correspondence_response,
-                          type: 'response',
-                          user_id: responder.id)] }
+      responses  do
+        [build(:correspondence_response,
+               type: "response",
+               user_id: responder.id)]
+      end
     end
 
     after(:create) do |kase, evaluator|
@@ -85,7 +84,7 @@ FactoryBot.define do
   factory :pending_dacu_clearance_ot_ico_foi,
           parent: :accepted_ot_ico_foi do
     transient do
-      identifier { 'pending dacu clearance overturned ico foi case'}
+      identifier { "pending dacu clearance overturned ico foi case" }
     end
 
     flagged_accepted
@@ -97,16 +96,14 @@ FactoryBot.define do
           aliases: [:approved_disclosure_ot_ico_foi],
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
-      identifier { 'approved by disclosure overturned ico foi case'}
-# date draft compliant is passed in in a transient blocked so it can is be
-# changed in the tests. It is added to the the case in the after create block
-# to match the order the code updates the case.
+      identifier { "approved by disclosure overturned ico foi case" }
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
-
     after(:create) do |kase, evaluator|
-
       kase.approver_assignments.for_team(evaluator.approving_team)
         .first.update!(approved: true)
 
@@ -116,7 +113,7 @@ FactoryBot.define do
              acting_team: evaluator.approving_team
 
       kase.assignments.approving.for_team(evaluator.approving_team)
-        .update(approved: true)
+        .update(approved: true) # rubocop:disable Rails/SaveBang
 
       kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
 
@@ -127,7 +124,7 @@ FactoryBot.define do
   factory :pending_press_clearance_ot_ico_foi,
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
-      identifier      { 'pending press clearance overturned ico foi case'}
+      identifier { "pending press clearance overturned ico foi case" }
     end
 
     taken_on_by_press
@@ -138,7 +135,7 @@ FactoryBot.define do
   factory :pending_private_clearance_ot_ico_foi,
           parent: :pending_press_clearance_ot_ico_foi do
     transient do
-      identifier { 'pending private clearance overturned ico foi case'}
+      identifier { "pending private clearance overturned ico foi case" }
     end
 
     _transition_to_pending_private_clearance
@@ -148,15 +145,14 @@ FactoryBot.define do
           aliases: [:approved_press_private_ot_ico_foi],
           parent: :pending_private_clearance_ot_ico_foi do
     transient do
-      identifier { 'approved press private overturned ico foi case'}
-# date draft compliant is passed in in a transient blocked so it can is be
-# changed in the tests. It is added to the the case in the after create block
-# to match the order the code updates the case.
+      identifier { "approved press private overturned ico foi case" }
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
     after(:create) do |kase, evaluator|
-
       kase.approver_assignments.for_team(evaluator.private_office)
         .first.update!(approved: true)
 
@@ -166,7 +162,7 @@ FactoryBot.define do
              acting_team: evaluator.private_office
 
       kase.assignments.approving.for_team(evaluator.private_office)
-        .update(approved: true)
+        .update(approved: true) # rubocop:disable Rails/SaveBang
 
       kase.reload
     end
@@ -179,7 +175,7 @@ FactoryBot.define do
       responder { find_or_create :foi_responder }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
@@ -197,7 +193,7 @@ FactoryBot.define do
       identifier { "disclosure approved, responded overturned ico foi case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
@@ -215,7 +211,7 @@ FactoryBot.define do
       identifier { "press and private approved, responded overturned ico foi case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
@@ -227,7 +223,6 @@ FactoryBot.define do
   end
 
   factory :closed_ot_ico_foi, parent: :responded_ot_ico_foi do
-
     transient do
       identifier { "closed overturned ico foi case" }
     end
@@ -250,7 +245,6 @@ FactoryBot.define do
   factory :closed_trigger_ot_ico_foi,
           aliases: [:closed_disclosure_approved_ot_ico_foi],
           parent: :responded_trigger_ot_ico_foi do
-
     transient do
       identifier { "closed, approved trigger overturned ico foi case" }
     end
@@ -272,7 +266,6 @@ FactoryBot.define do
   factory :closed_full_approval_ot_ico_foi,
           aliases: [:closed_press_private_ot_ico_foi],
           parent: :responded_full_approval_ot_ico_foi do
-
     transient do
       identifier { "closed, approved full-approval overturned ico foi case" }
     end

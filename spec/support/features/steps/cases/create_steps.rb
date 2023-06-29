@@ -1,4 +1,4 @@
-def create_foi_case_step(type: 'standard',
+def create_foi_case_step(type: "standard",
                          delivery_method: :sent_by_email,
                          uploaded_request_files: [],
                          flag_for_disclosure: false)
@@ -9,26 +9,26 @@ def create_foi_case_step(type: 'standard',
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('FOI').click
+  cases_new_page.create_link_for_correspondence("FOI").click
   expect(cases_new_foi_page).to be_displayed
 
   # cases_new_foi_page.fill_in_case_type(type)
   cases_new_foi_page.fill_in_case_details(
-    type: type,
-    delivery_method: delivery_method,
-    uploaded_request_files: uploaded_request_files
+    type:,
+    delivery_method:,
+    uploaded_request_files:,
   )
   cases_new_foi_page.choose_flag_for_disclosure_specialists(
-    flag_for_disclosure ? 'yes' : 'no'
+    flag_for_disclosure ? "yes" : "no",
   )
-  click_button 'Create case'
+  click_button "Create case"
 
   # Return the case we created using the params of the current  path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
   Case::Base.find(kase_id)
 end
 
-def create_foi_case_auto_flagged_step(type: 'standard',
+def create_foi_case_auto_flagged_step(type: "standard",
                                       delivery_method: :sent_by_email,
                                       uploaded_request_files: [])
 
@@ -38,34 +38,33 @@ def create_foi_case_auto_flagged_step(type: 'standard',
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('FOI').click
+  cases_new_page.create_link_for_correspondence("FOI").click
   expect(cases_new_foi_page).to be_displayed
 
   2.times do
     cases_new_foi_page.fill_in_case_details(
-      type: 'standard',
-      delivery_method: delivery_method,
-      uploaded_request_files: uploaded_request_files,
+      type: "standard",
+      delivery_method:,
+      uploaded_request_files:,
     )
     expect(cases_new_foi_page).to have_content("Flag for disclosure specialists")
 
     cases_new_foi_page.fill_in_case_details(
-      type: type,
-      delivery_method: delivery_method,
-      uploaded_request_files: uploaded_request_files,
-      flag_for_disclosure_specialists: false
+      type:,
+      delivery_method:,
+      uploaded_request_files:,
+      flag_for_disclosure_specialists: false,
     )
 
-    expect(cases_new_foi_page).to_not have_content("Flag for disclosure specialists")
+    expect(cases_new_foi_page).not_to have_content("Flag for disclosure specialists")
   end
 
-  click_button 'Create case'
+  click_button "Create case"
 
   # Return the case we created using the params of the current  path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
   Case::Base.find(kase_id)
 end
-
 
 def create_ico_case_step(original_case:, related_cases: [], uploaded_request_files: [])
   # Assume we are on a case listing page
@@ -74,16 +73,16 @@ def create_ico_case_step(original_case:, related_cases: [], uploaded_request_fil
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('ICO').click
+  cases_new_page.create_link_for_correspondence("ICO").click
   expect(cases_new_ico_page).to be_displayed
 
   cases_new_ico_page.form.fill_in_case_details(
-    uploaded_request_files: uploaded_request_files
+    uploaded_request_files:,
   )
   cases_new_ico_page.form.add_original_case(original_case)
   cases_new_ico_page.form.add_related_cases(related_cases)
 
-  click_button 'Create case'
+  click_button "Create case"
 
   expect(assignments_new_page).to be_displayed
 
@@ -92,7 +91,7 @@ def create_ico_case_step(original_case:, related_cases: [], uploaded_request_fil
   Case::Base.find(kase_id)
 end
 
-def create_sar_case_step(params={})
+def create_sar_case_step(params = {})
   flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
 
   # Assume we are on a case listing page
@@ -101,15 +100,15 @@ def create_sar_case_step(params={})
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('SAR - Subject access request').click
+  cases_new_page.create_link_for_correspondence("SAR - Subject access request").click
   expect(cases_new_sar_page).to be_displayed
 
   cases_new_sar_page.fill_in_case_details(params)
   scroll_to cases_new_sar_page.choose_flag_for_disclosure_specialists
   cases_new_sar_page.choose_flag_for_disclosure_specialists(
-    flag_for_disclosure ? 'yes' : 'no'
+    flag_for_disclosure ? "yes" : "no",
   )
-  click_button 'Create case'
+  click_button "Create case"
 
   # Return the case we created using the params of the current path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
@@ -125,7 +124,7 @@ def create_offender_sar_case_step(params = {})
   cases_page.new_case_button.click
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('OFFENDER').click
+  cases_new_page.create_link_for_correspondence("OFFENDER").click
   expect(cases_new_offender_sar_subject_details_page).to be_displayed
 
   cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
@@ -153,8 +152,7 @@ def create_offender_sar_case_step(params = {})
   expect(open_cases_page).to have_content "Sabrina Adams"
 end
 
-
-def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodLength
+def create_overturned_ico_case_step(params = {})
   ico_case = params.delete(:ico_case)
   flagged = params.delete(:flag_for_disclosure)
   case_type = params[:case_type].downcase
@@ -165,11 +163,11 @@ def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodL
   # button when available
   cases_show_page.actions.create_overturned.click
 
-  if case_type.upcase == 'SAR'
-    new_overturned_ico_page = cases_new_sar_overturned_ico_page
-  else
-    new_overturned_ico_page = cases_new_foi_overturned_ico_page
-  end
+  new_overturned_ico_page = if case_type.upcase == "SAR"
+                              cases_new_sar_overturned_ico_page
+                            else
+                              cases_new_foi_overturned_ico_page
+                            end
 
   expect(new_overturned_ico_page).to be_displayed(id: ico_case.id)
   expect(new_overturned_ico_page).to have_form
@@ -182,19 +180,19 @@ def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodL
   form.final_deadline.month.set(final_deadline.month)
   form.final_deadline.year.set(final_deadline.year)
 
-  expect(form.has_checked_field?('By email', visible: false)).to eq true
+  expect(form.has_checked_field?("By email", visible: false)).to eq true
   expect(form.has_field?(
-    "Name of the ICO information officer who's handling this case",
-    with: ico_case.ico_officer_name,
-    type: :text
-  )).to eq true
+           "Name of the ICO information officer who's handling this case",
+           with: ico_case.ico_officer_name,
+           type: :text,
+         )).to eq true
 
   if form.has_flag_for_disclosure_specialists?
-    form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no',
+    form.choose_flag_for_disclosure_specialists(flagged ? "yes" : "no",
                                                 case_type: case_type.downcase)
   end
 
-  click_button 'Create case'
+  click_button "Create case"
 
   # Return the case we created using the params of the current  path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]

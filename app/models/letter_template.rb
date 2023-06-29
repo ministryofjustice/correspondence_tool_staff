@@ -3,16 +3,16 @@ class LetterTemplate < ApplicationRecord
   validates :abbreviation, uniqueness: true
 
   enum template_type: {
-    dispatch: 'dispatch',
-    acknowledgement: 'acknowledgement',
+    dispatch: "dispatch",
+    acknowledgement: "acknowledgement",
   }
 
   def self.type_name(type)
-    LetterTemplate.template_types[type] || 'unknown'
+    LetterTemplate.template_types[type] || "unknown"
   end
 
   def render(values, letter, field)
-    template = ERB.new(self.send(field))
+    template = ERB.new(send(field))
     template.result(binding)
   end
 end

@@ -1,5 +1,4 @@
 class UserCreationService
-
   attr_reader :result, :user
 
   def initialize(team:, params:)
@@ -13,7 +12,7 @@ class UserCreationService
     @user = User.where(email: @params[:email].downcase).singular_or_nil
     if @user
       if @user.team_roles.map(&:team_id).include?(@team.id)
-        @user.errors.add(:base, 'This user is already in the team')
+        @user.errors.add(:base, "This user is already in the team")
       else
         update_existing_user
       end
@@ -22,7 +21,7 @@ class UserCreationService
     end
   end
 
-  private
+private
 
   def update_existing_user
     if full_names_match
@@ -39,7 +38,6 @@ class UserCreationService
       @user = User.new(@params)
       @user.errors.add(:base, error_message)
     end
-
   end
 
   def create_new_user
@@ -53,7 +51,7 @@ class UserCreationService
   end
 
   def full_names_match
-    @user.full_name.strip().downcase == @params[:full_name].strip().downcase
+    @user.full_name.strip.downcase == @params[:full_name].strip.downcase
   end
 
   def add_user_to_teams

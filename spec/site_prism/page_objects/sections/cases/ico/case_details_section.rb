@@ -3,102 +3,101 @@ module PageObjects
     module Cases
       module ICO
         class CaseDetailsSection < SitePrism::Section
+          element :section_heading, ".case-details .request--heading"
 
-          element :section_heading, '.case-details .request--heading'
-
-          section :case_type, 'tr.case-type' do
-            element :ico_trigger, 'td .ico-trigger'
-            element :data, 'td'
+          section :case_type, "tr.case-type" do
+            element :ico_trigger, "td .ico-trigger"
+            element :data, "td"
           end
 
-          section :ico_reference, 'tr.ico-reference' do
-            element :data, 'td'
+          section :ico_reference, "tr.ico-reference" do
+            element :data, "td"
           end
 
-          section :ico_officer_name, 'tr.ico-officer-name' do
-            element :data, 'td'
+          section :ico_officer_name, "tr.ico-officer-name" do
+            element :data, "td"
           end
 
-          section :date_received, 'tr.date-received' do
-            element :data, 'td'
+          section :date_received, "tr.date-received" do
+            element :data, "td"
           end
 
-          section :internal_deadline, 'tr.case-internal-deadline' do
-            element :data, 'td:nth-child(2)'
+          section :internal_deadline, "tr.case-internal-deadline" do
+            element :data, "td:nth-child(2)"
           end
 
-          section :external_deadline, 'tr.case-external-deadline' do
-            element :data, 'td:nth-child(2)'
+          section :external_deadline, "tr.case-external-deadline" do
+            element :data, "td:nth-child(2)"
           end
 
-          section :original_internal_deadline, 'tr.case-original-internal-deadline' do
-            element :data, 'td:nth-child(2)'
+          section :original_internal_deadline, "tr.case-original-internal-deadline" do
+            element :data, "td:nth-child(2)"
           end
 
-          section :original_external_deadline, 'tr.case-original-external-deadline' do
-            element :data, 'td:nth-child(2)'
+          section :original_external_deadline, "tr.case-original-external-deadline" do
+            element :data, "td:nth-child(2)"
           end
 
-          section :original_date_responded, 'tr.case-original-date-responded' do
-            element :data, 'td:nth-child(2)'
+          section :original_date_responded, "tr.case-original-date-responded" do
+            element :data, "td:nth-child(2)"
           end
 
-          section :name, 'tr.requester-name' do
-            element :data, 'td'
+          section :name, "tr.requester-name" do
+            element :data, "td"
           end
 
-          section :email, 'tr.requester-email' do
-            element :data, 'td'
+          section :email, "tr.requester-email" do
+            element :data, "td"
           end
 
-          section :address, 'tr.requester-address' do
-            element :data, 'td'
+          section :address, "tr.requester-address" do
+            element :data, "td"
           end
 
-          section :requester_type, 'tr.requester-type' do
-            element :data, 'td'
+          section :requester_type, "tr.requester-type" do
+            element :data, "td"
           end
 
-          section :delivery_method, 'tr.delivery-method' do
-            element :data, 'td'
+          section :delivery_method, "tr.delivery-method" do
+            element :data, "td"
           end
 
-          section :responders_details, '.responder-details' do
-            section :team, '.team' do
-              element :data, 'td:nth-child(2)'
+          section :responders_details, ".responder-details" do
+            section :team, ".team" do
+              element :data, "td:nth-child(2)"
             end
 
-            section :name, '.responder-name' do
-              element :data, 'td:nth-child(2)'
+            section :name, ".responder-name" do
+              element :data, "td:nth-child(2)"
             end
           end
 
-          section :response_details, '.response-details' do
-            section :date_responded, '.date-responded' do
-              element :data, 'td'
+          section :response_details, ".response-details" do
+            section :date_responded, ".date-responded" do
+              element :data, "td"
             end
 
-            section :timeliness, '.timeliness' do
-              element :data, 'td'
+            section :timeliness, ".timeliness" do
+              element :data, "td"
             end
 
-            section :time_taken, '.time-taken' do
-              element :data, 'td:nth-child(2)'
+            section :time_taken, ".time-taken" do
+              element :data, "td:nth-child(2)"
             end
 
-            section :info_held, '.info-held' do
-              element :data, 'td'
+            section :info_held, ".info-held" do
+              element :data, "td"
             end
-            section :outcome, '.outcome' do
-              element :data, 'td'
-            end
-
-            section :refusal_reason, '.refusal-reason' do
-              element :data, 'td'
+            section :outcome, ".outcome" do
+              element :data, "td"
             end
 
-            section :exemptions, '.exemptions' do
-              elements :list, 'td ul li'
+            section :refusal_reason, ".refusal-reason" do
+              element :data, "td"
+            end
+
+            section :exemptions, ".exemptions" do
+              elements :list, "td ul li"
             end
           end
 

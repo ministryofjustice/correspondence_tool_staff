@@ -5,7 +5,6 @@ def disable_feature(feature_name)
   allow(FeatureSet).to receive(feature_name).and_return(feature)
 end
 
-
 def enable_feature(feature_name)
   feature = instance_double(FeatureSet::EnabledFeature,
                             enabled?: true,

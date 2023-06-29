@@ -1,9 +1,8 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-
   config.after_initialize do
-    Bullet.enable        = true
+    Bullet.enable = true
     # Just looking for N+1 queries at the moment - so turn off counter cache and unused eager loads
     Bullet.counter_cache_enable        = false
     Bullet.unused_eager_loading_enable = false
@@ -12,58 +11,62 @@ Rails.application.configure do
     # These are hard to remove as they are in the admin controller who doesn't know
     # how to eager load the original case just for ICO cases
     [Case::OverturnedICO::FOI, Case::ICO::FOI, Case::ICO::SAR, Case::OverturnedICO::SAR, Case::SAR::OffenderComplaint].each do |klass|
-      Bullet.add_safelist :type => :n_plus_one_query,
-                           :class_name => klass.name,
-                           :association => :original_case
-      Bullet.add_safelist :type => :n_plus_one_query,
-                           :class_name => klass.name,
-                           :association => :original_case_link
+      Bullet.add_safelist type: :n_plus_one_query,
+                          class_name: klass.name,
+                          association: :original_case
+      Bullet.add_safelist type: :n_plus_one_query,
+                          class_name: klass.name,
+                          association: :original_case_link
     end
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'LinkedCase',
-                         :association => :linked_case
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'LinkedCase',
-                         :association => :case
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'Assignment',
-                         :association => :case
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "LinkedCase",
+                        association: :linked_case
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "LinkedCase",
+                        association: :case
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "Assignment",
+                        association: :case
 
     # searches are also a challenge...
-    [:retention_schedule, :responder, :message_transitions, :managing_assignment, :responder_assignment, :responding_team, :approver_assignments, :managing_team].each do |assoc|
-      [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
-       Case::ICO::FOI, Case::FOI::Standard, Case::SAR::Standard,
-       Case::SAR::Offender, Case::SAR::OffenderComplaint].each do |klass|
-        Bullet.add_safelist :type => :n_plus_one_query,
-                             :class_name => klass.name,
-                             :association => assoc
+    %i[retention_schedule responder message_transitions managing_assignment responder_assignment responding_team approver_assignments managing_team].each do |assoc|
+      [Case::FOI::TimelinessReview,
+       Case::FOI::ComplianceReview,
+       Case::ICO::FOI,
+       Case::FOI::Standard,
+       Case::SAR::Standard,
+       Case::SAR::Offender,
+       Case::SAR::OffenderComplaint].each do |klass|
+        Bullet.add_safelist type: :n_plus_one_query,
+                            class_name: klass.name,
+                            association: assoc
       end
     end
 
     # These 2 are a consequence of app/models/user.rb:176
     # users are related to teams (apparently), but only BusinessUnits have correspondence_types
     # so its hard to eager load without changing the code significantly
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'BusinessUnit',
-                         :association => :correspondence_type_roles
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'BusinessUnit',
-                         :association => :correspondence_types
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'BusinessGroup',
-                         :association => :moved_to_unit
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'Directorate',
-                         :association => :moved_to_unit
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'BusinessUnit',
-                         :association => :moved_to_unit
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "BusinessUnit",
+                        association: :correspondence_type_roles
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "BusinessUnit",
+                        association: :correspondence_types
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "BusinessGroup",
+                        association: :moved_to_unit
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "Directorate",
+                        association: :moved_to_unit
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "BusinessUnit",
+                        association: :moved_to_unit
 
-    Bullet.add_safelist :type => :n_plus_one_query,
-                         :class_name => 'TeamsUsersRole',
-                         :association => :team
+    Bullet.add_safelist type: :n_plus_one_query,
+                        class_name: "TeamsUsersRole",
+                        association: :team
     # Enable this to track down most of the N+1 query issues
-    Bullet.raise         = true # raise an error if n+1 query occurs
+    Bullet.raise = true # raise an error if n+1 query occurs
   end
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -82,7 +85,7 @@ Rails.application.configure do
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}",
   }
 
   # Show full error reports and disable caching.

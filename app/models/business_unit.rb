@@ -15,31 +15,30 @@
 #
 
 class BusinessUnit < Team
-
-  VALID_ROLES = %w{ responder approver manager team_admin}.freeze
+  VALID_ROLES = %w[responder approver manager team_admin].freeze
   validates :parent_id, presence: true
-  validates_presence_of :correspondence_type_roles
+  validates :correspondence_type_roles, presence: true
 
-  belongs_to :directorate, foreign_key: 'parent_id'
+  belongs_to :directorate, foreign_key: "parent_id"
 
   has_one :business_group, through: :directorate
 
   has_many :manager_user_roles,
            -> { manager_roles },
-           class_name: 'TeamsUsersRole',
+           class_name: "TeamsUsersRole",
            foreign_key: :team_id
   has_many :responder_user_roles,
            -> { responder_roles },
-           class_name: 'TeamsUsersRole',
+           class_name: "TeamsUsersRole",
            foreign_key: :team_id
   has_many :approver_user_roles,
            -> { approver_roles },
-           class_name: 'TeamsUsersRole',
+           class_name: "TeamsUsersRole",
            foreign_key: :team_id
 
   has_many :team_admin_user_roles,
            -> { team_admin_roles },
-           class_name: 'TeamsUsersRole',
+           class_name: "TeamsUsersRole",
            foreign_key: :team_id
 
   has_many :managers, through: :manager_user_roles, source: :user
@@ -49,7 +48,7 @@ class BusinessUnit < Team
   has_many :correspondence_type_roles,
            -> { distinct },
            foreign_key: :team_id,
-           class_name: 'TeamCorrespondenceTypeRole'
+           class_name: "TeamCorrespondenceTypeRole"
 
   has_many :correspondence_types,
            -> { distinct },
@@ -61,12 +60,12 @@ class BusinessUnit < Team
   has_many :responding_assignments,
            -> { responding },
            foreign_key: :team_id,
-           class_name: 'Assignment'
+           class_name: "Assignment"
 
   has_many :pending_accepted_assignments,
-           -> { pending_accepted},
+           -> { pending_accepted },
            foreign_key: :team_id,
-           class_name: 'Assignment'
+           class_name: "Assignment"
 
   has_many :cases, through: :assignments
 
@@ -77,18 +76,18 @@ class BusinessUnit < Team
   has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
   has_many :assigned_open_cases, -> { in_open_or_responded_state }, through: :pending_accepted_assignments, source: :case
 
-  scope :managing, -> { where(role: 'manager') }
-  scope :approving, -> { where(role: 'approver') }
-  scope :responding, -> { where(role: 'responder') }
+  scope :managing, -> { where(role: "manager") }
+  scope :approving, -> { where(role: "approver") }
+  scope :responding, -> { where(role: "responder") }
   scope :active, -> { where(deleted_at: nil) }
 
   after_save :update_search_index
 
   def self.responding_for_correspondence_type(correspondence_type)
     joins(:correspondence_type_roles).where(
-      'team_correspondence_type_roles.correspondence_type_id = ? and team_correspondence_type_roles.respond = ?',
+      "team_correspondence_type_roles.correspondence_type_id = ? and team_correspondence_type_roles.respond = ?",
       correspondence_type.id,
-      true
+      true,
     )
   end
 
@@ -159,7 +158,7 @@ class BusinessUnit < Team
   def previous_teams
     teams = []
     previous_teams = previous_incarnations(id)
-    while previous_teams.count() > 0 do
+    while previous_teams.count.positive?
       previous_teams.each do |previous_team|
         teams << previous_team
         # Add all the immediately previous incarnations of the team, remove the current
@@ -173,24 +172,21 @@ class BusinessUnit < Team
     TeamsUsersRole.where(team_id: previous_team_ids)
   end
 
-  private
+private
 
   def previous_incarnations(id)
     Team.where(moved_to_unit_id: id)
   end
 
   def update_search_index
-    if saved_changes.include?('name')
-      SearchIndexBuNameUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
+    if saved_changes.include?("name")
+      SearchIndexBuNameUpdaterJob.set(wait: 10.seconds).perform_later(id)
     end
   end
 
   def deletion_validation
-    if deleted_at.present?
-      if open_cases.any?
-        errors.add(:base, "Unable to deactivate: this business unit has open cases")
-      end
+    if deleted_at.present? && open_cases.any?
+      errors.add(:base, "Unable to deactivate: this business unit has open cases")
     end
   end
-
 end

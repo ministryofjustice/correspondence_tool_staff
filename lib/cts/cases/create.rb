@@ -1,6 +1,4 @@
-require 'cts'
-
-# rubocop:disable Metrics/ClassLength
+require "cts"
 
 module CTS::Cases
   # @todo Used by Admin section to generate test data.
@@ -20,7 +18,7 @@ module CTS::Cases
     end
 
     def call(target_state, kase = nil)
-      CTS::check_environment unless options[:force]
+      CTS.check_environment unless options[:force]
       parse_options(options)
 
       journey = find_case_journey_for_state target_state.to_sym
@@ -43,7 +41,7 @@ module CTS::Cases
 
     def new_case
       case @klass.to_s
-      when 'Case::SAR::Standard' then new_sar_case
+      when "Case::SAR::Standard" then new_sar_case
       when /^Case::ICO/ then new_ico_case
       when /^Case::FOI/ then new_foi_case
       when /^Case::OverturnedICO/ then new_overturned_case
@@ -57,17 +55,17 @@ module CTS::Cases
           Faker::Lorem.paragraph(
             sentence_count: 10,
             supplemental: true,
-            random_sentences_to_add: 10
-          )
+            random_sentences_to_add: 10,
+          ),
         ),
-        received_date:        get_ico_received_date,
-        external_deadline:    get_ico_external_deadline,
-        internal_deadline:    get_ico_internal_deadline,
-        created_at:           get_created_at_date,
-        dirty:                options.fetch(:dirty, true),
-        ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
+        received_date: get_ico_received_date,
+        external_deadline: get_ico_external_deadline,
+        internal_deadline: get_ico_internal_deadline,
+        created_at: get_created_at_date,
+        dirty: options.fetch(:dirty, true),
+        ico_officer_name: options.fetch(:ico_officer_name, Faker::Name.name),
         ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
-        creator:              options[:creator]
+        creator: options[:creator],
       )
     end
 
@@ -75,24 +73,24 @@ module CTS::Cases
       name = options.fetch(:name, Faker::Name.name)
 
       @klass.new(
-        name:            name,
-        email:           options.fetch(:email, Faker::Internet.email(name: name)),
-        delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
-        subject:         options.fetch(:subject, Faker::Company.catch_phrase),
+        name:,
+        email: options.fetch(:email, Faker::Internet.email(name:)),
+        delivery_method: options.fetch(:delivery_method, "sent_by_email"),
+        subject: options.fetch(:subject, Faker::Company.catch_phrase),
         message: options.fetch(
           :message,
           Faker::Lorem.paragraph(
             sentence_count: 10,
             supplemental: true,
-            random_sentences_to_add: 10
-          )
+            random_sentences_to_add: 10,
+          ),
         ),
-        requester_type:  options.fetch(:requester_type,
-                                       Case::FOI::Standard.requester_types.keys.sample),
-        received_date:   get_foi_received_date,
-        created_at:      get_created_at_date,
-        dirty:           options.fetch(:dirty, true),
-        creator:         options[:creator]
+        requester_type: options.fetch(:requester_type,
+                                      Case::FOI::Standard.requester_types.keys.sample),
+        received_date: get_foi_received_date,
+        created_at: get_created_at_date,
+        dirty: options.fetch(:dirty, true),
+        creator: options[:creator],
       )
     end
 
@@ -100,42 +98,42 @@ module CTS::Cases
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
       @klass.new(
         subject_full_name: options.fetch(:subject_full_name, Faker::Name.name),
-        email:             options.fetch(:email, Faker::Internet.email(name: subject_full_name)),
-        subject:           options.fetch(:subject, Faker::Company.catch_phrase),
-        third_party:       options.fetch(:third_party, false),
+        email: options.fetch(:email, Faker::Internet.email(name: subject_full_name)),
+        subject: options.fetch(:subject, Faker::Company.catch_phrase),
+        third_party: options.fetch(:third_party, false),
         message: options.fetch(
           :message,
           Faker::Lorem.paragraph(
             sentence_count: 10,
             supplemental: true,
-            random_sentences_to_add: 10
-          )
+            random_sentences_to_add: 10,
+          ),
         ),
-        subject_type:      options.fetch(:subject_type,
-                                         Case::SAR::Standard.subject_types.keys.sample),
-        received_date:     get_sar_received_date,
-        created_at:        get_created_at_date,
-        reply_method:      options.fetch(:reply_method, 'send_by_email'),
-        request_method:    options.fetch(:request_method, 'post'),
-        dirty:             options.fetch(:dirty, true),
-        creator:           options[:creator]
+        subject_type: options.fetch(:subject_type,
+                                    Case::SAR::Standard.subject_types.keys.sample),
+        received_date: get_sar_received_date,
+        created_at: get_created_at_date,
+        reply_method: options.fetch(:reply_method, "send_by_email"),
+        request_method: options.fetch(:request_method, "post"),
+        dirty: options.fetch(:dirty, true),
+        creator: options[:creator],
       )
     end
 
     def new_overturned_case
       @klass.new(
-        created_at:        get_created_at_date,
-        dirty:             options.fetch(:dirty, true),
-        email:             options.fetch(:email, Faker::Internet.email),
+        created_at: get_created_at_date,
+        dirty: options.fetch(:dirty, true),
+        email: options.fetch(:email, Faker::Internet.email),
         external_deadline: get_overturned_external_deadline,
         internal_deadline: get_overturned_internal_deadline,
-        received_date:     get_overturned_received_date,
-        reply_method:      options.fetch(:reply_method, 'send_by_email'),
-        creator:           options[:creator]
+        received_date: get_overturned_received_date,
+        reply_method: options.fetch(:reply_method, "send_by_email"),
+        creator: options[:creator],
       )
     end
 
-    private
+  private
 
     def get_foi_received_date
       options.fetch(:received_date) do
@@ -187,7 +185,7 @@ module CTS::Cases
 
     def get_created_at_date
       if options[:created_at].present?
-        0.business_days.after(DateTime.parse(options[:created_at]))
+        0.business_days.after(Time.zone.parse(options[:created_at]))
       else
         0.business_days.after(4.business_days.ago)
       end
@@ -201,22 +199,20 @@ module CTS::Cases
 
       @flag =
         if options.key?(:flag_for_disclosure)
-          options[:flag_for_disclosure] ? 'disclosure' : nil
+          options[:flag_for_disclosure] ? "disclosure" : nil
         elsif options.key?(:flag_for_team)
           options[:flag_for_team]
-        else
-          nil
         end
 
       if options[:received_date]
         @received_date = options[:received_date]
-      elsif @created_at.present? && (DateTime.parse(@created_at) < DateTime.now)
+      elsif @created_at.present? && (Time.zone.parse(@created_at) < Time.zone.now)
         @received_date = @created_at
       end
     end
 
     def process_target_state_param(state)
-      if state == 'all'
+      if state == "all"
         @target_states += get_journey_for_flagged_state(@flag)
       elsif find_case_journey_for_state(state.to_sym).any?
         @target_states << state
@@ -235,38 +231,36 @@ module CTS::Cases
     def flag_for_dacu_disclosure(*cases)
       cases.each do |kase|
         cleared_case = CaseFlagForClearanceService.new(
-          user: CTS::dacu_manager,
-          kase: kase,
+          user: CTS.dacu_manager,
+          kase:,
           team: DefaultTeamService.new(kase).approving_team,
         )
 
         cleared_case.call
 
-        unless cleared_case.result == :ok
-          raise "Could not flag case for clearance by DACU Disclosure, " \
-                "case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, " \
-                "result: #{cleared_case.result}"
-        end
+        next if cleared_case.result == :ok
+
+        raise "Could not flag case for clearance by DACU Disclosure, " \
+              "case id: #{kase.id}, user id: #{CTS.dacu_manager.id}, " \
+              "result: #{cleared_case.result}"
       end
     end
 
     def run_transitions(kase, target_state, journey)
       journey.each do |state|
-        begin
-          if @dry_run
-            logger.info "  transition to '#{state}'"
-          else
-            __send__("transition_to_#{state}", kase)
-            kase.reload
-          end
-        rescue => exx
-          logger.error "Error occured on case #{target_state}: #{exx.message}"
-          logger.error ""
-          logger.error "Case unsuccessfully transitioned to #{state}:"
-          logger.error "---------------------------------------"
-          logger.error kase.ai
-          raise
+        if @dry_run
+          logger.info "  transition to '#{state}'"
+        else
+          __send__("transition_to_#{state}", kase)
+          kase.reload
         end
+      rescue StandardError => e
+        logger.error "Error occured on case #{target_state}: #{e.message}"
+        logger.error ""
+        logger.error "Case unsuccessfully transitioned to #{state}:"
+        logger.error "---------------------------------------"
+        logger.error kase.ai
+        raise
       end
     end
 
@@ -275,9 +269,9 @@ module CTS::Cases
     def transition_to_awaiting_responder(kase)
       CaseAssignResponderService.new(
         team: responding_team,
-        kase: kase,
-        role: 'responding',
-        user: CTS::dacu_manager
+        kase:,
+        role: "responding",
+        user: CTS.dacu_manager,
       ).call
     end
 
@@ -288,13 +282,13 @@ module CTS::Cases
     def transition_to_accepted_by_dacu_disclosure(kase)
       assignment = kase
         .approver_assignments
-        .find_by(team: CTS::dacu_disclosure_team)
+        .find_by(team: CTS.dacu_disclosure_team)
 
-      user = CTS::dacu_disclosure_approver
+      user = CTS.dacu_disclosure_approver
 
       service = CaseAcceptApproverAssignmentService.new(
-        assignment: assignment,
-        user: user
+        assignment:,
+        user:,
       )
 
       unless service.call
@@ -307,35 +301,35 @@ module CTS::Cases
     def transition_to_taken_on_by_press_office(kase)
       call_case_flag_for_clearance_service(
         kase,
-        CTS::press_officer,
-        CTS::press_office_team
+        CTS.press_officer,
+        CTS.press_office_team,
       )
     end
 
     def transition_to_taken_on_by_private_office(kase)
-      call_case_flag_for_clearance_service(kase, CTS::private_officer, CTS::private_office_team)
+      call_case_flag_for_clearance_service(kase, CTS.private_officer, CTS.private_office_team)
     end
 
     def transition_to_awaiting_dispatch(kase)
-      if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
-        call_case_approval_service(CTS::dacu_disclosure_approver, kase)
+      if kase.approver_assignments.for_user(CTS.dacu_disclosure_approver).any?
+        call_case_approval_service(CTS.dacu_disclosure_approver, kase)
       else
         ResponseUploaderService.seed!(
-          kase: kase,
+          kase:,
           current_user: responder,
-          filepath: 'spec/fixtures/eon.pdf',
+          filepath: "spec/fixtures/eon.pdf",
         )
 
         kase.state_machine.add_responses!(
           acting_user: responder,
           acting_team: kase.responding_team,
-          filenames: kase.attachments
+          filenames: kase.attachments,
         )
       end
     end
 
     def transition_to_responded(kase)
-      kase.update(date_responded: 5.business_days.after(kase.received_date))
+      kase.update!(date_responded: 5.business_days.after(kase.received_date))
 
       responder =
         if kase.ico?
@@ -355,42 +349,42 @@ module CTS::Cases
         kase.state_machine.progress_for_clearance!(
           acting_user: responder,
           acting_team: kase.responding_team,
-          target_team: dts.approving_team
+          target_team: dts.approving_team,
         )
       else
         ResponseUploaderService.seed!(
-          kase: kase,
+          kase:,
           current_user: responder,
-          filepath: 'spec/fixtures/eon.pdf',
+          filepath: "spec/fixtures/eon.pdf",
         )
 
         kase.state_machine.add_responses!(
           acting_user: responder,
-          acting_team:responding_team,
-          filenames: kase.attachments
+          acting_team: responding_team,
+          filenames: kase.attachments,
         )
       end
     end
 
     def transition_to_pending_press_office_clearance(kase)
-      if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
-        call_case_approval_service(CTS::dacu_disclosure_approver, kase)
+      if kase.approver_assignments.for_user(CTS.dacu_disclosure_approver).any?
+        call_case_approval_service(CTS.dacu_disclosure_approver, kase)
       end
     end
 
     def transition_to_pending_private_office_clearance(kase)
-      if kase.approver_assignments.for_user(CTS::press_officer).any?
-        call_case_approval_service(CTS::press_officer, kase)
+      if kase.approver_assignments.for_user(CTS.press_officer).any?
+        call_case_approval_service(CTS.press_officer, kase)
       end
     end
 
     def transition_to_closed(kase)
       case kase.type_abbreviation
-      when 'FOI', 'OVERTURNED_FOI'
+      when "FOI", "OVERTURNED_FOI"
         transition_to_closed_for_foi(kase)
-      when 'ICO'
+      when "ICO"
         transition_to_closed_for_ico(kase)
-      when 'SAR', 'OVERTURNED_SAR'
+      when "SAR", "OVERTURNED_SAR"
         transition_to_closed_for_sar(kase)
       else
         # Cannot allow silent fail as this suggests a rogue case type
@@ -400,17 +394,15 @@ module CTS::Cases
 
     # (End) Magic Method transition functions used by {#run_transitions}
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
       CTS::Cases::Constants::CASE_JOURNEYS[correspondence_type_abbreviation]
       .find_all do |name, _states|
         @flag.blank? ||
-          (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
-          (@flag == 'press'      && name == :flagged_for_press_office) ||
-          (@flag == 'private'    && name == :flagged_for_private_office)
+          (@flag == "disclosure" && name == :flagged_for_dacu_disclosure) ||
+          (@flag == "press"      && name == :flagged_for_press_office) ||
+          (@flag == "private"    && name == :flagged_for_private_office)
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def find_case_journey_for_state(state)
       journeys_to_check.each do |_name, states|
@@ -423,11 +415,11 @@ module CTS::Cases
 
     def get_journey_for_flagged_state(flag)
       case flag
-      when 'disclosure'
+      when "disclosure"
         CASE_JOURNEYS[][:flagged_for_dacu_displosure]
-      when 'press'
+      when "press"
         CASE_JOURNEYS[correspondence_type_abbreviation][:flagged_for_press_office]
-      when 'private'
+      when "private"
         CASE_JOURNEYS[correspondence_type_abbreviation][:flagged_for_private_office]
       else
         CASE_JOURNEYS[correspondence_type_abbreviation][:unflagged]
@@ -435,25 +427,21 @@ module CTS::Cases
     end
 
     def responder
-      @responder ||= begin
-        if options.key?(:responder)
-          CTS::find_user(options[:responder])
-        else
-          responding_team.responders.first!
-        end
-      end
+      @responder ||= if options.key?(:responder)
+                       CTS.find_user(options[:responder])
+                     else
+                       responding_team.responders.first!
+                     end
     end
 
     def responding_team
-      @responding_team ||= begin
-        if options.key?(:responding_team)
-          CTS::find_team(options[:responding_team])
-        elsif options.key?(:responder)
-          responder.responding_teams.first
-        else
-          BusinessUnit.includes(:responders).responding.active.sample
-        end
-      end
+      @responding_team ||= if options.key?(:responding_team)
+                             CTS.find_team(options[:responding_team])
+                           elsif options.key?(:responder)
+                             responder.responding_teams.first
+                           else
+                             BusinessUnit.includes(:responders).responding.active.sample
+                           end
 
       if @responding_team.responders.none?
         create_responder(@responding_team)
@@ -468,9 +456,9 @@ module CTS::Cases
 
     def call_case_approval_service(user, kase)
       approval_service = CaseApprovalService.new(
-        user: user,
-        kase: kase,
-        bypass_params: nil
+        user:,
+        kase:,
+        bypass_params: nil,
       )
 
       approval_service.call
@@ -484,9 +472,9 @@ module CTS::Cases
 
     def call_case_flag_for_clearance_service(kase, user, team)
       clearance_service = CaseFlagForClearanceService.new(
-        user: user,
-        kase: kase,
-        team: team
+        user:,
+        kase:,
+        team:,
       )
 
       clearance_service.call
@@ -502,14 +490,14 @@ module CTS::Cases
       name = Faker::Name.name
       user = User.create!(
         full_name: name,
-        email: Faker::Internet.email(name: name),
-        password: SecureRandom.random_number(36**13).to_s(36)
+        email: Faker::Internet.email(name:),
+        password: SecureRandom.random_number(36**13).to_s(36),
       )
 
-      TeamsUsersRole.create(
-        user: user,
+      TeamsUsersRole.create!(
+        user:,
         team: responding_team,
-        role: 'responder'
+        role: "responder",
       )
     end
 
@@ -519,46 +507,46 @@ module CTS::Cases
 
     def transition_to_closed_for_foi(kase)
       kase.prepare_for_close
-      kase.update(
-        date_responded: Date.today,
+      kase.update!(
+        date_responded: Time.zone.today,
         info_held_status: CaseClosure::InfoHeldStatus.held,
-        outcome_abbreviation: 'granted'
+        outcome_abbreviation: "granted",
       )
-      kase.close(CTS::dacu_manager)
+      kase.close(CTS.dacu_manager)
     end
 
     def transition_to_closed_for_ico(kase)
       kase.prepare_for_close
       ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample)
-      kase.update(date_ico_decision_received: Date.today, ico_decision: ico_decision)
+      kase.update(date_ico_decision_received: Time.zone.today, ico_decision:) # rubocop:disable Rails/SaveBang
 
       if kase.overturned?
-        uploader = S3Uploader.new(kase, CTS::dacu_manager)
-        uploader.add_file_to_case('spec/fixtures/ico_decision.png', :ico_decision)
+        uploader = S3Uploader.new(kase, CTS.dacu_manager)
+        uploader.add_file_to_case("spec/fixtures/ico_decision.png", :ico_decision)
         kase.ico_decision_comment = options.fetch(:ico_decision_comment, Faker::TvShows::DrWho.quote)
       end
 
       kase.save!
-      kase.close(CTS::dacu_manager)
+      kase.close(CTS.dacu_manager)
     end
 
     def transition_to_closed_for_sar(kase)
       kase.prepare_for_close
-      kase.update(date_responded: Date.today, missing_info: false)
+      kase.update!(date_responded: Time.zone.today, missing_info: false)
       kase.respond_and_close(responder)
     end
 
     def original_case_type(kase)
       case kase.type
-      when 'Case::ICO::FOI' then 'Case::FOI::Standard'
-      when 'Case::ICO::SAR' then 'Case::SAR::Standard'
+      when "Case::ICO::FOI" then "Case::FOI::Standard"
+      when "Case::ICO::SAR" then "Case::SAR::Standard"
       end
     end
 
     def original_appeal_case_type(kase)
       case kase.type
-      when 'Case::OverturnedICO::FOI' then 'Case::ICO::FOI'
-      when 'Case::OverturnedICO::SAR' then 'Case::ICO::SAR'
+      when "Case::OverturnedICO::FOI" then "Case::ICO::FOI"
+      when "Case::OverturnedICO::SAR" then "Case::ICO::SAR"
       end
     end
 
@@ -573,7 +561,7 @@ module CTS::Cases
       case_creator = CTS::Cases::Create.new(
         Rails.logger,
         type: original_case_type(kase),
-        creator: options[:creator]
+        creator: options[:creator],
       )
 
       (result, original_case) = case_creator.call(:closed)
@@ -592,7 +580,7 @@ module CTS::Cases
         flag_for_disclosure: true,
         ico_decision: :overturned,
         type: original_appeal_case_type(kase),
-        creator: options[:creator]
+        creator: options[:creator],
       )
 
       (result, original_ico_appeal) = case_creator.call(:closed)

@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'add information officer to a business unit' do
+feature "add information officer to a business unit" do
   given(:manager) { create :manager }
   given(:bu)      { create :business_unit }
 
-  scenario 'case manager adds an information officer to a business unit' do
+  scenario "case manager adds an information officer to a business unit" do
     bu
     login_as manager
 

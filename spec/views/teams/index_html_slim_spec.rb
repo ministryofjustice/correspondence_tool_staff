@@ -1,22 +1,19 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'teams/index.html.slim', type: :view do
-
+describe "teams/index.html.slim", type: :view do
   let(:manager)      { create :manager }
   let(:business_map) { build_stubbed(:report_type, :r006) }
   let(:reports)      { [business_map] }
 
-  before(:each) do
-    @bg_2 = create :business_group, name: 'HMPPS',
-                   lead: create(:team_lead, value: 'John Smith')
-    create :directorate, business_group: @bg_2
-    create :directorate, business_group: @bg_2
-    @bg_3 = create :business_group, name: 'HMCTS',
-                   lead: create(:team_lead, value: 'Jane Doe')
-    create :directorate, business_group: @bg_3
+  before do
+    bg_2 = create :business_group, name: "HMPPS", lead: create(:team_lead, value: "John Smith")
+    bg_3 = create :business_group, name: "HMCTS", lead: create(:team_lead, value: "Jane Doe")
+    create :directorate, business_group: bg_2
+    create :directorate, business_group: bg_2
+    create :directorate, business_group: bg_3
   end
 
-  it 'displays all business groups' do
+  it "displays all business groups" do
     login_as manager
     assign(:teams, BusinessGroup.all)
     assign(:reports, reports)
@@ -30,14 +27,14 @@ describe 'teams/index.html.slim', type: :view do
     expect(page.heading.text).to eq "Business groups"
 
     # check data in table is correct
-    bg = page.row_for_business_group('HMPPS')
-    expect(bg.name.text).to eq 'View the details of HMPPS'
-    expect(bg.director_general.text).to eq 'John Smith'
-    expect(bg.num_directorates.text).to eq '2'
+    bg1 = page.row_for_business_group("HMPPS")
+    expect(bg1.name.text).to eq "View the details of HMPPS"
+    expect(bg1.director_general.text).to eq "John Smith"
+    expect(bg1.num_directorates.text).to eq "2"
 
-    bg = page.row_for_business_group('HMCTS')
-    expect(bg.name.text).to eq 'View the details of HMCTS'
-    expect(bg.director_general.text).to eq 'Jane Doe'
-    expect(bg.num_directorates.text).to eq '1'
+    bg2 = page.row_for_business_group("HMCTS")
+    expect(bg2.name.text).to eq "View the details of HMCTS"
+    expect(bg2.director_general.text).to eq "Jane Doe"
+    expect(bg2.num_directorates.text).to eq "1"
   end
 end

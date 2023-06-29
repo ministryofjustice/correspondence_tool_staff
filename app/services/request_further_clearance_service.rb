@@ -1,5 +1,4 @@
 class RequestFurtherClearanceService
-
   attr_accessor :result
 
   def initialize(user:, kase:)
@@ -24,7 +23,7 @@ class RequestFurtherClearanceService
         acting_user: @user,
         acting_team: @user.managing_teams.first,
         target_team: responding_team_if_case_accepted,
-        target_user: @kase.responder
+        target_user: @kase.responder,
       )
 
       flag_case_for_disclosure
@@ -35,17 +34,17 @@ class RequestFurtherClearanceService
     end
 
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 
-  private
+private
 
   def responding_team_if_case_accepted
-    if @kase.responder == nil
+    if @kase.responder.nil?
       nil
     else
       @kase.responding_team
@@ -54,13 +53,13 @@ class RequestFurtherClearanceService
 
   def flag_case_for_disclosure
     CaseFlagForClearanceService.new(user: @user,
-                                  kase: @kase,
-                                  team: BusinessUnit.dacu_disclosure).call
+                                    kase: @kase,
+                                    team: BusinessUnit.dacu_disclosure).call
   end
 
   def flag_case_for_press_and_private
     # update the escalation deadline to the new clearance deadline
     # Enabled press/private to view this case in their Case list
-    @kase.update( escalation_deadline: @kase.deadline_calculator.escalation_deadline(Date.today))
+    @kase.update(escalation_deadline: @kase.deadline_calculator.escalation_deadline(Time.zone.today))
   end
 end

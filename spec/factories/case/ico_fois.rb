@@ -1,8 +1,7 @@
 FactoryBot.define do
+  sequence(:ico_foi_reference_number) { |n| sprintf("ICOFOIREFNUM%03d", n) }
 
-  sequence(:ico_foi_reference_number) { |n| "ICOFOIREFNUM%03d" % [n] }
-
-  factory :ico_foi_case, class: Case::ICO::FOI do
+  factory :ico_foi_case, class: "Case::ICO::FOI" do
     transient do
       creation_time  { 4.business_days.ago }
       identifier     { "new ICO FOI case based from a closed FOI case" }
@@ -13,7 +12,7 @@ FactoryBot.define do
       approver       { find_or_create(:disclosure_specialist) }
     end
 
-    current_state               { 'unassigned' }
+    current_state               { "unassigned" }
     sequence(:message)          { |n| "#{identifier} message #{n}" }
     ico_reference_number        { generate :ico_foi_reference_number }
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
@@ -29,20 +28,20 @@ FactoryBot.define do
       create :approver_assignment,
              case: kase,
              team: evaluator.approving_team,
-             state: 'pending'
+             state: "pending"
       create :flag_case_for_clearance_transition,
              case: kase,
              acting_team: evaluator.managing_team,
              acting_user: evaluator.managing_team.managers.first,
              target_team: evaluator.approving_team
-      kase.update(workflow: 'trigger')
+      kase.update!(workflow: "trigger")
 
       if evaluator.flag_for_disclosure == :accepted
         disclosure_assignment = kase.assignments.for_team(
-          evaluator.approving_team
+          evaluator.approving_team,
         ).singular
-        disclosure_assignment.update(state: 'accepted',
-                                     user: evaluator.approver)
+        disclosure_assignment.update!(state: "accepted",
+                                      user: evaluator.approver)
       end
 
       kase.reload
@@ -54,8 +53,8 @@ FactoryBot.define do
       end
 
       after(:create) do |kase, evaluator|
-        kase.assignments.for_team(evaluator.approving_team).first.update(
-          state: 'accepted',
+        kase.assignments.for_team(evaluator.approving_team).first.update!(
+          state: "accepted",
           user_id: evaluator.approver.id,
         )
         create :flag_case_for_clearance_transition,
@@ -79,8 +78,8 @@ FactoryBot.define do
       create :assignment,
              case: kase,
              team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
+             state: "pending",
+             role: "responding",
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
@@ -99,7 +98,7 @@ FactoryBot.define do
     end
 
     after(:create) do |kase, evaluator|
-      kase.responder_assignment.update_attribute :user, evaluator.responder
+      kase.responder_assignment.update!(user: evaluator.responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
@@ -110,11 +109,10 @@ FactoryBot.define do
     end
   end
 
-
   factory :ico_foi_case_with_response, parent: :accepted_ico_foi_case do
     transient do
       identifier { "ico foi case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build(:correspondence_response, type: "response", user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -131,12 +129,12 @@ FactoryBot.define do
 
   factory :pending_dacu_clearance_ico_foi_case, parent: :accepted_ico_foi_case do
     transient do
-      identifier      { 'pending dacu clearance ICO FOI case' }
+      identifier { "pending dacu clearance ICO FOI case" }
     end
 
     after(:create) do |kase, evaluator|
       kase.approver_assignments.for_team(evaluator.approving_team).singular
-        .update(user: evaluator.approver, state: 'accepted')
+        .update!(user: evaluator.approver, state: "accepted")
       create :case_transition_pending_dacu_clearance,
              case: kase,
              acting_team: evaluator.responding_team,
@@ -148,10 +146,10 @@ FactoryBot.define do
 
   factory :approved_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
     transient do
-      identifier { 'approved ICO FOI case' }
-# date draft compliant is passed in in a transient blocked so it can is be
-# changed in the tests. It is added to the the case in the after create block
-# to match the order the code updates the case.
+      identifier { "approved ICO FOI case" }
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
@@ -169,14 +167,14 @@ FactoryBot.define do
 
   factory :responded_ico_foi_case, parent: :approved_ico_foi_case do
     transient do
-      identifier { 'responded ICO FOI case' }
-  # date draft compliant is passed in in a transient blocked so it can is be
-  # changed in the tests. It is added to the the case in the after create block
-  # to match the order the code updates the case.
+      identifier { "responded ICO FOI case" }
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond_to_ico,
@@ -188,14 +186,14 @@ FactoryBot.define do
 
   factory :awaiting_dispatch_ico_foi_case, parent: :approved_ico_foi_case do
     transient do
-      identifier { 'awaiting dispatch ICO FOI case' }
-  # date draft compliant is passed in in a transient blocked so it can is be
-  # changed in the tests. It is added to the the case in the after create block
-  # to match the order the code updates the case.
+      identifier { "awaiting dispatch ICO FOI case" }
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_await_dispatch_ico,
@@ -207,8 +205,8 @@ FactoryBot.define do
 
   factory :closed_ico_foi_case, parent: :responded_ico_foi_case do
     transient do
-      identifier  { 'closed ICO FOI case' }
-      attachments {[ build(:case_ico_decision) ]}
+      identifier  { "closed ICO FOI case" }
+      attachments { [build(:case_ico_decision)] }
     end
 
     received_date { 22.business_days.ago }
@@ -219,7 +217,6 @@ FactoryBot.define do
     trait :overturned_by_ico do
       ico_decision         { "overturned" }
       ico_decision_comment { Faker::TvShows::DrWho.quote }
-
     end
 
     after(:create) do |kase, evaluator|
@@ -232,7 +229,7 @@ FactoryBot.define do
 
   factory :require_further_action_ico_foi_case, parent: :responded_ico_foi_case do
     transient do
-      identifier { 'ICO FOI case required further action' }
+      identifier { "ICO FOI case required further action" }
     end
 
     after(:create) do |kase, evaluator|
@@ -241,16 +238,15 @@ FactoryBot.define do
       kase.update!(
         original_external_deadline: kase.external_deadline,
         original_internal_deadline: kase.internal_deadline,
-        original_date_responded: kase.date_responded
+        original_date_responded: kase.date_responded,
       )
       kase.reload
       kase.update!(
         external_deadline: 20.business_days.after(evaluator.original_external_deadline),
         internal_deadline: 10.business_days.after(evaluator.original_external_deadline),
-        date_responded: nil
+        date_responded: nil,
       )
       kase.reload
     end
   end
-
 end

@@ -1,29 +1,31 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/data_requests/send_email', type: :view do
-  context '#send_email' do
-    let(:kase) {
+describe "cases/data_requests/send_email", type: :view do
+  describe "#send_email" do
+    let(:kase) do
       create(
         :offender_sar_case,
-        subject_full_name: 'Minnie Mouse',
+        subject_full_name: "Minnie Mouse",
       )
-    }
+    end
 
-    let(:data_request) {
+    let(:data_request) do
       create(
         :data_request,
-        offender_sar_case: kase
+        offender_sar_case: kase,
       )
-    }
+    end
 
-    let(:commissioning_document) {
+    let(:commissioning_document) do
       create(
         :commissioning_document,
-        data_request: data_request,
+        data_request:,
       )
-    }
+    end
 
-    context 'data request with contact without email address' do
+    let(:page) { data_request_email_confirmation_page }
+
+    context "with data request with contact without email address" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -32,18 +34,17 @@ describe 'cases/data_requests/send_email', type: :view do
 
         render
         data_request_email_confirmation_page.load(rendered)
-        @page = data_request_email_confirmation_page
       end
 
-      it 'has required content' do
-        expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
-        expect(@page.page_banner.text).to include 'The selected location does not have an email address.'
-        expect(@page.button_send_email.disabled?).to eq true
-        expect(@page.link_cancel.text).to eq 'Cancel'
+      it "has required content" do
+        expect(page.page_heading.heading.text).to eq "Are you sure you want to send the commissioning email?"
+        expect(page.page_banner.text).to include "The selected location does not have an email address."
+        expect(page.button_send_email.disabled?).to eq true
+        expect(page.link_cancel.text).to eq "Cancel"
       end
     end
 
-    context 'data request with contact which has email address' do
+    context "with data request with contact which has email address" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -52,13 +53,12 @@ describe 'cases/data_requests/send_email', type: :view do
 
         render
         data_request_email_confirmation_page.load(rendered)
-        @page = data_request_email_confirmation_page
       end
 
-      it 'has required content' do
-        expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
-        expect(@page.button_send_email.value).to eq 'Send commissioning email'
-        expect(@page.link_cancel.text).to eq 'Cancel'
+      it "has required content" do
+        expect(page.page_heading.heading.text).to eq "Are you sure you want to send the commissioning email?"
+        expect(page.button_send_email.value).to eq "Send commissioning email"
+        expect(page.link_cancel.text).to eq "Cancel"
       end
     end
   end

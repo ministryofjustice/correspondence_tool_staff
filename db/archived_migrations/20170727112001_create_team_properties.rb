@@ -8,6 +8,6 @@ class CreateTeamProperties < ActiveRecord::Migration[5.0]
     end
 
     add_index :team_properties, :team_id
-    add_index :team_properties, [:team_id, :key, :value], unique: true
+    add_index :team_properties, %i[team_id key value], unique: true
   end
 end

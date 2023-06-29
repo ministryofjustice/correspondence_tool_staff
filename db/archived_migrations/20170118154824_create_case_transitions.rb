@@ -11,13 +11,13 @@ class CreateCaseTransitions < ActiveRecord::Migration[5.1]
     end
 
     add_index(:case_transitions,
-              [:case_id, :sort_key],
+              %i[case_id sort_key],
               unique: true,
               name: "index_case_transitions_parent_sort")
     add_index(:case_transitions,
-              [:case_id, :most_recent],
+              %i[case_id most_recent],
               unique: true,
-              where: 'most_recent',
+              where: "most_recent",
               name: "index_case_transitions_parent_most_recent")
   end
 end

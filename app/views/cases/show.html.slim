@@ -83,7 +83,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/clearance_levels', locals: { case_details: @case }
 
-  - if case_attachments_visible_for_case?
+  - if case_attachments_visible_for_case?(@case)
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 

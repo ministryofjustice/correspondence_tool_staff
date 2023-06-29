@@ -1,2 +1,2 @@
-require File.join(Rails.root, 'lib', 'host_env')
-require File.join(Rails.root, 'lib', 'feature_set')
+require Rails.root.join("lib/host_env")
+require Rails.root.join("lib/feature_set")

@@ -1,13 +1,13 @@
 class AddReceivedByToCase < ActiveRecord::Migration[5.0]
-  class Case < ActiveRecord::Base
+  class Case < ApplicationRecord
     self.inheritance_column = :_type_not_used
   end
 
   def up
     Case.connection.transaction do
       create_enum :cases_delivery_methods,
-                  'sent_by_email',
-                  'sent_by_post'
+                  "sent_by_email",
+                  "sent_by_post"
       add_column :cases, :delivery_method, :cases_delivery_methods
 
       Case.all.each do |kase|

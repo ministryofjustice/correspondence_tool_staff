@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Cases::AttachmentsController, type: :controller do
   let(:responder) { kase.responder }
@@ -7,15 +7,15 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
   let(:kase)       { create(:case_with_response) }
   let(:attachment) { kase.attachments.first      }
 
-  describe '#download' do
-    shared_examples 'unauthorized user' do
-      it 'redirect to the login or root page' do
+  describe "#download" do
+    shared_examples "unauthorized user" do
+      it "redirect to the login or root page" do
         get :download, params: { case_id: kase.id, id: attachment.id }
         if subject.current_user
           if subject.current_user.manager?
             expect(response).to redirect_to manager_root_path
           elsif subject.current_user.responder?
-             expect(response).to redirect_to manager_root_path
+            expect(response).to redirect_to manager_root_path
           end
         else
           expect(response).to redirect_to new_user_session_path
@@ -23,10 +23,12 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
-    shared_examples 'an authorized user' do
+    shared_examples "an authorized user" do
       let(:presigned_url) { "http://pre-signed.com/url" }
-      let(:object) { instance_double Aws::S3::Object,
-                                     presigned_url: presigned_url }
+      let(:object) do
+        instance_double Aws::S3::Object,
+                        presigned_url:
+      end
       before do
         allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                            .with(attachment.key)
@@ -34,39 +36,39 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
 
       it "redirects to the attachment's url" do
-        get :download, params: { case_id: kase.id, id: attachment.id}
+        get :download, params: { case_id: kase.id, id: attachment.id }
         expect(response).to redirect_to presigned_url
       end
     end
 
-    context 'as an anonymous user' do
-      it_behaves_like 'unauthorized user'
+    context "when an anonymous user" do
+      it_behaves_like "unauthorized user"
     end
 
-    context 'as a manager' do
+    context "when a manager" do
       before { sign_in manager }
 
-      it_behaves_like 'an authorized user'
+      it_behaves_like "an authorized user"
     end
 
-    context 'as a responder' do
+    context "when a responder" do
       before { sign_in responder }
 
-      it_behaves_like 'an authorized user'
+      it_behaves_like "an authorized user"
     end
   end
 
-  describe '#destroy' do
+  describe "#destroy" do
     let(:attachment_object) do
       instance_double(
         Aws::S3::Object,
-        delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
+        delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
       )
     end
     let(:preview_object) do
       instance_double(
         Aws::S3::Object,
-        delete: instance_double(Aws::S3::Types::DeleteObjectOutput)
+        delete: instance_double(Aws::S3::Types::DeleteObjectOutput),
       )
     end
 
@@ -79,8 +81,8 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
                                          .and_return(preview_object)
     end
 
-    shared_examples 'unauthorized user' do
-      it 'redirect to the login or root page' do
+    shared_examples "unauthorized user" do
+      it "redirect to the login or root page" do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
         if subject.current_user
           if subject.current_user.manager?
@@ -95,45 +97,39 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
-    context 'as an anonymous user' do
-      it_behaves_like 'unauthorized user'
+    context "when an anonymous user" do
+      it_behaves_like "unauthorized user"
     end
 
-    context 'as a manager with a case that is still open' do
+    context "when a manager with a case that is still open" do
       before { sign_in manager }
 
-      it_behaves_like 'unauthorized user'
+      it_behaves_like "unauthorized user"
     end
 
-    context 'as a manager with a case that is still open' do
-      before { sign_in manager }
-
-      it_behaves_like 'unauthorized user'
-    end
-
-    context 'as a manager with a case that has been marked as responded' do
+    context "when a manager with a case that has been marked as responded" do
       let(:kase) { create(:responded_case) }
 
       before { sign_in manager }
 
-      it_behaves_like 'unauthorized user'
+      it_behaves_like "unauthorized user"
     end
 
-    context 'as a responder who is still responding to a case' do
+    context "when a responder who is still responding to a case" do
       before { sign_in responder }
 
-      it 'deletes the attachment from the case' do
+      it "deletes the attachment from the case" do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
         expect(kase.reload.attachments).not_to include(attachment)
       end
     end
 
-    context 'as a responder who has marked the case as responded' do
+    context "when a responder who has marked the case as responded" do
       let(:kase) { create(:responded_case) }
 
       before { sign_in responder }
 
-      it_behaves_like 'unauthorized user'
+      it_behaves_like "unauthorized user"
     end
   end
 end

@@ -1,10 +1,8 @@
 class Case::FOI::StandardPolicy < Case::BasePolicy
-
   class Scope < Case::BaseScopePolicy
-
     def correspondence_type
       CorrespondenceType.foi
-    end 
+    end
 
     def resolve_responder_default
       @scope
@@ -34,8 +32,8 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
 
     (check_case_is_pending_press_office_clearance &&
         check_user_is_assigned_press_office_approver) ||
-        (check_case_is_pending_private_office_clearance &&
-            check_user_is_private_office_approver)
+      (check_case_is_pending_private_office_clearance &&
+          check_user_is_private_office_approver)
   end
 
   def can_send_back?
@@ -73,11 +71,11 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
   end
 
   check :unflagged_case_can_be_escalated do
-    !self.case.current_state.in?(%w{responded closed})
+    !self.case.current_state.in?(%w[responded closed])
   end
 
   check :ds_flagged_case_can_be_escalated do
-     self.case.outside_escalation_deadline? &&
-      !self.case.current_state.in?(%w{responded closed})
+    self.case.outside_escalation_deadline? &&
+      !self.case.current_state.in?(%w[responded closed])
   end
 end

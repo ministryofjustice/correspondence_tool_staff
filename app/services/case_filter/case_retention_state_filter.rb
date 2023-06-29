@@ -2,7 +2,7 @@ module CaseFilter
   class CaseRetentionStateFilter < CaseMultiChoicesFilterBase
     class << self
       def identifier
-        'filter_retention_state'
+        "filter_retention_state"
       end
 
       def filter_attributes
@@ -16,11 +16,11 @@ module CaseFilter
 
     def call
       @records.where(
-        retention_schedule: { state: @query.filter_retention_state }
+        retention_schedule: { state: @query.filter_retention_state },
       )
     end
 
-    private
+  private
 
     def retention_states
       RetentionSchedule.states_map.except(*excluded_states).stringify_keys

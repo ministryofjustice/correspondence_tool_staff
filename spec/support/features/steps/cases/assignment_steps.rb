@@ -1,6 +1,6 @@
 def assign_case_step(business_unit:,
-                     expected_status: 'To be accepted',
-                     expected_to_be_with: '%{business_unit_name}',
+                     expected_status: "To be accepted",
+                     expected_to_be_with: "%{business_unit_name}",
                      expected_flash_msg: "Case assigned to #{business_unit.name}",
                      assigning_page: assignments_new_page)
   # Browse Business Group
@@ -13,8 +13,8 @@ def assign_case_step(business_unit:,
 
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 
-  expected_to_be_with_text = expected_to_be_with % { business_unit_name: business_unit.name }
-  unless cases_show_page.case_status.details.copy.text == 'Closed'
+  expected_to_be_with_text = sprintf(expected_to_be_with, business_unit_name: business_unit.name)
+  unless cases_show_page.case_status.details.copy.text == "Closed"
     expect(cases_show_page.case_status.details.who_its_with.text)
       .to eq expected_to_be_with_text
   end

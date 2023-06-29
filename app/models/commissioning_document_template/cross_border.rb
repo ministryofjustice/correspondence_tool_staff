@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class CrossBorder < CommissioningDocumentTemplate::Base
     def request_type
-      'TX'
+      "TX"
     end
 
     def deadline
@@ -12,7 +12,7 @@ module CommissioningDocumentTemplate
       super.merge(
         aliases: kase.subject_aliases,
         date_range: data_request.request_dates.capitalize,
-        deadline: deadline,
+        deadline:,
       )
     end
   end

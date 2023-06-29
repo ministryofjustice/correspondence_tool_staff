@@ -1,6 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'state machine' do
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
+describe "state machine" do
   def all_user_teams
     @setup.user_teams
   end
@@ -9,63 +10,53 @@ describe 'state machine' do
     @setup.cases
   end
 
-  context 'usual suspects' do
+  context "when usual suspects" do
     before(:all) do
       DbHousekeeping.clean
       @setup = StandardSetup.new(
-        only_cases: [
-          :ico_foi_unassigned,
-          :ico_foi_awaiting_responder,
-          :ico_foi_accepted,
-          :ico_foi_pending_dacu,
-          :ico_foi_awaiting_dispatch,
-          :ico_foi_responded,
-          :ico_foi_closed,
-          :ico_sar_unassigned,
-          :ico_sar_awaiting_responder,
-          :ico_sar_accepted,
-          :ico_sar_pending_dacu,
-          :ico_sar_awaiting_dispatch,
-          :ico_sar_responded,
-          :ico_sar_closed,
-        ]
+        only_cases: %i[
+          ico_foi_unassigned
+          ico_foi_awaiting_responder
+          ico_foi_accepted
+          ico_foi_pending_dacu
+          ico_foi_awaiting_dispatch
+          ico_foi_responded
+          ico_foi_closed
+          ico_sar_unassigned
+          ico_sar_awaiting_responder
+          ico_sar_accepted
+          ico_sar_pending_dacu
+          ico_sar_awaiting_dispatch
+          ico_sar_responded
+          ico_sar_closed
+        ],
       )
-
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: true)
+    end
 
-    describe 'setup' do
-      context 'FOI' do
-        context 'trigger workflow' do
-          context 'awaiting dispatch' do
-            it 'is trigger workflow' do
-              kase = @setup.ico_foi_awaiting_dispatch
-              expect(kase.current_state).to eq 'awaiting_dispatch'
-              expect(kase.workflow).to eq 'trigger'
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
-              expect(kase.approver_assignments.for_team(@setup.press_office_team)).to be_empty
-              expect(kase.approver_assignments.for_team(@setup.private_office_team)).to be_empty
-            end
-          end
-
-          context 'awaiting dispatch' do
-            it 'is trigger workflow' do
+    describe "setup" do
+      context "when FOI" do
+        context "and trigger workflow" do
+          context "and awaiting dispatch" do
+            it "is trigger workflow" do
               kase = @setup.ico_sar_awaiting_dispatch
-              expect(kase.current_state).to eq 'awaiting_dispatch'
-              expect(kase.workflow).to eq 'trigger'
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
+              expect(kase.current_state).to eq "awaiting_dispatch"
+              expect(kase.workflow).to eq "trigger"
+              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq "accepted"
               expect(kase.approver_assignments.for_team(@setup.press_office_team)).to be_empty
               expect(kase.approver_assignments.for_team(@setup.private_office_team)).to be_empty
             end
           end
 
-          context 'pending dacu clearance' do
-            it 'is trigger workflow' do
+          context "and pending dacu clearance" do
+            it "is trigger workflow" do
               kase = @setup.ico_foi_pending_dacu
-              expect(kase.current_state).to eq 'pending_dacu_clearance'
-              expect(kase.workflow).to eq 'trigger'
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq 'accepted'
+              expect(kase.current_state).to eq "pending_dacu_clearance"
+              expect(kase.workflow).to eq "trigger"
+              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq "accepted"
               expect(kase.approver_assignments.for_team(@setup.press_office_team)).to be_empty
               expect(kase.approver_assignments.for_team(@setup.private_office_team)).to be_empty
             end
@@ -74,842 +65,798 @@ describe 'state machine' do
       end
     end
 
+    describe "accept_approver_assignment" do
+      let(:event) { :accept_approver_assignment }
 
-    describe :accept_approver_assignment do
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-               )
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+        )
       }
     end
 
-    describe :accept_responder_assignment do
+    describe "accept_responder_assignment" do
+      let(:event) { :accept_responder_assignment }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:responder, :ico_foi_awaiting_responder],
-          [:sar_responder, :ico_sar_awaiting_responder],
-          [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder]
-               ).debug
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[responder ico_foi_awaiting_responder],
+          %i[sar_responder ico_sar_awaiting_responder],
+          %i[another_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
+        )
       }
     end
 
-    describe :add_message_to_case do
+    describe "add_message_to_case" do
+      let(:event) { :add_message_to_case }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_foi_closed],
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
+          %i[responder ico_foi_awaiting_responder],
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[responder ico_foi_responded],
+          %i[responder ico_foi_closed],
+          %i[sar_responder ico_sar_awaiting_responder],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[sar_responder ico_sar_responded],
+          %i[sar_responder ico_sar_closed],
+          %i[another_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_responded],
+          %i[another_responder_in_same_team ico_foi_closed],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_responded],
+          %i[another_sar_responder_in_same_team ico_sar_closed],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_responded],
+          %i[disclosure_specialist ico_foi_closed],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_responded],
+          %i[disclosure_specialist ico_sar_closed],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_responded],
+          %i[disclosure_specialist_coworker ico_foi_closed],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_responded],
+          %i[disclosure_specialist_coworker ico_sar_closed],
+        )
+      }
 
-          [:disclosure_bmt, :ico_sar_unassigned],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-          [:disclosure_bmt, :ico_sar_closed],
-
-          [:responder, :ico_foi_awaiting_responder],
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_foi_responded],
-          [:responder, :ico_foi_closed],
-
-          [:sar_responder, :ico_sar_awaiting_responder],
-          [:sar_responder, :ico_sar_accepted],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
-          [:sar_responder, :ico_sar_responded],
-          [:sar_responder, :ico_sar_closed],
-
-          [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_foi_responded],
-          [:another_responder_in_same_team, :ico_foi_closed],
-
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_sar_responded],
-          [:another_sar_responder_in_same_team, :ico_sar_closed],
-
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_foi_responded],
-          [:disclosure_specialist, :ico_foi_closed],
-
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_responded],
-          [:disclosure_specialist, :ico_sar_closed],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_foi_responded],
-          [:disclosure_specialist_coworker, :ico_foi_closed],
-
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_responded],
-          [:disclosure_specialist_coworker, :ico_sar_closed],
-               )
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[responder ico_foi_responded],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[sar_responder ico_sar_responded],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_responded],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_responded],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_responded],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_responded],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_responded],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_responded],
+        ).with_hook("Workflows::Hooks", :notify_responder_message_received)
       }
     end
 
-    describe :approve do
+    describe "approve" do
+      let(:event) { :approve }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-               ) }
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+        )
+      }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+        ).with_hook("Workflows::Hooks", :notify_responder_ready_to_send)
+      }
     end
 
-    describe :assign_responder do
+    describe "assign_responder" do
+      let(:event) { :assign_responder }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_sar_unassigned],
-               )}
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_sar_unassigned],
+        )
+      }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_sar_unassigned],
+        ).with_hook("Workflows::Hooks", :assign_responder_email)
+      }
     end
 
-    describe :assign_to_new_team do
+    describe "assign_to_new_team" do
+      let(:event) { :assign_to_new_team }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_closed],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_closed],
-        )}
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_closed],
+        )
+      }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+        ).with_hook("Workflows::Hooks", :assign_responder_email)
+      }
     end
 
-    describe :close do
+    describe "close" do
+      let(:event) { :close }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_sar_responded],
-        )}
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_sar_responded],
+        )
+      }
     end
 
-    describe :destroy_case do
-      it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_foi_closed],
-          [:disclosure_bmt, :ico_sar_unassigned],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-          [:disclosure_bmt, :ico_sar_closed],
+    describe "destroy_case" do
+      let(:event) { :destroy_case }
 
-               )}
+      it {
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
+        )
+      }
     end
 
-    describe :edit_case do
-      it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_foi_closed],
-          [:disclosure_bmt, :ico_sar_unassigned],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-          [:disclosure_bmt, :ico_sar_closed],
+    describe "edit_case" do
+      let(:event) { :edit_case }
 
-               )}
+      it {
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
+        )
+      }
     end
 
-    describe :flag_for_clearance do
+    describe "flag_for_clearance" do
+      let(:event) { :flag_for_clearance }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_sar_unassigned],
-        )}
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_sar_unassigned],
+        )
+      }
     end
 
-    describe :link_a_case do
+    describe "link_a_case" do
+      let(:event) { :link_a_case }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_foi_closed],
-
-          [:disclosure_bmt, :ico_sar_unassigned],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-          [:disclosure_bmt, :ico_sar_closed],
-
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
           # Responders should not be adding/removing links
-          [:responder, :ico_foi_unassigned],
-          [:responder, :ico_foi_awaiting_responder],
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_foi_responded],
-          [:responder, :ico_foi_closed],
-          [:responder, :ico_sar_unassigned],
-          [:responder, :ico_sar_awaiting_responder],
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_sar_awaiting_dispatch],
-          [:responder, :ico_sar_responded],
-          [:responder, :ico_sar_closed],
-
-          [:sar_responder, :ico_sar_unassigned],
-          [:sar_responder, :ico_sar_awaiting_responder],
-          [:sar_responder, :ico_sar_accepted],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
-          [:sar_responder, :ico_sar_responded],
-          [:sar_responder, :ico_sar_closed],
-          [:sar_responder, :ico_foi_unassigned],
-          [:sar_responder, :ico_foi_awaiting_responder],
-          [:sar_responder, :ico_foi_accepted],
-          [:sar_responder, :ico_foi_pending_dacu],
-          [:sar_responder, :ico_foi_awaiting_dispatch],
-          [:sar_responder, :ico_foi_responded],
-          [:sar_responder, :ico_foi_closed],
-
+          %i[responder ico_foi_unassigned],
+          %i[responder ico_foi_awaiting_responder],
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[responder ico_foi_responded],
+          %i[responder ico_foi_closed],
+          %i[responder ico_sar_unassigned],
+          %i[responder ico_sar_awaiting_responder],
+          %i[responder ico_sar_accepted],
+          %i[responder ico_sar_pending_dacu],
+          %i[responder ico_sar_awaiting_dispatch],
+          %i[responder ico_sar_responded],
+          %i[responder ico_sar_closed],
+          %i[sar_responder ico_sar_unassigned],
+          %i[sar_responder ico_sar_awaiting_responder],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[sar_responder ico_sar_responded],
+          %i[sar_responder ico_sar_closed],
+          %i[sar_responder ico_foi_unassigned],
+          %i[sar_responder ico_foi_awaiting_responder],
+          %i[sar_responder ico_foi_accepted],
+          %i[sar_responder ico_foi_pending_dacu],
+          %i[sar_responder ico_foi_awaiting_dispatch],
+          %i[sar_responder ico_foi_responded],
+          %i[sar_responder ico_foi_closed],
           # Responders should not be adding/removing links
-          [:another_responder_in_same_team, :ico_foi_unassigned],
-          [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_foi_responded],
-          [:another_responder_in_same_team, :ico_foi_closed],
-          [:another_responder_in_same_team, :ico_sar_unassigned],
-          [:another_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_responded],
-          [:another_responder_in_same_team, :ico_sar_closed],
-
-          [:another_sar_responder_in_same_team, :ico_sar_unassigned],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_sar_responded],
-          [:another_sar_responder_in_same_team, :ico_sar_closed],
-          [:another_sar_responder_in_same_team, :ico_foi_unassigned],
-          [:another_sar_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_foi_accepted],
-          [:another_sar_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_foi_responded],
-          [:another_sar_responder_in_same_team, :ico_foi_closed],
-
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_foi_responded],
-          [:disclosure_specialist, :ico_foi_closed],
-
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_responded],
-          [:disclosure_specialist, :ico_sar_closed],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_foi_responded],
-          [:disclosure_specialist_coworker, :ico_foi_closed],
-
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_responded],
-          [:disclosure_specialist_coworker, :ico_sar_closed],
-
-          [:another_disclosure_specialist, :ico_foi_unassigned],
-          [:another_disclosure_specialist, :ico_foi_awaiting_responder],
-          [:another_disclosure_specialist, :ico_foi_accepted],
-          [:another_disclosure_specialist, :ico_foi_pending_dacu],
-          [:another_disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:another_disclosure_specialist, :ico_foi_responded],
-          [:another_disclosure_specialist, :ico_foi_closed],
-
-          [:another_disclosure_specialist, :ico_sar_unassigned],
-          [:another_disclosure_specialist, :ico_sar_awaiting_responder],
-          [:another_disclosure_specialist, :ico_sar_accepted],
-          [:another_disclosure_specialist, :ico_sar_pending_dacu],
-          [:another_disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:another_disclosure_specialist, :ico_sar_responded],
-          [:another_disclosure_specialist, :ico_sar_closed],
-
+          %i[another_responder_in_same_team ico_foi_unassigned],
+          %i[another_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_responded],
+          %i[another_responder_in_same_team ico_foi_closed],
+          %i[another_responder_in_same_team ico_sar_unassigned],
+          %i[another_responder_in_same_team ico_sar_awaiting_responder],
+          %i[another_responder_in_same_team ico_sar_accepted],
+          %i[another_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_sar_responded],
+          %i[another_responder_in_same_team ico_sar_closed],
+          %i[another_sar_responder_in_same_team ico_sar_unassigned],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_responded],
+          %i[another_sar_responder_in_same_team ico_sar_closed],
+          %i[another_sar_responder_in_same_team ico_foi_unassigned],
+          %i[another_sar_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_foi_accepted],
+          %i[another_sar_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_foi_responded],
+          %i[another_sar_responder_in_same_team ico_foi_closed],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_responded],
+          %i[disclosure_specialist ico_foi_closed],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_responded],
+          %i[disclosure_specialist ico_sar_closed],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_responded],
+          %i[disclosure_specialist_coworker ico_foi_closed],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_responded],
+          %i[disclosure_specialist_coworker ico_sar_closed],
+          %i[another_disclosure_specialist ico_foi_unassigned],
+          %i[another_disclosure_specialist ico_foi_awaiting_responder],
+          %i[another_disclosure_specialist ico_foi_accepted],
+          %i[another_disclosure_specialist ico_foi_pending_dacu],
+          %i[another_disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[another_disclosure_specialist ico_foi_responded],
+          %i[another_disclosure_specialist ico_foi_closed],
+          %i[another_disclosure_specialist ico_sar_unassigned],
+          %i[another_disclosure_specialist ico_sar_awaiting_responder],
+          %i[another_disclosure_specialist ico_sar_accepted],
+          %i[another_disclosure_specialist ico_sar_pending_dacu],
+          %i[another_disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[another_disclosure_specialist ico_sar_responded],
+          %i[another_disclosure_specialist ico_sar_closed],
           # Responders should not be adding/removing links
-          [:another_responder_in_diff_team, :ico_foi_unassigned],
-          [:another_responder_in_diff_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_diff_team, :ico_foi_accepted],
-          [:another_responder_in_diff_team, :ico_foi_pending_dacu],
-          [:another_responder_in_diff_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_diff_team, :ico_foi_responded],
-          [:another_responder_in_diff_team, :ico_foi_closed],
-          [:another_responder_in_diff_team, :ico_sar_unassigned],
-          [:another_responder_in_diff_team, :ico_sar_awaiting_responder],
-          [:another_responder_in_diff_team, :ico_sar_accepted],
-          [:another_responder_in_diff_team, :ico_sar_pending_dacu],
-          [:another_responder_in_diff_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_diff_team, :ico_sar_responded],
-          [:another_responder_in_diff_team, :ico_sar_closed],
-
-          [:another_sar_responder_in_diff_team, :ico_sar_unassigned],
-          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_responder],
-          [:another_sar_responder_in_diff_team, :ico_sar_accepted],
-          [:another_sar_responder_in_diff_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_diff_team, :ico_sar_responded],
-          [:another_sar_responder_in_diff_team, :ico_sar_closed],
-          [:another_sar_responder_in_diff_team, :ico_foi_unassigned],
-          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_diff_team, :ico_foi_accepted],
-          [:another_sar_responder_in_diff_team, :ico_foi_pending_dacu],
-          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_dispatch],
-          [:another_sar_responder_in_diff_team, :ico_foi_responded],
-          [:another_sar_responder_in_diff_team, :ico_foi_closed],
-
-          [:private_officer, :ico_foi_unassigned],
-          [:private_officer, :ico_foi_awaiting_responder],
-          [:private_officer, :ico_foi_accepted],
-          [:private_officer, :ico_foi_pending_dacu],
-          [:private_officer, :ico_foi_awaiting_dispatch],
-          [:private_officer, :ico_foi_responded],
-          [:private_officer, :ico_foi_closed],
-
-          [:private_officer, :ico_sar_unassigned],
-          [:private_officer, :ico_sar_awaiting_responder],
-          [:private_officer, :ico_sar_accepted],
-          [:private_officer, :ico_sar_pending_dacu],
-          [:private_officer, :ico_sar_awaiting_dispatch],
-          [:private_officer, :ico_sar_responded],
-          [:private_officer, :ico_sar_closed],
-
-          [:press_officer, :ico_foi_unassigned],
-          [:press_officer, :ico_foi_awaiting_responder],
-          [:press_officer, :ico_foi_accepted],
-          [:press_officer, :ico_foi_pending_dacu],
-          [:press_officer, :ico_foi_awaiting_dispatch],
-          [:press_officer, :ico_foi_responded],
-          [:press_officer, :ico_foi_closed],
-
-          [:press_officer, :ico_sar_unassigned],
-          [:press_officer, :ico_sar_awaiting_responder],
-          [:press_officer, :ico_sar_accepted],
-          [:press_officer, :ico_sar_pending_dacu],
-          [:press_officer, :ico_sar_awaiting_dispatch],
-          [:press_officer, :ico_sar_responded],
-          [:press_officer, :ico_sar_closed]
-
-               )
+          %i[another_responder_in_diff_team ico_foi_unassigned],
+          %i[another_responder_in_diff_team ico_foi_awaiting_responder],
+          %i[another_responder_in_diff_team ico_foi_accepted],
+          %i[another_responder_in_diff_team ico_foi_pending_dacu],
+          %i[another_responder_in_diff_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_diff_team ico_foi_responded],
+          %i[another_responder_in_diff_team ico_foi_closed],
+          %i[another_responder_in_diff_team ico_sar_unassigned],
+          %i[another_responder_in_diff_team ico_sar_awaiting_responder],
+          %i[another_responder_in_diff_team ico_sar_accepted],
+          %i[another_responder_in_diff_team ico_sar_pending_dacu],
+          %i[another_responder_in_diff_team ico_sar_awaiting_dispatch],
+          %i[another_responder_in_diff_team ico_sar_responded],
+          %i[another_responder_in_diff_team ico_sar_closed],
+          %i[another_sar_responder_in_diff_team ico_sar_unassigned],
+          %i[another_sar_responder_in_diff_team ico_sar_awaiting_responder],
+          %i[another_sar_responder_in_diff_team ico_sar_accepted],
+          %i[another_sar_responder_in_diff_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_diff_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_diff_team ico_sar_responded],
+          %i[another_sar_responder_in_diff_team ico_sar_closed],
+          %i[another_sar_responder_in_diff_team ico_foi_unassigned],
+          %i[another_sar_responder_in_diff_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_diff_team ico_foi_accepted],
+          %i[another_sar_responder_in_diff_team ico_foi_pending_dacu],
+          %i[another_sar_responder_in_diff_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_diff_team ico_foi_responded],
+          %i[another_sar_responder_in_diff_team ico_foi_closed],
+          %i[private_officer ico_foi_unassigned],
+          %i[private_officer ico_foi_awaiting_responder],
+          %i[private_officer ico_foi_accepted],
+          %i[private_officer ico_foi_pending_dacu],
+          %i[private_officer ico_foi_awaiting_dispatch],
+          %i[private_officer ico_foi_responded],
+          %i[private_officer ico_foi_closed],
+          %i[private_officer ico_sar_unassigned],
+          %i[private_officer ico_sar_awaiting_responder],
+          %i[private_officer ico_sar_accepted],
+          %i[private_officer ico_sar_pending_dacu],
+          %i[private_officer ico_sar_awaiting_dispatch],
+          %i[private_officer ico_sar_responded],
+          %i[private_officer ico_sar_closed],
+          %i[press_officer ico_foi_unassigned],
+          %i[press_officer ico_foi_awaiting_responder],
+          %i[press_officer ico_foi_accepted],
+          %i[press_officer ico_foi_pending_dacu],
+          %i[press_officer ico_foi_awaiting_dispatch],
+          %i[press_officer ico_foi_responded],
+          %i[press_officer ico_foi_closed],
+          %i[press_officer ico_sar_unassigned],
+          %i[press_officer ico_sar_awaiting_responder],
+          %i[press_officer ico_sar_accepted],
+          %i[press_officer ico_sar_pending_dacu],
+          %i[press_officer ico_sar_awaiting_dispatch],
+          %i[press_officer ico_sar_responded],
+          %i[press_officer ico_sar_closed],
+        )
       }
     end
 
-    describe :reassign_user do
+    describe "reassign_user" do
+      let(:event) { :reassign_user }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:responder,     :ico_foi_accepted],
-          [:sar_responder, :ico_sar_accepted],
-          [:responder,     :ico_foi_pending_dacu],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:responder,     :ico_foi_awaiting_dispatch],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[responder ico_foi_accepted],
+          %i[sar_responder ico_sar_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+        )
+      }
 
-          [:another_responder_in_same_team,     :ico_foi_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team,     :ico_foi_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team,     :ico_foi_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-               ) }
-    end
-
-    describe :reject_responder_assignment do
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:responder,     :ico_foi_awaiting_responder],
-          [:sar_responder, :ico_sar_awaiting_responder],
-
-          [:another_responder_in_same_team,     :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder]
-               ).debug
+        expect(event).to have_after_hook(
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+        ).with_hook("Workflows::Hooks", :reassign_user_email)
       }
     end
 
-    describe :remove_linked_case do
+    describe "reject_responder_assignment" do
+      let(:event) { :reject_responder_assignment }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-          [:disclosure_bmt, :ico_foi_closed],
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[responder ico_foi_awaiting_responder],
+          %i[sar_responder ico_sar_awaiting_responder],
+          %i[another_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
+        )
+      }
+    end
 
-          [:disclosure_bmt, :ico_sar_unassigned],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-          [:disclosure_bmt, :ico_sar_closed],
+    describe "remove_linked_case" do
+      let(:event) { :remove_linked_case }
 
+      it {
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
           # Responders should not be adding/removing links
-          [:responder, :ico_foi_unassigned],
-          [:responder, :ico_foi_awaiting_responder],
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_foi_responded],
-          [:responder, :ico_foi_closed],
-          [:responder, :ico_sar_unassigned],
-          [:responder, :ico_sar_awaiting_responder],
-          [:responder, :ico_sar_accepted],
-          [:responder, :ico_sar_pending_dacu],
-          [:responder, :ico_sar_awaiting_dispatch],
-          [:responder, :ico_sar_responded],
-          [:responder, :ico_sar_closed],
-
-          [:sar_responder, :ico_sar_unassigned],
-          [:sar_responder, :ico_sar_awaiting_responder],
-          [:sar_responder, :ico_sar_accepted],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
-          [:sar_responder, :ico_sar_responded],
-          [:sar_responder, :ico_sar_closed],
-          [:sar_responder, :ico_foi_unassigned],
-          [:sar_responder, :ico_foi_awaiting_responder],
-          [:sar_responder, :ico_foi_accepted],
-          [:sar_responder, :ico_foi_pending_dacu],
-          [:sar_responder, :ico_foi_awaiting_dispatch],
-          [:sar_responder, :ico_foi_responded],
-          [:sar_responder, :ico_foi_closed],
-
+          %i[responder ico_foi_unassigned],
+          %i[responder ico_foi_awaiting_responder],
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[responder ico_foi_responded],
+          %i[responder ico_foi_closed],
+          %i[responder ico_sar_unassigned],
+          %i[responder ico_sar_awaiting_responder],
+          %i[responder ico_sar_accepted],
+          %i[responder ico_sar_pending_dacu],
+          %i[responder ico_sar_awaiting_dispatch],
+          %i[responder ico_sar_responded],
+          %i[responder ico_sar_closed],
+          %i[sar_responder ico_sar_unassigned],
+          %i[sar_responder ico_sar_awaiting_responder],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[sar_responder ico_sar_responded],
+          %i[sar_responder ico_sar_closed],
+          %i[sar_responder ico_foi_unassigned],
+          %i[sar_responder ico_foi_awaiting_responder],
+          %i[sar_responder ico_foi_accepted],
+          %i[sar_responder ico_foi_pending_dacu],
+          %i[sar_responder ico_foi_awaiting_dispatch],
+          %i[sar_responder ico_foi_responded],
+          %i[sar_responder ico_foi_closed],
           # Responders should not be adding/removing links
-          [:another_responder_in_same_team, :ico_foi_unassigned],
-          [:another_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_foi_responded],
-          [:another_responder_in_same_team, :ico_foi_closed],
-          [:another_responder_in_same_team, :ico_sar_unassigned],
-          [:another_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_responder_in_same_team, :ico_sar_accepted],
-          [:another_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_sar_responded],
-          [:another_responder_in_same_team, :ico_sar_closed],
-
-          [:another_sar_responder_in_same_team, :ico_sar_unassigned],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_sar_responded],
-          [:another_sar_responder_in_same_team, :ico_sar_closed],
-          [:another_sar_responder_in_same_team, :ico_foi_unassigned],
-          [:another_sar_responder_in_same_team, :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_same_team, :ico_foi_accepted],
-          [:another_sar_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_foi_responded],
-          [:another_sar_responder_in_same_team, :ico_foi_closed],
-
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_foi_responded],
-          [:disclosure_specialist, :ico_foi_closed],
-
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_responded],
-          [:disclosure_specialist, :ico_sar_closed],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_foi_responded],
-          [:disclosure_specialist_coworker, :ico_foi_closed],
-
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_responded],
-          [:disclosure_specialist_coworker, :ico_sar_closed],
-
-          [:another_disclosure_specialist, :ico_foi_unassigned],
-          [:another_disclosure_specialist, :ico_foi_awaiting_responder],
-          [:another_disclosure_specialist, :ico_foi_accepted],
-          [:another_disclosure_specialist, :ico_foi_pending_dacu],
-          [:another_disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:another_disclosure_specialist, :ico_foi_responded],
-          [:another_disclosure_specialist, :ico_foi_closed],
-
-          [:another_disclosure_specialist, :ico_sar_unassigned],
-          [:another_disclosure_specialist, :ico_sar_awaiting_responder],
-          [:another_disclosure_specialist, :ico_sar_accepted],
-          [:another_disclosure_specialist, :ico_sar_pending_dacu],
-          [:another_disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:another_disclosure_specialist, :ico_sar_responded],
-          [:another_disclosure_specialist, :ico_sar_closed],
-
+          %i[another_responder_in_same_team ico_foi_unassigned],
+          %i[another_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_responded],
+          %i[another_responder_in_same_team ico_foi_closed],
+          %i[another_responder_in_same_team ico_sar_unassigned],
+          %i[another_responder_in_same_team ico_sar_awaiting_responder],
+          %i[another_responder_in_same_team ico_sar_accepted],
+          %i[another_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_sar_responded],
+          %i[another_responder_in_same_team ico_sar_closed],
+          %i[another_sar_responder_in_same_team ico_sar_unassigned],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_responded],
+          %i[another_sar_responder_in_same_team ico_sar_closed],
+          %i[another_sar_responder_in_same_team ico_foi_unassigned],
+          %i[another_sar_responder_in_same_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_same_team ico_foi_accepted],
+          %i[another_sar_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_foi_responded],
+          %i[another_sar_responder_in_same_team ico_foi_closed],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_responded],
+          %i[disclosure_specialist ico_foi_closed],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_responded],
+          %i[disclosure_specialist ico_sar_closed],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_responded],
+          %i[disclosure_specialist_coworker ico_foi_closed],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_responded],
+          %i[disclosure_specialist_coworker ico_sar_closed],
+          %i[another_disclosure_specialist ico_foi_unassigned],
+          %i[another_disclosure_specialist ico_foi_awaiting_responder],
+          %i[another_disclosure_specialist ico_foi_accepted],
+          %i[another_disclosure_specialist ico_foi_pending_dacu],
+          %i[another_disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[another_disclosure_specialist ico_foi_responded],
+          %i[another_disclosure_specialist ico_foi_closed],
+          %i[another_disclosure_specialist ico_sar_unassigned],
+          %i[another_disclosure_specialist ico_sar_awaiting_responder],
+          %i[another_disclosure_specialist ico_sar_accepted],
+          %i[another_disclosure_specialist ico_sar_pending_dacu],
+          %i[another_disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[another_disclosure_specialist ico_sar_responded],
+          %i[another_disclosure_specialist ico_sar_closed],
           # Responders should not be adding/removing links
-          [:another_responder_in_diff_team, :ico_foi_unassigned],
-          [:another_responder_in_diff_team, :ico_foi_awaiting_responder],
-          [:another_responder_in_diff_team, :ico_foi_accepted],
-          [:another_responder_in_diff_team, :ico_foi_pending_dacu],
-          [:another_responder_in_diff_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_diff_team, :ico_foi_responded],
-          [:another_responder_in_diff_team, :ico_foi_closed],
-          [:another_responder_in_diff_team, :ico_sar_unassigned],
-          [:another_responder_in_diff_team, :ico_sar_awaiting_responder],
-          [:another_responder_in_diff_team, :ico_sar_accepted],
-          [:another_responder_in_diff_team, :ico_sar_pending_dacu],
-          [:another_responder_in_diff_team, :ico_sar_awaiting_dispatch],
-          [:another_responder_in_diff_team, :ico_sar_responded],
-          [:another_responder_in_diff_team, :ico_sar_closed],
-
-          [:another_sar_responder_in_diff_team, :ico_sar_unassigned],
-          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_responder],
-          [:another_sar_responder_in_diff_team, :ico_sar_accepted],
-          [:another_sar_responder_in_diff_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_diff_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_diff_team, :ico_sar_responded],
-          [:another_sar_responder_in_diff_team, :ico_sar_closed],
-          [:another_sar_responder_in_diff_team, :ico_foi_unassigned],
-          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_responder],
-          [:another_sar_responder_in_diff_team, :ico_foi_accepted],
-          [:another_sar_responder_in_diff_team, :ico_foi_pending_dacu],
-          [:another_sar_responder_in_diff_team, :ico_foi_awaiting_dispatch],
-          [:another_sar_responder_in_diff_team, :ico_foi_responded],
-          [:another_sar_responder_in_diff_team, :ico_foi_closed],
-
-          [:private_officer, :ico_foi_unassigned],
-          [:private_officer, :ico_foi_awaiting_responder],
-          [:private_officer, :ico_foi_accepted],
-          [:private_officer, :ico_foi_pending_dacu],
-          [:private_officer, :ico_foi_awaiting_dispatch],
-          [:private_officer, :ico_foi_responded],
-          [:private_officer, :ico_foi_closed],
-
-          [:private_officer, :ico_sar_unassigned],
-          [:private_officer, :ico_sar_awaiting_responder],
-          [:private_officer, :ico_sar_accepted],
-          [:private_officer, :ico_sar_pending_dacu],
-          [:private_officer, :ico_sar_awaiting_dispatch],
-          [:private_officer, :ico_sar_responded],
-          [:private_officer, :ico_sar_closed],
-
-          [:press_officer, :ico_foi_unassigned],
-          [:press_officer, :ico_foi_awaiting_responder],
-          [:press_officer, :ico_foi_accepted],
-          [:press_officer, :ico_foi_pending_dacu],
-          [:press_officer, :ico_foi_awaiting_dispatch],
-          [:press_officer, :ico_foi_responded],
-          [:press_officer, :ico_foi_closed],
-
-          [:press_officer, :ico_sar_unassigned],
-          [:press_officer, :ico_sar_awaiting_responder],
-          [:press_officer, :ico_sar_accepted],
-          [:press_officer, :ico_sar_pending_dacu],
-          [:press_officer, :ico_sar_awaiting_dispatch],
-          [:press_officer, :ico_sar_responded],
-          [:press_officer, :ico_sar_closed]
-   )    }
-    end
-
-    describe :respond do
-      it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-        )}
-    end
-
-    describe :unaccept_approver_assignment do
-      it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-        )}
-    end
-
-    describe :upload_response_and_approve do
-      it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-
-               )
+          %i[another_responder_in_diff_team ico_foi_unassigned],
+          %i[another_responder_in_diff_team ico_foi_awaiting_responder],
+          %i[another_responder_in_diff_team ico_foi_accepted],
+          %i[another_responder_in_diff_team ico_foi_pending_dacu],
+          %i[another_responder_in_diff_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_diff_team ico_foi_responded],
+          %i[another_responder_in_diff_team ico_foi_closed],
+          %i[another_responder_in_diff_team ico_sar_unassigned],
+          %i[another_responder_in_diff_team ico_sar_awaiting_responder],
+          %i[another_responder_in_diff_team ico_sar_accepted],
+          %i[another_responder_in_diff_team ico_sar_pending_dacu],
+          %i[another_responder_in_diff_team ico_sar_awaiting_dispatch],
+          %i[another_responder_in_diff_team ico_sar_responded],
+          %i[another_responder_in_diff_team ico_sar_closed],
+          %i[another_sar_responder_in_diff_team ico_sar_unassigned],
+          %i[another_sar_responder_in_diff_team ico_sar_awaiting_responder],
+          %i[another_sar_responder_in_diff_team ico_sar_accepted],
+          %i[another_sar_responder_in_diff_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_diff_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_diff_team ico_sar_responded],
+          %i[another_sar_responder_in_diff_team ico_sar_closed],
+          %i[another_sar_responder_in_diff_team ico_foi_unassigned],
+          %i[another_sar_responder_in_diff_team ico_foi_awaiting_responder],
+          %i[another_sar_responder_in_diff_team ico_foi_accepted],
+          %i[another_sar_responder_in_diff_team ico_foi_pending_dacu],
+          %i[another_sar_responder_in_diff_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_diff_team ico_foi_responded],
+          %i[another_sar_responder_in_diff_team ico_foi_closed],
+          %i[private_officer ico_foi_unassigned],
+          %i[private_officer ico_foi_awaiting_responder],
+          %i[private_officer ico_foi_accepted],
+          %i[private_officer ico_foi_pending_dacu],
+          %i[private_officer ico_foi_awaiting_dispatch],
+          %i[private_officer ico_foi_responded],
+          %i[private_officer ico_foi_closed],
+          %i[private_officer ico_sar_unassigned],
+          %i[private_officer ico_sar_awaiting_responder],
+          %i[private_officer ico_sar_accepted],
+          %i[private_officer ico_sar_pending_dacu],
+          %i[private_officer ico_sar_awaiting_dispatch],
+          %i[private_officer ico_sar_responded],
+          %i[private_officer ico_sar_closed],
+          %i[press_officer ico_foi_unassigned],
+          %i[press_officer ico_foi_awaiting_responder],
+          %i[press_officer ico_foi_accepted],
+          %i[press_officer ico_foi_pending_dacu],
+          %i[press_officer ico_foi_awaiting_dispatch],
+          %i[press_officer ico_foi_responded],
+          %i[press_officer ico_foi_closed],
+          %i[press_officer ico_sar_unassigned],
+          %i[press_officer ico_sar_awaiting_responder],
+          %i[press_officer ico_sar_accepted],
+          %i[press_officer ico_sar_pending_dacu],
+          %i[press_officer ico_sar_awaiting_dispatch],
+          %i[press_officer ico_sar_responded],
+          %i[press_officer ico_sar_closed],
+        )
       }
     end
 
-    describe :upload_response_and_return_for_redraft do
+    describe "respond" do
+      let(:event) { :respond }
+
       it {
-        should permit_event_to_be_triggered_only_by(
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-               )
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+        )
       }
     end
 
-  ############## EMAIL TESTS ################
+    describe "unaccept_approver_assignment" do
+      let(:event) { :unaccept_approver_assignment }
 
-
-    describe :add_message_to_case do
       it {
-        should have_after_hook(
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_foi_pending_dacu],
-          [:disclosure_bmt, :ico_foi_awaiting_dispatch],
-          [:disclosure_bmt, :ico_foi_responded],
-
-          [:disclosure_bmt, :ico_sar_accepted],
-          [:disclosure_bmt, :ico_sar_pending_dacu],
-          [:disclosure_bmt, :ico_sar_awaiting_dispatch],
-          [:disclosure_bmt, :ico_sar_responded],
-
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-          [:responder, :ico_foi_responded],
-
-          [:sar_responder, :ico_sar_accepted],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
-          [:sar_responder, :ico_sar_responded],
-
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-          [:another_responder_in_same_team, :ico_foi_responded],
-
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-          [:another_sar_responder_in_same_team, :ico_sar_responded],
-
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_foi_responded],
-
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_responded],
-
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_foi_responded],
-
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_responded],
-
-       ).with_hook('Workflows::Hooks', :notify_responder_message_received)
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+        )
       }
     end
 
-    describe :approve do
-      it {
-        should have_after_hook(
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
+    describe "upload_response_and_approve" do
+      let(:event) { :upload_response_and_approve }
 
-       ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
+      it {
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+        )
+      }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+        ).with_hook("Workflows::Hooks", :notify_responder_ready_to_send)
       }
     end
 
-    describe :assign_responder do
+    describe "upload_response_and_return_for_redraft" do
+      let(:event) { :upload_response_and_return_for_redraft }
+
       it {
-        should have_after_hook(
-          [:disclosure_bmt, :ico_foi_unassigned],
-          [:disclosure_bmt, :ico_sar_unassigned],
-       ).with_hook('Workflows::Hooks', :assign_responder_email)
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+        )
       }
-    end
 
-
-    describe :assign_to_new_team do
       it {
-        should have_after_hook(
-          [:disclosure_bmt, :ico_foi_awaiting_responder],
-          [:disclosure_bmt, :ico_foi_accepted],
-          [:disclosure_bmt, :ico_sar_awaiting_responder],
-          [:disclosure_bmt, :ico_sar_accepted],
-       ).with_hook('Workflows::Hooks', :assign_responder_email)
-      }
-    end
-
-
-    describe :reassign_user do
-      it {
-        should have_after_hook(
-          [:responder, :ico_foi_accepted],
-          [:responder, :ico_foi_pending_dacu],
-          [:responder, :ico_foi_awaiting_dispatch],
-
-          [:sar_responder, :ico_sar_accepted],
-          [:sar_responder, :ico_sar_pending_dacu],
-          [:sar_responder, :ico_sar_awaiting_dispatch],
-
-          [:another_responder_in_same_team, :ico_foi_accepted],
-          [:another_responder_in_same_team, :ico_foi_pending_dacu],
-          [:another_responder_in_same_team, :ico_foi_awaiting_dispatch],
-
-          [:another_sar_responder_in_same_team, :ico_sar_accepted],
-          [:another_sar_responder_in_same_team, :ico_sar_pending_dacu],
-          [:another_sar_responder_in_same_team, :ico_sar_awaiting_dispatch],
-
-          [:disclosure_specialist, :ico_foi_unassigned],
-          [:disclosure_specialist, :ico_foi_awaiting_responder],
-          [:disclosure_specialist, :ico_foi_accepted],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-          [:disclosure_specialist, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist, :ico_sar_unassigned],
-          [:disclosure_specialist, :ico_sar_awaiting_responder],
-          [:disclosure_specialist, :ico_sar_accepted],
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_sar_awaiting_dispatch],
-
-          [:disclosure_specialist_coworker, :ico_foi_unassigned],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_foi_accepted],
-          [:disclosure_specialist_coworker, :ico_foi_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_foi_awaiting_dispatch],
-          [:disclosure_specialist_coworker, :ico_sar_unassigned],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_responder],
-          [:disclosure_specialist_coworker, :ico_sar_accepted],
-          [:disclosure_specialist_coworker, :ico_sar_pending_dacu],
-          [:disclosure_specialist_coworker, :ico_sar_awaiting_dispatch],
-
-       ).with_hook('Workflows::Hooks', :reassign_user_email)
-      }
-    end
-
-    describe :upload_response_and_return_for_redraft do
-      it {
-        should have_after_hook(
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-
-       ).with_hook('Workflows::Hooks', :notify_responder_redraft_requested)
-      }
-    end
-
-    describe :upload_response_and_approve do
-      it {
-        should have_after_hook(
-          [:disclosure_specialist, :ico_sar_pending_dacu],
-          [:disclosure_specialist, :ico_foi_pending_dacu],
-
-       ).with_hook('Workflows::Hooks', :notify_responder_ready_to_send)
+        expect(event).to have_after_hook(
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+        ).with_hook("Workflows::Hooks", :notify_responder_redraft_requested)
       }
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

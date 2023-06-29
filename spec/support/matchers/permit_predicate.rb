@@ -21,10 +21,10 @@ module PermitPredicate
       @errors = []
       all_users.each do |user_type, user|
         all_cases.each do |case_type, kase|
-          predicates = Workflows::Predicates.new(user: user, kase: kase)
+          predicates = Workflows::Predicates.new(user:, kase:)
           result = predicates.send(predicate)
           if [user_type, case_type].in?(permitted_combinations) ^ result
-            debugger if @debug_on_error && $stdout.tty?
+            debugger if @debug_on_error && $stdout.tty? # rubocop:disable Lint/Debugger
             @errors << [user_type, case_type, result]
           end
         end
@@ -41,20 +41,17 @@ module PermitPredicate
     end
 
     failure_message do |predicate|
-      unless @errors.nil? || @errors.empty?
+      if @errors.present?
         @error_message = "Predicate #{predicate} failed for the combinations:\n"
         @errors.each do |user, kase, result|
-          if result
-            @error_message <<
-              "  [#{user}, #{kase}] did not expect it, but got true\n"
-          else
-            @error_message <<
-              "  [#{user}, #{kase}] expected true, but got false\n"
-          end
+          @error_message << if result
+                              "  [#{user}, #{kase}] did not expect it, but got true\n"
+                            else
+                              "  [#{user}, #{kase}] expected true, but got false\n"
+                            end
         end
       end
       @error_message
     end
   end
 end
-

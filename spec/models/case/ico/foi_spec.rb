@@ -29,45 +29,47 @@
 #  user_id              :integer          not null, default(-100), foreign key
 #
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Case::ICO::FOI do
-  let(:kase) { described_class.new() }
+  let(:kase) { described_class.new }
 
-  describe '.decorator_class' do
+  describe ".decorator_class" do
     subject { described_class.decorator_class }
-    it { should eq Case::ICO::FOIDecorator }
+
+    it { is_expected.to eq Case::ICO::FOIDecorator }
   end
 
-  describe '#original_case_type' do
+  describe "#original_case_type" do
     subject { kase.original_case_type }
-    it { should eq 'FOI' }
+
+    it { is_expected.to eq "FOI" }
   end
 
-  describe '#num_days_late_against_original_deadline' do
+  describe "#num_days_late_against_original_deadline" do
     let(:require_further_action_case) { create :require_further_action_ico_foi_case }
 
-    it 'is nil when 0 days late' do
-      require_further_action_case.original_external_deadline = Date.today
+    it "is nil when 0 days late" do
+      require_further_action_case.original_external_deadline = Time.zone.today
       expect(require_further_action_case.num_days_late_against_original_deadline).to be nil
     end
 
-    it 'is nil when not yet late for open case' do
-      require_further_action_case.original_external_deadline = Date.tomorrow
+    it "is nil when not yet late for open case" do
+      require_further_action_case.original_external_deadline = Time.zone.tomorrow
       expect(require_further_action_case.num_days_late_against_original_deadline).to be nil
     end
 
-    it 'returns correct number of days late for open case' do
-      Timecop.freeze(Time.new(2020, 9, 11, 9, 45, 33)) do
+    it "returns correct number of days late for open case" do
+      Timecop.freeze(Time.zone.local(2020, 9, 11, 9, 45, 33)) do
         tase = build_stubbed :require_further_action_ico_foi_case,
-                      created_at: Time.new(2020, 8, 1, 9, 45, 00),
-                      received_date: Time.new(2020, 8, 1, 9, 45, 33)
-        tase.original_external_deadline = Time.new(2020, 9, 4, 9, 00, 33)
+                             created_at: Time.zone.local(2020, 8, 1, 9, 45, 0o0),
+                             received_date: Time.zone.local(2020, 8, 1, 9, 45, 33)
+        tase.original_external_deadline = Time.zone.local(2020, 9, 4, 9, 0o0, 33)
         expect(tase.num_days_late_against_original_deadline).to eq 5
       end
     end
 
-    it 'returns correct number of days late for closed case' do
+    it "returns correct number of days late for closed case" do
       Timecop.freeze(Date.new(2020, 9, 11)) do
         require_further_action_case.original_external_deadline = Date.new(2020, 9, 1)
         require_further_action_case.date_responded = Date.new(2020, 9, 10)
@@ -75,5 +77,4 @@ describe Case::ICO::FOI do
       end
     end
   end
-
 end

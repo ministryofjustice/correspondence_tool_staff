@@ -1,5 +1,4 @@
 class PdfMakerJob < ApplicationJob
-
   queue_as :pdf_maker
 
   def perform(attachment_id, retry_count = 0)

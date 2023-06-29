@@ -1,5 +1,4 @@
 class NotifyTeamService
-
   attr_reader :result, :case
 
   def initialize(kase, mail_type)
@@ -13,7 +12,7 @@ class NotifyTeamService
     @result = :ok
   end
 
-  private
+private
 
   def notify_managing_team
     ActionNotificationsMailer

@@ -15,10 +15,10 @@ class CaseUpdatePartialFlagsService
       has_changed = is_data_changed?
       has_partial_flag_changed = is_partial_case_flag_changed?
       has_second_flag_changed = is_further_actions_required_flag_changed?
-     
+
       if has_partial_flag_changed
-        trigger_event(get_partial_event_name('mark_as_partial_case', @flag_params["is_partial_case"]))
-      end 
+        trigger_event(get_partial_event_name("mark_as_partial_case", @flag_params["is_partial_case"]))
+      end
 
       if has_second_flag_changed
         event_name = get_event_name_for_second_flag(@flag_params["further_actions_required"])
@@ -26,7 +26,7 @@ class CaseUpdatePartialFlagsService
           trigger_event(event_name)
         end
       end
-      
+
       if has_changed
         @case.save!
         @result = :ok
@@ -34,25 +34,25 @@ class CaseUpdatePartialFlagsService
         @result = :no_changes
       end
     end
-  rescue => err
-    @message = err.message
+  rescue StandardError => e
+    @message = e.message
     @result = :error
   end
 
-  private 
+private
 
   def is_partial_case_flag_changed?
-    @case.changed_attributes.keys.include?('is_partial_case')
+    @case.changed_attributes.keys.include?("is_partial_case")
   end
 
   def is_further_actions_required_flag_changed?
-    @case.changed_attributes.keys.include?('further_actions_required')
+    @case.changed_attributes.keys.include?("further_actions_required")
   end
 
   def is_date_change?
-    @case.changed_attributes.keys.include?('partial_case_letter_sent_dated')
+    @case.changed_attributes.keys.include?("partial_case_letter_sent_dated")
   end
-  
+
   def is_data_changed?
     is_partial_case_flag_changed? || is_further_actions_required_flag_changed? || is_date_change?
   end
@@ -66,19 +66,16 @@ class CaseUpdatePartialFlagsService
   end
 
   def get_event_name_for_second_flag(flag_value)
-    case flag_value
-    when 'yes'
-      'mark_as_further_actions_required'
-    when 'no'
-      'unmark_as_further_actions_required'
-    when 'awaiting_response'
-      'mark_as_awaiting_response_for_partial_case'
-    end
+    {
+      yes: "mark_as_further_actions_required",
+      no: "unmark_as_further_actions_required",
+      awaiting_response: "mark_as_awaiting_response_for_partial_case",
+    }[flag_value.to_sym]
   end
 
   def trigger_event(event_name)
     acting_team = @user.case_team_for_event(@case, event_name)
     @case.state_machine.send("#{event_name}!", acting_user: @user,
-      acting_team: acting_team)
+                                               acting_team:)
   end
 end

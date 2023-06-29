@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'assignments/edit.html.slim', type: :view do
-
+describe "assignments/edit.html.slim", type: :view do
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)
     super(user)
@@ -9,12 +8,13 @@ describe 'assignments/edit.html.slim', type: :view do
 
   let(:responder)       { find_or_create :foi_responder }
   let(:responding_team) { responder.responding_teams.first }
-  let(:awaiting_responder_case) { create(:awaiting_responder_case, :with_messages,
-                                         responding_team: responding_team).decorate }
+  let(:awaiting_responder_case) do
+    create(:awaiting_responder_case, :with_messages,
+           responding_team:).decorate
+  end
   let(:assignment)      { awaiting_responder_case.responder_assignment }
 
-  it 'displays the edit assignment page' do
-
+  it "displays the edit assignment page" do
     assign(:case, awaiting_responder_case)
     assign(:case_transitions, awaiting_responder_case.transitions.decorate)
     assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
@@ -64,15 +64,16 @@ describe 'assignments/edit.html.slim', type: :view do
     expect(page).to have_reject_radio
 
     expect(page.confirm_button.value).to eq "Confirm"
-
   end
 
-  context 'ICO cases' do
-    let(:awaiting_responder_case) { create(:awaiting_responder_ico_foi_case, :with_messages,
-                                         responding_team: responding_team).decorate }
-    let(:assignment_for_ico)          { awaiting_responder_case.responder_assignment }
+  describe "ICO cases" do
+    let(:awaiting_responder_case) do
+      create(:awaiting_responder_ico_foi_case, :with_messages,
+             responding_team:).decorate
+    end
+    let(:assignment_for_ico) { awaiting_responder_case.responder_assignment }
 
-    it 'should display page and sections for ICO cases' do
+    it "displays page and sections for ICO cases" do
       assign(:case, awaiting_responder_case)
       assign(:case_transitions, awaiting_responder_case.transitions.decorate)
       assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
@@ -125,16 +126,17 @@ describe 'assignments/edit.html.slim', type: :view do
       expect(page).to have_reject_radio
 
       expect(page.confirm_button.value).to eq "Confirm"
-
     end
   end
 
-  context 'Overturned SARS cases' do
-    let(:awaiting_responder_case) { create(:awaiting_responder_ot_ico_sar, :with_messages,
-                                         responding_team: responding_team).decorate }
-    let(:assignment_for_overturned)          { awaiting_responder_case.responder_assignment }
+  describe "Overturned SARS cases" do
+    let(:awaiting_responder_case) do
+      create(:awaiting_responder_ot_ico_sar, :with_messages,
+             responding_team:).decorate
+    end
+    let(:assignment_for_overturned) { awaiting_responder_case.responder_assignment }
 
-    it 'should display page and sections for ICO cases' do
+    it "displays page and sections for ICO cases" do
       assign(:case, awaiting_responder_case)
       assign(:case_transitions, awaiting_responder_case.transitions.decorate)
       assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
@@ -174,7 +176,6 @@ describe 'assignments/edit.html.slim', type: :view do
 
       expect(page.overturned_sar).to have_no_request
 
-
       expect(page).to have_messages
 
       expect(page).to have_new_message
@@ -188,16 +189,17 @@ describe 'assignments/edit.html.slim', type: :view do
       expect(page).to have_reject_radio
 
       expect(page.confirm_button.value).to eq "Confirm"
-
     end
   end
 
-  context 'Overturned FOI cases' do
-    let(:ovt_foi_case)            { create(:awaiting_responder_ot_ico_foi, :with_messages,
-                                           responding_team: responding_team).decorate }
-    let(:assignment)              { awaiting_responder_case.responder_assignment }
+  describe "Overturned FOI cases" do
+    let(:ovt_foi_case) do
+      create(:awaiting_responder_ot_ico_foi, :with_messages,
+             responding_team:).decorate
+    end
+    let(:assignment) { awaiting_responder_case.responder_assignment }
 
-    it 'should display page and sections for ICO cases' do
+    it "displays page and sections for ICO cases" do
       assign(:case, ovt_foi_case)
       assign(:case_transitions, ovt_foi_case.transitions.decorate)
       assign(:correspondence_type_key, ovt_foi_case.type_abbreviation.downcase)
@@ -237,7 +239,6 @@ describe 'assignments/edit.html.slim', type: :view do
 
       expect(page.overturned_foi).to have_no_request
 
-
       expect(page).to have_messages
 
       expect(page).to have_new_message
@@ -251,7 +252,6 @@ describe 'assignments/edit.html.slim', type: :view do
       expect(page).to have_reject_radio
 
       expect(page.confirm_button.value).to eq "Confirm"
-
     end
   end
 end

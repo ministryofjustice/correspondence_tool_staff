@@ -11,7 +11,7 @@ module RetentionSchedules
     end
   end
 
-  class WrongCaseTypeError< StandardError
+  class WrongCaseTypeError < StandardError
     def message
       "Non Offender SAR / Offender SAR Compaint cases cannot be destroyed"
     end
@@ -24,39 +24,38 @@ module RetentionSchedules
   end
 
   class AnonymiseCaseService
-
     ANON_VALUES = {
-      case_reference_number: '123456',
-      date_of_birth: Date.new(01, 01, 0001),
-      email: 'anon.email@cms-gdpr.justice.gov.uk',
-      message: 'Information has been anonymised',
-      name: 'XXXX XXXX',
-      other_subject_ids: 'YY0123456789X',
-      postal_address: 'Anon address',
-      previous_case_numbers: 'XXXXXXXX',
-      prison_number: '123456',
-      requester_reference: 'XXXXXX',
-      subject: 'XXXX XXXX',
-      subject_address: 'Anon location',
-      subject_aliases: 'Anon alias',
-      subject_full_name: 'XXXX XXXX',
-      third_party_name: 'Anon requester',
-      third_party_relationship: 'Anon relationship',
+      case_reference_number: "123456",
+      date_of_birth: Date.new(0o1, 0o1, 0o001),
+      email: "anon.email@cms-gdpr.justice.gov.uk",
+      message: "Information has been anonymised",
+      name: "XXXX XXXX",
+      other_subject_ids: "YY0123456789X",
+      postal_address: "Anon address",
+      previous_case_numbers: "XXXXXXXX",
+      prison_number: "123456",
+      requester_reference: "XXXXXX",
+      subject: "XXXX XXXX",
+      subject_address: "Anon location",
+      subject_aliases: "Anon alias",
+      subject_full_name: "XXXX XXXX",
+      third_party_name: "Anon requester",
+      third_party_relationship: "Anon relationship",
 
       # Offender SAR Complaint specific fields
-      gld_contact_email: 'anon.email@cms-gdpr.justice.gov.uk',
-      gld_contact_name: 'XXXX XXXX',
-      gld_contact_phone: 'XXXX XXXX',
-      gld_reference: 'XXXX XXXX',
-      ico_contact_email: 'anon.email@cms-gdpr.justice.gov.uk',
-      ico_contact_name: 'XXXX XXXX',
-      ico_contact_phone: 'XXXX XXXX',
-      ico_reference: 'XXXX XXXX',
+      gld_contact_email: "anon.email@cms-gdpr.justice.gov.uk",
+      gld_contact_name: "XXXX XXXX",
+      gld_contact_phone: "XXXX XXXX",
+      gld_reference: "XXXX XXXX",
+      ico_contact_email: "anon.email@cms-gdpr.justice.gov.uk",
+      ico_contact_name: "XXXX XXXX",
+      ico_contact_phone: "XXXX XXXX",
+      ico_reference: "XXXX XXXX",
     }.freeze
 
-    ANON_NOTE_MESSAGE_VALUE = 'Note details have been anonymised'.freeze
+    ANON_NOTE_MESSAGE_VALUE = "Note details have been anonymised".freeze
 
-    ANON_DATA_REQUEST_NOTE_VALUE = 'Information has been anonymised'.freeze
+    ANON_DATA_REQUEST_NOTE_VALUE = "Information has been anonymised".freeze
 
     def initialize(kase:)
       # whole case and links will need to be loaded
@@ -76,25 +75,25 @@ module RetentionSchedules
       end
     end
 
-    private
+  private
 
     def anonymise_core_case_fields
       PaperTrail.request(enabled: false) do
         ANON_VALUES.each do |key, value|
           if @kase.respond_to?(key) && @kase.send(key).present?
-            @kase.update_attribute(key, value)
+            @kase.update_attribute(key, value) # rubocop:disable Rails/SkipsModelValidations
           end
         end
       end
     end
 
     def anonymise_case_notes
-      notes = @kase.transitions.where(event: 'add_note_to_case')
+      notes = @kase.transitions.where(event: "add_note_to_case")
 
       notes.each do |note|
         if note.message.present?
           note.message = ANON_NOTE_MESSAGE_VALUE
-          note.save
+          note.save # rubocop:disable Rails/SaveBang
         end
       end
     end
@@ -105,7 +104,7 @@ module RetentionSchedules
       data_requests.each do |data_request|
         if data_request.request_type_note.present?
           data_request.request_type_note = ANON_DATA_REQUEST_NOTE_VALUE
-          data_request.save
+          data_request.save # rubocop:disable Rails/SaveBang
         end
       end
     end
@@ -119,9 +118,9 @@ module RetentionSchedules
     end
 
     def guard_clause_checks
-      raise RetentionSchedules::WrongCaseTypeError unless @kase.type_of_offender_sar? 
+      raise RetentionSchedules::WrongCaseTypeError unless @kase.type_of_offender_sar?
       raise RetentionSchedules::CaseNotClosedError unless @kase.closed?
-      raise RetentionSchedules::NoRetentionScheduleError unless @kase.retention_schedule.present?
+      raise RetentionSchedules::NoRetentionScheduleError if @kase.retention_schedule.blank?
       raise RetentionSchedules::UnactionableStateError unless @kase.retention_schedule.to_be_anonymised?
     end
   end
