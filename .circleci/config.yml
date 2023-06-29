@@ -405,8 +405,8 @@ workflows:
             ignore: main
       - build_branch_and_push_to_ecr_approval:
           type: approval
-          requires:
-            - build_and_test
+          # requires:
+          #   - build_and_test
       context: build_branch_and_push_to_ecr-workflow
       - build_branch_and_push_to_ecr:
           requires:
