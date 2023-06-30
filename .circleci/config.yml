@@ -241,15 +241,15 @@ jobs:
             - build_tag
 
   build_main_and_push_to_ecr:
-    <<: *deploy_container_config
+    # <<: *deploy_container_config
     <<: *defaults
     executor: aws-ecr/default
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - setup_remote_docker:
-          docker_layer_caching: true
+      # - setup_remote_docker:
+      #     docker_layer_caching: true
       - aws-cli/setup:
           role_arn: $ECR_ROLE_TO_ASSUME
           region: $ECR_REGION
