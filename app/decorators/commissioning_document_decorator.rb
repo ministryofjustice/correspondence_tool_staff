@@ -4,7 +4,7 @@ class CommissioningDocumentDecorator < Draper::Decorator
   delegate_all
 
   def sent
-    super ? 'Yes': 'No'
+    super ? "Yes" : "No"
   end
 
   def request_document
@@ -16,14 +16,14 @@ class CommissioningDocumentDecorator < Draper::Decorator
   end
 
   def download_link
-    link_to('Download', h.download_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
+    link_to("Download", h.download_case_data_request_commissioning_document_path(data_request.case_id, data_request, self))
   end
 
   def replace_link
-    link_to('Replace', h.replace_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
+    link_to("Replace", h.replace_case_data_request_commissioning_document_path(data_request.case_id, data_request, self))
   end
 
   def change_link
-    link_to('Change', h.edit_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
+    link_to("Change", h.edit_case_data_request_commissioning_document_path(data_request.case_id, data_request, self))
   end
 end

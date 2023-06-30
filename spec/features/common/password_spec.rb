@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 feature "Signing in" do
   let!(:deactivated_user) { create :deactivated_user }

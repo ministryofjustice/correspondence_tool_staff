@@ -8,5 +8,4 @@ class AddReasonForDelayForOffenderSar < ActiveRecord::Migration[5.2]
     drop_column :cases, :reason_for_lateness_id
     drop_column :cases, :reason_for_lateness_note
   end
-
 end

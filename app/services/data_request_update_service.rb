@@ -12,31 +12,29 @@ class DataRequestUpdateService
 
   def call
     ActiveRecord::Base.transaction do
-      begin
-        @result = :unprocessed
+      @result = :unprocessed
 
-        @data_request.assign_attributes(@params.merge!(user_id: @user.id))
-        next unless @data_request.changed?
+      @data_request.assign_attributes(@params.merge!(user_id: @user.id))
+      next unless @data_request.changed?
 
-        @data_request.save!
+      @data_request.save!
 
-        @case.state_machine.add_data_received!(
-          acting_user: @user,
-          acting_team: BusinessUnit.dacu_branston,
-          message: log_message,
-        )
+      @case.state_machine.add_data_received!(
+        acting_user: @user,
+        acting_team: BusinessUnit.dacu_branston,
+        message: log_message,
+      )
 
-        @result = :ok
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
-        @result = :error
-      end
+      @result = :ok
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
+      @result = :error
     end
   end
 
-  private
+private
 
   def log_message
-    scope = 'cases.data_requests.update'
+    scope = "cases.data_requests.update"
     old_pages = @old_num_pages
     new_pages = @data_request.cached_num_pages
 
@@ -44,20 +42,19 @@ class DataRequestUpdateService
       # Create nicely readable sentences for both old and new number of pages
       # i18n-tasks-use t('cases.data_requests.update.log_pages')
       [old_pages, new_pages].map do |n|
-        "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+        "#{n} #{I18n.t('.log_pages', scope:, count: n)}"
       end
 
       # i18n-tasks-use t('cases.data_requests.update.log_message_pages_changed')
-      I18n.t('.log_message_pages_changed',
-        request_type: I18n.t("helpers.label.data_request.request_type.#{data_request.request_type}"),
-        location: @data_request.location,
-        date_changed: Date.current.strftime('%F'),
-        old_pages: old_pages,
-        new_pages: new_pages,
-        scope: scope
-      )
+      I18n.t(".log_message_pages_changed",
+             request_type: I18n.t("helpers.label.data_request.request_type.#{data_request.request_type}"),
+             location: @data_request.location,
+             date_changed: Date.current.strftime("%F"),
+             old_pages:,
+             new_pages:,
+             scope:)
     else
-      ''
+      ""
     end
   end
 

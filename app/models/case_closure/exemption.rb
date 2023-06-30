@@ -18,44 +18,43 @@
 
 module CaseClosure
   class Exemption < Metadatum
-
     SECTION_NUMBERS = {
-      's12'   => 'cost',
-      's21'   => 'othermeans',
-      's22'   => 'future',
-      's22a'  => 'research',
-      's23'   => 'security',
-      's24'   => 'natsec',
-      's26'   => 'defence',
-      's27'   => 'intrel',
-      's28'   => 'ukrel',
-      's29'   => 'economy',
-      's30'   => 'pubauth',
-      's31'   => 'law',
-      's32'   => 'court',
-      's33'   => 'audit',
-      's34'   => 'pp',
-      's35'   => 'policy',
-      's36'   => 'prej',
-      's37'   => 'royals',
-      's38'   => 'elf',
-      's39'   => 'env',
-      's40'   => 'pers',
-      's41'   => 'conf',
-      's42'   => 'legpriv',
-      's43'   => 'comm',
-      's44'   => 'prohib',
-      'ncnd'  => 'ncnd'
+      "s12" => "cost",
+      "s21" => "othermeans",
+      "s22" => "future",
+      "s22a" => "research",
+      "s23" => "security",
+      "s24" => "natsec",
+      "s26" => "defence",
+      "s27" => "intrel",
+      "s28" => "ukrel",
+      "s29" => "economy",
+      "s30" => "pubauth",
+      "s31" => "law",
+      "s32" => "court",
+      "s33" => "audit",
+      "s34" => "pp",
+      "s35" => "policy",
+      "s36" => "prej",
+      "s37" => "royals",
+      "s38" => "elf",
+      "s39" => "env",
+      "s40" => "pers",
+      "s41" => "conf",
+      "s42" => "legpriv",
+      "s43" => "comm",
+      "s44" => "prohib",
+      "ncnd" => "ncnd",
     }.freeze
 
     ABBREVIATIONS = SECTION_NUMBERS.invert.freeze
 
     validates :subtype, presence: true
 
-    scope :ncnd, -> { where(subtype: 'ncnd') }
-    scope :absolute, -> { where(subtype: 'absolute') }
-    scope :qualified, -> { where(subtype: 'qualified') }
-    scope :absolute_for_partly_refused, -> { where.not(abbreviation: 'cost') }
+    scope :ncnd, -> { where(subtype: "ncnd") }
+    scope :absolute, -> { where(subtype: "absolute") }
+    scope :qualified, -> { where(subtype: "qualified") }
+    scope :absolute_for_partly_refused, -> { where.not(abbreviation: "cost") }
 
     def self.method_missing(method, *args)
       # process self.s21 to self.s40
@@ -71,11 +70,11 @@ module CaseClosure
     end
 
     def ncnd?
-      subtype == 'ncnd'
+      subtype == "ncnd"
     end
 
     def self.most_frequently_used
-      self.unscoped.where(abbreviation: %w{ pers othermeans court future }).order(:name)
+      unscoped.where(abbreviation: %w[pers othermeans court future]).order(:name)
     end
 
     def self.section_number_from_id(abbreviation)

@@ -1,17 +1,16 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'teams/edit.html.slim', type: :view do
-
+describe "teams/edit.html.slim", type: :view do
   let(:manager)   { create :manager }
-  let(:hmpps)     { create_business_group('HMPPS', 'Michael Spurr')}
-  let(:prisons)   { create_directorate(hmpps, 'Prisons', 'Phil Copple')}
-  let(:ops)       { create_business_unit(prisons, 'Operations', 'Jack Harris')}
+  let(:hmpps)     { create_business_group("HMPPS", "Michael Spurr") }
+  let(:prisons)   { create_directorate(hmpps, "Prisons", "Phil Copple") }
+  let(:ops)       { create_business_unit(prisons, "Operations", "Jack Harris") }
 
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  context 'editing an existing business group' do
+  context "when editing an existing business group" do
     before do
       login_as manager
       assign(:team, hmpps)
@@ -19,8 +18,7 @@ describe 'teams/edit.html.slim', type: :view do
       teams_edit_page.load(rendered)
     end
 
-    it 'displays the edit business group page and all its fields' do
-
+    it "displays the edit business group page and all its fields" do
       expect(teams_edit_page.page_heading.text)
         .to eq "Edit Business group"
 
@@ -48,10 +46,9 @@ describe 'teams/edit.html.slim', type: :view do
 
       expect(teams_edit_page).to have_submit_button
     end
-
   end
 
-  context 'Editing an existing directorate' do
+  context "when editing an existing directorate" do
     before do
       login_as manager
       assign(:team, prisons)
@@ -59,8 +56,7 @@ describe 'teams/edit.html.slim', type: :view do
       teams_edit_page.load(rendered)
     end
 
-    it 'displays the edit directorate page and all its fields' do
-
+    it "displays the edit directorate page and all its fields" do
       expect(teams_edit_page.page_heading.heading.text)
         .to eq "Edit Directorate"
 
@@ -91,11 +87,9 @@ describe 'teams/edit.html.slim', type: :view do
 
       expect(teams_edit_page).to have_submit_button
     end
-
   end
 
-
-  context 'editing an existing business unit' do
+  context "when editing an existing business unit" do
     before do
       login_as manager
       assign(:team, ops)
@@ -103,14 +97,12 @@ describe 'teams/edit.html.slim', type: :view do
       teams_edit_page.load(rendered)
     end
 
-    it 'displays the new business group page and all its fields' do
-
+    it "displays the new business group page and all its fields" do
       expect(teams_edit_page.page_heading.heading.text)
         .to eq "Edit Business unit"
 
       expect(teams_edit_page.page_heading.sub_heading.text)
         .to eq "Directorate: #{prisons.name} "
-
 
       expect(teams_edit_page.business_unit_label.text)
         .to eq "Business unit"
@@ -135,35 +127,32 @@ describe 'teams/edit.html.slim', type: :view do
       expect(teams_edit_page).to have_no_managing_role_option
 
       expect(teams_edit_page).to have_submit_button
-
     end
-
   end
 
-  private
+private
 
   def create_business_group(name, team_lead)
     create :business_group,
-           name: name,
+           name:,
            lead: create(:team_lead, value: team_lead)
   end
 
-  def create_directorate(bg, name, team_lead)
+  def create_directorate(business_group, name, team_lead)
     create :directorate,
-           name: name,
-           business_group: bg,
+           name:,
+           business_group:,
            lead: create(:team_lead, value: team_lead)
   end
 
   def create_business_unit(directorate, name, team_lead)
     create :business_unit,
-           name: name,
-           directorate: directorate,
+           name:,
+           directorate:,
            lead: create(:team_lead, value: team_lead)
   end
 
-
   def add_team_lead(team, team_lead)
-    TeamProperty.create!(team_id: team.id, key: 'lead', value: team_lead)
+    TeamProperty.create!(team_id: team.id, key: "lead", value: team_lead)
   end
 end

@@ -29,9 +29,8 @@
 #
 
 FactoryBot.define do
-
   factory :timeliness_review,
-          class: Case::FOI::TimelinessReview,
+          class: "Case::FOI::TimelinessReview",
           parent: :case do
     transient do
       identifier { "foi timeliness review" }
@@ -39,7 +38,7 @@ FactoryBot.define do
   end
 
   factory :accepted_timeliness_review,
-          class: Case::FOI::TimelinessReview,
+          class: "Case::FOI::TimelinessReview",
           parent: :accepted_case,
           aliases: [:foi_timeliness_review_being_drafted] do
     transient do
@@ -48,11 +47,10 @@ FactoryBot.define do
   end
 
   factory :closed_timeliness_review,
-          class: Case::FOI::TimelinessReview,
+          class: "Case::FOI::TimelinessReview",
           parent: :closed_case do
     transient do
-      identifier { 'closed foi timeliness review case' }
+      identifier { "closed foi timeliness review case" }
     end
   end
-
 end

@@ -1,12 +1,12 @@
 module PageObjects
   module Sections
     class ServiceFeedbackSection < SitePrism::Section
-      element :feedback_form, '#new_feedback'
-      element :feedback_textarea, '#new_feedback textarea'
+      element :feedback_form, "#new_feedback"
+      element :feedback_textarea, "#new_feedback textarea"
 
-      element :send_button, '.button-secondary'
-      element :success_notice, '.feedback-notification .alert-green'
-      element :error_notice, '.feedback-notification .alert-red'
+      element :send_button, ".button-secondary"
+      element :success_notice, ".feedback-notification .alert-green"
+      element :error_notice, ".feedback-notification .alert-red"
 
       def send_feedback(msg)
         feedback_form.set msg

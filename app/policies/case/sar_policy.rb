@@ -1,16 +1,13 @@
 class Case::SARPolicy < Case::BasePolicy
-
   class Scope < Case::BaseScopePolicy
-    
     def correspondence_type
       CorrespondenceType.sar
-    end 
-    
+    end
   end
 
   def respond_and_close?
     clear_failed_checks
-      user.responding_teams.include?(self.case.responding_team)
+    user.responding_teams.include?(self.case.responding_team)
   end
 
   def show?

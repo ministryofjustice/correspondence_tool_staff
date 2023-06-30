@@ -1,6 +1,6 @@
 class ChangeAssignmentsForTeams < ActiveRecord::Migration[5.0]
   def up
-    create_enum :team_roles, 'managing', 'responding'
+    create_enum :team_roles, "managing", "responding"
 
     change_table :assignments do |t|
       t.column :role, :team_roles
@@ -16,7 +16,7 @@ class ChangeAssignmentsForTeams < ActiveRecord::Migration[5.0]
   end
 
   def down
-    create_enum :assignment_type, 'caseworker', 'drafter'
+    create_enum :assignment_type, "caseworker", "drafter"
 
     change_table :assignments do |t|
       t.remove :role

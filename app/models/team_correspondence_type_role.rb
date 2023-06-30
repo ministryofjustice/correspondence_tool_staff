@@ -15,7 +15,6 @@
 #
 
 class TeamCorrespondenceTypeRole < ApplicationRecord
-
   belongs_to :team
   belongs_to :correspondence_type
 
@@ -34,30 +33,25 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
 
   def self.params_from_roles(roles)
     params = {
-        view: false,
-        edit: false,
-        manage: false,
-        respond: false,
-        approve: false, 
-        administer_team: false
+      view: false,
+      edit: false,
+      manage: false,
+      respond: false,
+      approve: false,
+      administer_team: false,
     }
     roles.each { |role| params[role.to_sym] = true }
     params
   end
 
-  private
+private
 
   def roles_for_team(team)
-    case team.role
-    when 'manager'
-      [:view, :edit, :manage]
-    when 'responder'
-      [:view, :respond]
-    when 'approver'
-      [:view, :approve]
-    when 'team_admin'
-      [:view, :administer_team]
-    end
+    {
+      manager: %i[view edit manage],
+      responder: %i[view respond],
+      approver: %i[view approve],
+      team_admin: %i[view administer_team],
+    }[team.role.to_sym] || []
   end
-
 end

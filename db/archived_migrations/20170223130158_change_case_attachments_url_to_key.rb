@@ -1,5 +1,5 @@
 class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
-  class CaseAttachment < ActiveRecord::Base
+  class CaseAttachment < ApplicationRecord
     self.inheritance_column = :_type_not_used
   end
 
@@ -8,7 +8,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
       add_column :case_attachments, :key, :string
       CaseAttachment.all.each do |attachment|
         attachment.update(
-          key: URI.decode(URI.parse(attachment.url).path.sub(%r{^/}, ''))
+          key: CGI.unescape(URI.parse(attachment.url).path.sub(%r{^/}, "")),
         )
       end
       add_index :case_attachments, :key, unique: true
@@ -22,7 +22,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
       bucket = Aws::S3::Resource.new.bucket(Settings.case_uploads_s3_bucket)
       CaseAttachment.all.each do |attachment|
         attachment.update(
-          url: bucket.object(attachment.key).public_url
+          url: bucket.object(attachment.key).public_url,
         )
       end
       remove_index :case_attachments, :key

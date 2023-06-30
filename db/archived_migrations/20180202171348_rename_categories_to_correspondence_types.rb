@@ -15,7 +15,7 @@ class RenameCategoriesToCorrespondenceTypes < ActiveRecord::Migration[5.0]
     remove_column :categories, :properties
   end
 
-  class Category < ActiveRecord::Base
+  class Category < ApplicationRecord
   end
 
   def migrate_integer_column_to_json(table, column)

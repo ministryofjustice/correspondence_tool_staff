@@ -120,7 +120,6 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bindex (0.8.1)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.11.1)
@@ -286,6 +285,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    json (2.6.3)
     jsonb_accessor (1.3.4)
       activerecord (>= 5.0)
       activesupport (>= 5.0)
@@ -303,8 +303,6 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    launchy (2.5.0)
-      addressable (~> 2.7)
     libreconv (0.9.5)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -477,26 +475,35 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.11.0)
-    rubocop (1.29.1)
+    rubocop (1.44.1)
+      json (~> 2.3)
       parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+      parser (>= 3.2.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.17.0, < 2.0)
+      rubocop-ast (>= 1.24.1, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.18.0)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.24.1)
       parser (>= 3.1.1.0)
-    rubocop-performance (1.14.0)
-      rubocop (>= 1.7.0, < 2.0)
-      rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.15.1)
+    rubocop-capybara (2.18.0)
+      rubocop (~> 1.41)
+    rubocop-govuk (4.10.0)
+      rubocop (= 1.44.1)
+      rubocop-ast (= 1.24.1)
+      rubocop-rails (= 2.17.4)
+      rubocop-rake (= 0.6.0)
+      rubocop-rspec (= 2.18.1)
+    rubocop-rails (2.17.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 1.7.0, < 2.0)
-    rubocop-rspec (2.11.1)
-      rubocop (~> 1.19)
+      rubocop (>= 1.33.0, < 2.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
+    rubocop-rspec (2.18.1)
+      rubocop (~> 1.33)
+      rubocop-capybara (~> 2.17)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyntlm (0.6.3)
@@ -599,11 +606,6 @@ GEM
     uniform_notifier (1.16.0)
     warden (1.2.9)
       rack (>= 2.0.9)
-    web-console (4.2.0)
-      actionview (>= 6.0.0)
-      activemodel (>= 6.0.0)
-      bindex (>= 0.4.0)
-      railties (>= 6.0.0)
     webdrivers (5.2.0)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
@@ -662,7 +664,6 @@ DEPENDENCIES
   jquery-ui-rails
   jsonb_accessor (~> 1.3.2)
   kaminari
-  launchy
   libreconv (~> 0.9.5)
   listen (~> 3.7.1)
   lograge
@@ -685,10 +686,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 5.0)
-  rubocop (~> 1.29)
-  rubocop-performance
-  rubocop-rails
-  rubocop-rspec (~> 2.10)
+  rubocop-govuk
   ruby-progressbar
   rubyzip (>= 1.2.4)
   sablon
@@ -711,7 +709,6 @@ DEPENDENCIES
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)
-  web-console
   webdrivers (~> 5.2.0)
   yard
 

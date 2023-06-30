@@ -2,7 +2,6 @@
 # returning the result through the #case_counts_by_user method.
 #
 class UserActiveCaseCountService
-
   def initialize
     @case_counts_by_user = {}
   end
@@ -17,7 +16,7 @@ class UserActiveCaseCountService
     CaseFinderService.new(user).for_scopes(scopes).scope
   end
 
-  private
+private
 
   def get_counts_for_user(user)
     scopes = get_scopes_for_user(user)
@@ -26,9 +25,8 @@ class UserActiveCaseCountService
   end
 
   def get_scopes_for_user(user)
-    user.roles.map do |role|
+    user.roles.map { |role|
       Settings.global_navigation.pages.my_open_cases.scope.__send__(role)
-    end.compact
+    }.compact
   end
-
 end

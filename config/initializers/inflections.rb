@@ -11,5 +11,5 @@
 # end
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.uncountable 'feedback'
+  inflect.uncountable "feedback"
 end

@@ -1,6 +1,6 @@
 module DbHousekeeping
   def self.clean(seed: true)
-    tables = %w(
+    tables = %w[
       cases
       assignments
       case_attachments
@@ -22,7 +22,7 @@ module DbHousekeeping
       report_types
       letter_templates
       category_references
-    )
+    ]
     tables.each do |table|
       ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE")
     end

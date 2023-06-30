@@ -1,7 +1,7 @@
 class Case::SAR::StandardDecorator < Case::BaseDecorator
   def missing_info
     if object.closed?
-      object.refusal_reason&.abbreviation == 'sartmm' ? 'yes' : 'no'
+      object.refusal_reason&.abbreviation == "sartmm" ? "yes" : "no"
     end
   end
 
@@ -14,7 +14,7 @@ class Case::SAR::StandardDecorator < Case::BaseDecorator
   end
 
   def third_party_display
-    object.third_party == true ? 'Yes' : 'No'
+    object.third_party == true ? "Yes" : "No"
   end
 
   def time_taken
@@ -26,6 +26,6 @@ class Case::SAR::StandardDecorator < Case::BaseDecorator
   end
 
   def request_methods_for_display
-    request_methods_sorted - ['unknown']
+    request_methods_sorted - %w[unknown]
   end
 end

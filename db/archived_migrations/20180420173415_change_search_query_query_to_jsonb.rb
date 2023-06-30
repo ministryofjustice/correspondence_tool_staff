@@ -1,5 +1,5 @@
 class ChangeSearchQueryQueryToJsonb < ActiveRecord::Migration[5.0]
-  class SearchQueryMigration < ActiveRecord::Base
+  class SearchQueryMigration < ApplicationRecord
     self.table_name = :search_queries
   end
 
@@ -8,11 +8,11 @@ class ChangeSearchQueryQueryToJsonb < ActiveRecord::Migration[5.0]
       SearchQueryMigration.all.each do |search_query|
         search_query.update_column(
           :query,
-          "{\"search\": {\"query\":\"#{search_query.query}\"}}"
+          "{\"search\": {\"query\":\"#{search_query.query}\"}}",
         )
       end
 
-      change_column :search_queries, :query, :jsonb, using: 'query::jsonb'
+      change_column :search_queries, :query, :jsonb, using: "query::jsonb"
     end
   end
 
@@ -23,7 +23,7 @@ class ChangeSearchQueryQueryToJsonb < ActiveRecord::Migration[5.0]
       SearchQueryMigration.all.each do |search_query|
         search_query.update_column(
           :query,
-          JSON.parse(search_query.query)['search']['query']
+          JSON.parse(search_query.query)["search"]["query"],
         )
       end
     end

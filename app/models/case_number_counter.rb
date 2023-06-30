@@ -9,7 +9,7 @@
 
 class CaseNumberCounter < ApplicationRecord
   def self.next_for_date(date)
-    self.find_or_create_by(date: date)
+    find_or_create_by!(date:)
     update_sql = <<~EOSQL
       UPDATE case_number_counters
         SET counter = counter + 1

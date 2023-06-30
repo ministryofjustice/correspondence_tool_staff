@@ -1,5 +1,5 @@
 class AddCorrespondenceTypeColumnsToReportTypes < ActiveRecord::Migration[5.0]
-  require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
+  require Rails.root.join("db/seeders/report_type_seeder")
 
   def up
     add_column :report_types, :foi, :boolean, default: false

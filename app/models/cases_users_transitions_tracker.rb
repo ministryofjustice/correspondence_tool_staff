@@ -14,8 +14,7 @@
 # a particular user has looked at.
 class CasesUsersTransitionsTracker < ApplicationRecord
   belongs_to :case,
-             class_name: 'Case::Base',
-             foreign_key: :case_id
+             class_name: "Case::Base"
 
   belongs_to :user
 
@@ -25,13 +24,13 @@ class CasesUsersTransitionsTracker < ApplicationRecord
     def sync_for_case_and_user(kase, user)
       latest_transition = kase.message_transitions.last
       if latest_transition.present?
-        tracker = find_by case: kase, user: user
+        tracker = find_by(case: kase, user:)
         if tracker
           # Pretty sure this can't fail, but its a good pattern to use ! methods
           tracker.update! case_transition_id: latest_transition.id
         else
           create! case: kase,
-                  user: user,
+                  user:,
                   case_transition_id: latest_transition.id
         end
       end
@@ -43,7 +42,7 @@ class CasesUsersTransitionsTracker < ApplicationRecord
 
     if case_transition_id.present?
       last_transition_id.present? &&
-        self.case_transition_id >= last_transition_id
+        case_transition_id >= last_transition_id
     else
       last_transition_id.nil?
     end

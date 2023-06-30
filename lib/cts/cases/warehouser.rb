@@ -1,4 +1,4 @@
-require 'cts'
+require "cts"
 
 module CTS::Cases
   class Warehouser
@@ -11,30 +11,30 @@ module CTS::Cases
 
     def call
       logger.info Benchmark::CAPTION
-      logger.info Benchmark.measure { @added, @deleted = handle_task }
+      logger.info(Benchmark.measure { @added, @deleted = handle_task })
       logger.info "\n#{@added} cases added to warehouse\n#{@deleted} cases deleted from warehouse\n"
     end
 
-    private 
+  private
 
     def handle_task
       case @options[:scope]
-      when 'all'
+      when "all"
         reconcile_cases
-      when 'case_number'    
+      when "case_number"
         if @options[:number].present?
-          generate_case_sync_jobs_by_case_number(@options[:number])    
+          generate_case_sync_jobs_by_case_number(@options[:number])
         else
-          raise 'Please provide the number string of a case, please check help'
-        end 
-      when 'case_id_range'    
+          raise "Please provide the number string of a case, please check help"
+        end
+      when "case_id_range"
         if @options[:start].present? && @options[:end].present?
-          generate_case_sync_jobs_by_id_range(@options[:start], @options[:end])    
+          generate_case_sync_jobs_by_id_range(@options[:start], @options[:end])
         else
-          raise 'Please provide the id range of cases, please check help'
-        end 
+          raise "Please provide the id range of cases, please check help"
+        end
       else
-        raise 'Unrecognised option please check help'
+        raise "Unrecognised option please check help"
       end
     end
 
@@ -43,7 +43,7 @@ module CTS::Cases
     end
 
     def generate_case_sync_jobs_by_id_range(start_case_id, end_case_id)
-      Case::Base.where(id: start_case_id..end_case_id).each do | kase |
+      Case::Base.where(id: start_case_id..end_case_id).each do |kase|
         ::Warehouse::CaseSyncJob.perform_later(kase.class.to_s, kase.id)
       end
     end

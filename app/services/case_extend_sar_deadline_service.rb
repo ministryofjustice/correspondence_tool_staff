@@ -19,7 +19,7 @@ class CaseExtendSARDeadlineService
           acting_team: @user.case_team(@case),
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
-          message: message
+          message:,
         )
         new_extended_times = @extension_period.to_i + (@case.extended_times || 0)
         @case.extend_deadline!(@extension_deadline, new_extended_times)
@@ -29,14 +29,14 @@ class CaseExtendSARDeadlineService
       end
     end
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 
-  private
+private
 
   def new_extension_deadline(extend_by)
     @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
@@ -59,17 +59,17 @@ class CaseExtendSARDeadlineService
     if @extension_period.blank?
       @case.errors.add(
         :extension_period,
-        "cannot be blank"
+        "cannot be blank",
       )
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_period,
-        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date"
+        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date",
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(
         :extension_period,
-        "cannot be before the final deadline"
+        "cannot be before the final deadline",
       )
     end
   end
@@ -78,7 +78,7 @@ class CaseExtendSARDeadlineService
     if @reason.blank?
       @case.errors.add(
         :reason_for_extending,
-        "cannot be blank"
+        "cannot be blank",
       )
     end
   end

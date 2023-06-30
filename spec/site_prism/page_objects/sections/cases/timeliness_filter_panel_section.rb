@@ -8,13 +8,12 @@ module PageObjects
         # elements. Check for visibility on the panel section, not the
         # checkboxes
         element :in_time_checkbox,
-                '#search_query_filter_timeliness_in_time',
+                "#search_query_filter_timeliness_in_time",
                 visible: false
         element :late_checkbox,
-                '#search_query_filter_timeliness_late',
+                "#search_query_filter_timeliness_late",
                 visible: false
       end
     end
   end
 end
-

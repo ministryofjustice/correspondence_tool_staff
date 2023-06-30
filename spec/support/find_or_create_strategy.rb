@@ -13,16 +13,16 @@ module FactoryBot
         :find
       end
 
-      private
+    private
 
       def build_class(evaluation)
-        @klass ||= evaluation
+        @build_class ||= evaluation
                      .instance_variable_get(:@attribute_assigner)
                      .instance_variable_get(:@build_class)
       end
 
       def get_match_attributes(evaluation)
-        evaluation.hash.keep_if do |attr,_value|
+        evaluation.hash.keep_if do |attr, _value|
           attr.to_s.in? build_class(evaluation).column_names
         end
       end
@@ -30,6 +30,7 @@ module FactoryBot
       def get_overrides(evaluation = nil)
         evaluation.object
         return @overrides unless @overrides.nil?
+
         evaluation.instance_variable_get(:@attribute_assigner).instance_variable_get(:@evaluator).instance_variable_get(:@overrides).clone
       end
     end

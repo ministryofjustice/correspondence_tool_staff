@@ -19,27 +19,27 @@
 module CaseClosure
   class AppealOutcome < Metadatum
     def self.upheld
-      where(abbreviation: 'upheld').singular
+      where(abbreviation: "upheld").singular
     end
 
     def self.upheld_in_part
-      where(abbreviation: 'upheld_part').singular
+      where(abbreviation: "upheld_part").singular
     end
 
     def self.overturned
-      where(abbreviation: 'overturned').singular
+      where(abbreviation: "overturned").singular
     end
 
     def upheld?
-      abbreviation == 'upheld'
+      abbreviation == "upheld"
     end
 
     def upheld_in_part?
-      abbreviation == 'upheld_part'
+      abbreviation == "upheld_part"
     end
 
     def overturned?
-      abbreviation == 'overturned'
+      abbreviation == "overturned"
     end
   end
 end

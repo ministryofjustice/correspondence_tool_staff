@@ -1,5 +1,4 @@
 class DefaultTeamService
-
   def initialize(kase)
     @case = kase
   end
@@ -16,28 +15,28 @@ class DefaultTeamService
     case for_team
     when BusinessUnit.private_office
       [{
-         team: BusinessUnit.dacu_disclosure,
-         user: nil
-       },
+        team: BusinessUnit.dacu_disclosure,
+        user: nil,
+      },
        {
          team: BusinessUnit.press_office,
-         user: User.find_by!(email: default_press_officer)
+         user: User.find_by!(email: default_press_officer),
        }]
     when BusinessUnit.press_office
       [{
-         team: BusinessUnit.dacu_disclosure,
-         user: nil
-       },
+        team: BusinessUnit.dacu_disclosure,
+        user: nil,
+      },
        {
          team: BusinessUnit.private_office,
-         user: User.find_by!(email: default_private_officer)
+         user: User.find_by!(email: default_private_officer),
        }]
     else
       []
     end
   end
 
-  private
+private
 
   def default_press_officer
     @case.correspondence_type.default_press_officer

@@ -1,11 +1,9 @@
 module Stats
   module AppealCalculations
-
     module Callbacks
-
       def self.calculate_total_columns(stats, appeal_types)
         appeal_types.each do |appeal_type|
-          stats.stats.each do | _team_id, row |
+          stats.stats.each do |_team_id, row|
             row_name = "#{appeal_type}_appeal_total".to_sym
             row[row_name] = AppealCalculations.sum_all_received(row, appeal_type)
           end
@@ -14,7 +12,7 @@ module Stats
 
       def self.calculate_percentages(stats, appeal_types)
         appeal_types.each do |appeal_type|
-          stats.stats.each do | _team_id, row |
+          stats.stats.each do |_team_id, row|
             row_name = "#{appeal_type}_appeal_performance".to_sym
             row[row_name] = AppealCalculations.calculate_overall_performance(row, appeal_type)
           end
@@ -51,7 +49,7 @@ module Stats
     end
 
     def self.calculate_percentage(value, total)
-      if total == 0
+      if total.zero?
         0.0
       else
         ((value / total.to_f) * 100).round(1)

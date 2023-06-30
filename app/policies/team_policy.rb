@@ -1,5 +1,4 @@
 class TeamPolicy < ApplicationPolicy
-
   attr_reader :user, :team, :failed_checks
 
   def initialize(user, team = nil)
@@ -59,7 +58,6 @@ class TeamPolicy < ApplicationPolicy
   end
 
   class Scope
-
     attr_reader :user, :scope
 
     def initialize(user, scope)
@@ -69,7 +67,7 @@ class TeamPolicy < ApplicationPolicy
 
     def resolve
       if user.manager?
-        scope.where(type: 'BusinessGroup')
+        scope.where(type: "BusinessGroup")
       else
         scope.with_user(user)
       end
@@ -87,5 +85,4 @@ class TeamPolicy < ApplicationPolicy
   check :team_has_no_active_children do
     !team.has_active_children?
   end
-
 end

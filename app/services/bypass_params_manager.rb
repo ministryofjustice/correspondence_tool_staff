@@ -1,5 +1,4 @@
 class BypassParamsManager
-
   attr_reader :error_message, :params
 
   def initialize(params)
@@ -34,10 +33,10 @@ class BypassParamsManager
     @params == other.params
   end
 
-  private
+private
 
   def check_approval_requested?
-    @params[:bypass_approval][:press_office_approval_required] == 'true'
+    @params[:bypass_approval][:press_office_approval_required] == "true"
   end
 
   def check_bypass_requested?
@@ -46,14 +45,14 @@ class BypassParamsManager
 
   def params_valid?
     if present? && check_approval_requested? && check_message_present?
-      record_error 'Do not specify a reason for skipping further clearance if further clearance required.'
+      record_error "Do not specify a reason for skipping further clearance if further clearance required."
     elsif present? && check_bypass_requested? && check_message_blank?
-      record_error 'You must specify a reason for skipping further clearance'
+      record_error "You must specify a reason for skipping further clearance"
     else
       true
     end
   end
-  #rubocop:ensable Metrics/CyclomaticComplexity
+  # rubocop:ensable Metrics/CyclomaticComplexity
 
   def record_error(message)
     @error_message = message
@@ -67,5 +66,4 @@ class BypassParamsManager
   def check_message_blank?
     !check_message_present?
   end
-
 end

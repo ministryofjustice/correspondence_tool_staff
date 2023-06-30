@@ -1,1 +1,1 @@
-require File.join(Rails.root, 'lib', 'sentry_context_provider')
+require Rails.root.join("lib/sentry_context_provider")

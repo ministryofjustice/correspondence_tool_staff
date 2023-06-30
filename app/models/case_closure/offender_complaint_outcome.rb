@@ -3,27 +3,27 @@
 module CaseClosure
   class OffenderComplaintOutcome < Metadatum
     def self.succeeded
-      where(abbreviation: 'succeeded').singular
+      where(abbreviation: "succeeded").singular
     end
 
     def self.not_succeeded
-      where(abbreviation: 'not_succeeded').singular
+      where(abbreviation: "not_succeeded").singular
     end
 
     def self.settled
-      where(abbreviation: 'settled').singular
+      where(abbreviation: "settled").singular
     end
 
     def succeeded?
-      abbreviation == 'succeeded'
+      abbreviation == "succeeded"
     end
 
     def not_succeeded?
-      abbreviation == 'not_succeeded'
+      abbreviation == "not_succeeded"
     end
 
     def settled?
-      abbreviation == 'settled'
+      abbreviation == "settled"
     end
   end
 end

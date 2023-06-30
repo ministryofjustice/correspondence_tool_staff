@@ -7,22 +7,21 @@ module PageObjects
                 visible: false
 
         element :unassigned_checkbox,
-                '#search_query_filter_open_case_status_unassigned',
+                "#search_query_filter_open_case_status_unassigned",
                 visible: false
 
         element :responded_checkbox,
-                '#search_query_filter_open_case_status_responded',
+                "#search_query_filter_open_case_status_responded",
                 visible: false
 
         element :open_checkbox,
-          '#search_query_filter_status_open',
-          visible: false
+                "#search_query_filter_status_open",
+                visible: false
 
         element :closed_checkbox,
-          '#search_query_filter_status_closed',
-          visible: false
+                "#search_query_filter_status_closed",
+                visible: false
       end
     end
   end
 end
-

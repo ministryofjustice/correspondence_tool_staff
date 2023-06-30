@@ -13,13 +13,13 @@ class AddUserToCase < ActiveRecord::Migration[5.0]
     User.new(
       id: DEFAULT_USER_ID,
       email: Settings.default_user_email, # ideally dud emails
-      full_name: '',
+      full_name: "",
       password: SecureRandom.base64(20),
-      deleted_at: Date.today # to prevent login attempts
+      deleted_at: Time.zone.today, # to prevent login attempts
     )
     .save!(validate: false)
 
-    add_reference :cases, :user, foreign_key: true, null:false, default: DEFAULT_USER_ID
+    add_reference :cases, :user, foreign_key: true, null: false, default: DEFAULT_USER_ID
   end
 
   def down

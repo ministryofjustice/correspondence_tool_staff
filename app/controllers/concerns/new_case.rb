@@ -17,7 +17,7 @@ module NewCase
 
       @case = default_subclass.new.decorate
       @case_types = correspondence_type.sub_classes.map(&:to_s)
-      @s3_direct_post = S3Uploader.for(@case, 'requests')
+      @s3_direct_post = S3Uploader.for(@case, "requests")
     else
       flash.alert =
         helpers.t "cases.new.correspondence_type_errors.#{valid_type}",

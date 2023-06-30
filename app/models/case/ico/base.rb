@@ -28,10 +28,9 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-require './lib/translate_for_case'
+require "./lib/translate_for_case"
 
 class Case::ICO::Base < Case::Base
-
   include LinkableOriginalCase
   include DraftTimeliness::ResponseAdded
 
@@ -58,21 +57,21 @@ class Case::ICO::Base < Case::Base
                       :internal_deadline,
                       :received_date
 
-  has_paper_trail only: [
-    :date_responded,
-    :external_deadline,
-    :internal_deadline,
-    :ico_officer_name,
-    :ico_reference_number,
-    :message,
-    :properties,
-    :received_date,
-    :date_closed
+  has_paper_trail only: %i[
+    date_responded
+    external_deadline
+    internal_deadline
+    ico_officer_name
+    ico_reference_number
+    message
+    properties
+    received_date
+    date_closed
   ]
 
   enum ico_decision: {
-    upheld: 'upheld',
-    overturned: 'overturned'
+    upheld: "upheld",
+    overturned: "overturned",
   }
 
   validates :ico_officer_name, presence: true
@@ -84,7 +83,7 @@ class Case::ICO::Base < Case::Base
   validates :internal_deadline, presence: true
   validate :internal_deadline_within_limits?,
            if: -> { internal_deadline.present? }
-  validates_presence_of :original_case
+  validates :original_case, presence: true
   validates :received_date, presence: true
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
@@ -92,11 +91,11 @@ class Case::ICO::Base < Case::Base
 
   has_many :ico_decision_attachments,
            -> { ico_decision },
-           class_name: 'CaseAttachment',
+           class_name: "CaseAttachment",
            foreign_key: :case_id
 
   before_save do
-    self.workflow = 'trigger'
+    self.workflow = "trigger"
   end
 
   after_create :process_uploaded_request_files,
@@ -106,9 +105,9 @@ class Case::ICO::Base < Case::Base
     def searchable_fields_and_ranks
       super.except(:name).merge(
         {
-          ico_officer_name:     'C',
-          ico_reference_number: 'B',
-        }
+          ico_officer_name: "C",
+          ico_reference_number: "B",
+        },
       )
     end
 
@@ -116,12 +115,12 @@ class Case::ICO::Base < Case::Base
       # This string is used when constructing paths or methods in other parts of
       # the system. Ensure that it does not come from a user-supplied parameter,
       # and does not contain special chars like slashes, etc.
-      'ICO'
+      "ICO"
     end
   end
 
   def name=(_new_name)
-    raise StandardError.new('name attribute is read-only for ICO cases')
+    raise StandardError, "name attribute is read-only for ICO cases"
   end
 
   def requires_flag_for_disclosure_specialists?
@@ -135,7 +134,7 @@ class Case::ICO::Base < Case::Base
   delegate :subject, to: :original_case
 
   def subject=(_new_subject)
-    raise StandardError.new('subject attribute is read-only for ICO cases')
+    raise StandardError, "subject attribute is read-only for ICO cases"
   end
 
   def ico?
@@ -163,21 +162,19 @@ class Case::ICO::Base < Case::Base
   end
 
   def validate_late_team_recorded
-    if prepared_for_recording_late_team? && responded_late?
-      if late_team_id.blank?
-        errors.add(:late_team, "cannot be blank")
-      end
+    if prepared_for_recording_late_team? && responded_late? && late_team_id.blank?
+      errors.add(:late_team, "cannot be blank")
     end
   end
 
-  private
+private
 
   def identifier
     message
   end
 
   def default_workflow
-    'trigger'
+    "trigger"
   end
 
   def external_deadline_within_limits?
@@ -193,12 +190,12 @@ class Case::ICO::Base < Case::Base
       if external_deadline < received_date
         errors.add(
           :external_deadline,
-          I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_received')
+          I18n.t("activerecord.errors.models.case.attributes.external_deadline.before_received"),
         )
       elsif external_deadline > received_date + 1.year
         errors.add(
           :external_deadline,
-          I18n.t('activerecord.errors.models.case.attributes.external_deadline.too_far_past_received')
+          I18n.t("activerecord.errors.models.case.attributes.external_deadline.too_far_past_received"),
         )
       end
     end
@@ -208,7 +205,7 @@ class Case::ICO::Base < Case::Base
     if external_deadline.present? && internal_deadline > external_deadline
       errors.add(
         :external_deadline,
-        I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_internal')
+        I18n.t("activerecord.errors.models.case.attributes.external_deadline.before_internal"),
       )
     end
   end
@@ -219,37 +216,37 @@ class Case::ICO::Base < Case::Base
         :internal_deadline,
         TranslateForCase.t(
           self,
-          'activerecord.errors.models',
-          'attributes.internal_deadline.before_received'
-        )
+          "activerecord.errors.models",
+          "attributes.internal_deadline.before_received",
+        ),
       )
     end
     if external_deadline.present? && internal_deadline > external_deadline
       errors.add(
         :internal_deadline,
-        I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
+        I18n.t("activerecord.errors.models.case.attributes.internal_deadline.after_external"),
       )
     end
   end
 
   def received_date_within_limits?
-    if received_date < Date.today - 10.years
+    if received_date < Time.zone.today - 10.years
       errors.add(
         :received_date,
         TranslateForCase.t(
           self,
-          'activerecord.errors.models',
-          'attributes.received_date.past'
-        )
+          "activerecord.errors.models",
+          "attributes.received_date.past",
+        ),
       )
-    elsif received_date > Date.today
+    elsif received_date > Time.zone.today
       errors.add(
         :received_date,
         TranslateForCase.t(
           self,
-          'activerecord.errors.models',
-          'attributes.received_date.not_in_future'
-        )
+          "activerecord.errors.models",
+          "attributes.received_date.not_in_future",
+        ),
       )
     end
   end

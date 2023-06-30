@@ -1,9 +1,8 @@
 class ApplicationController < ActionController::Base
-
   include Pundit::Authorization
 
-  GLOBAL_NAV_EXCLUSION_PATHS    = %w{ /cases/filter }.freeze
-  CSV_REQUEST_REGEX             = /\.csv$/.freeze
+  GLOBAL_NAV_EXCLUSION_PATHS    = %w[/cases/filter].freeze
+  CSV_REQUEST_REGEX             = /\.csv$/
 
   before_action do
     unless self.class.to_s =~ /^Devise::/
@@ -18,7 +17,7 @@ class ApplicationController < ActionController::Base
   before_action :check_maintenance_mode
 
   before_action :set_paper_trail_whodunnit
-  before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck, :maintenance_mode, :accessibility]
+  before_action :authenticate_user!, :set_user, except: %i[ping healthcheck maintenance_mode accessibility]
   before_action :set_global_nav, if: -> { current_user.present? && global_nav_required? }
   before_action :add_security_headers
   before_action :set_hompepage_nav, if: -> { current_user.present? && global_nav_required? }
@@ -30,20 +29,21 @@ class ApplicationController < ActionController::Base
   end
 
   def maintenance_mode
-    redirect_to '/' and return unless maintenance_mode_on?
+    redirect_to "/" and return unless maintenance_mode_on?
+
     render layout: nil, file: "layouts/maintenance"
   end
 
-  private
+private
 
   def check_maintenance_mode
-    if maintenance_mode_on? && request.fullpath != '/maintenance'
-      redirect_to '/maintenance' and return
+    if maintenance_mode_on? && request.fullpath != "/maintenance"
+      redirect_to "/maintenance" and return
     end
   end
 
   def maintenance_mode_on?
-    File.exist? Rails.root.join('maintenance.txt')
+    File.exist? Rails.root.join("maintenance.txt")
   end
 
   def download_csv_request?
@@ -52,11 +52,11 @@ class ApplicationController < ActionController::Base
   end
 
   def add_security_headers
-    headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    headers['Pragma'] = 'no-cache'
-    headers['Expires'] = '-1'
+    headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    headers["Pragma"] = "no-cache"
+    headers["Expires"] = "-1"
     if Rails.env.production?
-      headers['Strict-Transport-Security'] = 'max-age=31536000, includeSubDomains'
+      headers["Strict-Transport-Security"] = "max-age=31536000, includeSubDomains"
     end
   end
 
@@ -98,20 +98,19 @@ class ApplicationController < ActionController::Base
   end
 
   def send_csv_case_by_specific_report(specific_report)
-    headers["Content-Type"] = 'text/csv; charset=utf-8'
+    headers["Content-Type"] = "text/csv; charset=utf-8"
     report_type = ReportType.find_by(abbr: specific_report)
     report_service_class = report_type.class_name.constantize
     report_service = report_service_class.new(case_scope: @cases)
     headers["Content-Disposition"] =
       %(attachment; filename="#{report_service.filename}")
-      self.response_body = report_service.to_csv()
+    self.response_body = report_service.to_csv
   end
 
   def send_csv_case_by_default(action_string)
-    headers["Content-Type"] = 'text/csv; charset=utf-8'
+    headers["Content-Type"] = "text/csv; charset=utf-8"
     headers["Content-Disposition"] =
       %(attachment; filename="#{CSVGenerator.filename(action_string)}")
-      self.response_body = CSVGenerator.new(@cases, CSVExporter.new(nil))
+    self.response_body = CSVGenerator.new(@cases, CSVExporter.new(nil))
   end
-
 end

@@ -2,11 +2,11 @@ module Stats
   class R007ClosedCasesReport < BaseClosedCasesReport
     class << self
       def title
-        'Closed cases report'
+        "Closed cases report"
       end
 
       def description
-        'Entire list of closed cases'
+        "Entire list of closed cases"
       end
 
       def etl_handler
@@ -20,7 +20,6 @@ module Stats
 
     def report_type
       ReportType.r007
-    end  
+    end
   end
 end
-

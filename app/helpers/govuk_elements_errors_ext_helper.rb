@@ -1,9 +1,8 @@
 module GovukElementsErrorsExtHelper
-
   def error_summary_list(object)
-    content_tag(:ul, class: 'error-summary-list') do
+    content_tag(:ul, class: "error-summary-list") do
       messages = error_summary_messages(object)
-      messages.flatten.join('').html_safe
+      messages.flatten.join("").html_safe
     end
   end
 
@@ -26,7 +25,6 @@ module GovukElementsErrorsExtHelper
   def object_prefixes(object)
     [underscore_name(object)]
   end
-
 end
 
 module GovukElementsErrorsHelper

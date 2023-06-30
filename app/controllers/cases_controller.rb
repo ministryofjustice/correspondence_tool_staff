@@ -1,15 +1,15 @@
-require './lib/translate_for_case'
+require "./lib/translate_for_case"
 
 class CasesController < ApplicationController
   include SetupCase
   include Closable
 
-  before_action -> { set_case(params[:id]) }, only: [:edit, :update]
+  before_action -> { set_case(params[:id]) }, only: %i[edit update]
 
-  before_action -> { set_decorated_case(params[:id]) }, only: [
-    :show,
-    :destroy,
-    :confirm_destroy
+  before_action -> { set_decorated_case(params[:id]) }, only: %i[
+    show
+    destroy
+    confirm_destroy
   ]
 
   # Attributes used by sub-classes to set the current Case type for the request
@@ -39,7 +39,7 @@ class CasesController < ApplicationController
       @accepted_now = params[:accepted_now]
       CasesUsersTransitionsTracker.sync_for_case_and_user(@case, current_user)
 
-      render 'cases/show'
+      render "cases/show"
     end
   end
 
@@ -47,36 +47,34 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     authorize Case::Base, :can_add_case?
 
-    render 'cases/select_type'
+    render "cases/select_type"
   end
 
   def create
-    begin
-      authorize case_type, :can_add_case?
+    authorize case_type, :can_add_case?
 
-      service = CaseCreateService.new(
-        user: current_user,
-        case_type: case_type,
-        params: create_params
-      )
-      service.call
-      @case = service.case
+    service = CaseCreateService.new(
+      user: current_user,
+      case_type:,
+      params: create_params,
+    )
+    service.call
+    @case = service.case
 
-      case service.result
-      when :assign_responder
-        flash[:creating_case] = true
-        flash[:notice] = service.message
-        redirect_to new_case_assignment_path @case
-      else
-        @case = @case.decorate
-        @case_types = @correspondence_type.sub_classes.map(&:to_s)
-        @s3_direct_post = S3Uploader.for(@case, 'requests')
-        render 'cases/new'
-      end
-    rescue ActiveRecord::RecordNotUnique
-      flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
-      render 'cases/new'
+    case service.result
+    when :assign_responder
+      flash[:creating_case] = true
+      flash[:notice] = service.message
+      redirect_to new_case_assignment_path @case
+    else
+      @case = @case.decorate
+      @case_types = @correspondence_type.sub_classes.map(&:to_s)
+      @s3_direct_post = S3Uploader.for(@case, "requests")
+      render "cases/new"
     end
+  rescue ActiveRecord::RecordNotUnique
+    flash.now[:notice] = t("activerecord.errors.models.case.attributes.number.duplication")
+    render "cases/new"
   end
 
   def edit
@@ -85,9 +83,9 @@ class CasesController < ApplicationController
     authorize @case
 
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
-    @s3_direct_post = S3Uploader.for(@case, 'requests')
+    @s3_direct_post = S3Uploader.for(@case, "requests")
     @case = @case.decorate
-    render 'cases/edit'
+    render "cases/edit"
   end
 
   def update
@@ -101,16 +99,17 @@ class CasesController < ApplicationController
 
     if service.result == :error
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
-      @s3_direct_post = S3Uploader.for(@case, 'requests')
+      @s3_direct_post = S3Uploader.for(@case, "requests")
       if service.error_message.present?
         flash[:alert] = service.error_message
       end
-      render 'cases/edit' and return
+      render "cases/edit" and return
     end
 
-    if service.result == :ok
-      flash[:notice] = t('cases.update.case_updated')
-    elsif service.result == :no_changes
+    case service.result
+    when :ok
+      flash[:notice] = t("cases.update.case_updated")
+    when :no_changes
       flash[:alert] = "No changes were made"
     end
 
@@ -125,7 +124,7 @@ class CasesController < ApplicationController
     service = CaseDeletionService.new(
       current_user,
       @case,
-      params.require(:case).permit(:reason_for_deletion)
+      params.require(:case).permit(:reason_for_deletion),
     )
     service.call
 
@@ -134,7 +133,7 @@ class CasesController < ApplicationController
       redirect_to cases_path
     else
       @case.assign_attributes(params.require(:case).permit(:reason_for_deletion))
-      render 'cases/confirm_destroy'
+      render "cases/confirm_destroy"
     end
   end
 
@@ -142,7 +141,7 @@ class CasesController < ApplicationController
     authorize @case
   end
 
-  protected
+protected
 
   def case_updater_service
     CaseUpdaterService
@@ -167,11 +166,11 @@ class CasesController < ApplicationController
   # approve, upload_responses).
   def user_not_authorized(exception)
     case exception.query
-    when 'approve?',
-         'can_add_attachment?',
+    when "approve?",
+         "can_add_attachment?",
          /^add_response_to_flagged_case/,
-         'upload_responses?',
-         'update_closure?'
+         "upload_responses?",
+         "update_closure?"
       super(exception, case_path(@case))
     else
       super
@@ -212,15 +211,15 @@ class CasesController < ApplicationController
     # e.g. Offender SAR
   end
 
-  private
+private
 
   def correspondence_types_for_current_user
-    types = current_user.
-              managing_teams.
-              first.
-              correspondence_types.
-              menu_visible.
-              order(:name).to_a
+    types = current_user
+              .managing_teams
+              .first
+              .correspondence_types
+              .menu_visible
+              .order(:name).to_a
 
     add_sar_ir_to_permitted_types_if_sars_allowed(types)
     types

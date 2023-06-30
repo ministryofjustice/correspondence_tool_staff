@@ -2,17 +2,17 @@ module PageObjects
   module Sections
     module Cases
       class CaseHistorySection < SitePrism::Section
-        element :section_heading, 'h2.request--heading'
+        element :section_heading, "h2.request--heading"
 
-        element :heading, 'thead tr'
-        elements :entries, 'tbody tr'
+        element :heading, "thead tr"
+        elements :entries, "tbody tr"
 
-        sections :rows, 'tbody tr' do
-          element :action_date, 'td:nth-child(1)'
-          element :user, 'td:nth-child(2)'
-          element :team, 'td:nth-child(3)'
-          section :details, 'td:nth-child(4)' do
-            element :event, 'strong'
+        sections :rows, "tbody tr" do
+          element :action_date, "td:nth-child(1)"
+          element :user, "td:nth-child(2)"
+          element :team, "td:nth-child(3)"
+          section :details, "td:nth-child(4)" do
+            element :event, "strong"
           end
         end
 

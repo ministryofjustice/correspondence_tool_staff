@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
@@ -7,7 +7,7 @@ class StatsController < ApplicationController
 
   before_action :authorize_user
 
-  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
+  SPREADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".freeze
 
   def index
     @reports = Pundit.policy_scope(current_user, ReportType.where(standard_report: true).all)
@@ -19,7 +19,7 @@ class StatsController < ApplicationController
     report.run_and_update!(user: current_user)
     if report.background_job?
       # should display the link for downloading
-      flash[:download] = report_download_link(report.id, 'success')
+      flash[:download] = report_download_link(report.id, "success")
       redirect_back(fallback_location: root_path)
     else
       generate_final_report(report)
@@ -39,10 +39,10 @@ class StatsController < ApplicationController
       @report.run_and_update!(
         user: current_user,
         period_start: @report.period_start,
-        period_end: @report.period_end
+        period_end: @report.period_end,
       )
       if @report.background_job? || @report.persist_results?
-        flash[:download] = report_download_link(@report.id, 'success')
+        flash[:download] = report_download_link(@report.id, "success")
         redirect_to new_stat_path
       else
         generate_final_report(@report)
@@ -61,9 +61,10 @@ class StatsController < ApplicationController
 
   def download_custom
     report = Report.find(params[:id])
-    report_data, _ = report.report_details
+    report_data, = report.report_details
     if report.background_job?
       return download_waiting(report) unless report.ready?
+
       authorize report, :can_download_user_generated_report?
     end
 
@@ -77,10 +78,10 @@ class StatsController < ApplicationController
   end
 
   def self.closed_cases_correspondence_type
-    FauxCorrespondenceType.new('CLOSED_CASES', 'General closed cases report')
+    FauxCorrespondenceType.new("CLOSED_CASES", "General closed cases report")
   end
 
-  private
+private
 
   def send_xlsx_report(report)
     axlsx = create_spreadsheet(report)
@@ -97,7 +98,7 @@ class StatsController < ApplicationController
               disposition: :attachment
   end
 
-  def send_default_report(report, report_data=nil)
+  def send_default_report(report, report_data = nil)
     # If the data is relevant big, it will be passed as report data, otherwise the data will
     # be stored in report record
     report_data_for_generation = report_data || report.report_data
@@ -106,11 +107,11 @@ class StatsController < ApplicationController
               disposition: :attachment
   end
 
-  def generate_final_report(report, report_data=nil)
+  def generate_final_report(report, report_data = nil)
     case report.report_format
-    when 'xlsx'
+    when "xlsx"
       send_xlsx_report(report)
-    when 'csv'
+    when "csv"
       send_csv_report(report)
     else
       send_default_report(report, report_data)
@@ -127,12 +128,12 @@ class StatsController < ApplicationController
   end
 
   # The plan here is/was to colour the spreadsheet titles just like the existing reports from ITG
-  LIGHT_BLUE = 'c1d1f0'.freeze
-  LIGHT_GREY = 'd1d1e0'.freeze
+  LIGHT_BLUE = "c1d1f0".freeze
+  LIGHT_GREY = "d1d1e0".freeze
 
-  BRIGHT_RED = 'FF0000'.freeze
-  BRIGHT_YELLOW = 'FFFF00'.freeze
-  BRIGHT_LIME_GREEN = '00FF00'.freeze
+  BRIGHT_RED = "FF0000".freeze
+  BRIGHT_YELLOW = "FFFF00".freeze
+  BRIGHT_LIME_GREEN = "00FF00".freeze
 
   # mapping of RAG ratings to spreadsheet cell colours
   RAG_RATING_COLOURS = { red: BRIGHT_RED,
@@ -142,7 +143,7 @@ class StatsController < ApplicationController
                          blue: LIGHT_BLUE }.freeze
 
   # Assumes no report spans more than 26 columns
-  SPREADSHEET_COLUMN_NAMES = ('A'..'Z').to_a
+  SPREADSHEET_COLUMN_NAMES = ("A".."Z").to_a
 
   def create_spreadsheet(report)
     axlsx = Axlsx::Package.new
@@ -152,11 +153,11 @@ class StatsController < ApplicationController
         sheet.add_row row.map(&:value)
 
         row.each_with_index do |item, item_index|
-          if item.rag_rating
-            cell_letter = SPREADSHEET_COLUMN_NAMES.fetch(item_index)
-            cell = "#{cell_letter}#{row_index+1}"
-            sheet.add_style cell, bg_color: RAG_RATING_COLOURS.fetch(item.rag_rating)
-          end
+          next unless item.rag_rating
+
+          cell_letter = SPREADSHEET_COLUMN_NAMES.fetch(item_index)
+          cell = "#{cell_letter}#{row_index + 1}"
+          sheet.add_style cell, bg_color: RAG_RATING_COLOURS.fetch(item.rag_rating)
         end
       end
     end
@@ -195,7 +196,7 @@ class StatsController < ApplicationController
         :correspondence_type,
         :report_type_id,
         :period_start_dd, :period_start_mm, :period_start_yyyy,
-        :period_end_dd, :period_end_mm, :period_end_yyyy,
+        :period_end_dd, :period_end_mm, :period_end_yyyy
       )
   end
 
@@ -203,14 +204,14 @@ class StatsController < ApplicationController
     [
       t(".#{translation_key}"),
       view_context.link_to(
-        'Download',
-        download_custom_stats_path(id: report_id)
+        "Download",
+        download_custom_stats_path(id: report_id),
       ),
-    ].join(' ')
+    ].join(" ")
   end
 
   def download_waiting(report)
-    flash[:download] = report_download_link(report.id, 'waiting')
+    flash[:download] = report_download_link(report.id, "waiting")
     @report = report
     set_fields_for_custom_action
 

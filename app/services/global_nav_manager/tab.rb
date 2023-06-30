@@ -3,9 +3,8 @@ class GlobalNavManager
     attr_reader :name, :parent, :count
 
     def initialize(name:, parent:, attrs:)
-      @name        = name
-      @parent      = parent
-      @path        = attrs[:path] || name.to_s
+      super(name:, parent:, attrs:)
+      @path = attrs[:path] || name.to_s
       @count = nil
       process_scope attrs[:scope] if attrs[:scope].present?
       process_visibility attrs[:visibility]

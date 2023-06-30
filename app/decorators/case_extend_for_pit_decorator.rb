@@ -2,8 +2,5 @@ class CaseExtendForPITDecorator < Draper::Decorator
   decorates Case::Base
   delegate_all
 
-  attr_accessor :extension_deadline_dd
-  attr_accessor :extension_deadline_mm
-  attr_accessor :extension_deadline_yyyy
-  attr_accessor :reason_for_extending
+  attr_accessor :extension_deadline_dd, :extension_deadline_mm, :extension_deadline_yyyy, :reason_for_extending
 end

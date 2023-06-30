@@ -1,5 +1,5 @@
 class CreateReportTypes < ActiveRecord::Migration[5.0]
-  require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
+  require Rails.root.join("db/seeders/report_type_seeder")
 
   def change
     create_table :report_types do |t|

@@ -35,7 +35,7 @@ module Steppable
 
   def get_previous_step
     current_index = steps.index(current_step)
-    current_index > 0 ? steps[current_index - 1] : nil
+    current_index.positive? ? steps[current_index - 1] : nil
   end
 
   def valid_attributes?(params)
@@ -49,11 +49,10 @@ module Steppable
 
   def process_params_after_step(params)
     params ||= ActionController::Parameters.new({}).permit!
-    params_after_step_method_name = "params_after_step_#{self.current_step.tr('-', '_')}"
+    params_after_step_method_name = "params_after_step_#{current_step.tr('-', '_')}"
     if respond_to?(params_after_step_method_name, params)
       params = send(params_after_step_method_name, params)
     end
     params
-  end 
-
+  end
 end

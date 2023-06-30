@@ -21,12 +21,12 @@ module PermitTriggerEvent
           config = state_machine.config_for_event(event_name: event,
                                                   metadata: {
                                                     acting_user: user,
-                                                    acting_team: team
+                                                    acting_team: team,
                                                   })
 
-            result = !config.nil? && config.after_transition == @expected_hook
+          result = !config.nil? && config.after_transition == @expected_hook
           if [user_type, case_type].in?(permitted_combinations) ^ result
-            debugger if @debug_on_error && $stdout.tty?
+            debugger if @debug_on_error && $stdout.tty? # rubocop:disable Lint/Debugger
             @errors << [user_type, case_type, !config.nil?]
           end
         end
@@ -47,16 +47,14 @@ module PermitTriggerEvent
     end
 
     failure_message do |event|
-      unless @errors.nil? || @errors.empty?
+      if @errors.present?
         @error_message = "Event #{event} failed for the combinations:\n"
         @errors.each do |user_type, kase_type, result|
-          if result
-            @error_message <<
-                "  The after hook #{@expected_hook} was not present for #{user_type} on #{kase_type}.\n"
-          else
-            @error_message <<
-                "  We expected the after hook #{@expected_hook} to be present for #{user_type} on #{kase_type} cases, but it is not.\n"
-          end
+          @error_message << if result
+                              "  The after hook #{@expected_hook} was not present for #{user_type} on #{kase_type}.\n"
+                            else
+                              "  We expected the after hook #{@expected_hook} to be present for #{user_type} on #{kase_type} cases, but it is not.\n"
+                            end
         end
       end
       @error_message

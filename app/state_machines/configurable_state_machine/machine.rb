@@ -1,15 +1,13 @@
 module ConfigurableStateMachine
-  #rubocop:disable Metrics/ClassLength
   class Machine
-
     def initialize(config:, kase:)
       @config = config
       @kase = kase
       @events = nil
     end
 
-    # Ideal there shouldn't be any other definitions of states other than state machine yaml file. but 
-    # tried to remove it with a method in manager and ended up with an error below 
+    # Ideal there shouldn't be any other definitions of states other than state machine yaml file. but
+    # tried to remove it with a method in manager and ended up with an error below
     # >> Circular dependency detected while autoloading constant in one of policy ruby code
     # Couldn't think of easy way to fix it, so just added missing states here
     def self.states
@@ -35,7 +33,7 @@ module ConfigurableStateMachine
     end
 
     def self.states_for_closed_cases
-      ['closed']
+      %w[closed]
     end
 
     def events
@@ -52,7 +50,7 @@ module ConfigurableStateMachine
 
     def permitted_events(current_user_or_id)
       user = current_user_or_id.instance_of?(User) ? current_user_or_id : User.find(current_user_or_id)
-      events = permitted_events_for_role_and_user(user: user, state: @kase.current_state)
+      events = permitted_events_for_role_and_user(user:, state: @kase.current_state)
       events.flatten.uniq.sort
     end
 
@@ -66,16 +64,17 @@ module ConfigurableStateMachine
     #
 
     def can_trigger_event?(event_name:, metadata:, roles: nil)
-      configs = configs_for_event(event_name: event_name, metadata: metadata, roles: roles)
-      configs.map { |config| event_triggerable_in_config?(config: config, user: @user ) }.any?
+      configs = configs_for_event(event_name:, metadata:, roles:)
+      configs.map { |config| event_triggerable_in_config?(config:, user: @user) }.any?
     end
 
     def configs_for_event(event_name:, metadata:, roles:)
-      set_users_and_roles(metadata: metadata, roles: roles)
+      set_users_and_roles(metadata:, roles:)
       configs = []
       @roles.each do |role|
         role_config = @config.user_roles[role]
         next if role_config.nil?
+
         role_state_config = role_config.states[@kase.current_state]
         event_config = fetch_event_config(config: role_state_config, event: event_name)
         configs << event_config
@@ -88,7 +87,7 @@ module ConfigurableStateMachine
         false
       elsif config.if.nil?
         true
-      elsif predicate_is_true?(predicate: config.if, user: user)
+      elsif predicate_is_true?(predicate: config.if, user:)
         true
       else
         false
@@ -96,17 +95,18 @@ module ConfigurableStateMachine
     end
 
     def config_for_event(event_name:, metadata:, roles: nil)
-      set_users_and_roles(metadata: metadata, roles: roles)
+      set_users_and_roles(metadata:, roles:)
       @roles.each do |role|
         role_config = @config.user_roles[role]
         next if role_config.nil?
+
         role_state_config = role_config.states[@kase.current_state]
         event_config = fetch_event_config(config: role_state_config, event: event_name)
         if event_config
           return check_event_config(config: event_config, user: @user)
         end
       end
-      return nil
+      nil
     end
 
     def set_users_and_roles(metadata:, roles:)
@@ -120,7 +120,7 @@ module ConfigurableStateMachine
     #
     def method_missing(method, *args)
       if method.to_s =~ /(.+)!$/
-        event_name = $1
+        event_name = ::Regexp.last_match(1)
         trigger_event(event: event_name.to_sym, params: args.first)
       else
         super
@@ -145,45 +145,47 @@ module ConfigurableStateMachine
         guards.all? { |g| g.call(object, last_transition, metadata) }
     end
 
-    def next_state_for_event(event, params) #rubocop:disable Metrics/MethodLength
+    def next_state_for_event(event, params)
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
-        role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user: user).first
+        role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user:).first
         user_role_config = @config.user_roles[role]
-        raise InvalidEventError.new(kase: @kase,
-                                    user: params[:acting_user],
-                                    event: event,
-                                    role: role,
-                                    message: "No such role") if user_role_config.nil? ###
+        if user_role_config.nil?
+          raise InvalidEventError.new(kase: @kase,
+                                      user: params[:acting_user],
+                                      event:,
+                                      role:,
+                                      message: "No such role")
+        end
         state_config = user_role_config.states[@kase.current_state]
         if state_config.nil? || state_config.to_hash.keys.exclude?(event)
-          raise InvalidEventError.new(role: role,
+          raise InvalidEventError.new(role:,
                                       kase: @kase,
                                       user: params[:acting_user],
-                                      event: event,
+                                      event:,
                                       message: "No state, or event in this state found")
         end
         event_config = state_config[event]
         if event_config.to_h.key?(:transition_to)
           event_config.transition_to
         elsif event_config.to_h.key?(:transition_to_using)
-          result_from_class_and_method(class_and_method: event_config.transition_to_using, user: user)
+          result_from_class_and_method(class_and_method: event_config.transition_to_using, user:)
         else
           @kase.current_state
         end
       else
         raise InvalidEventError.new(role: nil,
                                     kase: @kase,
-                                    user: user,
-                                    event: event,
+                                    user:,
+                                    event:,
                                     message: "Not permitted to trigger event")
       end
     end
 
     def teams_that_can_trigger_event_on_case(event_name:, user:)
       available_teams = []
-      possible_teams_for_case(user).each do | team |
+      possible_teams_for_case(user).each do |team|
         if is_team_available_for_this_event?(event_name, user, team)
           available_teams << team
         end
@@ -191,34 +193,35 @@ module ConfigurableStateMachine
       available_teams
     end
 
-    private
+  private
 
     def possible_teams_for_case(user)
       if (@kase.teams & user.teams.active).any?
-        case_teams = @kase.permitted_teams & user.teams.active
+        @kase.permitted_teams & user.teams.active
       else
-        case_teams = user.teams.active
+        user.teams.active
       end
-      case_teams
-    end  
+    end
 
     def is_team_available_for_this_event?(event_name, user, team)
-      team.active? && can_trigger_event_for_the_case?(event_name: event_name, acting_team: team, user: user) 
+      team.active? && can_trigger_event_for_the_case?(event_name:, acting_team: team, user:)
     end
 
     def first_role_that_can_trigger_event_on_case(event_name:, metadata:, user:)
       roles = user.roles_for_case(@kase)
-      roles.delete_if { | role| !can_trigger_event?(event_name: event_name, metadata: metadata, roles: [role]) }
+      roles.delete_if { |role| !can_trigger_event?(event_name:, metadata:, roles: [role]) }
     end
 
     def event_present_and_triggerable?(role_state_config:, event:, user:)
       return false if role_state_config.nil?
+
       config = role_state_config[event]
       return false if config.nil?
+
       if config.to_h.key?(:if)
-        return predicate_is_true?(predicate: config.if, user: user) ? true : false
+        predicate_is_true?(predicate: config.if, user:) ? true : false
       else
-        return true
+        true
       end
     end
 
@@ -239,7 +242,7 @@ module ConfigurableStateMachine
     def check_event_config(config:, user:)
       if config.nil?
         RecursiveOpenStruct.new
-      elsif config.if.nil? || predicate_is_true?(predicate: config.if, user: user)
+      elsif config.if.nil? || predicate_is_true?(predicate: config.if, user:)
         config
       end
     end
@@ -251,17 +254,20 @@ module ConfigurableStateMachine
       if user_role_config.nil?
         return false
       end
+
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || state_config.to_hash.keys.exclude?(event)
         return false
       end
       unless can_trigger_event?(
-            event_name: event, 
-            metadata: {acting_user: user, acting_team: acting_team},
-            roles: [role])
+        event_name: event,
+        metadata: { acting_user: user, acting_team: },
+        roles: [role],
+      )
         return false
       end
-      return true
+
+      true
     end
 
     # in a transaction, write the case transition record, and transition the case
@@ -269,56 +275,54 @@ module ConfigurableStateMachine
     # * :acting_user (this corresponds to the current_user)
     # * :acting_team
     #
-    #rubocop:disable Metrics/MethodLength
     def trigger_event(event:, params:)
       event = event.to_sym
-      raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
+      raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event:, params:) if !params.key?(:acting_user) || !params.key?(:acting_team)
 
       role = params[:acting_team].role
       user_role_config = @config.user_roles[role]
       if user_role_config.nil?
         raise InvalidEventError.new(
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                role: role,
-                message: "No state machine config for role #{role}"
-              )
+          kase: @kase,
+          user: params[:acting_user],
+          event:,
+          role:,
+          message: "No state machine config for role #{role}",
+        )
       end
       user = extract_user_from_metadata(params)
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || state_config.to_hash.keys.exclude?(event)
         raise InvalidEventError.new(
-                role: role,
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                message: "No event #{event} for role #{role} and case state " \
-                         "#{@kase.current_state}"
-              )
+          role:,
+          kase: @kase,
+          user: params[:acting_user],
+          event:,
+          message: "No event #{event} for role #{role} and case state " \
+                   "#{@kase.current_state}",
+        )
       end
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
-          to_state = find_destination_state(event_config: event_config, user: user)
-          to_workflow = find_destination_workflow(event_config: event_config, user: user)
+          to_state = find_destination_state(event_config:, user:)
+          to_workflow = find_destination_workflow(event_config:, user:)
           CaseTransition.unset_most_recent(@kase)
-          write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
+          write_transition(event:, to_state:, to_workflow:, params:)
           @kase.update!(current_state: to_state, workflow: to_workflow)
-          execute_after_transition_method(event_config: event_config, user: user, metadata: params)
+          execute_after_transition_method(event_config:, user:, metadata: params)
         end
       else
         raise InvalidEventError.new(
-                role: role,
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                message: "Event #{event} not permitted for role #{role} and " \
-                         "case state #{@kase.current_state}"
-              )
+          role:,
+          kase: @kase,
+          user: params[:acting_user],
+          event:,
+          message: "Event #{event} not permitted for role #{role} and " \
+                   "case state #{@kase.current_state}",
+        )
       end
     end
-    #rubocop:enable Metrics/MethodLength
 
     def extract_roles_from_metadata(metadata)
       team = extract_team_from_metadata(metadata)
@@ -353,10 +357,11 @@ module ConfigurableStateMachine
       user.roles.each do |role|
         role_config = @config.user_roles[role]
         next if role_config.nil?
+
         role_state_config = role_config.states[state]
-        role_state_config.to_h.keys.each do |event|
+        role_state_config.to_h.each_key do |event|
           event_config = role_state_config[event]
-          events << event if event_triggerable_for_user?(event_config: event_config, user: user)
+          events << event if event_triggerable_for_user?(event_config:, user:)
         end
       end
       events
@@ -364,15 +369,15 @@ module ConfigurableStateMachine
 
     def event_triggerable_for_user?(event_config:, user:)
       if event_config.to_h.key?(:if)
-        predicate_is_true?(predicate: event_config[:if], user: user)
+        predicate_is_true?(predicate: event_config[:if], user:)
       else
         true
       end
     end
 
     def predicate_is_true?(predicate:, user:)
-      klass, method = predicate.split('#')
-      predicate_object = klass.constantize.new(user: user, kase: @kase)
+      klass, method = predicate.split("#")
+      predicate_object = klass.constantize.new(user:, kase: @kase)
       predicate_object.__send__(method) ? true : false
     end
 
@@ -380,22 +385,22 @@ module ConfigurableStateMachine
       if event_config.to_h.key?(:transition_to)
         event_config.transition_to
       elsif event_config.to_h.key?(:transition_to_using)
-        result_from_class_and_method(class_and_method: event_config.transition_to_using, user: user)
+        result_from_class_and_method(class_and_method: event_config.transition_to_using, user:)
       else
         @kase.current_state
       end
     end
 
     def result_from_class_and_method(class_and_method:, user:)
-      klass, method = class_and_method.split('#')
-      conditional_object = klass.constantize.new(user: user, kase: @kase)
+      klass, method = class_and_method.split("#")
+      conditional_object = klass.constantize.new(user:, kase: @kase)
       conditional_object.__send__(method)
     end
 
     def find_destination_workflow(event_config:, user:)
       config = event_config.to_h
       if config.key?(:switch_workflow_using)
-        result_from_class_and_method(class_and_method: event_config.switch_workflow_using, user: user)
+        result_from_class_and_method(class_and_method: event_config.switch_workflow_using, user:)
       elsif config.key?(:switch_workflow)
         event_config.switch_workflow
       else
@@ -406,17 +411,17 @@ module ConfigurableStateMachine
     def execute_after_transition_method(event_config:, user:, metadata:)
       if event_config.to_h.key?(:after_transition)
         class_and_method = event_config.after_transition
-        klass, method = class_and_method.split('#')
-        after_object = klass.constantize.new(user: user, kase: @kase, metadata: metadata)
+        klass, method = class_and_method.split("#")
+        after_object = klass.constantize.new(user:, kase: @kase, metadata:)
         after_object.__send__(method)
       end
     end
 
     def write_transition(event:, to_state:, to_workflow:, params:)
       attrs = {
-        event: event,
-        to_state: to_state,
-        to_workflow: to_workflow,
+        event:,
+        to_state:,
+        to_workflow:,
         sort_key: CaseTransition.next_sort_key(@kase),
         most_recent: true,
         acting_user_id: params[:acting_user]&.id,
@@ -443,12 +448,11 @@ module ConfigurableStateMachine
 
     def clear_params_for_transition(params)
       cloned_params = params.clone
-      %i{ acting_user acting_team target_user target_team num_attachments disable_hook }.each do |key|
+      %i[acting_user acting_team target_user target_team num_attachments disable_hook].each do |key|
         cloned_params.delete(key)
       end
       cloned_params
     end
-  
   end
-  #rubocop:enable Metrics/ClassLength
+  # rubocop:enable Metrics/ClassLength
 end

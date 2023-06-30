@@ -1,4 +1,4 @@
-require 'cts'
+require "cts"
 
 module CTS::Teams
   class RolesSeeder
@@ -9,24 +9,24 @@ module CTS::Teams
     end
 
     def run
-      max_name_length = BusinessUnit.pluck('max(length(name))').first
+      max_name_length = BusinessUnit.pick("max(length(name))")
       BusinessUnit.all.each do |bu|
         if bu.role.present?
-          puts "%#{max_name_length}s: skipping, role exists: #{bu.role}" % [bu.name]
+          puts sprintf("%#{max_name_length}s: skipping, role exists: #{bu.role}", bu.name)
           next
         end
 
         role = case bu.name
                when Settings.foi_cases.default_managing_team
-                 'manager'
+                 "manager"
                when Settings.foi_cases.default_clearance_team,
                     Settings.press_office_team_name,
                     Settings.private_office_team_name
-                 'approver'
+                 "approver"
                else
-                 'responder'
+                 "responder"
                end
-        puts "%#{max_name_length}s: setting role to #{role}" % [bu.name]
+        puts sprintf("%#{max_name_length}s: setting role to #{role}", bu.name)
         unless options[:dry_run]
           bu.role = role
         end

@@ -1,4 +1,4 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type,
                                             *expected_methods|
@@ -11,19 +11,18 @@ RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type,
     end
 
     failure_message do
-      "expected that the team correspondence type role record would be for " +
+      "expected that the team correspondence type role record would be for " \
         "#{expected_correspondence_type} with #{expected_methods}\n"
     end
-
   end
 
   def set_up_permissions(true_methods)
     permissions = {
-        view: false,
-        manage: false,
-        edit: false,
-        respond: false,
-        approve: false
+      view: false,
+      manage: false,
+      edit: false,
+      respond: false,
+      approve: false,
     }
     true_methods.each do |meth|
       permissions[meth] = true
@@ -31,6 +30,3 @@ RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type,
     permissions
   end
 end
-
-
-

@@ -11,7 +11,7 @@ class RequestUploaderService
 
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
-    @error_message = ''
+    @error_message = ""
   end
 
   def upload!
@@ -26,8 +26,8 @@ class RequestUploaderService
       end
     rescue Aws::S3::Errors::ServiceError,
            ActiveRecord::RecordInvalid,
-           ActiveRecord::RecordNotUnique => err
-      @error_message = "Error processing uploaded files: #{err.message}"
+           ActiveRecord::RecordNotUnique => e
+      @error_message = "Error processing uploaded files: #{e.message}"
       Rails.logger.error(@error_message)
       @result = :error
       @attachments = nil
@@ -36,7 +36,7 @@ class RequestUploaderService
     @attachments
   end
 
-  private
+private
 
   def transition_state(response_attachments)
     filenames = response_attachments.map(&:filename)
@@ -44,9 +44,9 @@ class RequestUploaderService
       @case.state_machine.add_message_to_case!(
         acting_user: @current_user,
         acting_team: @current_user.case_team(@case),
-        filenames: filenames,
-        message: @upload_comment)
+        filenames:,
+        message: @upload_comment,
+      )
     end
   end
-
 end

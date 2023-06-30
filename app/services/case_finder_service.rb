@@ -23,7 +23,7 @@ class CaseFinderService
         if respond_to? scope_method, true
           __send__ scope_method
         else
-          raise NameError.new("could not find scope named #{scope_method}")
+          raise NameError, "could not find scope named #{scope_method}"
         end
       end
 
@@ -34,25 +34,25 @@ class CaseFinderService
   end
 
   def for_params(params)
-    if params['states'].present?
-      @scope = in_states(params['states'])
+    if params["states"].present?
+      @scope = in_states(params["states"])
     end
     self
   end
 
   def closed_cases_scope
-    get_root_scope('closed_cases_scope').presented_as_closed
+    get_root_scope("closed_cases_scope").presented_as_closed
   end
 
   def retention_cases_scope
-    get_root_scope('default')
-      .includes([:retention_schedule, :case_links, :linked_cases])
+    get_root_scope("default")
+      .includes(%i[retention_schedule case_links linked_cases])
       .where(retention_schedule: {
-        planned_destruction_date: RetentionSchedule.common_date_viewable_from_range
+        planned_destruction_date: RetentionSchedule.common_date_viewable_from_range,
       })
   end
 
-  private
+private
 
   def get_root_scope(feature = nil)
     if feature.present?
@@ -90,58 +90,61 @@ class CaseFinderService
   def my_open_cases_scope
     scope.joins(:assignments).presented_as_open
       .with_user(user)
-      .distinct('case.id')
+      .distinct("case.id")
   end
 
   def my_open_flagged_for_approval_cases_scope
     scope.presented_as_open
       .flagged_for_approval(*user.approving_team)
-      .with_user(user, states: ['accepted'])
-      .distinct('case.id')
+      .with_user(user, states: %w[accepted])
+      .distinct("case.id")
   end
 
   def open_cases_scope
-    get_root_scope('open_cases_scope')
+    get_root_scope("open_cases_scope")
     .presented_as_open
     .joins(:assignments)
-    .where(assignments: { state: %w[pending accepted]})
-    .distinct('case.id')
+    .where(assignments: { state: %w[pending accepted] })
+    .distinct("case.id")
   end
 
   def erasable_cases_scope
     retention_cases_scope.where(
-      retention_schedule: { 
+      retention_schedule: {
         state: RetentionSchedule::STATE_TO_BE_ANONYMISED,
-        planned_destruction_date: RetentionSchedule.erasable_cases_viewable_range 
-      })
+        planned_destruction_date: RetentionSchedule.erasable_cases_viewable_range,
+      },
+    )
   end
 
   def triagable_cases_scope
     triagable_statuses = [
-      RetentionSchedule::STATE_REVIEW, 
-      RetentionSchedule::STATE_RETAIN, 
-      RetentionSchedule::STATE_NOT_SET
+      RetentionSchedule::STATE_REVIEW,
+      RetentionSchedule::STATE_RETAIN,
+      RetentionSchedule::STATE_NOT_SET,
     ]
 
     retention_cases_scope.where(
-      retention_schedule: { 
-        state: triagable_statuses
-      }).or(triagable_destroy_cases_scope)
+      retention_schedule: {
+        state: triagable_statuses,
+      },
+    ).or(triagable_destroy_cases_scope)
   end
 
   def triagable_destroy_cases_scope
     retention_cases_scope.where(
-      retention_schedule: { 
+      retention_schedule: {
         state: RetentionSchedule::STATE_TO_BE_ANONYMISED,
-        planned_destruction_date: RetentionSchedule.triagable_destroy_cases_range
-      })
+        planned_destruction_date: RetentionSchedule.triagable_destroy_cases_range,
+      },
+    )
   end
 
   def open_flagged_for_approval_scope
     scope.presented_as_open
       .flagged_for_approval(*user.approving_team)
-      .where(assignments: { state: ['accepted']})
-      .distinct('case.id')
+      .where(assignments: { state: %w[accepted] })
+      .distinct("case.id")
   end
 
   def in_time_cases_scope
@@ -153,28 +156,28 @@ class CaseFinderService
   end
 
   def in_states(states)
-    scope.in_states(states.split(','))
+    scope.in_states(states.split(","))
   end
 
   CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE = [
     Case::FOI::ComplianceReview,
-    Case::FOI::TimelinessReview
+    Case::FOI::TimelinessReview,
   ].map(&:name)
 
   def new_cases_from_last_3_days(team)
     scope
       .joins(:transitions)
       .where.not(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
-      .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
+      .where("(properties ->> 'escalation_deadline')::date >= ?", Time.zone.today)
       .or(
         scope
           .joins(:transitions)
           .where(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
-          .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
-          .where('case_transitions.event = ?', :request_further_clearance)
+          .where("(properties ->> 'escalation_deadline')::date >= ?", Time.zone.today)
+          .where("case_transitions.event = ?", :request_further_clearance),
       )
       .not_with_teams(team)
       .order(created_at: :desc)
-      .distinct('case.id')
+      .distinct("case.id")
   end
 end

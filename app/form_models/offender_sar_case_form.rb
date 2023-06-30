@@ -11,5 +11,4 @@ module OffenderSARCaseForm
        request-details
        date-received].freeze
   end
-
 end

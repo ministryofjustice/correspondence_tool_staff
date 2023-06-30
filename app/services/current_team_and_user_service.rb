@@ -17,7 +17,7 @@ class CurrentTeamAndUserService
     @resolver.user
   end
 
-  private
+private
 
   def can_handle_the_state
     (@resolver.respond_to? @case.current_state) || (@case.class.permitted_states.include? @case.current_state)

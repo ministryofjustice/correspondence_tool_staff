@@ -9,7 +9,7 @@ module CommissioningDocumentTemplate
     end
 
     def path
-      Rails.root.join('lib', 'assets', template_name)
+      Rails.root.join("lib", "assets", template_name)
     end
 
     def context
@@ -22,7 +22,7 @@ module CommissioningDocumentTemplate
       }
     end
 
-    private
+  private
 
     def template_name
       "#{self.class.name.demodulize.underscore}.docx"
@@ -37,7 +37,7 @@ module CommissioningDocumentTemplate
     end
 
     def date_format(date)
-      date.strftime('%d/%m/%Y')
+      date.strftime("%d/%m/%Y")
     end
   end
 end

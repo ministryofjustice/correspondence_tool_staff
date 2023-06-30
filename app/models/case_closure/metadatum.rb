@@ -26,24 +26,24 @@ class CaseClosure::Metadatum < ApplicationRecord
   scope :active, -> { where(active: true) }
 
   validates :name, :abbreviation, :sequence_id, presence: true
-  validates :name, :abbreviation, uniqueness: {scope: :type }
+  validates :name, :abbreviation, uniqueness: { scope: :type }
 
   def self.id_from_name(name)
-    self.where(name: name).first&.id
+    where(name:).first&.id
   end
 
   def self.by_name(name)
-    self.where(name: name).first
+    where(name:).first
   end
 
   def self.by_abbreviation(abbreviation)
-    self.where(abbreviation: abbreviation).first
+    where(abbreviation:).first
   end
 
   def self.exemption_ncnd_refusal
-    where(type: 'CaseClosure::RefusalReason', abbreviation: 'ncnd') +
-        unscoped.where(type: 'CaseClosure::Exemption').where.not(subtype: 'ncnd')
-            .order(:name)
+    where(type: "CaseClosure::RefusalReason", abbreviation: "ncnd") +
+      unscoped.where(type: "CaseClosure::Exemption").where.not(subtype: "ncnd")
+          .order(:name)
   end
 
   def self.exemption_filter_abbreviation(id)
@@ -54,5 +54,4 @@ class CaseClosure::Metadatum < ApplicationRecord
       record.abbreviation
     end
   end
-
 end

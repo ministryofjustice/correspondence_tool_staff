@@ -5,8 +5,8 @@ class RectifyCaseSubjectTypeValues < ActiveRecord::DataMigration
     # Due to an error during refactoring, the value was changed to 'offender_sar'
 
     Case::Base.connection.execute <<~EOSQL
-      UPDATE cases 
-        SET properties = jsonb_set(properties, '{subject_type}', '"offender"', false) 
+      UPDATE cases#{' '}
+        SET properties = jsonb_set(properties, '{subject_type}', '"offender"', false)#{' '}
         WHERE properties ->> 'subject_type' = 'offender_sar';
     EOSQL
 

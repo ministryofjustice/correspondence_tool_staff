@@ -18,21 +18,20 @@
 
 module CaseClosure
   class InfoHeldStatus < Metadatum
-
     def self.held
-      where(abbreviation: 'held').singular
+      where(abbreviation: "held").singular
     end
 
     def self.not_held
-      where(abbreviation: 'not_held').singular
+      where(abbreviation: "not_held").singular
     end
 
     def self.part_held
-      where(abbreviation: 'part_held').singular
+      where(abbreviation: "part_held").singular
     end
 
     def self.not_confirmed
-      where(abbreviation: 'not_confirmed').singular
+      where(abbreviation: "not_confirmed").singular
     end
 
     def self.id_from_abbreviation(abbrev)
@@ -40,19 +39,19 @@ module CaseClosure
     end
 
     def held?
-      abbreviation == 'held'
+      abbreviation == "held"
     end
 
     def not_held?
-      abbreviation == 'not_held'
+      abbreviation == "not_held"
     end
 
     def part_held?
-      abbreviation == 'part_held'
+      abbreviation == "part_held"
     end
 
     def not_confirmed?
-      abbreviation == 'not_confirmed'
+      abbreviation == "not_confirmed"
     end
   end
 end

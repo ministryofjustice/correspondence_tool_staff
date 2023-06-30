@@ -38,14 +38,14 @@ class Case::FOI::Standard < Case::Base
       # This string is used when constructing paths or methods in other parts of
       # the system. Ensure that it does not come from a user-supplied parameter,
       # and does not contain special chars like slashes, etc.
-      'FOI'
+      "FOI"
     end
   end
 
   include DraftTimeliness::ResponseAdded
 
   before_save do
-    self.wokflow = 'standard' if workflow.nil?
+    self.wokflow = "standard" if workflow.nil?
   end
 
   jsonb_accessor :properties,
@@ -55,38 +55,38 @@ class Case::FOI::Standard < Case::Base
                  late_team_id: :integer,
                  date_draft_compliant: :date
 
-  has_paper_trail only: [
-    :name,
-    :email,
-    :postal_address,
-    :properties,
-    :received_date,
-    :requester_type,
-    :subject,
+  has_paper_trail only: %i[
+    name
+    email
+    postal_address
+    properties
+    received_date
+    requester_type
+    subject
   ]
 
   enum requester_type: {
-    academic_business_charity: 'academic_business_charity',
-    journalist: 'journalist',
-    member_of_the_public: 'member_of_the_public',
-    offender: 'offender',
-    solicitor: 'solicitor',
-    staff_judiciary: 'staff_judiciary',
-    what_do_they_know: 'what_do_they_know',
+    academic_business_charity: "academic_business_charity",
+    journalist: "journalist",
+    member_of_the_public: "member_of_the_public",
+    offender: "offender",
+    solicitor: "solicitor",
+    staff_judiciary: "staff_judiciary",
+    what_do_they_know: "what_do_they_know",
   }
 
   enum delivery_method: {
-    sent_by_post: 'sent_by_post',
-    sent_by_email: 'sent_by_email',
+    sent_by_post: "sent_by_post",
+    sent_by_email: "sent_by_email",
   }
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
-  validates_presence_of :name
+  validates :name, presence: true
   validates :postal_address,
             presence: true,
             on: :create,
             if: -> { email.blank? || sent_by_post? }
-  validates_presence_of :requester_type, :delivery_method
+  validates :requester_type, :delivery_method, presence: true
   validates :subject, presence: true, length: { maximum: 100 }
 
   validate :validate_uploaded_request_files, on: :create
@@ -99,16 +99,16 @@ class Case::FOI::Standard < Case::Base
   # it.
   def flagged_case_responded_to_in_time_for_stats_purposes?
     responding_team_assignment_date = transitions.where(
-        event: 'assign_responder'
+      event: "assign_responder",
     ).last.created_at.to_date
 
     disclosure_approval_date = transitions.where(
-        event: 'approve',
-        acting_team_id: default_clearance_team.id
+      event: "approve",
+      acting_team_id: default_clearance_team.id,
     ).last.created_at.to_date
 
     internal_deadline = @deadline_calculator.internal_deadline_for_date(
-        correspondence_type, responding_team_assignment_date
+      correspondence_type, responding_team_assignment_date
     )
 
     internal_deadline >= disclosure_approval_date
@@ -124,14 +124,14 @@ class Case::FOI::Standard < Case::Base
 
   def self.factory(type)
     case type&.downcase
-    when 'standard'
+    when "standard"
       self
-    when 'timelinessreview'
+    when "timelinessreview"
       Case::FOI::TimelinessReview
-    when 'compliancereview'
+    when "compliancereview"
       Case::FOI::ComplianceReview
     else
-      raise ArgumentError.new("Invalid FOI type requested: #{type.inspect}")
+      raise ArgumentError, "Invalid FOI type requested: #{type.inspect}"
     end
   end
 
@@ -139,33 +139,32 @@ class Case::FOI::Standard < Case::Base
     Case::ICO::FOI
   end
 
-  private
+private
 
   def validate_uploaded_request_files
     validate_uploaded_request_files_for_sending_by_post
     validate_uploaded_request_files_for_sending_by_email
-  end 
+  end
 
   def validate_uploaded_request_files_for_sending_by_post
     if sent_by_post? & uploaded_request_files.blank?
       errors.add(
         :uploaded_request_files,
-        I18n.t('activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank')
-      )        
+        I18n.t("activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank"),
+      )
     end
-  end 
+  end
 
   def validate_uploaded_request_files_for_sending_by_email
     if sent_by_email? && message.blank? && uploaded_request_files.blank?
       errors.add(
         :message,
-        I18n.t('activerecord.errors.models.case/foi/standard.attributes.message.optional_blank')
-      )        
+        I18n.t("activerecord.errors.models.case/foi/standard.attributes.message.optional_blank"),
+      )
       errors.add(
         :uploaded_request_files,
-        I18n.t('activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank')
-      )        
+        I18n.t("activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank"),
+      )
     end
-  end 
-
+  end
 end

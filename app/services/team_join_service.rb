@@ -30,26 +30,24 @@ class TeamJoinService
     @target_team = target_team
     @result = :incomplete
 
-    raise TeamNotBusinessUnitError.new unless @team.is_a? BusinessUnit
-    raise InvalidTargetBusinessUnitError.new unless @target_team.is_a? BusinessUnit
-    raise OriginalBusinessUnitError.new if @team == @target_team
-    raise TeamHasCodeError.new if @team.code.present?
-    raise TeamHasCodeError.new if @target_team.code.present?
+    raise TeamNotBusinessUnitError unless @team.is_a? BusinessUnit
+    raise InvalidTargetBusinessUnitError unless @target_team.is_a? BusinessUnit
+    raise OriginalBusinessUnitError if @team == @target_team
+    raise TeamHasCodeError if @team.code.present?
+    raise TeamHasCodeError if @target_team.code.present?
   end
 
   def call
     ActiveRecord::Base.transaction do
-      begin
-        join_team!
-        @result = :ok
-      rescue
-        @team.reload
-        @result = :error
-      end
+      join_team!
+      @result = :ok
+    rescue StandardError
+      @team.reload
+      @result = :error
     end
   end
 
-  private
+private
 
   def join_team!
     join_users_to_new_team_history
@@ -59,9 +57,9 @@ class TeamJoinService
     link_old_team_to_new_team
   end
 
-  def create_role(team, ur)
-    unless team.user_roles.where(user_id: ur.user.id, role: ur.role).present?
-      TeamsUsersRole.create(team: team, user: ur.user, role: ur.role)
+  def create_role(team, user_role)
+    if team.user_roles.where(user_id: user_role.user.id, role: user_role.role).blank?
+      TeamsUsersRole.create!(team:, user: user_role.user, role: user_role.role)
     end
   end
 
@@ -108,6 +106,6 @@ class TeamJoinService
   def link_old_team_to_new_team
     # We do this for reporting purposes
     @team.moved_to_unit = @target_team
-    @team.save
+    @team.save # rubocop:disable Rails/SaveBang
   end
 end

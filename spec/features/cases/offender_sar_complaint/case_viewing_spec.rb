@@ -1,7 +1,6 @@
 require "rails_helper"
 
-feature 'Viewing for cases', js: true do
-
+feature "Viewing for cases", js: true do
   given(:responding_team)   { create :team_branston }
   given(:responder)         { responding_team.responders.first }
 
@@ -10,7 +9,6 @@ feature 'Viewing for cases', js: true do
   end
 
   scenario "View 'My open cases tab' - tab case count numbers are correct" do
-
     login_as responder
 
     cases_page.load
@@ -34,22 +32,22 @@ feature 'Viewing for cases', js: true do
     create(:accepted_complaint_case)
     create(:accepted_complaint_case)
     make_case_late(create(:accepted_complaint_case))
-    
-    create(:accepted_complaint_case, complaint_type: 'litigation')
-    create(:accepted_complaint_case, complaint_type: 'litigation')
 
-    3.times {
+    create(:accepted_complaint_case, complaint_type: "litigation")
+    create(:accepted_complaint_case, complaint_type: "litigation")
+
+    3.times do
       make_case_late(
         create(
-          :accepted_complaint_case, 
-          complaint_type: 'litigation'
-        )
+          :accepted_complaint_case,
+          complaint_type: "litigation",
+        ),
       )
-    }
+    end
   end
 
   def make_case_late(kase)
     kase.external_deadline = 5.days.ago
-    kase.save(validate: false)
+    kase.save!(validate: false)
   end
 end

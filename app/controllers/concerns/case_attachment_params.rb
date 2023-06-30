@@ -4,8 +4,7 @@ module CaseAttachmentParams
   def create_params
     params.permit(
       :upload_comment,
-      uploaded_request_files: []
+      uploaded_request_files: [],
     )
   end
-
 end

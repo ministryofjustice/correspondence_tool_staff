@@ -4,7 +4,7 @@
 
   = render partial: 'cases/overturned_shared/new_form', locals: { kase: @case, f: f }
 
-  - if show_disclosure_radios_for_ovt?
+  - if show_disclosure_radios_for_ovt?(@case)
     = f.radio_button_fieldset :flag_for_disclosure_specialists
 
   .button-holder

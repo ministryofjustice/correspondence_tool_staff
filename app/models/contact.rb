@@ -1,12 +1,11 @@
 class Contact < ApplicationRecord
-
   validates :name, presence: true
   validates :address_line_1, presence: true
   validates :postcode, presence: true
   validates :contact_type, presence: true
   validate :validate_emails
 
-  belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts
+  belongs_to :contact_type, class_name: "CategoryReference", inverse_of: :contacts
 
   def address
     format_address("\n")
@@ -21,7 +20,7 @@ class Contact < ApplicationRecord
   end
 
   def self.filter_by_contact_type(filters)
-    filter_sql = 'category_references.code IN (?)'
+    filter_sql = "category_references.code IN (?)"
     joins(:contact_type).where(filter_sql, filters)
   end
 
@@ -38,7 +37,7 @@ class Contact < ApplicationRecord
     data_request_emails&.split("\n")
   end
 
-  private
+private
 
   def format_address(separator)
     [
@@ -46,21 +45,21 @@ class Contact < ApplicationRecord
       address_line_2,
       town,
       county,
-      postcode
+      postcode,
     ].compact
      .reject(&:empty?)
      .join(separator)
   end
 
   def validate_emails
-    return unless data_request_emails.present?
+    return if data_request_emails.blank?
 
     data_request_emails.split.each do |email|
       next if email =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
 
       errors.add(
         :data_request_emails,
-        :invalid
+        :invalid,
       )
     end
   end

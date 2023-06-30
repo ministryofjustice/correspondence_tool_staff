@@ -1,20 +1,20 @@
 class UsersController < ApplicationController
   include AvailableCaseReports
 
-  before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
+  before_action :set_team, only: %i[create new edit update confirm_destroy]
 
   def show
     @user = User.find params[:id]
     unpaginated_cases = UserActiveCaseCountService.new.active_cases_for_user(@user)
-    if download_csv_request?
-      @cases = unpaginated_cases.decorate
-    else
-      @cases = unpaginated_cases.page(params[:page]).decorate
-    end
+    @cases = if download_csv_request?
+               unpaginated_cases.decorate
+             else
+               unpaginated_cases.page(params[:page]).decorate
+             end
     respond_to do |format|
       format.html { render :show }
       format.csv do
-        send_csv_cases @user.full_name.downcase.tr(' ', '_')
+        send_csv_cases @user.full_name.downcase.tr(" ", "_")
       end
     end
   end
@@ -25,10 +25,10 @@ class UsersController < ApplicationController
     @user = service.user
     case service.result
     when :ok
-      flash[:notice] = 'User created'
+      flash[:notice] = "User created"
       redirect_to team_path(id: @team.id)
     when :existing_ok
-      flash[:notice] = 'Existing user added to team'
+      flash[:notice] = "Existing user added to team"
       redirect_to team_path(id: @team.id)
     else
       render :new
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find params[:id]
     if @user.update(create_user_params)
-      flash[:notice] = 'User details updated'
+      flash[:notice] = "User details updated"
       redirect_to team_path(id: @team.id)
     else
       render :edit
@@ -62,11 +62,11 @@ class UsersController < ApplicationController
     service.call
     case service.result
     when :ok
-      flash[:notice] = I18n.t('devise.registrations.destroyed')
+      flash[:notice] = I18n.t("devise.registrations.destroyed")
     when :has_live_cases
-      flash[:alert] = I18n.t('devise.registrations.has_live_cases')
+      flash[:alert] = I18n.t("devise.registrations.has_live_cases")
     else
-      flash[:alert] = I18n.t('devise.registrations.error')
+      flash[:alert] = I18n.t("devise.registrations.error")
     end
     redirect_to team_path(params[:team_id])
   end
@@ -77,7 +77,7 @@ class UsersController < ApplicationController
     render :confirm_destroy
   end
 
-  private
+private
 
   def validate_role
     if params.require(:role) == @team.role
@@ -88,7 +88,7 @@ class UsersController < ApplicationController
   end
 
   def create_user_params
-    params[:user][:full_name] = params[:user][:full_name].strip()
+    params[:user][:full_name] = params[:user][:full_name].strip
     params.require(:user).permit(
       :full_name,
       :email,

@@ -1,6 +1,5 @@
 class CaseAcceptApproverAssignmentService
-  attr_accessor :result
-  attr_accessor :error
+  attr_accessor :result, :error
 
   def initialize(assignment:, user:)
     @assignment = assignment
@@ -11,6 +10,7 @@ class CaseAcceptApproverAssignmentService
 
   def call
     return false unless validate_still_pending
+
     begin
       @assignment.case.state_machine.accept_approver_assignment!(acting_user: @user, acting_team: @team)
       @assignment.user = @user
@@ -18,15 +18,15 @@ class CaseAcceptApproverAssignmentService
       @assignment.save!
       @result = :ok
       true
-    rescue => err
-      Rails.logger.debug { ">>>>>>>>>>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n" }
-      Rails.logger.debug err.message
-      Rails.logger.debug err.backtrace
+    rescue StandardError => e
+      Rails.logger.debug { ">>>>>>>>>>>> error #{e.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n" }
+      Rails.logger.debug e.message
+      Rails.logger.debug e.backtrace
       raise
     end
   end
 
-  private
+private
 
   def validate_still_pending
     if @assignment.pending?

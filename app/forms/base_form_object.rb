@@ -16,8 +16,8 @@ class BaseFormObject
   # the attributes declared in the form object.
   def self.build(record)
     attrs = record.slice(
-      attribute_names
-    ).merge!(record: record)
+      attribute_names,
+    ).merge!(record:)
 
     new(attrs)
   end
@@ -47,12 +47,12 @@ class BaseFormObject
     instance_variable_set("@#{attr_name}".to_sym, value)
   end
 
-  private
+private
 
   # If the logic is any more complex than this, override in subclasses
   def persist!
     record.update(
-      **attributes
+      **attributes,
     )
   end
 end

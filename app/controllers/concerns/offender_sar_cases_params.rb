@@ -3,7 +3,6 @@ module OffenderSARCasesParams
 
   class InputValidationError < RuntimeError; end
 
-  #rubocop:disable Metrics/MethodLength
   def create_offender_sar_params
     params.require(:offender_sar).permit(
       :case_reference_number,
@@ -36,10 +35,9 @@ module OffenderSARCasesParams
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :request_method,
       :requester_reference,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
-  #rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
   def update_offender_sar_params
@@ -55,16 +53,16 @@ module OffenderSARCasesParams
   def record_reason_params
     params.require(:offender_sar).permit(
       :reason_for_lateness_note,
-      :reason_for_lateness_id
-      )
+      :reason_for_lateness_id,
+    )
   end
 
   def partial_case_flags_params
     params.require(:offender_sar).permit(
       :is_partial_case,
       :further_actions_required,
-      :partial_case_letter_sent_dated_dd, :partial_case_letter_sent_dated_mm, :partial_case_letter_sent_dated_yyyy,
-      )
+      :partial_case_letter_sent_dated_dd, :partial_case_letter_sent_dated_mm, :partial_case_letter_sent_dated_yyyy
+    )
   end
 
   def sent_to_sscl_params
@@ -79,24 +77,23 @@ module OffenderSARCasesParams
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      )
+    )
   end
 
   def validate_reason(reason_params)
     error_message = nil
     if reason_params.empty?
-      error_message = t('alerts.offender_sar.reason_for_lateness.blank')
+      error_message = t("alerts.offender_sar.reason_for_lateness.blank")
     else
       reason = @reasons_for_lateness[reason_params["reason_for_lateness_id"].to_i]
       if reason.present?
         if reason == "other" && reason_params["reason_for_lateness_note"].blank?
-          error_message = t('alerts.offender_sar.reason_for_lateness.blank')
+          error_message = t("alerts.offender_sar.reason_for_lateness.blank")
         end
       else
-        error_message = t('alerts.offender_sar.reason_for_lateness.invalid')
+        error_message = t("alerts.offender_sar.reason_for_lateness.invalid")
       end
     end
-    raise InputValidationError.new(error_message) unless error_message.nil?
+    raise InputValidationError, error_message unless error_message.nil?
   end
-
 end

@@ -1,22 +1,22 @@
+# rubocop:disable Rails/Exit
 module CTS
   class << self
-
     def info(statement)
       $stdout.puts statement
     end
 
     def error(statement)
-      $stderr.puts statement
+      warn statement
     end
 
     def check_environment
       environment = if ::Rails.env.production?
-                      ENV.fetch('ENV', Rails.env)
+                      ENV.fetch("ENV", Rails.env)
                     else
                       Rails.env
                     end
-      if environment == 'prod' || environment == 'production'
-        STDERR.puts "Environment '#{environment}' detected. Run cts in non-prod environments only!"
+      if %w[prod production].include?(environment)
+        warn "Environment '#{environment}' detected. Run cts in non-prod environments only!"
         exit 1
       end
     end
@@ -30,17 +30,19 @@ module CTS
         teams.each { |t| error "  #{t.name}" }
         raise "Multiple teams found matching #{id_or_name}"
       end
+
       teams.first
     end
 
     def find_teams(id_or_name)
-      if id_or_name.match %r{^\d+$}
+      case id_or_name
+      when %r{^\d+$}
         [BusinessUnit.find(id_or_name)]
-      elsif id_or_name.match %r{^/(.*)/$}
+      when %r{^/(.*)/$}
         team_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
         BusinessUnit.all.find_all { |t| t.name.match(team_name_regex) }
       else
-        BusinessUnit.where('name = ? OR code = ?', id_or_name, id_or_name)
+        BusinessUnit.where("name = ? OR code = ?", id_or_name, id_or_name)
       end
     end
 
@@ -53,13 +55,15 @@ module CTS
         users.each { |u| error "  #{u.name}" }
         raise "Multiple users found matching #{id_or_name}."
       end
+
       users.first
     end
 
     def find_users(id_or_name)
-      if id_or_name.match %r{^\d+$}
+      case id_or_name
+      when %r{^\d+$}
         [User.find(id_or_name)]
-      elsif id_or_name.match %r{^/(.*)/$}
+      when %r{^/(.*)/$}
         user_name_regex = Regexp.new(Regexp.last_match(1), Regexp::IGNORECASE)
         User.all.find_all { |t| t.full_name.match(user_name_regex) }
       else
@@ -68,7 +72,7 @@ module CTS
     end
 
     def find_case(id_or_number)
-      Case::Base.where(['id = ? or number = ?', id_or_number, id_or_number]).first or
+      Case::Base.where(["id = ? or number = ?", id_or_number, id_or_number]).first or
         raise "No case found matching id or number '#{id_or_number}'."
     end
 
@@ -80,36 +84,32 @@ module CTS
       hmcts_team
       hr_team
       laa_team
-    rescue => err
-      error err.message
+    rescue StandardError => e
+      error e.message
       error "Run 'cts teams seed' to populate teams"
-      error err.backtrace.join("\n\t")
+      error e.backtrace.join("\n\t")
       exit 2
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
     def validate_users_populated
-      begin
-        dacu_team.managers.first || raise("DACU BMT missing users")
-        dacu_disclosure_team.approvers.first || raise("DACU Disclosure missing users")
-        hmcts_team.responders.first || raise("HMCTS missing users")
-        hr_team.responders.first || raise("HR missing users")
-        press_office_team.approvers.first || raise("Press Office missing users")
-        private_office_team.approvers.first || raise("Private Office missing users")
-      rescue => ex
-        error "Error validating users:"
-        error ex.message
-        error "Run 'cts users seed' to populate users"
-        error ex.backtrace.join("\n\t")
+      dacu_team.managers.first || raise("DACU BMT missing users")
+      dacu_disclosure_team.approvers.first || raise("DACU Disclosure missing users")
+      hmcts_team.responders.first || raise("HMCTS missing users")
+      hr_team.responders.first || raise("HR missing users")
+      press_office_team.approvers.first || raise("Press Office missing users")
+      private_office_team.approvers.first || raise("Private Office missing users")
+    rescue StandardError => e
+      error "Error validating users:"
+      error e.message
+      error "Run 'cts users seed' to populate users"
+      error e.backtrace.join("\n\t")
 
-        exit 3
-      end
+      exit 3
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def dacu_manager
       @dacu_manager ||= if dacu_team.managers.blank?
-                          raise 'DACU team has no managers assigned.'
+                          raise "DACU team has no managers assigned."
                         else
                           dacu_team.managers.first
                         end
@@ -118,7 +118,7 @@ module CTS
     def dacu_disclosure_approver
       @dacu_disclosure_approver ||=
         if dacu_disclosure_team.approvers.blank?
-          raise 'DACU Disclosure team has no approvers assigned.'
+          raise "DACU Disclosure team has no approvers assigned."
         else
           dacu_disclosure_team.approvers.last
         end
@@ -127,7 +127,7 @@ module CTS
     def press_officer
       @press_officer ||=
         if press_office_team.approvers.blank?
-          raise 'Press Office team has no approvers assigned.'
+          raise "Press Office team has no approvers assigned."
         else
           press_office_team.approvers.first
         end
@@ -135,41 +135,42 @@ module CTS
 
     def private_officer
       @private_officer ||=
-          if private_office_team.approvers.blank?
-            raise 'Private Office team has no approvers assigned.'
-          else
-            private_office_team.approvers.first
-          end
+        if private_office_team.approvers.blank?
+          raise "Private Office team has no approvers assigned."
+        else
+          private_office_team.approvers.first
+        end
     end
 
     def dacu_team
-      @dacu_team ||= CTS::find_team Settings.foi_cases.default_managing_team
+      @dacu_team ||= CTS.find_team Settings.foi_cases.default_managing_team
     end
 
     def dacu_disclosure_team
       @dacu_disclosure_team ||=
-        CTS::find_team Settings.foi_cases.default_clearance_team
+        CTS.find_team Settings.foi_cases.default_clearance_team
     end
 
     def press_office_team
-      @press_office_team ||= CTS::find_team Settings.press_office_team_name
+      @press_office_team ||= CTS.find_team Settings.press_office_team_name
     end
 
     def private_office_team
-      @private_office_team ||= CTS::find_team Settings.private_office_team_name
+      @private_office_team ||= CTS.find_team Settings.private_office_team_name
     end
 
     def hmcts_team
       @hmcts_team ||=
-        CTS::find_team 'North East Regional Support Unit (NE RSU)'
+        CTS.find_team "North East Regional Support Unit (NE RSU)"
     end
 
     def laa_team
-      @laa_team ||= CTS::find_team 'Legal Aid Agency (LAA)'
+      @laa_team ||= CTS.find_team "Legal Aid Agency (LAA)"
     end
 
     def hr_team
-      @hr_team ||= CTS::find_team 'MoJ Human Resources (MoJ HR)'
+      @hr_team ||= CTS.find_team "MoJ Human Resources (MoJ HR)"
     end
   end
 end
+# rubocop:enable Rails/Exit

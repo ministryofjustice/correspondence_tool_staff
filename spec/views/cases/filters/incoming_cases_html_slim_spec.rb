@@ -1,48 +1,62 @@
-require 'rails_helper'
-require 'capybara/dsl'
+require "rails_helper"
+require "capybara/dsl"
 
-describe 'cases/filters/incoming.html.slim', type: :view do
+# rubocop:disable RSpec/BeforeAfterAll
+describe "cases/filters/incoming.html.slim", type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
-  let(:case1) { create(:assigned_case, :flagged,
-                       approving_team: team_dacu_disclosure,
-                       name: 'Joe Smith',
-                       subject: 'Prison Reform',
-                       message: 'message number 1').decorate }
-  let(:case2) { create(:assigned_case, :flagged,
-                       approving_team: team_dacu_disclosure,
-                       name: 'Jane Doe',
-                       subject: 'Court Reform',
-                       message: 'message number 2').decorate }
-  let(:further_clearance_case) { create(:assigned_case, :flagged, :further_clearance_requested,
-                                   approving_team: team_dacu_disclosure,
-                                   name: 'Questioning Jim',
-                                   subject: 'Reform Reform',
-                                   message: 'message number 3').decorate }
-  let(:request)         { instance_double ActionDispatch::Request,
-                                          path: '/cases/incoming',
-                                          fullpath: '/cases/incoming',
-                                          query_parameters: {},
-                                          params: {}}
+  let(:case1) do
+    create(:assigned_case, :flagged,
+           approving_team: team_dacu_disclosure,
+           name: "Joe Smith",
+           subject: "Prison Reform",
+           message: "message number 1").decorate
+  end
+  let(:case2) do
+    create(:assigned_case, :flagged,
+           approving_team: team_dacu_disclosure,
+           name: "Jane Doe",
+           subject: "Court Reform",
+           message: "message number 2").decorate
+  end
+  let(:further_clearance_case) do
+    create(:assigned_case, :flagged, :further_clearance_requested,
+           approving_team: team_dacu_disclosure,
+           name: "Questioning Jim",
+           subject: "Reform Reform",
+           message: "message number 3").decorate
+  end
+  let(:request) do
+    instance_double ActionDispatch::Request,
+                    path: "/cases/incoming",
+                    fullpath: "/cases/incoming",
+                    query_parameters: {},
+                    params: {}
+  end
 
   before do
     DbHousekeeping.clean(seed: true)
     assign(:homepage_nav_manager, GlobalNavManager.new(disclosure_specialist,
-                                                     request,
-                                                     Settings.homepage_navigation.pages))
+                                                       request,
+                                                       Settings.homepage_navigation.pages))
     allow(controller).to receive(:current_user).and_return(disclosure_specialist)
   end
-  
-  after(:all) { DbHousekeeping.clean(seed: true) }
 
-  it 'displays the cases given it' do
+  after(:all) do
+    DbHousekeeping.clean(seed: true)
+  end
+
+  it "displays the cases given it" do
     case1
     case2
     further_clearance_case
-    assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:id)))
+    cases = PaginatingDecorator.new(Case::Base.all.page.order(:id))
+    assign(:cases, cases)
 
-    policy = double('Pundit::Policy', can_add_case?: false, unflag_for_clearance?: true)
-    allow(view).to receive(:policy).and_return(policy)
+    cases.each do |kase|
+      allow_case_policies_in_view(kase, :unflag_for_clearance?)
+      disallow_case_policies_in_view(kase, :can_add_case?)
+    end
 
     sign_in disclosure_specialist
 
@@ -51,39 +65,36 @@ describe 'cases/filters/incoming.html.slim', type: :view do
 
     first_case = incoming_cases_page.case_list[0]
     expect(first_case.number.text).to eq "Case number #{case1.number}"
-    expect(first_case.request.name.text).to eq 'Joe Smith | Member of the public'
-    expect(first_case.request.subject.text).to eq 'Prison Reform'
-    expect(first_case.request.message.text).to eq 'message number 1'
-    expect(first_case.actions.take_on_case.text).to eq 'Take case on'
-    expect(first_case.actions.de_escalate_link.text).to eq 'De-escalate'
+    expect(first_case.request.name.text).to eq "Joe Smith | Member of the public"
+    expect(first_case.request.subject.text).to eq "Prison Reform"
+    expect(first_case.request.message.text).to eq "message number 1"
+    expect(first_case.actions.take_on_case.text).to eq "Take case on"
+    expect(first_case.actions.de_escalate_link.text).to eq "De-escalate"
 
     second_case = incoming_cases_page.case_list[1]
     expect(second_case.number.text).to eq "Case number #{case2.number}"
-    expect(second_case.request.name.text).to eq 'Jane Doe | Member of the public'
-    expect(second_case.request.subject.text).to eq 'Court Reform'
-    expect(second_case.request.message.text).to eq 'message number 2'
-    expect(second_case.actions.take_on_case.text).to eq 'Take case on'
-    expect(second_case.actions.de_escalate_link.text).to eq 'De-escalate'
+    expect(second_case.request.name.text).to eq "Jane Doe | Member of the public"
+    expect(second_case.request.subject.text).to eq "Court Reform"
+    expect(second_case.request.message.text).to eq "message number 2"
+    expect(second_case.actions.take_on_case.text).to eq "Take case on"
+    expect(second_case.actions.de_escalate_link.text).to eq "De-escalate"
 
     third_case = incoming_cases_page.case_list[2]
     expect(third_case.number.text).to eq "Case number #{further_clearance_case.number}"
-    expect(third_case.request.name.text).to eq 'Questioning Jim | Member of the public'
-    expect(third_case.request.subject.text).to eq 'Reform Reform'
-    expect(third_case.request.message.text).to eq 'message number 3'
-    expect(third_case.actions.take_on_case.text).to eq 'Take case on'
-    expect(third_case.actions.de_escalate_link.text).to eq 'De-escalate'
-    expect(third_case.actions.requested_by.text).to eq 'Further clearance requested'
+    expect(third_case.request.name.text).to eq "Questioning Jim | Member of the public"
+    expect(third_case.request.subject.text).to eq "Reform Reform"
+    expect(third_case.request.message.text).to eq "message number 3"
+    expect(third_case.actions.take_on_case.text).to eq "Take case on"
+    expect(third_case.actions.de_escalate_link.text).to eq "De-escalate"
+    expect(third_case.actions.requested_by.text).to eq "Further clearance requested"
   end
 
-  describe 'pagination' do
-    before do
-      allow(view).to receive(:policy).and_return(spy('Pundit::Policy'))
-    end
-
-    it 'renders the paginator' do
+  describe "pagination" do
+    it "renders the paginator" do
       assign(:cases, Case::Base.none.page.decorate)
       render
-      expect(response).to have_rendered('kaminari/_paginator')
+      expect(response).to have_rendered("kaminari/_paginator")
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

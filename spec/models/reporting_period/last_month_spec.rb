@@ -1,9 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
 module ReportingPeriod
   describe LastMonth do
-    context '#initialize' do
-      it 'works on first day of next month' do
+    describe "#initialize" do
+      it "works on first day of next month" do
         date = Date.new(1998, 10, 1)
         expected_start = Date.new(1998, 9, 1)
         expected_end = Date.new(1998, 9, 30)

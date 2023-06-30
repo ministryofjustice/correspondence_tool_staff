@@ -6,7 +6,7 @@ module Cases
 
     def initialize
       @correspondence_type = CorrespondenceType.overturned_foi
-      @correspondence_type_key = 'overturned_foi'
+      @correspondence_type_key = "overturned_foi"
 
       super
     end

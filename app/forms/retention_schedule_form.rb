@@ -16,7 +16,7 @@ class RetentionScheduleForm < BaseFormObject
     allowed_states.map(&:to_s)
   end
 
-  private
+private
 
   # If the retention schedule has progressed already to any state other than the
   # initial `not_set`, we don't allow reverting back to the initial state, so we

@@ -1,10 +1,9 @@
 module CaseFilter
   class CaseTriggerFlagFilter < CaseMultiChoicesFilterBase
-
     def self.identifier
-      'filter_sensitivity'
+      "filter_sensitivity"
     end
-  
+
     def self.filter_attributes
       [:filter_sensitivity]
     end
@@ -12,30 +11,29 @@ module CaseFilter
     def available_choices
       {
         filter_sensitivity: {
-          'non-trigger' => I18n.t('filters.filter_sensitivity.non-trigger'),
-          'trigger'     => I18n.t('filters.filter_sensitivity.trigger')
-        }
+          "non-trigger" => I18n.t("filters.filter_sensitivity.non-trigger"),
+          "trigger" => I18n.t("filters.filter_sensitivity.trigger"),
+        },
       }
     end
 
     def is_permitted_for_user?
-      @user.permitted_correspondence_types.any? { | c_type | ['FOI'].include? c_type.abbreviation }
+      @user.permitted_correspondence_types.any? { |c_type| %w[FOI].include? c_type.abbreviation }
     end
 
     def call
       records = @records
-      records = filter_sensitivity(records)
-      records
+      filter_sensitivity(records)
     end
 
-    private
+  private
 
     def filter_trigger?
-      'trigger'.in? @query.filter_sensitivity
+      "trigger".in? @query.filter_sensitivity
     end
 
     def filter_non_trigger?
-      'non-trigger'.in? @query.filter_sensitivity
+      "non-trigger".in? @query.filter_sensitivity
     end
 
     def filter_sensitivity(records)

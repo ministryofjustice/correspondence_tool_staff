@@ -15,9 +15,9 @@ class Letter
   end
 
   def body
-    @letter_template&.render(values, self, 'body')
+    @letter_template&.render(values, self, "body")
   end
-  
+
   def values
     cloned_case = @case.dup
 
@@ -32,13 +32,13 @@ class Letter
     ]
 
     attributes.each do |attr|
-      cloned_case.assign_attributes({attr.to_sym => ERB::Util.html_escape(@case.send(attr)) })
+      cloned_case.assign_attributes({ attr.to_sym => ERB::Util.html_escape(@case.send(attr)) })
     end
     cloned_case
   end
 
   def letter_date
-    Date.today.strftime('%e %B %Y')
+    Time.zone.today.strftime("%e %B %Y")
   end
 
   def template_name
@@ -64,7 +64,7 @@ class Letter
   end
 
   def letter_address
-    @letter_template&.render(values, self, 'letter_address')
+    @letter_template&.render(values, self, "letter_address")
   end
 
   def company_name
@@ -73,7 +73,7 @@ class Letter
 
   def format_address(address)
     if address.include?(",")
-      address.split(',').map {|word| word.strip }.join("\n") 
+      address.split(",").map(&:strip).join("\n")
     else
       address
     end

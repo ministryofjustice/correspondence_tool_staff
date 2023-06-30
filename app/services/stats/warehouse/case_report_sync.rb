@@ -34,16 +34,16 @@ module Stats
         },
         'Case::Base': {
           fields: [],
-          execute: ->(record, _) { [record] }
+          execute: ->(record, _) { [record] },
         },
         'CaseClosure::Metadatum': {
           fields: %w[
-              info_held_status_id
-              refusal_reason_id
-              outcome_id
-              appeal_outcome_id
-            ],
-          execute: ->(record, query) { self.find_cases(record, query) },
+            info_held_status_id
+            refusal_reason_id
+            outcome_id
+            appeal_outcome_id
+          ],
+          execute: ->(record, query) { find_cases(record, query) },
         },
         'CaseTransition': {
           fields: [],
@@ -51,27 +51,27 @@ module Stats
         },
         'Team': {
           fields: %w[
-              responding_team_id
-              business_group_id
-              directorate_id
-            ],
-          execute: ->(record, query) { self.find_cases(record, query) },
+            responding_team_id
+            business_group_id
+            directorate_id
+          ],
+          execute: ->(record, query) { find_cases(record, query) },
         },
         'TeamProperty': {
           fields: %w[
-              director_general_name_property_id
-              director_name_property_id
-              deputy_director_name_property_id
-            ],
-          execute: ->(record, query) { self.find_cases(record, query) },
+            director_general_name_property_id
+            director_name_property_id
+            deputy_director_name_property_id
+          ],
+          execute: ->(record, query) { find_cases(record, query) },
         },
         'User': {
           fields: %w[
-              creator_id
-              casework_officer_user_id
-              responder_id
-            ],
-          execute: ->(record, query) { self.find_cases(record, query) },
+            creator_id
+            casework_officer_user_id
+            responder_id
+          ],
+          execute: ->(record, query) { find_cases(record, query) },
         },
       }.freeze
 
@@ -82,14 +82,14 @@ module Stats
       # code-smell, took the pragmatic/simpler decision to maintain sync
       # operations in one place for this initial 'alpha' implementation
       def initialize(record)
-        raise ArgumentError.new('record must be an ApplicationRecord') unless record.is_a? ApplicationRecord
+        raise ArgumentError, "record must be an ApplicationRecord" unless record.is_a? ApplicationRecord
 
         syncable, mapping_klass = self.class.syncable?(record)
 
         if syncable
           cases = self.class.affected_cases(
             record,
-            MAPPINGS[mapping_klass.to_s.to_sym]
+            MAPPINGS[mapping_klass.to_s.to_sym],
           )
           self.class.sync(cases)
         end
@@ -99,7 +99,7 @@ module Stats
         # Where clause conditions to search against CaseReport
         query = setting[:fields]
           .map { |f| "#{f} = :param" }
-          .join(' OR ')
+          .join(" OR ")
 
         # Get all Case(s) related to the CaseReport(s)
         setting[:execute].call(record, query)
@@ -114,7 +114,7 @@ module Stats
       def self.find_cases(record, query)
         ::Warehouse::CaseReport
           .includes(:case)
-          .where([query, param: record.id])
+          .where([query, { param: record.id }])
           .map(&:case)
       end
 
@@ -123,7 +123,7 @@ module Stats
 
         result = MAPPINGS.keys.any? do |type|
           if record.is_a?(type.to_s.constantize)
-            !!(mapping_klass = type)
+            !(mapping_klass = type).nil?
           end
         end
 

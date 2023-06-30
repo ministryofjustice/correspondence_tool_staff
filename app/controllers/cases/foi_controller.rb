@@ -3,20 +3,20 @@ module Cases
     include NewCase
     include FOICasesParams
 
-    before_action -> { set_case(params[:id]) }, only: [:send_back, :confirm_send_back]
+    before_action -> { set_case(params[:id]) }, only: %i[send_back confirm_send_back]
 
     def initialize
       @correspondence_type = CorrespondenceType.foi
-      @correspondence_type_key = 'foi'
+      @correspondence_type_key = "foi"
 
       super
     end
 
     def send_back
       authorize @case, :can_send_back?
-    
+
       set_permitted_events
-      render 'cases/foi/send_back'
+      render "cases/foi/send_back"
     end
 
     def confirm_send_back
@@ -26,7 +26,7 @@ module Cases
       service = CaseSendBackService.new(
         user: current_user,
         kase: @case,
-        comment: params[:extra_comment]
+        comment: params[:extra_comment],
       )
       result = service.call
 
@@ -39,15 +39,16 @@ module Cases
         render :send_back
       end
     end
-  
+
     def new
       permitted_correspondence_types
       new_case_for @correspondence_type
     end
 
     def case_type
-      foi_type = params.dig(@correspondence_type_key, 'type')
+      foi_type = params.dig(@correspondence_type_key, "type")
       return Case::FOI::Standard if foi_type.blank?
+
       Case::FOI::Standard.factory(foi_type)
     end
 

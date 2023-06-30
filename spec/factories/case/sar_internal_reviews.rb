@@ -29,8 +29,7 @@
 #
 
 FactoryBot.define do
-
-  factory :sar_internal_review, class: Case::SAR::InternalReview do
+  factory :sar_internal_review, class: "Case::SAR::InternalReview" do
     transient do
       creation_time       { 4.business_days.ago }
       identifier          { "new sar internal review case" }
@@ -45,31 +44,31 @@ FactoryBot.define do
     end
 
     association :original_case, factory: [:sar_case]
-    current_state                 { 'unassigned' }
+    current_state                 { "unassigned" }
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(name: identifier) }
-    reply_method                  { 'send_by_email' }
-    sar_ir_subtype                { 'compliance' }
+    reply_method                  { "send_by_email" }
+    sar_ir_subtype                { "compliance" }
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
     received_date                 { Time.zone.today.to_s }
     sequence(:postal_address)     { |n| "#{identifier} postal address #{n}" }
     sequence(:subject_full_name)  { |n| "Subject #{n}" }
-    subject_type                  { 'offender' }
+    subject_type                  { "offender" }
     third_party                   { false }
     created_at                    { creation_time }
     creator                       { create(:user, :orphan) }
 
     trait :third_party do
       third_party { true }
-      third_party_relationship { 'Aunt' }
+      third_party_relationship { "Aunt" }
     end
 
     trait :deleted_case do
       i_am_deleted { true }
     end
 
-    after(:create) do | kase, evaluator|
+    after(:create) do |kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
 
@@ -82,20 +81,20 @@ FactoryBot.define do
         create :approver_assignment,
                case: kase,
                team: evaluator.approving_team,
-               state: 'pending'
-        kase.update workflow: 'trigger'
+               state: "pending"
+        kase.update! workflow: "trigger"
 
         if evaluator.flag_for_disclosure == :accepted
           disclosure_assignment = kase.assignments.for_team(
-            evaluator.approving_team
+            evaluator.approving_team,
           ).singular
-          disclosure_assignment.update(state: 'accepted',
-                                       user: evaluator.approver)
+          disclosure_assignment.update!(state: "accepted",
+                                        user: evaluator.approver)
         end
       end
 
       if evaluator.i_am_deleted
-        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        kase.update! deleted: true, reason_for_deletion: "Needs to go"
       end
     end
 
@@ -114,16 +113,16 @@ FactoryBot.define do
     trait :extended_deadline_sar_internal_review do
       after(:create) do |kase, evaluator|
         create :case_transition_extend_sar_deadline_by_30_days,
-         case: kase,
-         acting_team: evaluator.managing_team,
-         acting_user: evaluator.manager
+               case: kase,
+               acting_team: evaluator.managing_team,
+               acting_user: evaluator.manager
 
-        kase.extend_deadline!(kase.external_deadline + 30.days,1)
+        kase.extend_deadline!(kase.external_deadline + 30.days, 1)
       end
     end
   end
 
-  factory :awaiting_responder_sar_internal_review, parent: :sar_internal_review, aliases: [:assigned_sar_internal_review], class: Case::SAR::InternalReview do
+  factory :awaiting_responder_sar_internal_review, parent: :sar_internal_review, aliases: [:assigned_sar_internal_review], class: "Case::SAR::InternalReview" do
     transient do
       identifier { "assigned sar internal review" }
     end
@@ -135,8 +134,8 @@ FactoryBot.define do
       create :assignment,
              case: kase,
              team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
+             state: "pending",
+             role: "responding",
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
@@ -148,16 +147,15 @@ FactoryBot.define do
     end
   end
 
-
   factory :accepted_sar_internal_review, parent: :assigned_sar_internal_review,
-          aliases: [:sar_internal_review_being_drafted] do
+                                         aliases: [:sar_internal_review_being_drafted] do
     transient do
       identifier { "accepted sar internal review" }
     end
 
     after(:create) do |kase, evaluator|
       responder = evaluator.responder || responding_team.responders.first
-      kase.responder_assignment.update_attribute :user, responder
+      kase.responder_assignment.update!(user: responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
@@ -180,7 +178,6 @@ FactoryBot.define do
              acting_user: evaluator.responder,
              target_team: evaluator.approving_team
       kase.reload
-
     end
   end
 
@@ -196,7 +193,6 @@ FactoryBot.define do
              acting_user: evaluator.responder,
              target_team: evaluator.approving_team
       kase.reload
-
     end
   end
 
@@ -205,7 +201,7 @@ FactoryBot.define do
       identifier { "responded case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,
@@ -218,9 +214,9 @@ FactoryBot.define do
 
   factory :approved_sar_internal_review, parent: :pending_dacu_clearance_sar_internal_review do
     transient do
-# date draft compliant is passed in in a transient blocked so it can is be
-# changed in the tests. It is added to the the case in the after create block
-# to match the order the code updates the case.
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
@@ -265,7 +261,6 @@ FactoryBot.define do
       date_draft_compliant { received_date + 2.days }
     end
 
-
     after(:create) do |kase, evaluator|
       if evaluator.flag_for_disclosure
         create :case_transition_progress_for_clearance,
@@ -279,7 +274,6 @@ FactoryBot.define do
                acting_team: evaluator.approving_team,
                acting_user: evaluator.approver
       end
-
 
       create :case_transition_respond,
              case: kase,
@@ -299,7 +293,7 @@ FactoryBot.define do
   factory :closed_sar_internal_review_with_response, parent: :closed_sar_internal_review do
     transient do
       identifier { "closed sar case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build(:correspondence_response, type: "response", user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|

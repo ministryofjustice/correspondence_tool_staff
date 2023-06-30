@@ -1,5 +1,4 @@
 class Case::SAR::InternalReviewPolicy < Case::SAR::StandardPolicy
-
   class Scope < Case::SAR::InternalReviewPolicy::Scope
     def correspondence_type
       CorrespondenceType.sar_internal_review
@@ -26,4 +25,3 @@ class Case::SAR::InternalReviewPolicy < Case::SAR::StandardPolicy
     user.managing_teams.include?(self.case.managing_team)
   end
 end
-

@@ -17,7 +17,7 @@ class CaseExtendForPITService
           acting_team: @user.case_team(@case),
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
-          message: @reason
+          message: @reason,
         )
 
         @case.extend_pit_deadline!(@extension_deadline)
@@ -25,17 +25,17 @@ class CaseExtendForPITService
       end
     end
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 
-  private
+private
 
   def validate_params
-    unless @reason.present?
+    if @reason.blank?
       @case.errors.add(:reason_for_extending, "cannot be blank")
       @result = :validation_error
     end
@@ -57,7 +57,7 @@ class CaseExtendForPITService
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_deadline,
-        "Date is more than #{Settings.pit_extension_limit} beyond the final deadline"
+        "Date is more than #{Settings.pit_extension_limit} beyond the final deadline",
       )
       false
     elsif @extension_deadline < @case.external_deadline

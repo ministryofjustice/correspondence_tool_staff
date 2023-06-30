@@ -8,7 +8,7 @@ module Cases
 
     def initialize
       @correspondence_type = CorrespondenceType.ico
-      @correspondence_type_key = 'ico'
+      @correspondence_type_key = "ico"
 
       super
     end
@@ -28,19 +28,19 @@ module Cases
         format.js do
           if process_new_linked_cases_for_params
             response = render_to_string(
-              partial: "cases/#{ @correspondence_type_key }/case_linking/linked_cases",
+              partial: "cases/#{@correspondence_type_key}/case_linking/linked_cases",
               locals: {
                 linked_cases: @linked_cases.map(&:decorate),
                 link_type: @link_type,
-              }
+              },
             )
 
             render status: :ok, json: { content: response, link_type: @link_type }.to_json
 
           else
             render status: :bad_request,
-              json: { linked_case_error: @linked_case_error,
-                link_type: @link_type }.to_json
+                   json: { linked_case_error: @linked_case_error,
+                           link_type: @link_type }.to_json
           end
         end
       end
@@ -55,14 +55,15 @@ module Cases
         redirect_to case_path
       else
         @team_collection = CaseTeamCollection.new(@case)
-        render '/cases/ico/late_team'
+        render "/cases/ico/late_team"
       end
     end
 
     # Can only be determined during case creation. Note defaulting to FOI
     # to allow subsequent validation to be performed during Case#Create
     def case_type
-      return Case::ICO::FOI unless original_case_id.present?
+      return Case::ICO::FOI if original_case_id.blank?
+
       Case::Base.find(original_case_id).class.ico_model
     end
 
@@ -86,22 +87,20 @@ module Cases
       ico_close_date_responded_params
     end
 
-    private
+  private
 
     def record_late_team_params(correspondence_type)
-      if correspondence_type == 'ICO'
+      if correspondence_type == "ICO"
         record_late_team_ico_params
       else
-        raise '#record_late_team_params only valid for ICO cases'
+        raise "#record_late_team_params only valid for ICO cases"
       end
     end
 
     def original_case_id
-      @_original_case_id ||= begin
-        if params && params[:ico].present? && params[:ico][:original_case_ids].present?
-          params[:ico][:original_case_ids].first
-        end
-      end
+      @original_case_id ||= if params && params[:ico].present? && params[:ico][:original_case_ids].present?
+                              params[:ico][:original_case_ids].first
+                            end
     end
   end
 end

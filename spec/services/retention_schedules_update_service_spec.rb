@@ -1,60 +1,60 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe RetentionSchedulesUpdateService do
   let(:manager)         { find_or_create :branston_user }
   let(:managing_team)   { create :managing_team, managers: [manager] }
 
-  let!(:not_set_timely_kase) { 
+  let!(:not_set_timely_kase) do
     case_with_retention_schedule(
-      case_type: :offender_sar_case, 
-      state: 'not_set',
-      date: Date.today - 4.months
-    ) 
-  }
+      case_type: :offender_sar_case,
+      state: "not_set",
+      date: Time.zone.today - 4.months,
+    )
+  end
 
-  let!(:reviewable_timely_kase) { 
+  let!(:reviewable_timely_kase) do
     case_with_retention_schedule(
-      case_type: :offender_sar_case, 
-      state: 'review',
-      date: Date.today - (4.months - 7.days)
-    ) 
-  }
+      case_type: :offender_sar_case,
+      state: "review",
+      date: Time.zone.today - (4.months - 7.days),
+    )
+  end
 
-  let!(:retain_timely_kase) { 
+  let!(:retain_timely_kase) do
     case_with_retention_schedule(
-      case_type: :offender_sar_case, 
-      state: 'retain',
-      date: Date.today - (4.months - 7.days)
-    ) 
-  }
+      case_type: :offender_sar_case,
+      state: "retain",
+      date: Time.zone.today - (4.months - 7.days),
+    )
+  end
 
   let(:selected_cases_params) do
     ActiveSupport::HashWithIndifferentAccess.new(
       {
-        not_set_timely_kase.id => '1',
-        reviewable_timely_kase.id => '1',
-        retain_timely_kase.id => '0'
-      }
+        not_set_timely_kase.id => "1",
+        reviewable_timely_kase.id => "1",
+        retain_timely_kase.id => "0",
+      },
     )
   end
 
-  let(:service) {
-    RetentionSchedulesUpdateService.new(
+  let(:service) do
+    described_class.new(
       retention_schedules_params: selected_cases_params,
       event_text: "Mark for destruction",
-      current_user: manager
+      current_user: manager,
     )
-  }
+  end
 
-  let(:service_with_error) {
-    RetentionSchedulesUpdateService.new(
+  let(:service_with_error) do
+    described_class.new(
       retention_schedules_params: selected_cases_params,
       event_text: "non existant status",
-      current_user: manager
+      current_user: manager,
     )
-  }
+  end
 
-  describe '#call' do
+  describe "#call" do
     before do
       service.call
 
@@ -62,13 +62,13 @@ describe RetentionSchedulesUpdateService do
       reviewable_timely_kase.reload
     end
 
-    it 'call to service updates correct cases' do
-      expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_anonymised'
-      expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_anonymised'
-      expect(retain_timely_kase.retention_schedule.state).to eq 'retain'
+    it "call to service updates correct cases" do
+      expect(not_set_timely_kase.retention_schedule.state).to eq "to_be_anonymised"
+      expect(reviewable_timely_kase.retention_schedule.state).to eq "to_be_anonymised"
+      expect(retain_timely_kase.retention_schedule.state).to eq "retain"
     end
 
-    it 'adds note to case history on state change' do
+    it "adds note to case history on state change" do
       history_message = reviewable_timely_kase
                           .transitions
                           .case_history
@@ -80,8 +80,8 @@ describe RetentionSchedulesUpdateService do
     end
   end
 
-  describe '#prepare_case_ids' do
-    it 'returns case ids that have been selected' do
+  describe "#prepare_case_ids" do
+    it "returns case ids that have been selected" do
       ids = [
         not_set_timely_kase.id,
         reviewable_timely_kase.id,
@@ -91,23 +91,23 @@ describe RetentionSchedulesUpdateService do
     end
   end
 
-  describe 'exception handling' do
-    it 'raises error if incorrect status action is passed' do
-      service_with_error.call 
-      error_message = 'Requested retention schedule status action is incorrect'
+  describe "exception handling" do
+    it "raises error if incorrect status action is passed" do
+      service_with_error.call
+      error_message = "Requested retention schedule status action is incorrect"
       expect(service_with_error.error_message).to eq(error_message)
       expect(service_with_error.result).to eq(:error)
     end
   end
 
-  describe '#parameterize_status_action' do
-    it 'can parameterize an action text' do
+  describe "#parameterize_status_action" do
+    it "can parameterize an action text" do
       expect(service.parameterize_status_action).to eq :mark_for_destruction
     end
   end
 
-  describe 'constants' do
-    it 'can resolve STATUS_ACTIONS to correct AASM event trigger method names' do
+  describe "constants" do
+    it "can resolve STATUS_ACTIONS to correct AASM event trigger method names" do
       statuses = RetentionSchedulesUpdateService::STATUS_ACTIONS
 
       expect(statuses[:further_review_needed]).to eq :mark_for_review
@@ -120,13 +120,13 @@ describe RetentionSchedulesUpdateService do
   def case_with_retention_schedule(case_type:, state:, date:)
     kase = create(
       case_type, :closed,
-      retention_schedule: 
-        RetentionSchedule.new( 
-         state: state,
-         planned_destruction_date: date 
-      ) 
+      retention_schedule:
+        RetentionSchedule.new(
+          state:,
+          planned_destruction_date: date,
+        )
     )
-    kase.save
+    kase.save!
     kase
   end
 end
