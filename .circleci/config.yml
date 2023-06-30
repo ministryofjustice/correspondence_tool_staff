@@ -279,9 +279,9 @@ jobs:
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
-      - scan_image:
-        requires:
-          - build_branch_and_push_to_ecr
+        - scan_image:
+          requires:
+            - build_branch_and_push_to_ecr
     steps:
       - checkout
       - attach_workspace:
