@@ -222,28 +222,27 @@ jobs:
       - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
-    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-      <<: *defaults
-
-      steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - aws-cli/setup:
-            role_arn: $ECR_ROLE_TO_ASSUME
-            region: $ECR_REGION
-        - *configure_build_tag
-        - run: |
-            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-        - aws-ecr/build-image:
-            push-image: true
-            tag: ${BUILD_TAG}
-            region: $ECR_REGION
-            repo: $ECR_REPOSITORY
-        - persist_to_workspace:
-            root: workspace
-            paths:
-              - build_tag
+    steps:
+      executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+        <<: *defaults
+          - checkout
+          - attach_workspace:
+              at: /tmp/workspace
+          - aws-cli/setup:
+              role_arn: $ECR_ROLE_TO_ASSUME
+              region: $ECR_REGION
+          - *configure_build_tag
+          - run: |
+              aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+          - aws-ecr/build-image:
+              push-image: true
+              tag: ${BUILD_TAG}
+              region: $ECR_REGION
+              repo: $ECR_REPOSITORY
+          - persist_to_workspace:
+              root: workspace
+              paths:
+                - build_tag
 
   build_main_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
