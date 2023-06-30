@@ -196,6 +196,7 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
+    <<: *defaults
 
     steps:
       - checkout
@@ -228,7 +229,7 @@ jobs:
           region: $ECR_REGION
       - *configure_build_tag
       - run: |
-          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com *build_and_push_docker_image
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
       - aws-ecr/build-image:
           push-image: true
           tag: ${BUILD_TAG}
@@ -252,7 +253,7 @@ jobs:
           region: $ECR_REGION
       - *configure_build_tag
       - run: |
-          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com *build_and_push_docker_image
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
       - aws-ecr/build-image:
           push-image: true
           tag: ${BUILD_TAG}
