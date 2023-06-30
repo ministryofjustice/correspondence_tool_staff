@@ -207,7 +207,7 @@ jobs:
 
     steps:
       - checkout
-      # - *restore_cache
+      - *restore_cache
       # - *install_bundler
       # - *check_bundler_version
       # - *install_psql
@@ -219,55 +219,55 @@ jobs:
       # - *update_chromedriver
       # - *setup_test_reporter
       # - *run_unit_and_feature_tests
-      # - *upload_test_coverage
+      - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    <<: *defaults
+      <<: *defaults
 
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - aws-cli/setup:
-          role_arn: $ECR_ROLE_TO_ASSUME
-          region: $ECR_REGION
-      - *configure_build_tag
-      - run: |
-          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-      - aws-ecr/build-image:
-          push-image: true
-          tag: ${BUILD_TAG}
-          region: $ECR_REGION
-          repo: $ECR_REPOSITORY
-      - persist_to_workspace:
-          root: workspace
-          paths:
-            - build_tag
+      steps:
+        - checkout
+        - attach_workspace:
+            at: /tmp/workspace
+        - aws-cli/setup:
+            role_arn: $ECR_ROLE_TO_ASSUME
+            region: $ECR_REGION
+        - *configure_build_tag
+        - run: |
+            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+        - aws-ecr/build-image:
+            push-image: true
+            tag: ${BUILD_TAG}
+            region: $ECR_REGION
+            repo: $ECR_REPOSITORY
+        - persist_to_workspace:
+            root: workspace
+            paths:
+              - build_tag
 
   build_main_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    <<: *defaults
+      <<: *defaults
 
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - aws-cli/setup:
-          role_arn: $ECR_ROLE_TO_ASSUME
-          region: $ECR_REGION
-      - *configure_build_tag
-      - run: |
-          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-      - aws-ecr/build-image:
-          push-image: true
-          tag: ${BUILD_TAG}
-          region: $ECR_REGION
-          repo: $ECR_REPOSITORY
-      - persist_to_workspace:
-          root: workspace
-          paths:
-            - build_tag
+      steps:
+        - checkout
+        - attach_workspace:
+            at: /tmp/workspace
+        - aws-cli/setup:
+            role_arn: $ECR_ROLE_TO_ASSUME
+            region: $ECR_REGION
+        - *configure_build_tag
+        - run: |
+            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+        - aws-ecr/build-image:
+            push-image: true
+            tag: ${BUILD_TAG}
+            region: $ECR_REGION
+            repo: $ECR_REPOSITORY
+        - persist_to_workspace:
+            root: workspace
+            paths:
+              - build_tag
   scan_image:
     <<: *deploy_container_config
     steps:
@@ -282,9 +282,6 @@ jobs:
 
     steps:
       - checkout
-      - scan_image:
-        requires:
-          - build_branch_and_push_to_ecr
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
@@ -377,11 +374,15 @@ workflows:
             branches:
               only: main
       - build_main_and_push_to_ecr:
+        requires:
           context: build_main_and_push_to_ecr-workflow
             - build_and_test
+      - scan_image:
+          requires:
+            - build_main_and_push_to_ecr:
       - deploy_main_to_dev:
           requires:
-            - build_main_and_push_to_ecr
+          -scan_image
       - deploy_main_to_staging_approval:
           type: approval
           requires:
