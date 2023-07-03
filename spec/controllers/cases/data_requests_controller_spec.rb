@@ -311,7 +311,6 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           expect(assigns(:recipient_emails)).to eq([CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL])
         end
       end
-
     end
 
     context "with non-probation document" do
