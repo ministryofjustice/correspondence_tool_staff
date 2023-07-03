@@ -80,6 +80,8 @@ module Cases
         return false
       end
 
+      @no_email_present = @recipient_emails.empty?
+
       @email = ProbationCommissioningDocumentEmail.new(email_params)
       return false unless @email.valid?
 
