@@ -1564,7 +1564,7 @@ en:
         unprocessed: No changes made
       upto: "Up to"
       send_email:
-        no_email_address: The selected location does not have an email address.
+        no_email_address: The selected location does not have an email address. Please update or select another.
     commissioning_documents:
       new:
         heading: Select Day 1 request document
