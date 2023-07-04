@@ -393,7 +393,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+        at: /tmp/workspace
       - *install_expect
       - *deploy_to_staging
       - slack/notify:
