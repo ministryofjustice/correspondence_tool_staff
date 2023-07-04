@@ -128,23 +128,43 @@ references:
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
 
-  # upload_test_coverage: &upload_test_coverage
-  #   run:
-  #     name: Upload the test coverage into codeclimate
-  #     command: |
-  #       ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
-  #       ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
-
-  configure_build_tag: &configure_build_tag
+  upload_test_coverage: &upload_test_coverage
     run:
-      name: Build docker image
+      name: Upload the test coverage into codeclimate
       command: |
-        mkdir -p workspace
+        ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+        ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
+
+  aws_setup: &aws_setup
+    # Authenticate to AWS using OIDC v2 with the AWS CLI
+    aws-cli/setup:
+      role_arn: $ECR_ROLE_TO_ASSUME
+      region: $ECR_REGION
+
+  ecr_login: &ecr_login
+    run:
+      name: Authenticate to the ECR repository
+      command: |
+        aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+
+   configure_build_tag: &configure_build_tag
+    run:
+      name: Create build tag
+      command: |
         current_branch=$(git branch | grep \* | cut -d ' ' -f2)
         short_version=$(git rev-parse --short $current_branch)
-        build_tag=cts-${current_branch}-${short_version}
-        echo build_tag > workspace/build_tag
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $build_tag --slack_webhook ${SLACK_WEBHOOK_CT} || true
+        build_tag=cmoj-${current_branch}-${short_version}
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+        mkdir -p workspace
+        echo $BUILD_TAG > workspace/build_tag
+
+  build_and_push_image: &build_and_push_image
+    aws-ecr/build-image:
+      push-image: true
+      tag: $BUILD_TAG
+      region: $ECR_REGION
+      repo: $ECR_REPOSITORY
 
   scan_for_vulnerabilities: &scan_for_vulnerabilities
     run:
@@ -154,14 +174,96 @@ references:
         python3 config/pipeline/aws_ecr_scan_results.py --search contact-moj-ecr --tag $build_tag --slack_webhook $SLACK_WEBHOOK || true
 
 
-  deploy_to_dev: &deploy_to_dev
+  build_and_push_image: &build_and_push_image
+    aws-ecr/build-image:
+      push-image: true
+      tag: $BUILD_TAG
+      region: $ECR_REGION
+      repo: $ECR_REPOSITORY
+
+  scan_for_vulnerabilities: &scan_for_vulnerabilities
     run:
-      name: Deploy to Development environment
+      name: Check ECR scan results
       command: |
         build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag development circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
+        python3 config/pipeline/aws_ecr_scan_results.py --search contact-moj-ecr --tag $build_tag --slack_webhook $SLACK_WEBHOOK || true
+
+  deploy_to_dev: &deploy_to_dev
+    run:
+      build_and_test:
+      <<: *test_container_config
+      <<: *defaults
+      steps:
+        - checkout
+        - *restore_cache
+        - *upload_test_coverage
+
+    build_branch_and_push_to_ecr:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *aws_setup
+      - *ecr_login
+      - *configure_build_tag
+      - *build_and_push_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
+
+  build_main_and_push_to_ecr:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *aws_setup
+      - *ecr_login
+      - *configure_build_tag
+      - *build_and_push_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
+
+  scan_image:
+      <<: *deploy_container_config
+      steps:
+        - checkout
+        - attach_workspace:
+            at: /tmp/workspace
+        - *scan_for_vulnerabilities
+
+  dev_deployment_tasks: &do_dev_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
+      - build_main_and_push_to_ecr:
+          requires:
+            - build_and_test
+      - scan_image:
+          requires:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_dev:
+          requires:
+            - scan_image
+      - deploy_main_to_staging_approval:
+          type: approval
+          requires:
+            - deploy_main_to_dev
+      - deploy_main_to_staging:
+          requires:
+            - deploy_main_to_staging_approval
+      - deploy_main_to_production_approval:
+          type: approval
+          requires:
+            - deploy_main_to_staging
+      - deploy_main_to_production:
+          requires:
+            - deploy_main_to_production_approval
 
   deploy_to_staging: &deploy_to_staging
     run:
@@ -219,7 +321,7 @@ jobs:
       # - *update_chromedriver
       # - *setup_test_reporter
       # - *run_unit_and_feature_tests
-      # - *upload_test_coverage
+      - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
@@ -228,66 +330,79 @@ jobs:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
-        - aws-cli/setup:
-            role_arn: $ECR_ROLE_TO_ASSUME
-            region: $ECR_REGION
+        - *aws_setup
+        - *ecr_login
         - *configure_build_tag
-        - run: |
-            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-        - aws-ecr/build-image:
-            push-image: true
-            tag: ${BUILD_TAG}
-            region: $ECR_REGION
-            repo: $ECR_REPOSITORY
+        - *build_and_push_image
         - persist_to_workspace:
             root: workspace
             paths:
               - build_tag
 
   build_main_and_push_to_ecr:
-      <<: *defaults
       executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+      <<: *defaults
       steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
-        - aws-cli/setup:
-            role_arn: $ECR_ROLE_TO_ASSUME
-            region: $ECR_REGION
+        - *aws_setup
+        - *ecr_login
         - *configure_build_tag
-        - run: |
-            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-        - aws-ecr/build-image:
-            push-image: true
-            tag: ${BUILD_TAG}
-            region: $ECR_REGION
-            repo: $ECR_REPOSITORY
+        - *build_and_push_image
         - persist_to_workspace:
             root: workspace
             paths:
               - build_tag
+
   scan_image:
-    <<: *deploy_container_config
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *scan_for_vulnerabilities
+    requires:
+      - build_main_and_push_to_ecr
+        - deploy_main_to_dev:
+            requires:
+      - scan_image
+      - deploy_main_to_staging_approval:
+          type: approval
+          requires:
+            - deploy_main_to_dev
+      - deploy_main_to_staging:
+          requires:
+            - deploy_main_to_staging_approval
+      - deploy_main_to_production_approval:
+          type: approval
+          requires:
+            - deploy_main_to_staging
+      - deploy_main_to_production:
+          requires:
+            - deploy_main_to_production_approval
 
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
 
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_expect
-      - *deploy_to_dev
-      - slack/notify:
-          color: '#1d990c'
-          message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
-          webhook: ${SLACK_WEBHOOK_CT}
+       - build_main_and_push_to_ecr:
+          requires:
+            - build_and_test
+      - scan_image:
+          requires:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_dev:
+          requires:
+            - scan_image
+       - deploy_main_to_staging_approval:
+          type: approval
+          requires:
+            - deploy_main_to_dev
+      - deploy_main_to_staging:
+          requires:
+            - deploy_main_to_staging_approval
+      - deploy_main_to_production_approval:
+          type: approval
+          requires:
+            - deploy_main_to_staging
+      - deploy_main_to_production:
+          requires:
+            - deploy_main_to_production_approval
 
   deploy_branch_to_dev: *do_dev_deployment_tasks
   deploy_main_to_dev: *do_dev_deployment_tasks
@@ -398,14 +513,14 @@ workflows:
       - deploy_main_to_qa_approval:
           type: approval
           requires:
-            - build_main_and_push_to_ecr
+            - deploy_main_to_qa
       - deploy_main_to_qa:
           requires:
             - deploy_main_to_qa_approval
       - deploy_main_to_demo_approval:
           type: approval
           requires:
-            - build_main_and_push_to_ecr
+            - deploy_main_to_demo
       - deploy_main_to_demo:
           requires:
             - deploy_main_to_demo_approval
@@ -416,24 +531,24 @@ workflows:
         filters:
           branches:
             ignore: main
-      - build_branch_and_push_to_ecr:
-          context: build_branch_and_push_to_ecr-workflow
-          requires:
-            - scan_image
-      - scan_image:
+      - build_branch_and_push_to_ecr_approval:
+          type: approval
           requires:
             - build_and_test
+      - build_branch_and_push_to_ecr:
+          requires:
+            - build_branch_and_push_to_ecr_approval
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
             - build_branch_and_push_to_ecr
       - deploy_branch_to_dev:
           requires:
-            - scan_image
+            - deploy_branch_to_dev_approval
       - deploy_branch_to_staging_approval:
           type: approval
           requires:
-            - deploy_branch_to_dev
+            - build_branch_and_push_to_ecr
       - deploy_branch_to_staging:
           requires:
             - deploy_branch_to_staging_approval
