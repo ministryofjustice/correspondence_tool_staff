@@ -229,13 +229,6 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     end
 
     context "with no associated email" do
-      let(:params) do
-        {
-          id: data_request.id,
-          case_id: data_request.case_id,
-        }
-      end
-
       it "returns no associated email present" do
         allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
           .to receive(:recipient_emails).and_return([])
