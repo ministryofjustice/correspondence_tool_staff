@@ -219,7 +219,7 @@ jobs:
       # - *update_chromedriver
       # - *setup_test_reporter
       # - *run_unit_and_feature_tests
-      - *upload_test_coverage
+      # - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
