@@ -175,8 +175,12 @@ references:
 
   deploy_to_dev: &deploy_to_dev
     run:
-      echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-      source $BASH_ENV
+      name: Deploy to Development environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag qa circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
 
   deploy_to_qa: &deploy_to_qa
     run:
@@ -271,53 +275,6 @@ references:
   deploy_branch_to_dev: *do_dev_deployment_tasks
   deploy_main_to_dev: *do_dev_deployment_tasks
 
-  staging_deployment_tasks: &do_staging_deployment_tasks
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-      - build_main_and_push_to_ecr:
-          requires:
-            - build_and_test
-      - scan_image:
-          requires:
-            - build_main_and_push_to_ecr
-      - deploy_main_to_dev:
-          requires:
-            - scan_image
-      - deploy_main_to_demo:
-          requires:
-            - deploy_main_to_demo_approval
-      - deploy_main_to_demo_approval:
-          type: approval
-          requires:
-            - deploy_main_to_dev
-      - deploy_main_to_dev:
-          requires:
-            - deploy_main_to_qa_approval
-      - deploy_main_to_qa_approval:
-          type: approval
-          requires:
-            - deploy_main_to_dev
-      - deploy_main_to_staging:
-          requires:
-            - deploy_main_to_staging_approval
-      - deploy_main_to_staging_approval:
-          type: approval
-          requires:
-            - deploy_main_to_dev
-      - deploy_main_to_staging:
-          requires:
-            - deploy_main_to_staging_approval
-      - deploy_main_to_production_approval:
-          type: approval
-          requires:
-            - deploy_main_to_staging
-      - deploy_main_to_production:
-          requires:
-            - deploy_main_to_production_approval
-
 jobs:
 
   build_and_test:
@@ -339,38 +296,6 @@ jobs:
       # - *setup_test_reporter
       # - *run_unit_and_feature_tests
       - *upload_test_coverage
-
-  build_branch_and_push_to_ecr:
-    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    <<: *defaults
-    steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *aws_setup
-        - *ecr_login
-        - *configure_build_tag
-        - *build_and_push_image
-        - persist_to_workspace:
-            root: workspace
-            paths:
-              - build_tag
-
-  build_main_and_push_to_ecr:
-      executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-      <<: *defaults
-      steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *aws_setup
-        - *ecr_login
-        - *configure_build_tag
-        - *build_and_push_image
-        - persist_to_workspace:
-            root: workspace
-            paths:
-              - build_tag
 
   dev_deployment_tasks: &do_dev_deployment_tasks
       <<: *deploy_container_config
@@ -483,7 +408,6 @@ workflows:
             branches:
               only: main
       - build_main_and_push_to_ecr:
-          context: build_main_and_push_to_ecr-workflow
           requires:
             - build_and_test
       - scan_image:
@@ -561,5 +485,4 @@ workflows:
             - build_branch_and_push_to_ecr
       - deploy_branch_to_demo:
           requires:
-
             - deploy_branch_to_demo_approval
