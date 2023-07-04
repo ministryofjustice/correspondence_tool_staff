@@ -178,7 +178,7 @@ references:
       name: Deploy to Development environment
       command: |
         build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag development circleci
+        ./deploy.sh $build_tag dev circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
