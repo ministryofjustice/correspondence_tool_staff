@@ -228,6 +228,22 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:recipient_emails)).to eq("test@email.com")
     end
 
+    context "with no associated email" do
+      let(:params) do
+        {
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      end
+
+      it "returns no associated email present" do
+        allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
+          .to receive(:recipient_emails).and_return([])
+        get(:send_email, params:)
+        expect(assigns(:no_email_present)).to eq(true)
+      end
+    end
+
     context "when probation document selected" do
       let(:template_name) { "probation" }
 
@@ -289,26 +305,6 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           post(:send_email, params:)
           expect(response).to render_template(:probation_send_email)
           expect(assigns(:email)).not_to be_valid
-        end
-      end
-
-      context "with no associated email" do
-        let(:params) do
-          {
-            id: data_request.id,
-            case_id: data_request.case_id,
-            probation_commissioning_document_email: {
-              probation: 1,
-              email_branston_archives: "yes",
-            },
-          }
-        end
-
-        it "has branston registry as only recipient email" do
-          post(:send_email, params:)
-          allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
-            .to receive(:no_email_selected).and_return(true)
-          expect(assigns(:recipient_emails)).to eq([CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL])
         end
       end
     end
