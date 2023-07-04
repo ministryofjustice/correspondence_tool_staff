@@ -147,7 +147,7 @@ references:
       command: |
         aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
 
-   configure_build_tag: &configure_build_tag
+  configure_build_tag: &configure_build_tag
     run:
       name: Create build tag
       command: |
