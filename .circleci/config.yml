@@ -372,8 +372,8 @@ workflows:
             branches:
               only: main
       - build_main_and_push_to_ecr:
-          requires:
           context: build_main_and_push_to_ecr-workflow
+          requires:
             - build_and_test
       - scan_image:
           requires:
@@ -427,15 +427,14 @@ workflows:
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
-            - scan_image
             - build_branch_and_push_to_ecr
       - deploy_branch_to_dev:
           requires:
+            - scan_image
             - deploy_branch_to_dev_approval
       - deploy_branch_to_staging_approval:
           type: approval
           requires:
-            - scan_image
             - build_branch_and_push_to_ecr
       - deploy_branch_to_staging:
           requires:
