@@ -178,7 +178,7 @@ references:
       name: Deploy to Development environment
       command: |
         build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag qa circleci
+        ./deploy.sh $build_tag development circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
@@ -271,9 +271,6 @@ references:
           color: '#1d990c'
           message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
           webhook: ${SLACK_WEBHOOK}
-
-  deploy_branch_to_dev: *do_dev_deployment_tasks
-  deploy_main_to_dev: *do_dev_deployment_tasks
 
 jobs:
 
