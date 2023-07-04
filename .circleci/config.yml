@@ -182,6 +182,24 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
+  deploy_to_qa: &deploy_to_qa
+    run:
+      name: Deploy to QA environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag qa circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+
+  deploy_to_demo: &deploy_to_demo
+    run:
+      name: Deploy to Demo environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag demo circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+
   deploy_to_staging: &deploy_to_staging
     run:
       name: Deploy to Staging environment
