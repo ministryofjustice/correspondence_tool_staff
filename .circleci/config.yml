@@ -360,7 +360,7 @@ jobs:
     <<: *deploy_container_config
     <<: *defaults
 
-       - build_main_and_push_to_ecr:
+      - build_main_and_push_to_ecr:
           requires:
             - build_and_test
       - scan_image:
@@ -369,7 +369,7 @@ jobs:
       - deploy_main_to_dev:
           requires:
             - scan_image
-       - deploy_main_to_staging_approval:
+      - deploy_main_to_staging_approval:
           type: approval
           requires:
             - deploy_main_to_dev
