@@ -128,12 +128,12 @@ references:
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
 
-  upload_test_coverage: &upload_test_coverage
-    run:
-      name: Upload the test coverage into codeclimate
-      command: |
-        ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
-        ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
+  # upload_test_coverage: &upload_test_coverage
+  #   run:
+  #     name: Upload the test coverage into codeclimate
+  #     command: |
+  #       ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+  #       ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
 
   configure_build_tag: &configure_build_tag
     run:
