@@ -31,6 +31,7 @@ describe "cases/data_requests/send_email", type: :view do
         assign(:case, data_request.kase)
         assign(:commissioning_document, commissioning_document)
         assign(:recipient_emails, [])
+        assign(:no_email_present, true)
 
         render
         data_request_email_confirmation_page.load(rendered)
