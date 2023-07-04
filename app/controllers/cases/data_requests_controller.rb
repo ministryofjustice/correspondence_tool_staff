@@ -67,6 +67,8 @@ module Cases
     def send_email
       @recipient_emails = @data_request.recipient_emails
 
+      @no_email_present = @recipient_emails.empty?
+
       if @commissioning_document.probation? && !handled_sending_to_branston_archives?
         render :probation_send_email and return
       end

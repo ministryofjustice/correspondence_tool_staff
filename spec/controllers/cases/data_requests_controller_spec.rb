@@ -228,6 +228,15 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:recipient_emails)).to eq("test@email.com")
     end
 
+    context "with no associated email" do
+      it "returns no associated email present" do
+        allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
+          .to receive(:recipient_emails).and_return([])
+        get(:send_email, params:)
+        expect(assigns(:no_email_present)).to eq(true)
+      end
+    end
+
     context "when probation document selected" do
       let(:template_name) { "probation" }
 
