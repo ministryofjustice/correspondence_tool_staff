@@ -356,27 +356,6 @@ jobs:
             paths:
               - build_tag
 
-  scan_image:
-    requires:
-      - build_main_and_push_to_ecr
-        - deploy_main_to_dev:
-            requires:
-      - scan_image
-      - deploy_main_to_staging_approval:
-          type: approval
-          requires:
-            - deploy_main_to_dev
-      - deploy_main_to_staging:
-          requires:
-            - deploy_main_to_staging_approval
-      - deploy_main_to_production_approval:
-          type: approval
-          requires:
-            - deploy_main_to_staging
-      - deploy_main_to_production:
-          requires:
-            - deploy_main_to_production_approval
-
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
