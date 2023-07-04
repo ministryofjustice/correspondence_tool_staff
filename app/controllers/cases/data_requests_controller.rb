@@ -82,7 +82,6 @@ module Cases
         return false
       end
 
-
       @email = ProbationCommissioningDocumentEmail.new(email_params)
       return false unless @email.valid?
 
