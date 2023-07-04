@@ -222,10 +222,9 @@ jobs:
       - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
     steps:
-      executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-
         - checkout
         - attach_workspace:
             at: /tmp/workspace
@@ -246,9 +245,8 @@ jobs:
               - build_tag
 
   build_main_and_push_to_ecr:
-    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
       <<: *defaults
-
+      executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
       steps:
         - checkout
         - attach_workspace:
@@ -374,15 +372,15 @@ workflows:
             branches:
               only: main
       - build_main_and_push_to_ecr:
-        requires:
-          context: build_main_and_push_to_ecr-workflow
+          requires:
+            - build_main_and_push_to_ecr-workflow
             - build_and_test
       - scan_image:
           requires:
-            - build_main_and_push_to_ecr:
+            - build_main_and_push_to_ecr
       - deploy_main_to_dev:
           requires:
-            -scan_image
+            - scan_image
       - deploy_main_to_staging_approval:
           type: approval
           requires:
@@ -456,4 +454,3 @@ workflows:
       - deploy_branch_to_demo:
           requires:
             - deploy_branch_to_demo_approval
-
