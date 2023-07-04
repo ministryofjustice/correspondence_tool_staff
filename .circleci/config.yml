@@ -214,13 +214,6 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
-  build_and_push_image: &build_and_push_image
-    aws-ecr/build-image:
-      push-image: true
-      tag: $BUILD_TAG
-      region: $ECR_REGION
-      repo: $ECR_REPOSITORY
-
   scan_for_vulnerabilities: &scan_for_vulnerabilities
     run:
       name: Check ECR scan results
