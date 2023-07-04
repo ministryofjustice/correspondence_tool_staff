@@ -214,13 +214,6 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
-  scan_for_vulnerabilities: &scan_for_vulnerabilities
-    run:
-      name: Check ECR scan results
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        python3 config/pipeline/aws_ecr_scan_results.py --search contact-moj-ecr --tag $build_tag --slack_webhook $SLACK_WEBHOOK || true
-
     build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
