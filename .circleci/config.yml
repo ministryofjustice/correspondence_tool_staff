@@ -173,6 +173,32 @@ references:
         build_tag=`cat /tmp/workspace/build_tag`
         python3 config/pipeline/aws_ecr_scan_results.py --search contact-moj-ecr --tag $build_tag --slack_webhook $SLACK_WEBHOOK || true
 
+  deploy_to_dev: &deploy_to_dev
+    run:
+      name: Deploy to Development environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag development circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+
+  deploy_to_staging: &deploy_to_staging
+    run:
+      name: Deploy to Staging environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag staging circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+
+  deploy_to_production: &deploy_to_production
+    run:
+      name: Deploy to production environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag production circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
 
   build_and_push_image: &build_and_push_image
     aws-ecr/build-image:
@@ -545,4 +571,5 @@ workflows:
             - build_branch_and_push_to_ecr
       - deploy_branch_to_demo:
           requires:
+
             - deploy_branch_to_demo_approval
