@@ -241,6 +241,26 @@ references:
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_expect
+      - *deploy_to_dev
+      - slack/notify:
+          color: '#1d990c'
+          message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
+          webhook: ${SLACK_WEBHOOK}
+
+  deploy_branch_to_dev: *do_dev_deployment_tasks
+  deploy_main_to_dev: *do_dev_deployment_tasks
+
+  staging_deployment_tasks: &do_staging_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
       - build_main_and_push_to_ecr:
           requires:
             - build_and_test
@@ -250,6 +270,23 @@ references:
       - deploy_main_to_dev:
           requires:
             - scan_image
+      - deploy_main_to_demo:
+          requires:
+            - deploy_main_to_demo_approval
+      - deploy_main_to_demo_approval:
+          type: approval
+          requires:
+            - deploy_main_to_dev
+      - deploy_main_to_dev:
+          requires:
+            - deploy_main_to_qa_approval
+      - deploy_main_to_qa_approval:
+          type: approval
+          requires:
+            - deploy_main_to_dev
+      - deploy_main_to_staging:
+          requires:
+            - deploy_main_to_staging_approval
       - deploy_main_to_staging_approval:
           type: approval
           requires:
@@ -264,42 +301,6 @@ references:
       - deploy_main_to_production:
           requires:
             - deploy_main_to_production_approval
-
-  deploy_to_staging: &deploy_to_staging
-    run:
-      name: Deploy to Staging environment
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag staging circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
-
-  deploy_to_qa: &deploy_to_qa
-    run:
-      name: Deploy to QA environment
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag qa circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
-
-  deploy_to_demo: &deploy_to_demo
-    run:
-      name: Deploy to Demo environment
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag demo circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
-
-  deploy_to_production: &deploy_to_production
-    run:
-      name: Deploy to production environment
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag production circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
 
 jobs:
 
