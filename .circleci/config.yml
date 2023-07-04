@@ -424,10 +424,10 @@ workflows:
       - scan_image:
           requires:
             - build_branch_and_push_to_ecr
-      # - build_branch_and_push_to_ecr:
-      #     context: build_branch_and_push_to_ecr-workflow
-      #     requires:
-      #       - build_and_test
+      - build_branch_and_push_to_ecr:
+          context: build_branch_and_push_to_ecr-workflow
+          requires:
+            - build_and_test
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
