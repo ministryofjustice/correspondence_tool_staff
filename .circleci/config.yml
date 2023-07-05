@@ -218,6 +218,8 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
+  jobs:
+
     build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
@@ -272,11 +274,10 @@ references:
           message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
           webhook: ${SLACK_WEBHOOK}
 
-jobs:
-
   build_and_test:
     <<: *test_container_config
     <<: *defaults
+    resource_class: xlarge
 
     steps:
       - checkout
