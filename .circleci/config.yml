@@ -219,11 +219,10 @@ references:
         source $BASH_ENV
 
 jobs:
-
   build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
-      steps:
+    steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
@@ -233,13 +232,13 @@ jobs:
         - *build_and_push_image
         - persist_to_workspace:
             root: workspace
-          paths:
+            paths:
             - build_tag
 
   build_main_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
-      steps:
+    steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
@@ -254,7 +253,7 @@ jobs:
 
   scan_image:
     <<: *deploy_container_config
-      steps:
+    steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
@@ -263,7 +262,7 @@ jobs:
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
-      steps:
+    steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
@@ -274,13 +273,12 @@ jobs:
             message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
             webhook: ${SLACK_WEBHOOK}
 
-jobs:
   build_and_test:
     <<: *test_container_config
     <<: *defaults
     resource_class: xlarge
 
-      steps:
+    steps:
         - checkout
         - *restore_cache
         # - *install_bundler
@@ -302,7 +300,7 @@ jobs:
   staging_deployment_tasks: &do_staging_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
-      steps:
+    steps:
         - checkout
         - attach_workspace:
             at: /tmp/workspace
