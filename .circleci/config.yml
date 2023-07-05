@@ -292,7 +292,7 @@ jobs:
         # - *update_chromedriver
         # - *setup_test_reporter
         # - *run_unit_and_feature_tests
-        - *upload_test_coverage
+        # - *upload_test_coverage
 
   deploy_branch_to_dev: *do_dev_deployment_tasks
   deploy_main_to_dev: *do_dev_deployment_tasks
