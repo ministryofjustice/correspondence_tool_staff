@@ -242,17 +242,17 @@ jobs:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
     steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *aws_setup
-        - *ecr_login
-        - *configure_build_tag
-        - *build_and_push_image
-        - persist_to_workspace:
-            root: workspace
-            paths:
-            - build_tag
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *aws_setup
+      - *ecr_login
+      - *configure_build_tag
+      - *build_and_push_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+          - build_tag
 
   build_main_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
@@ -273,24 +273,24 @@ jobs:
   scan_image:
     <<: *deploy_container_config
     steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *scan_for_vulnerabilities
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *scan_for_vulnerabilities
 
   development_deployment_tasks: &do_development_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *install_expect
-        - *deploy_to_development
-        - slack/notify:
-            color: '#1d990c'
-            message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
-            webhook: ${SLACK_WEBHOOK_CT}
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_expect
+      - *deploy_to_development
+      - slack/notify:
+          color: '#1d990c'
+          message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
+          webhook: ${SLACK_WEBHOOK_CT}
 
 
 
@@ -301,15 +301,15 @@ jobs:
     <<: *deploy_container_config
     <<: *defaults
     steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - *install_expect
-        - *deploy_to_staging
-        - slack/notify:
-            color: '#1d990c'
-            message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Staging*'
-            webhook: ${SLACK_WEBHOOK_CT}
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_expect
+      - *deploy_to_staging
+      - slack/notify:
+          color: '#1d990c'
+          message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Staging*'
+          webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
   deploy_main_to_staging: *do_staging_deployment_tasks
