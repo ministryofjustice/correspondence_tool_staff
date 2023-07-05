@@ -271,7 +271,7 @@ jobs:
         - slack/notify:
             color: '#1d990c'
             message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
-            webhook: ${SLACK_WEBHOOK}
+            webhook: ${SLACK_WEBHOOK_CT}
 
   build_and_test:
     <<: *test_container_config
