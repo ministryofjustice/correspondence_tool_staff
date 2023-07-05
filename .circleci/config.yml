@@ -267,7 +267,7 @@ jobs:
         - attach_workspace:
             at: /tmp/workspace
         - *install_expect
-        - *deploy_to_dev
+        - *deploy_to_development
         - slack/notify:
             color: '#1d990c'
             message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
