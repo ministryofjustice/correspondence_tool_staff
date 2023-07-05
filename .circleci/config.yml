@@ -259,7 +259,7 @@ jobs:
             at: /tmp/workspace
         - *scan_for_vulnerabilities
 
-  dev_deployment_tasks: &do_dev_deployment_tasks
+  development_deployment_tasks: &do_development_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
