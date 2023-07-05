@@ -399,20 +399,20 @@ workflows:
       - deploy_main_to_production:
           requires:
             - deploy_main_to_production_approval
-      # - deploy_main_to_qa_approval:
-      #     type: approval
-      #     requires:
-      #       - deploy_main_to_qa
-      # - deploy_main_to_qa:
-      #     requires:
-      #       - deploy_main_to_qa_approval
-      # - deploy_main_to_demo_approval:
-      #     type: approval
-      #     requires:
-      #       - deploy_main_to_demo
-      # - deploy_main_to_demo:
-      #     requires:
-      #       - deploy_main_to_demo_approval
+      - deploy_main_to_qa_approval:
+          type: approval
+          requires:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_qa:
+          requires:
+            - deploy_main_to_qa_approval
+      - deploy_main_to_demo_approval:
+          type: approval
+          requires:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_demo:
+          requires:
+            - deploy_main_to_demo_approval
 
   build_and_deploy_branch:
     jobs:
