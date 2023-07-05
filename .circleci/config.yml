@@ -217,63 +217,63 @@ references:
         ./deploy.sh $build_tag production circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
+
 jobs:
   build_branch_and_push_to_ecr:
   executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
   <<: *defaults
-  steps:
-  - checkout
-  - attach_workspace:
-      at: /tmp/workspace
-  - *aws_setup
-  - *ecr_login
-  - *configure_build_tag
-  - *build_and_push_image
-  - persist_to_workspace:
-      root: workspace
-      paths:
-        - build_tag
-
-  build_main_and_push_to_ecr:
-  executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-  <<: *defaults
-  steps:
-  - checkout
-  - attach_workspace:
-      at: /tmp/workspace
-  - *aws_setup
-  - *ecr_login
-  - *configure_build_tag
-  - *build_and_push_image
-  - persist_to_workspace:
-      root: workspace
-      paths:
-        - build_tag
-
-  scan_image:
-  <<: *deploy_container_config
-  steps:
+    steps:
     - checkout
     - attach_workspace:
         at: /tmp/workspace
-    - *scan_for_vulnerabilities
+    - *aws_setup
+    - *ecr_login
+    - *configure_build_tag
+    - *build_and_push_image
+    - persist_to_workspace:
+        root: workspace
+        paths:
+          - build_tag
+
+  build_main_and_push_to_ecr:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    <<: *defaults
+    steps:
+    - checkout
+    - attach_workspace:
+        at: /tmp/workspace
+    - *aws_setup
+    - *ecr_login
+    - *configure_build_tag
+    - *build_and_push_image
+    - persist_to_workspace:
+        root: workspace
+        paths:
+          - build_tag
+
+  scan_image:
+    <<: *deploy_container_config
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *scan_for_vulnerabilities
 
   dev_deployment_tasks: &do_dev_deployment_tasks
-  <<: *deploy_container_config
-  <<: *defaults
-  steps:
-  - checkout
-  - attach_workspace:
-      at: /tmp/workspace
-  - *install_expect
-  - *deploy_to_dev
-  - slack/notify:
-      color: '#1d990c'
-      message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
-      webhook: ${SLACK_WEBHOOK}
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+    - checkout
+    - attach_workspace:
+        at: /tmp/workspace
+    - *install_expect
+    - *deploy_to_dev
+    - slack/notify:
+        color: '#1d990c'
+        message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
+        webhook: ${SLACK_WEBHOOK}
 
 jobs:
-
   build_and_test:
     <<: *test_container_config
     <<: *defaults
