@@ -223,20 +223,20 @@ jobs:
     <<: *defaults
     resource_class: xlarge
     steps:
-        - checkout
-        - *restore_cache
-        - *install_bundler
-        - *check_bundler_version
-        - *install_psql
-        - *install_dependencies
-        - *save_cache
-        - *wait_for_db
-        - *set_up_the_database
-        - *rubocop
-        - *update_chromedriver
-        - *setup_test_reporter
-        - *run_unit_and_feature_tests
-        - *upload_test_coverage
+      - checkout
+      - *restore_cache
+      - *install_bundler
+      - *check_bundler_version
+      - *install_psql
+      - *install_dependencies
+      - *save_cache
+      - *wait_for_db
+      - *set_up_the_database
+      - *rubocop
+      - *update_chromedriver
+      - *setup_test_reporter
+      - *run_unit_and_feature_tests
+      - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
