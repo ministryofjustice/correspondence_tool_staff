@@ -79,7 +79,7 @@ group :test do
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
   gem "simplecov", "~> 0.22.0"
-  gem "site_prism", "< 4.0"
+  gem "site_prism", "< 5.0"
   gem "webdrivers", "~> 5.2.0"
 end
 
