@@ -268,7 +268,7 @@ jobs:
       - persist_to_workspace:
           root: workspace
           paths:
-            - build_tag
+          - build_tag
 
   scan_image:
     <<: *deploy_container_config
