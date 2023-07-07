@@ -81,7 +81,7 @@ span.visually-hidden
               th = t('cases.commissioning_documents.table_headings.request_document')
               th = t('cases.commissioning_documents.table_headings.last_updated')
               th = t('cases.commissioning_documents.table_headings.action')
-          tbody
+          tbody.document
             tr
               td = @commissioning_document.request_document
               td = @commissioning_document.updated_at
@@ -106,7 +106,7 @@ span.visually-hidden
                 th = t('cases.commissioning_documents.email_history_table_headings.email_address')
                 th = t('cases.commissioning_documents.email_history_table_headings.date_sent')
                 th = t('cases.commissioning_documents.email_history_table_headings.status')
-            tbody
+            tbody.email_details
               - @data_request.data_request_emails.map(&:decorate).each do |email|
                 tr
                   td = email.email_type
