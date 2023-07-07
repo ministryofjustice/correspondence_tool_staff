@@ -425,5 +425,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     it "sets the To address of the email using the provided user" do
       expect(mail.to).to include email_address
     end
+
+    it "creates a DataRequestEmail record" do
+      expect {
+        mail.deliver_now
+      }.to change(DataRequestEmail, :count).by 1
+    end
   end
 end
