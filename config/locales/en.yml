@@ -716,7 +716,9 @@ en:
         completed: "Yes, all data received"
         date_completed: Date completed
         send_email_note_text: "Email will be sent to the following recipients:"
-
+      data_request_email:
+        email_type:
+          commissioning_email: Day 1 commissioning email
       data_request_log:
         num_pages: Number of pages
       commissioning_document:
@@ -1540,6 +1542,7 @@ en:
         link: View
         edit_link: Edit data request
         emails_header: Commissioning emails
+        emails_history_header: Email history
       edit:
         heading: Edit data request
         link: Edit
@@ -1575,8 +1578,12 @@ en:
       table_headings:
         request_document: Request document
         last_updated: Last updated
-        sent: Sent
         action: Action
+      email_history_table_headings:
+        email_type: Email type
+        email_address: Email address
+        date_sent: Date sent
+        status: Status
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
