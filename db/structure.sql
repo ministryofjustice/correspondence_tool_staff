@@ -740,7 +740,8 @@ CREATE TABLE public.data_requests (
     date_from date,
     date_to date,
     completed boolean DEFAULT false NOT NULL,
-    contact_id bigint
+    contact_id bigint,
+    email_branston_archives boolean DEFAULT false
 );
 
 
@@ -2469,6 +2470,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230203153008'),
 ('20230207153942'),
 ('20230601125430'),
-('20230706130822');
+('20230706130822'),
+('20230710161647');
 
 
