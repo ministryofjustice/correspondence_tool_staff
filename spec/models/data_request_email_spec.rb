@@ -42,4 +42,29 @@ RSpec.describe DataRequestEmail, type: :model do
       expect(described_class.delivering).not_to include data_request_email
     end
   end
+
+  describe "#update_status!" do
+    let(:notify_client) { instance_double(Notifications::Client) }
+    let(:client_response) { OpenStruct.new(status: "delivered") }
+    let(:email) { create(:data_request_email) }
+
+    before do
+      allow(Notifications::Client).to receive(:new).and_return(notify_client)
+      allow(notify_client).to receive(:get_notification).with(email.notify_id).and_return(client_response)
+    end
+
+    context "when email status needs updating" do
+      it "updates the status" do
+        expect { email.update_status! }.to change(email, :status).to "delivered"
+      end
+    end
+
+    context "when email status should not be updated" do
+      let(:email) { create(:data_request_email, created_at: 1.month.ago) }
+
+      it "does not update the status" do
+        expect { email.update_status! }.not_to(change(email, :status))
+      end
+    end
+  end
 end
