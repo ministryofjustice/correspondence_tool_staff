@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe DataRequestEmail, type: :model do
+  let(:job) { class_double(EmailStatusJob) }
+
   describe ".delivering" do
     it "returns created email" do
       data_request_email = create(:data_request_email, status: "created")
@@ -40,6 +42,25 @@ RSpec.describe DataRequestEmail, type: :model do
     it "does not return email created more than 7 days ago" do
       data_request_email = create(:data_request_email, status: "created", created_at: Time.zone.today - 8.days)
       expect(described_class.delivering).not_to include data_request_email
+    end
+  end
+
+  context "when created" do
+    it "queues a job with a delay" do
+      allow(EmailStatusJob).to receive(:set).with(wait: 15.seconds).and_return(job)
+      expect(job).to receive(:perform_later)
+      create(:data_request_email)
+    end
+  end
+
+  describe "#update_status_with_delay" do
+    it "queues a job with a delay" do
+      data_request_email = create(:data_request_email)
+
+      allow(EmailStatusJob).to receive(:set).with(wait: 15.seconds).and_return(job)
+      expect(job).to receive(:perform_later)
+
+      data_request_email.update_status_with_delay
     end
   end
 
