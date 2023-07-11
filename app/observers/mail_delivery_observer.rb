@@ -1,6 +1,6 @@
 class MailDeliveryObserver
   def self.delivered_email(message)
-    return if message.delivery_handler != "ActionNotificationsMailer"
+    return if message.delivery_handler != ActionNotificationsMailer
 
     data_request_email_id = message.header["dreid"]&.value
     return if data_request_email_id.nil?
