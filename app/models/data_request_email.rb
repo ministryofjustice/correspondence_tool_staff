@@ -11,7 +11,9 @@ class DataRequestEmail < ApplicationRecord
 
   after_create :update_status_with_delay
 
-  scope :delivering, -> { where(status: %w[created sending]).where("created_at >= ?", Time.zone.today - 7) }
+  scope :recent, -> { where("created_at >= ?", Time.zone.today - 7) }
+  scope :sent_to_notify, -> { where.not(notify_id: nil) }
+  scope :delivering, -> { recent.sent_to_notify.where(status: %w[created sending]) }
 
   def update_status_with_delay(delay: 15.seconds)
     EmailStatusJob.set(wait: delay).perform_later(id)
