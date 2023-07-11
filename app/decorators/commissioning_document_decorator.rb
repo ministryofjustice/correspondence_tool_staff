@@ -3,10 +3,6 @@ class CommissioningDocumentDecorator < Draper::Decorator
 
   delegate_all
 
-  def sent
-    super ? "Yes" : "No"
-  end
-
   def request_document
     I18n.t("helpers.label.commissioning_document.template_name.#{template_name}")
   end

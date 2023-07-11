@@ -4,6 +4,7 @@ class DataRequest < ApplicationRecord
   belongs_to :contact
   has_one    :commissioning_document
   has_many   :data_request_logs, after_add: :update_cached_attributes
+  has_many   :data_request_emails
 
   validates :request_type, presence: true
   validates :offender_sar_case, presence: true
