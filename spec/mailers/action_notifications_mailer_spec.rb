@@ -428,7 +428,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     it "creates a DataRequestEmail record" do
       expect {
-        mail.deliver_now
+        mail.deliver
       }.to change(DataRequestEmail, :count).by 1
     end
 
@@ -437,7 +437,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         create(:data_request_email, email_address:, data_request: commissioning_document.data_request)
 
         expect {
-          mail.deliver_now
+          mail.deliver
         }.to change(DataRequestEmail, :count).by 0
       end
     end
