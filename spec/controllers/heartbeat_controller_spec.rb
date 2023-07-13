@@ -11,8 +11,8 @@ RSpec.describe HeartbeatController, type: :controller do
       expect(ping_response["build_date"]).to eq Settings.build_date
       expect(ping_response["git_commit"]).not_to be_nil
       expect(ping_response["git_commit"]).to eq Settings.git_commit
-      expect(ping_response["git_source"]).not_to be_nil
-      expect(ping_response["git_source"]).to eq Settings.git_source
+      expect(ping_response["build_tag"]).not_to be_nil
+      expect(ping_response["build_tag"]).to eq Settings.git_source
     end
   end
 
