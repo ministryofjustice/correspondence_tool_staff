@@ -86,6 +86,7 @@ module Cases
       return false unless @email.valid?
 
       if @email.email_branston_archives == "yes"
+        @data_request.update!(email_branston_archives: true)
         @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
       end
 

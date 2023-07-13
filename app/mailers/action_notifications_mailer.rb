@@ -122,7 +122,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
-    data_request_email = DataRequestEmail.create!(
+    data_request_email = DataRequestEmail.find_or_create_by!(
       email_address: recipient,
       data_request: commissioning_document.data_request,
     )

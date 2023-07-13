@@ -262,6 +262,11 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           expect(response).to render_template(:send_email)
           expect(assigns(:recipient_emails)).to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
         end
+
+        it "updates the data_request" do
+          post(:send_email, params:)
+          expect(data_request.reload.email_branston_archives).to be_truthy
+        end
       end
 
       context "with decline probation email" do

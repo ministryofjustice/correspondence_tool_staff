@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe MailDeliveryObserver, type: :observer do
   let(:data_request_email) { create(:data_request_email) }
   let(:notify_id) { "35daaa7a-2859-4c39-a5f2-bfdb17a053f4" }
-  let(:delivery_handler) { "ActionNotificationsMailer" }
+  let(:delivery_handler) { ActionNotificationsMailer }
   let(:header) { { "dreid" => OpenStruct.new(value: data_request_email.id) } }
   let(:message) do
     OpenStruct.new(
