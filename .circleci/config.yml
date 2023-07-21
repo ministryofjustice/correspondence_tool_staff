@@ -49,7 +49,6 @@ references:
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
         RAILS_ENV=test bin/rails webdrivers:chromedriver:version
-        RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
   setup_test_reporter: &setup_test_reporter
     run:
