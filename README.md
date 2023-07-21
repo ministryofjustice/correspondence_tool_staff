@@ -215,8 +215,21 @@ rails parallel:spec:non_features
 
 #### Browser testing
 
-We use [headless chrome](https://developers.google.com/web/updates/2017/04/headless-chrome)
-for Capybara tests, which require JavaScript. You will need to install Chrome >= 59.
+We use chromedriver for Capybara tests, which require JavaScript. You can install using
+```
+brew install chromedriver
+```
+
+or to upgrade
+```
+brew upgrade chromedriver
+```
+
+If your Mac does not want to allow permission to the executable this can be overcome by running:
+```
+xattr -d com.apple.quarantine $(which chromedriver)
+```
+
 Where we don't require JavaScript to test a feature we use Capybara's default driver
 [RackTest](https://github.com/teamcapybara/capybara#racktest) which is ruby based
 and much faster as it does not require a server to be started.
