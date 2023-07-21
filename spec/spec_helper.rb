@@ -19,10 +19,6 @@ require "capybara/rspec"
 require "pundit/rspec"
 require "aws-sdk-s3"
 
-# Required or we'll get errors when we try to pre-sign S# direct uploads.
-ENV["AWS_ACCESS_KEY_ID"]     = "test_access_key_id"
-ENV["AWS_SECRET_ACCESS_KEY"] = "test_secret_access_key"
-
 RSpec.configure do |config|
   # The settings below are suggested to provide a good initial experience
   # with RSpec, but feel free to customize to your heart's content.
