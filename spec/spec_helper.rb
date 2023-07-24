@@ -79,4 +79,16 @@ RSpec.configure do |config|
   #   # a real object. This is generally recommended.
   #   mocks.verify_partial_doubles = true
   # end
+
+  # enable csrf testing in feature specs - `with_csrf_protection: true`
+  config.around(:each, :with_csrf_protection) do |example|
+    orig = ActionController::Base.allow_forgery_protection
+
+    begin
+      ActionController::Base.allow_forgery_protection = true
+      example.run
+    ensure
+      ActionController::Base.allow_forgery_protection = orig
+    end
+  end
 end
