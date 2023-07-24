@@ -20,7 +20,7 @@ require "pundit/rspec"
 require "aws-sdk-s3"
 
 # Required or we'll get errors when we try to pre-sign S# direct uploads.
-ENV["AWS_ACCESS_KEY_ID"]     = "test_access_key_id"
+ENV["AWS_ACCESS_KEY_ID"] = "test_access_key_id"
 ENV["AWS_SECRET_ACCESS_KEY"] = "test_secret_access_key"
 
 RSpec.configure do |config|
@@ -83,4 +83,16 @@ RSpec.configure do |config|
   #   # a real object. This is generally recommended.
   #   mocks.verify_partial_doubles = true
   # end
+
+  # enable csrf testing in feature specs - `with_csrf_protection: true`
+  config.around(:each, :with_csrf_protection) do |example|
+    orig = ActionController::Base.allow_forgery_protection
+
+    begin
+      ActionController::Base.allow_forgery_protection = true
+      example.run
+    ensure
+      ActionController::Base.allow_forgery_protection = orig
+    end
+  end
 end
