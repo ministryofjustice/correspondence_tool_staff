@@ -5,7 +5,7 @@ feature "editing teams" do
   given(:bu)      { create :business_unit }
 
   # Needs JS to add business areas covered which uses ajax
-  scenario "editing a business unit", js: true do
+  scenario "editing a business unit", with_csrf_protection: true, js: true do
     bu
     login_as manager
 
