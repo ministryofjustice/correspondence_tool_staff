@@ -55,14 +55,8 @@ private
   end
 
   def set_up_bucket
-    bucket_key_id = @task_arguments[:s3_bucket_setting][:bucket_key_id]
-    bucket_access_key = @task_arguments[:s3_bucket_setting][:bucket_access_key]
     bucket = @task_arguments[:s3_bucket_setting][:bucket]
-    @s3_bucket = S3BucketHelper::S3Bucket.new(
-      bucket_key_id,
-      bucket_access_key,
-      bucket:,
-    )
+    @s3_bucket = S3BucketHelper::S3Bucket.new(bucket:)
   end
 
   # The actual function of processing different task
