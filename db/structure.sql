@@ -653,6 +653,41 @@ CREATE TABLE public.data_migrations (
 
 
 --
+-- Name: data_request_emails; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_request_emails (
+    id bigint NOT NULL,
+    data_request_id bigint,
+    email_type integer DEFAULT 0,
+    email_address character varying,
+    notify_id character varying,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_request_emails_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_request_emails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_request_emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_request_emails_id_seq OWNED BY public.data_request_emails.id;
+
+
+--
 -- Name: data_request_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -705,7 +740,8 @@ CREATE TABLE public.data_requests (
     date_from date,
     date_to date,
     completed boolean DEFAULT false NOT NULL,
-    contact_id bigint
+    contact_id bigint,
+    email_branston_archives boolean DEFAULT false
 );
 
 
@@ -1406,6 +1442,13 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: data_request_emails id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_emails ALTER COLUMN id SET DEFAULT nextval('public.data_request_emails_id_seq'::regclass);
+
+
+--
 -- Name: data_request_logs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1635,6 +1678,14 @@ ALTER TABLE ONLY public.correspondence_types
 
 ALTER TABLE ONLY public.data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: data_request_emails data_request_emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_emails
+    ADD CONSTRAINT data_request_emails_pkey PRIMARY KEY (id);
 
 
 --
@@ -1947,6 +1998,13 @@ CREATE INDEX index_commissioning_documents_on_template_name ON public.commission
 --
 
 CREATE INDEX index_contacts_on_contact_type_id ON public.contacts USING btree (contact_type_id);
+
+
+--
+-- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_emails_on_data_request_id ON public.data_request_emails USING btree (data_request_id);
 
 
 --
@@ -2411,6 +2469,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230127153614'),
 ('20230203153008'),
 ('20230207153942'),
-('20230601125430');
+('20230601125430'),
+('20230706130822'),
+('20230710161647');
 
 

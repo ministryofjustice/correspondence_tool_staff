@@ -122,7 +122,13 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
-    mail(to: recipient)
+    data_request_email = DataRequestEmail.find_or_create_by!(
+      email_address: recipient,
+      data_request: commissioning_document.data_request,
+    )
+
+    # Sets dreid header with reference to record which can be used to update with Notify ID in MailDeliveryObserver
+    mail(to: recipient, dreid: data_request_email.id)
   end
 
 private

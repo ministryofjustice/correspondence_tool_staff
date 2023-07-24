@@ -46,5 +46,17 @@ describe CommissioningDocumentEmailService do
       expect(transistion.event).to eq "send_day_1_email"
       expect(transistion.metadata["message"]).to eq "Prison records requested from #{contact.name}"
     end
+
+    context "when branston archives require an email" do
+      before do
+        data_request.update!(email_branston_archives: true)
+      end
+
+      it "also sends an email to branston archives" do
+        expect(ActionNotificationsMailer).to receive(:commissioning_email).exactly(3).times.and_return(mailer)
+        expect(mailer).to receive(:deliver_later).exactly(3).times
+        service.send!
+      end
+    end
   end
 end

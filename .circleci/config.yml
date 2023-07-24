@@ -2,11 +2,12 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
+  aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
+  aws-ecr: circleci/aws-ecr@8.2.1 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
 
 references:
   defaults: &defaults
     working_directory: ~/track-a-query
-    resource_class: small
 
 # Sets up the docker images and environment variables that we use
   test_container_config: &test_container_config
@@ -47,8 +48,6 @@ references:
         sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
-        RAILS_ENV=test bin/rails webdrivers:chromedriver:version
-        RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
   setup_test_reporter: &setup_test_reporter
     run:
@@ -134,38 +133,55 @@ references:
         ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
         ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
 
-  configure_aws_profile: &configure_aws_profile
-    run:
-      name: Configure AWS CLI
-      command: |
-        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live
-        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live
-        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live
+  aws_setup: &aws_setup
+    # Authenticate to AWS using OIDC v2 with the AWS CLI
+    aws-cli/setup:
+      role_arn: $ECR_ROLE_TO_ASSUME
+      region: $ECR_REGION
 
-  build_and_push_docker_image: &build_and_push_docker_image
+  ecr_login: &ecr_login
     run:
-      name: Build docker image
+      name: Authenticate to the ECR repository
       command: |
-        . build.sh circleci
+        aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+
+  configure_build_tag: &configure_build_tag
+    run:
+      name: Create build tag
+      command: |
+        prefix="ct"
+        short_version=$(git rev-parse --short ${CIRCLE_BRANCH})
+        build_tag=$prefix-$CIRCLE_BRANCH-$short_version
+
+        echo "export BUILD_TAG=$build_tag" >> $BASH_ENV
+        source $BASH_ENV
+
         mkdir -p workspace
         echo $BUILD_TAG > workspace/build_tag
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $BUILD_TAG --slack_webhook ${SLACK_WEBHOOK_CT} || true
 
-  deploy_to_dev: &deploy_to_dev
+  build_and_push_image: &build_and_push_image
+    aws-ecr/build-image:
+      push-image: true
+      tag: $BUILD_TAG
+      region: $ECR_REGION
+      repo: $ECR_REPOSITORY
+      extra-build-args: |
+        --build-arg BUILD_DATE=$(date +%Y-%m-%dT%H:%M:%S%z) \
+        --build-arg COMMIT_ID=$CIRCLE_SHA1 \
+        --build-arg BUILD_TAG=$BUILD_TAG \
+
+  scan_for_vulnerabilities: &scan_for_vulnerabilities
+    run:
+      name: Check ECR scan results
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $build_tag --slack_webhook ${SLACK_WEBHOOK_CT} || true
+  deploy_to_development: &deploy_to_development
     run:
       name: Deploy to Development environment
       command: |
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag development circleci
-        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
-        source $BASH_ENV
-
-  deploy_to_staging: &deploy_to_staging
-    run:
-      name: Deploy to Staging environment
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        ./deploy.sh $build_tag staging circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
@@ -187,6 +203,15 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
+  deploy_to_staging: &deploy_to_staging
+    run:
+      name: Deploy to Staging environment
+      command: |
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag staging circleci
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
+        source $BASH_ENV
+
   deploy_to_production: &deploy_to_production
     run:
       name: Deploy to production environment
@@ -197,11 +222,10 @@ references:
         source $BASH_ENV
 
 jobs:
-
   build_and_test:
     <<: *test_container_config
+    <<: *defaults
     resource_class: xlarge
-    working_directory: ~/track-a-query
     steps:
       - checkout
       - *restore_cache
@@ -219,38 +243,46 @@ jobs:
       - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
-    <<: *deploy_container_config
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - *configure_aws_profile
-      - *build_and_push_docker_image
+      - *aws_setup
+      - *ecr_login
+      - *configure_build_tag
+      - *build_and_push_image
       - persist_to_workspace:
           root: workspace
           paths:
             - build_tag
 
   build_main_and_push_to_ecr:
-    <<: *deploy_container_config
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - *configure_aws_profile
-      - *build_and_push_docker_image
+      - *aws_setup
+      - *ecr_login
+      - *configure_build_tag
+      - *build_and_push_image
       - persist_to_workspace:
           root: workspace
           paths:
             - build_tag
 
-  dev_deployment_tasks: &do_dev_deployment_tasks
+  scan_image:
+    <<: *deploy_container_config
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *scan_for_vulnerabilities
+
+  development_deployment_tasks: &do_development_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -258,14 +290,16 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *deploy_to_dev
+      - *deploy_to_development
       - slack/notify:
           color: '#1d990c'
           message: '${CIRCLE_USERNAME} deployed *${BUILD_TAG}* to *Development*'
           webhook: ${SLACK_WEBHOOK_CT}
 
-  deploy_branch_to_dev: *do_dev_deployment_tasks
-  deploy_main_to_dev: *do_dev_deployment_tasks
+
+
+  deploy_branch_to_dev: *do_development_deployment_tasks
+  deploy_main_to_dev: *do_development_deployment_tasks
 
   staging_deployment_tasks: &do_staging_deployment_tasks
     <<: *deploy_container_config
@@ -349,9 +383,12 @@ workflows:
       - build_main_and_push_to_ecr:
           requires:
             - build_and_test
-      - deploy_main_to_dev:
+      - scan_image:
           requires:
             - build_main_and_push_to_ecr
+      - deploy_main_to_dev:
+          requires:
+            - scan_image
       - deploy_main_to_staging_approval:
           type: approval
           requires:
@@ -422,4 +459,3 @@ workflows:
       - deploy_branch_to_demo:
           requires:
             - deploy_branch_to_demo_approval
-

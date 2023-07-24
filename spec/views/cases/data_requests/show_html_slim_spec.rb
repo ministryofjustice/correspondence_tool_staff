@@ -70,7 +70,6 @@ describe "cases/data_requests/show", type: :view do
       it "displays details of the commissioning document" do
         expect(page.commissioning_document.row.request_document.text).to eq "Prison records"
         expect(page.commissioning_document.row.last_updated.text).to eq "20 Apr 2023 15:27"
-        expect(page.commissioning_document.row.sent.text).to eq "No"
         expect(page.commissioning_document.row.actions.text).to eq "Download | Replace | Change"
       end
 
@@ -80,7 +79,10 @@ describe "cases/data_requests/show", type: :view do
     end
 
     context "when commissioning email has been sent" do
+      let(:email_address) { "user@prison.gov.uk" }
+
       before do
+        create(:data_request_email, data_request:, created_at: "2023-07-07 14:53", email_address:)
         commissioning_document.sent = true
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request, data_request)
@@ -96,6 +98,13 @@ describe "cases/data_requests/show", type: :view do
 
       it "does not display send email button" do
         expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "displays email details" do
+        expect(page.commissioning_document.email_row.email_type.text).to eq "Day 1 commissioning email"
+        expect(page.commissioning_document.email_row.email_address.text).to eq email_address
+        expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
+        expect(page.commissioning_document.email_row.status.text).to eq "Created"
       end
     end
   end

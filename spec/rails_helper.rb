@@ -20,17 +20,9 @@ require "rspec/rails"
 require "capybara/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "capybara/rspec"
-
-# Webdrivers - Moved from deprecated chrome-helpers gem. Behaviour changed to require you to
-# explicitly issue a scroll command to bring off-screen elements below the fold up into view
-# before you click on them in feature specs
-# See https://stackoverflow.com/questions/55406656
-# and https://www.rubydoc.info/gems/capybara/Capybara/Node/Element#scroll_to-instance_method
-require "webdrivers"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Webdrivers.cache_time = 86_400
 Capybara.default_max_wait_time = 4
 
 options = Selenium::WebDriver::Chrome::Options.new

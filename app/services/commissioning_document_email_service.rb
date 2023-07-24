@@ -9,7 +9,7 @@ class CommissioningDocumentEmailService
 
   def send!
     upload_document
-    send_email
+    send_emails
     email_sent
   end
 
@@ -25,8 +25,13 @@ private
     commissioning_document.update_attribute(:attachment, attachment) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  def send_email
-    data_request.contact.all_emails.map do |email|
+  def send_emails
+    emails = data_request.recipient_emails
+    if data_request.email_branston_archives
+      emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
+    end
+
+    emails.map do |email|
       ActionNotificationsMailer.commissioning_email(
         commissioning_document,
         email,

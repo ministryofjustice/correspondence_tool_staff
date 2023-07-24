@@ -23,7 +23,6 @@ feature "commissioning document" do
     expect(data_request_show_page).to be_displayed
     row = data_request_show_page.commissioning_document.row
     expect(row.request_document).to have_text "Prison records"
-    expect(row.sent).to have_text "No"
   end
 
   scenario "Download commissioning document" do
