@@ -182,12 +182,12 @@ namespace :db do
     end
 
     desc "Delete all but latest s3 database dump files"
-    task :delete_s3_dumps, %i[tag requie_confirmation bucket] => :environment do |_task, args|
+    task :delete_s3_dumps, %i[tag require_confirmation bucket] => :environment do |_task, args|
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
-      args.with_defaults(requie_confirmation: "true")
+      args.with_defaults(require_confirmation: "true")
       s3_bucket = init_s3_bucket(args)
       puts "Delete dump files in s3 with tag of #{args[:bucket]}"
-      if args[:requie_confirmation].to_s == "true"
+      if args[:require_confirmation].to_s == "true"
         DumperUtils.question_user(
           "Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ",
         )
@@ -196,7 +196,7 @@ namespace :db do
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
       end
-      if args[:requie_confirmation].to_s == "true"
+      if args[:require_confirmation].to_s == "true"
         confirm_delete_dumps_file
       end
       dump_files.sort_by(&:last_modified).map do |object|
@@ -248,13 +248,13 @@ namespace :db do
 
   namespace :restore do
     desc "Loads an SQL dump of the database created by db:dump:<env> rake task to the local database"
-    task :local, %i[dir requie_confirmation] => :environment do |_task, args|
+    task :local, %i[dir require_confirmation] => :environment do |_task, args|
       if is_on_production?
         puts "Cannot run this command on production environment!"
       else
-        args.with_defaults(requie_confirmation: "true")
+        args.with_defaults(require_confirmation: "true")
         args.with_defaults(dir: "dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
-        if args[:requie_confirmation].to_s == "true"
+        if args[:require_confirmation].to_s == "true"
           safeguard_restore
         end
         dirname = Rails.root.join(args[:dir])
