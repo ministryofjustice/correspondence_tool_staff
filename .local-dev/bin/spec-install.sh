@@ -27,9 +27,6 @@ if ! bundle show rspec-core 2>/dev/null; then
   sub_header_divider "${YELLOW}Loading DB schema across multiple test databases${NC}"
   bundle exec rails parallel:load_schema | indent
 
-  sub_header_divider "${YELLOW}Attempting to update webdriver version for chrome${NC}"
-  bin/rails webdrivers:chromedriver:update | indent
-
   sub_header "${GREEN}Installation complete! Use ${YELLOW}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]\n\n${DARK_GRAY}******     ${GREEN}Or, use ${YELLOW}parallel testing${GREEN} like${NC} bundle exec rails parallel:spec"
 
   exit;
