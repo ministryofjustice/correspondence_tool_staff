@@ -81,14 +81,8 @@ def get_first_pod(working_env)
 end
 
 def init_s3_bucket(args)
-  args.with_defaults(bucket_key_id: ENV["AWS_ACCESS_KEY_ID"])
-  args.with_defaults(bucket_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
   args.with_defaults(bucket: Settings.case_uploads_s3_bucket)
-  S3BucketHelper::S3Bucket.new(
-    args[:bucket_key_id],
-    args[:bucket_access_key],
-    bucket: args[:bucket],
-  )
+  S3BucketHelper::S3Bucket.new(bucket: args[:bucket])
 end
 
 def is_on_production?
@@ -139,7 +133,7 @@ namespace :db do
     end
 
     desc "makes an anonymised dump of local database with tasks"
-    task :local, %i[tag storage bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :local, %i[tag storage bucket] => :environment do |_task, args|
       require File.expand_path("#{File.dirname(__FILE__)}/../../lib/db/database_dumper")
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
       args.with_defaults(storage: "bucket")
@@ -157,7 +151,7 @@ namespace :db do
     end
 
     desc "upload user_settings for anonymizer into s3 bucket under dumps folder"
-    task :upload_user_settings, %i[setting_file bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :upload_user_settings, %i[setting_file bucket] => :environment do |_task, args|
       raise "Please specifiy the file you want to upload" if args[:setting_file].blank?
 
       s3_bucket = init_s3_bucket(args)
@@ -166,14 +160,14 @@ namespace :db do
     end
 
     desc "download user_settings for anonymizer from s3 buckets"
-    task :download_user_settings, %i[bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :download_user_settings, %i[bucket] => :environment do |_task, args|
       s3_bucket = init_s3_bucket(args)
       user_settings = UsersSettingsForAnonymizer.new
       user_settings.download_user_settings_from_s3(s3_bucket, Rails.root.join("user_settings.json"))
     end
 
     desc "List s3 database dump files"
-    task :list_s3_dumps, %i[tag bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :list_s3_dumps, %i[tag bucket] => :environment do |_task, args|
       include ActionController
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
@@ -188,12 +182,12 @@ namespace :db do
     end
 
     desc "Delete all but latest s3 database dump files"
-    task :delete_s3_dumps, %i[tag requie_confirmation bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :delete_s3_dumps, %i[tag require_confirmation bucket] => :environment do |_task, args|
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
-      args.with_defaults(requie_confirmation: "true")
+      args.with_defaults(require_confirmation: "true")
       s3_bucket = init_s3_bucket(args)
       puts "Delete dump files in s3 with tag of #{args[:bucket]}"
-      if args[:requie_confirmation].to_s == "true"
+      if args[:require_confirmation].to_s == "true"
         DumperUtils.question_user(
           "Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ",
         )
@@ -202,7 +196,7 @@ namespace :db do
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
       end
-      if args[:requie_confirmation].to_s == "true"
+      if args[:require_confirmation].to_s == "true"
         confirm_delete_dumps_file
       end
       dump_files.sort_by(&:last_modified).map do |object|
@@ -213,7 +207,7 @@ namespace :db do
     end
 
     desc "Copy s3 bucket dump file locally and decompress"
-    task :copy_s3_dumps, %i[tag bucket_key_id bucket_access_key bucket] => :environment do |_task, args|
+    task :copy_s3_dumps, %i[tag bucket] => :environment do |_task, args|
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
       dir_name_base = "dumps_#{args[:tag]}_from_#{args[:bucket]}"
@@ -254,13 +248,13 @@ namespace :db do
 
   namespace :restore do
     desc "Loads an SQL dump of the database created by db:dump:<env> rake task to the local database"
-    task :local, %i[dir requie_confirmation] => :environment do |_task, args|
+    task :local, %i[dir require_confirmation] => :environment do |_task, args|
       if is_on_production?
         puts "Cannot run this command on production environment!"
       else
-        args.with_defaults(requie_confirmation: "true")
+        args.with_defaults(require_confirmation: "true")
         args.with_defaults(dir: "dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
-        if args[:requie_confirmation].to_s == "true"
+        if args[:require_confirmation].to_s == "true"
           safeguard_restore
         end
         dirname = Rails.root.join(args[:dir])

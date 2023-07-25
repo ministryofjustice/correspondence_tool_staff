@@ -55,8 +55,6 @@ RUN echo "export DATABASE_URL=postgres://postgres@db" >> ~/.bashrc && \
     echo "export RAKE_ENV=test" >> ~/.bashrc && \
     echo "export PARALLEL_TEST_PROCESSORS=8" >> ~/.bashrc && \
     echo "export COVERAGE=1" >> ~/.bashrc && \
-    echo "export AWS_ACCESS_KEY_ID=not_real" >> ~/.bashrc && \
-    echo "export AWS_SECRET_ACCESS_KEY=not_real" >> ~/.bashrc && \
     echo "export SECRET_KEY_BASE=not_real" >> ~/.bashrc
 
 
@@ -71,4 +69,3 @@ RUN sudo gem install bundler -v '~> 2.2.13'
 # Add a script to be executed every time the container starts.
 COPY .local-dev/bin/*.sh /usr/bin/
 RUN sudo chmod +x /usr/bin/*
-

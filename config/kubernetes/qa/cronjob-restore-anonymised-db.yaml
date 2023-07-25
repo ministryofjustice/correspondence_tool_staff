@@ -9,6 +9,7 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: track-a-query
           containers:
           - name: jobs
             image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
@@ -45,16 +46,6 @@ spec:
                   secretKeyRef:
                     name: track-a-query-s3-output
                     key: bucket_name
-              - name: AWS_ACCESS_KEY_ID
-                valueFrom:
-                  secretKeyRef:
-                    name: track-a-query-s3-output
-                    key: access_key_id
-              - name: AWS_SECRET_ACCESS_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: track-a-query-s3-output
-                    key: secret_access_key
             envFrom:
               - configMapRef:
                   name: environment-variables

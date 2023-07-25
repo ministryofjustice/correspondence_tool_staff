@@ -5,7 +5,7 @@ require Rails.root.join("lib/tasks/rake_task_helpers/dumper_utils")
 require Rails.root.join("lib/db/database_anonymizer_tasks")
 
 class DatabaseDumper
-  attr_reader :outcome_files, :bucket_key_id, :bucket_access_key, :bucket
+  attr_reader :outcome_files, :bucket
 
   MAX_NUM_OF_RECORDS_PER_GROUP = 10_000
   TABLES_TO_BE_EXCLUDED = %w[reports search_queries sessions versions].freeze

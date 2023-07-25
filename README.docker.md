@@ -42,8 +42,6 @@ REDIS_URL=redis://redis@log:6379
 REDIS_URL_SIDEKIQ=${REDIS_URL}/1
 RAILS_DEVELOPMENT_HOSTS=app
 POSTGRES_DB=db
-AWS_ACCESS_KEY_ID=not_real
-AWS_SECRET_ACCESS_KEY=not_real
 SECRET_KEY_BASE=not_real
 DEV_PASSWORD="a-h!p-sw!ng!ng-pAssword"
 
@@ -649,4 +647,3 @@ The app has a github action "Combine PRs" which automatically combines dependabo
 To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run workflows"
 
 See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
-
