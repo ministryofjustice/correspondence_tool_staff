@@ -4,6 +4,7 @@ data:
   RAILS_ENV: 'production'
   RAILS_SERVE_STATIC_FILES: 'true'
   SENTRY_ENVIRONMENT: 'production'
+  EMAIL_COMMISSIONING_DOCUMENT: '1'
 kind: ConfigMap
 metadata:
   name: environment-variables
