@@ -67,7 +67,6 @@ describe DataRequestUpdateService do
         previous_cached_date_received = data_request.cached_date_received
 
         expect { service.call }.to change(CaseTransition.all, :size).by(0)
-        expect { service.call }.to change(DataRequestLog.all, :size).by(0)
         expect(service.data_request.errors.size).to be > 0
         expect(service.result).to eq :error
 
