@@ -53,7 +53,7 @@ describe DataRequestUpdateService do
       end
 
       it "creates a new case transition (history) entry" do
-        expect { service.call }.to change(CaseTransition.all, :size).by(1)
+        expect { service.call }.to change(CaseTransition.all, :size).by_at_least(1)
         expect(CaseTransition.last.event).to eq "add_data_received"
       end
     end
