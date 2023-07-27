@@ -3,7 +3,6 @@ class DataRequest < ApplicationRecord
   belongs_to :user
   belongs_to :contact
   has_one    :commissioning_document
-  has_many   :data_request_logs, after_add: :update_cached_attributes
   has_many   :data_request_emails
 
   validates :request_type, presence: true
@@ -41,10 +40,6 @@ class DataRequest < ApplicationRecord
   }
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
-
-  def logs
-    data_request_logs
-  end
 
   def kase
     offender_sar_case
@@ -135,11 +130,6 @@ private
         I18n.t("activerecord.errors.models.data_request.attributes.location.blank"),
       )
     end
-  end
-
-  def update_cached_attributes(new_data_request_log)
-    self.cached_date_received = new_data_request_log.date_received
-    self.cached_num_pages = new_data_request_log.num_pages
   end
 
   def clean_attributes

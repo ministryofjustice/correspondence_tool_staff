@@ -52,24 +52,9 @@ describe DataRequestUpdateService do
         )
       end
 
-      before do
-        # rubocop:disable RSpec/ExpectInHook
-        expect(data_request.cached_num_pages).to eq 0
-        expect(data_request.cached_date_received).to be_nil
-        # rubocop:enable RSpec/ExpectInHook
-      end
-
       it "creates a new case transition (history) entry" do
         expect { service.call }.to change(CaseTransition.all, :size).by(1)
         expect(CaseTransition.last.event).to eq "add_data_received"
-      end
-
-      it "updates the data request values" do
-        service.call
-        request = service.data_request
-
-        # De-normalised values should match the DataRequestLog values
-        expect(request.cached_num_pages).to eq 21
       end
     end
 
