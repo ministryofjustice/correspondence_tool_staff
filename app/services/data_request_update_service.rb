@@ -57,13 +57,4 @@ private
       ""
     end
   end
-
-  # Allowing a user to create a new DataRequestLog which is a duplicate of the
-  # current total number of pages/date received is not currently considered a
-  # model error but rather a UX issue. Hence the check for unchanged? in this
-  # service rather than within the DataRequest model
-  def unchanged?(new_data_request_log)
-    @data_request.cached_num_pages_was == new_data_request_log.num_pages &&
-      @data_request.cached_date_received_was == new_data_request_log.date_received
-  end
 end
