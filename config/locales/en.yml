@@ -632,8 +632,6 @@ en:
         data_request_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
-      data_request_log:
-        num_pages: Record new total number of pages
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
@@ -719,8 +717,6 @@ en:
       data_request_email:
         email_type:
           commissioning_email: Day 1 commissioning email
-      data_request_log:
-        num_pages: Number of pages
       commissioning_document:
         template_name:
           cat_a: CAT A
