@@ -517,7 +517,6 @@ spec/models/case/overturned_ico/base_spec.rb:2.550368721000268
 spec/models/case_closure/outcome_spec.rb:0.02798608099692501
 spec/models/commissioning_document_template/prison_spec.rb:0.0386091299878899
 spec/models/contact_spec.rb:0.056748276998405345
-spec/models/data_request_log_spec.rb:0.30461987300077453
 spec/models/feedback_spec.rb:0.015912845003185794
 spec/models/letter_spec.rb:0.534082975005731
 spec/models/reporting_period/date_interval_spec.rb:0.001385315990773961

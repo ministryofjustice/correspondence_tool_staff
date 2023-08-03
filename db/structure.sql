@@ -688,40 +688,6 @@ ALTER SEQUENCE public.data_request_emails_id_seq OWNED BY public.data_request_em
 
 
 --
--- Name: data_request_logs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.data_request_logs (
-    id integer NOT NULL,
-    data_request_id integer NOT NULL,
-    user_id integer NOT NULL,
-    date_received date NOT NULL,
-    num_pages integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: data_request_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.data_request_logs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: data_request_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.data_request_logs_id_seq OWNED BY public.data_request_logs.id;
-
-
---
 -- Name: data_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1449,13 +1415,6 @@ ALTER TABLE ONLY public.data_request_emails ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- Name: data_request_logs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_logs ALTER COLUMN id SET DEFAULT nextval('public.data_request_logs_id_seq'::regclass);
-
-
---
 -- Name: data_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1686,14 +1645,6 @@ ALTER TABLE ONLY public.data_migrations
 
 ALTER TABLE ONLY public.data_request_emails
     ADD CONSTRAINT data_request_emails_pkey PRIMARY KEY (id);
-
-
---
--- Name: data_request_logs data_request_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_logs
-    ADD CONSTRAINT data_request_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2008,27 +1959,6 @@ CREATE INDEX index_data_request_emails_on_data_request_id ON public.data_request
 
 
 --
--- Name: index_data_request_logs_on_data_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_logs_on_data_request_id ON public.data_request_logs USING btree (data_request_id);
-
-
---
--- Name: index_data_request_logs_on_data_request_id_and_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_logs_on_data_request_id_and_user_id ON public.data_request_logs USING btree (data_request_id, user_id);
-
-
---
--- Name: index_data_request_logs_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_logs_on_user_id ON public.data_request_logs USING btree (user_id);
-
-
---
 -- Name: index_data_requests_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2239,14 +2169,6 @@ CREATE INDEX index_warehouse_case_reports_on_case_id ON public.warehouse_case_re
 
 
 --
--- Name: data_request_logs fk_rails_274490f7ec; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_logs
-    ADD CONSTRAINT fk_rails_274490f7ec FOREIGN KEY (data_request_id) REFERENCES public.data_requests(id);
-
-
---
 -- Name: warehouse_case_reports fk_rails_2a80c865a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2292,14 +2214,6 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.data_requests
     ADD CONSTRAINT fk_rails_e762904f02 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
-
-
---
--- Name: data_request_logs fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_logs
-    ADD CONSTRAINT fk_rails_fc711a84cc FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2471,6 +2385,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230207153942'),
 ('20230601125430'),
 ('20230706130822'),
-('20230710161647');
-
-
+('20230710161647'),
+('20230727110142');
