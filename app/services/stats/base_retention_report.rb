@@ -2,11 +2,11 @@ module Stats
   class BaseRetentionReport < BaseReport
     class << self
       def title
-        raise "#title method should be defined in sub-class of BaseRetentionReport"
+        "Retention report"
       end
 
       def description
-        raise "#description should be defined in sub-class of BaseRetentionReport"
+        "Shows cases whose last action was between the selected dates"
       end
 
       def report_format
