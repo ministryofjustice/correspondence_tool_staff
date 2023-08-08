@@ -71,6 +71,15 @@ class Letter
     values.third_party_company_name.presence
   end
 
+  def telephone_number
+    case @letter_template.template_type
+    when "dispatch"
+      "01283 496 110"
+    when "acknowledgement"
+      "01283 496 136"
+    end
+  end
+
   def format_address(address)
     if address.include?(",")
       address.split(",").map(&:strip).join("\n")
