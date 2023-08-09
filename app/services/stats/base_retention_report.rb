@@ -1,5 +1,16 @@
 module Stats
   class BaseRetentionReport < BaseReport
+    CSV_COLUMN_HEADINGS = [
+      "Case Number (aka DPA number)",
+      "Case Type",
+      "Complaint Type",
+      "Data Subject Name",
+      "Case History Date",
+      "Case History Who",
+      "Case History Team",
+      "Case History Action",
+    ].freeze
+
     class << self
       def title
         "Retention report"
@@ -10,75 +21,55 @@ module Stats
       end
 
       def report_format
-        BaseReport::ZIP
-      end
-
-      def etl_handler
-        raise "#description should be defined in sub-class of BaseRetentionReport"
+        BaseReport::XLSX
       end
     end
 
-    attr_reader :period_start, :period_end, :user
-
-    def process(report_guid:)
-      @period_end ||= Time.zone.today
-      scope = case_scope
-          .where(received_date: [@period_start..@period_end])
-          .order(received_date: :asc)
-
-      etl_handler = self.class.etl_handler.new(retrieval_scope: scope)
-      report = Report.find_by(guid: report_guid)
-
-      # Put the generated report into Redis for consumption by web app
-      redis = Redis.new
-      data = nil
-      File.open(etl_handler.results_filepath, "r") { |f| data = f.read }
-      redis.set(report_guid, data)
-
-      if report
-        report.report_data = {
-          filepath: etl_handler.results_filepath,
-          user_id: @user.id,
-        }.to_json
-        report.status = Stats::BaseReport::COMPLETE
-        report.filename = etl_handler.filename
-        report.save!
-      end
+    def results
+      @result_set
     end
 
-    def case_scope
-      raise "This method should be defined in sub-class of BaseRetentionReport"
+    def set_results(data)
+      @result_set = data
     end
 
     def report_type
       raise "#description should be defined in sub-class of BaseRetentionReport"
     end
 
-    delegate :default_reporting_period, to: :report_type
-
-    # Using a job allows processing to be offloaded into a separate
-    # server/container instance, increasing responsiveness of the web app.
-    def run(**args)
-      raise ArgumentError, "Missing report_guid" if args[:report_guid].blank?
-
-      @background_job = true
-      @status = Stats::BaseReport::WAITING
-      @job_ids = [args[:report_guid]]
-      ::Warehouse::ClosedCasesCreateJob.perform_later(
-        self.class.name,
-        args[:report_guid],
-        @user.id,
-        @period_start.to_i,
-        @period_end.to_i,
-      )
+    def case_scope
+      Case::SAR::Offender
+        .closed
+        .joins(:transitions)
+        .where(case_transitions: { most_recent: true })
+        .where(case_transitions: { created_at: @period_start..@period_end })
     end
 
-    def report_details(report)
-      redis = Redis.new
-      if redis.exists(report.guid)
-        report.status = Stats::BaseReport::COMPLETE
-        report.save!
-        redis.get(report.guid)
+    def run(*)
+      @background_job = false
+      @status = Stats::BaseReport::COMPLETE
+    end
+
+    def analyse_case(kase)
+      ct = kase.transitions.most_recent.decorate
+
+      [
+        kase.number,
+        kase.decorate.pretty_type,
+        kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : "",
+        kase.subject_full_name,
+        ct.action_date,
+        ct.user_name,
+        ct.user_team,
+        ct.event_desc,
+      ]
+    end
+
+    def to_csv
+      case_scope.map do |kase|
+        analyse_case(kase).map do |item|
+          OpenStruct.new value: item
+        end
       end
     end
   end
