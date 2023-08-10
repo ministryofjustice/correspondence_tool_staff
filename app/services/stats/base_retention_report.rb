@@ -21,7 +21,7 @@ module Stats
       end
 
       def report_format
-        BaseReport::XLSX
+        BaseReport::CSV
       end
 
       def persist_results?
