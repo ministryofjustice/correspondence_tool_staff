@@ -29,11 +29,18 @@ module Stats
       end
     end
 
-    # rubocop:disable Lint/MissingSuper
     def initialize(**)
       @result_set = [CSV_COLUMN_HEADINGS]
+      super
     end
-    # rubocop:enable Lint/MissingSuper
+
+    def report_type
+      raise "#description should be defined in sub-class of BaseRetentionReport"
+    end
+
+    def case_scope
+      raise "#case_scope should be defined in sub-class of BaseRetentionReport"
+    end
 
     def results
       @result_set
@@ -41,22 +48,6 @@ module Stats
 
     def set_results(data)
       @result_set = data
-    end
-
-    def report_type
-      raise "#description should be defined in sub-class of BaseRetentionReport"
-    end
-
-    def filename
-      report_type.filename(self.class.report_format)
-    end
-
-    def case_scope
-      Case::SAR::Offender
-        .closed
-        .joins(:transitions)
-        .where(case_transitions: { most_recent: true })
-        .where(case_transitions: { created_at: @period_start..@period_end })
     end
 
     def run(*)
