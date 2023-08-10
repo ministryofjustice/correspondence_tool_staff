@@ -23,7 +23,17 @@ module Stats
       def report_format
         BaseReport::XLSX
       end
+
+      def persist_results?
+        false
+      end
     end
+
+    # rubocop:disable Lint/MissingSuper
+    def initialize(**)
+      @result_set = [CSV_COLUMN_HEADINGS]
+    end
+    # rubocop:enable Lint/MissingSuper
 
     def results
       @result_set
@@ -37,6 +47,10 @@ module Stats
       raise "#description should be defined in sub-class of BaseRetentionReport"
     end
 
+    def filename
+      report_type.filename(self.class.report_format)
+    end
+
     def case_scope
       Case::SAR::Offender
         .closed
@@ -46,19 +60,18 @@ module Stats
     end
 
     def run(*)
-      @background_job = false
-      @status = Stats::BaseReport::COMPLETE
+      case_scope.each { |kase| process(kase) }
     end
 
-    def analyse_case(kase)
+    def process(kase)
       ct = kase.transitions.most_recent.decorate
 
-      [
+      @result_set << [
         kase.number,
         kase.decorate.pretty_type,
         kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : "",
         kase.subject_full_name,
-        ct.action_date,
+        ct.created_at.strftime("%F"),
         ct.user_name,
         ct.user_team,
         ct.event_desc,
@@ -66,10 +79,8 @@ module Stats
     end
 
     def to_csv
-      case_scope.map do |kase|
-        analyse_case(kase).map do |item|
-          OpenStruct.new value: item
-        end
+      @result_set.map do |row|
+        row.map { |item| OpenStruct.new(value: item) }
       end
     end
   end
