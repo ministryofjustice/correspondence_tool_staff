@@ -1,16 +1,5 @@
 module Stats
   class BaseRetentionReport < BaseReport
-    CSV_COLUMN_HEADINGS = [
-      "Case Number (aka DPA number)",
-      "Case Type",
-      "Complaint Type",
-      "Data Subject Name",
-      "Case History Date",
-      "Case History Who",
-      "Case History Team",
-      "Case History Action",
-    ].freeze
-
     class << self
       def title
         "Retention report"
@@ -29,17 +18,16 @@ module Stats
       end
     end
 
-    def initialize(**)
-      @result_set = [CSV_COLUMN_HEADINGS]
-      super
-    end
-
     def report_type
       raise "#description should be defined in sub-class of BaseRetentionReport"
     end
 
     def case_scope
       raise "#case_scope should be defined in sub-class of BaseRetentionReport"
+    end
+
+    def process(kase)
+      raise "#process should be defined in sub-class of BaseRetentionReport"
     end
 
     def results
@@ -52,21 +40,6 @@ module Stats
 
     def run(*)
       case_scope.each { |kase| @result_set << process(kase) }
-    end
-
-    def process(kase)
-      ct = kase.transitions.most_recent.decorate
-
-      [
-        kase.number,
-        kase.decorate.pretty_type,
-        kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : "",
-        kase.subject_full_name,
-        ct.created_at.strftime("%F"),
-        ct.user_name,
-        ct.user_team,
-        ct.event_desc,
-      ]
     end
 
     def to_csv

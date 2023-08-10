@@ -69,7 +69,7 @@ module Stats
         end
 
         it "puts header in CSV" do
-          expect(csv_lines.first).to eq BaseRetentionReport::CSV_COLUMN_HEADINGS
+          expect(csv_lines.first).to eq described_class::CSV_COLUMN_HEADINGS
         end
 
         it "puts case details in CSV" do
