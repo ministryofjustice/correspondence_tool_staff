@@ -51,13 +51,13 @@ module Stats
     end
 
     def run(*)
-      case_scope.each { |kase| process(kase) }
+      case_scope.each { |kase| @result_set << process(kase) }
     end
 
     def process(kase)
       ct = kase.transitions.most_recent.decorate
 
-      @result_set << [
+      [
         kase.number,
         kase.decorate.pretty_type,
         kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : "",
