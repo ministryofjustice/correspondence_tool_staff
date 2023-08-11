@@ -161,20 +161,18 @@ RSpec.describe Letter, type: :model do
 
   describe "#telephone_number" do
     context "when letter template is dispatch letter" do
-      let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
+      subject(:letter_number) { LetterTemplate::DISPATCH_LETTER_TEL_NUM }
 
       it "returns telephone number for dispatch letter" do
-        letter = described_class.new(letter_template.id, kase)
-        expect(letter.telephone_number).to eq("01283 496 110")
+        expect(letter_number).to eq "01283 496 110"
       end
     end
 
     context "when letter template is acknowledgment letter" do
-      let(:letter_template) { create(:letter_template, template_type: "acknowledgement", name: "Letter to Recipient") }
+      subject(:letter_number) { LetterTemplate::ACKNOWLEDGEMENT_LETTER_TEL_NUM }
 
       it "returns telephone number for acknowledgement letter" do
-        letter = described_class.new(letter_template.id, kase)
-        expect(letter.telephone_number).to eq("01283 496 136")
+        expect(letter_number).to eq "01283 496 136"
       end
     end
   end
