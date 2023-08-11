@@ -37,8 +37,12 @@ module Stats
 
       before do
         create_report_type(abbr: :r502)
-        create :closed_sar, identifier: "closed sar"
-        create :closed_case, identifier: "closed foi"
+
+        Timecop.travel(period_end - 1.hour) do
+          create :closed_sar, identifier: "closed sar"
+          create :closed_case, identifier: "closed foi"
+          create :offender_sar_case, :closed, identifier: "offender sar"
+        end
       end
 
       describe "#case_scope" do

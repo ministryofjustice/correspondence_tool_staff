@@ -21,7 +21,7 @@ module Stats
     end
 
     def case_scope
-      Case::SAR::OffenderComplaint
+      Case::Base.offender_sar_complaint
         .closed
         .joins(:transitions)
         .where(case_transitions: { most_recent: true })
