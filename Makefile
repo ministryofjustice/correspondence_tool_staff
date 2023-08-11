@@ -44,7 +44,6 @@ dc-build: dory # no cleaning
 	docker compose up -d --build
 
 down:
-	docker-sync stop
 	docker-sync clean
 	docker compose down
 

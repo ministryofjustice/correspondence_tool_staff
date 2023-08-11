@@ -57,7 +57,7 @@ services:
       - chrome
     volumes:
       - .:/usr/src/app/
-      - ~/.aws:/root/.aws
+      - ~/.aws:/home/circleci/.aws
       - spec-gems:/home/circleci/.rubygems
 
   chrome:

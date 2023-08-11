@@ -41,7 +41,7 @@ ENV APP_BUILD_TAG=${BUILD_TAG}
 
 
 
-FROM cimg/ruby:2.7-browsers AS base-test
+FROM cimg/ruby:3.1.4-browsers AS base-test
 RUN sudo apt --allow-releaseinfo-change-suite update && sudo apt install postgresql-client
 
 RUN sudo curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
