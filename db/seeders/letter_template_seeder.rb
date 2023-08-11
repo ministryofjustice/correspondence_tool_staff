@@ -328,9 +328,6 @@ class LetterTemplateSeeder
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
-
-                  <br><br><% if rec.template_type == "dispatch" %> dispatch number here <% else %> 12345 <% end %>
-
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br><strong><%= values.subject_full_name&.upcase %><% if values.prison_number.present? %> - <%= values.first_prison_number %><% end %></strong>
                   <br>
