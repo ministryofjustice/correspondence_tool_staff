@@ -158,4 +158,24 @@ RSpec.describe Letter, type: :model do
       expect(address_with_newlines).to eq "22 Sample Address\nTest Lane\nTestingington\nTE57ST"
     end
   end
+
+  describe "#telephone_number" do
+    context "when letter template is acknowledgement letter" do
+      let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
+
+      it "returns telephone number for dispatch letter" do
+        letter = described_class.new(letter_template.id, kase)
+        expect(letter.telephone_number).to eq("01283 496 110")
+      end
+    end
+
+    context "when letter template is dispatch letter" do
+      let(:letter_template) { create(:letter_template, template_type: "acknowledgement", name: "Letter to Recipient") }
+
+      it "returns telephone number for acknowledgement letter" do
+        letter = described_class.new(letter_template.id, kase)
+        expect(letter.telephone_number).to eq("01283 496 136")
+      end
+    end
+  end
 end
