@@ -26,7 +26,7 @@ module Stats
       raise "#case_scope should be defined in sub-class of BaseRetentionReport"
     end
 
-    def process(kase)
+    def process
       raise "#process should be defined in sub-class of BaseRetentionReport"
     end
 
