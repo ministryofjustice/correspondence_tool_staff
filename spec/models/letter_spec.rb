@@ -160,7 +160,7 @@ RSpec.describe Letter, type: :model do
   end
 
   describe "#telephone_number" do
-    context "when letter template is acknowledgement letter" do
+    context "when letter template is dispatch letter" do
       let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
 
       it "returns telephone number for dispatch letter" do
@@ -169,7 +169,7 @@ RSpec.describe Letter, type: :model do
       end
     end
 
-    context "when letter template is dispatch letter" do
+    context "when letter template is acknowledgment letter" do
       let(:letter_template) { create(:letter_template, template_type: "acknowledgement", name: "Letter to Recipient") }
 
       it "returns telephone number for acknowledgement letter" do
