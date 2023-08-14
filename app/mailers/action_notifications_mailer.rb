@@ -117,6 +117,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
+      email_subject: "Subject Access Request",
       email_address: recipient,
       deadline_text:,
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
