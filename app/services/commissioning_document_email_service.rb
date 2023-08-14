@@ -34,6 +34,7 @@ private
     emails.map do |email|
       ActionNotificationsMailer.commissioning_email(
         commissioning_document,
+        data_request.offender_sar_case.number,
         email,
       ).deliver_later
     end
