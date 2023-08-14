@@ -20,7 +20,7 @@ class LetterTemplate < ApplicationRecord
   end
 
   def telephone_number
-    case @letter_template.template_type
+    case template_type
     when "dispatch"
       DISPATCH_LETTER_TEL_NUM
     when "acknowledgement"
