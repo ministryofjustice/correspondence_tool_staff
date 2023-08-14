@@ -40,8 +40,7 @@ RSpec.describe LetterTemplate, type: :model do
         .to match "Thank you for your offender subject access request, Bob"
     end
   end
-
-
+  
   describe "#telephone_number" do
     context "when letter template is dispatch letter" do
       let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
