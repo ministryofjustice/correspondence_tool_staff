@@ -22,6 +22,7 @@ class Cases::LettersController < ApplicationController
           letter_date: @letter.letter_date,
           requester_reference: @letter.values.requester_reference,
           'html:letter_address': @letter.letter_address,
+          telephone_number: letter_template.telephone_number,
         }
 
         path = Rails.root.join("lib", "assets", letter_template.base_template_file_ref)
