@@ -58,7 +58,7 @@ private
 
   def database_alive?
     ActiveRecord::Base.connection.active?
-  rescue PG::ConnectionBad
+  rescue StandardError
     false
   end
 end
