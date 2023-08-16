@@ -217,7 +217,7 @@ rails parallel:spec:non_features
 
 We use chromedriver for Capybara tests, which require JavaScript. This is managed by selenium-webdriver.
 
-If you have an existing version on your PATH this may cause an issue so you will need to remove it from your PATH
+If you have an existing old version on your PATH this may cause an issue so you will need to remove it from your PATH
 or uninstall it.
 
 Where we don't require JavaScript to test a feature we use Capybara's default driver
