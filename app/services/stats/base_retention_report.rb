@@ -12,10 +12,6 @@ module Stats
       def report_format
         BaseReport::CSV
       end
-
-      def persist_results?
-        false
-      end
     end
 
     def report_type
