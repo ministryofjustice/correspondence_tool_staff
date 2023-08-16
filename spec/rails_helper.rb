@@ -42,7 +42,7 @@ Capybara.register_driver :remote_selenium do |app|
   Capybara.server_port = "3000"
 
   # and point capybara at our chromium docker container
-  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", capabilities: options)
+  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", options:)
 end
 
 Capybara.asset_host = "http://localhost:3000"
@@ -63,7 +63,7 @@ Capybara.register_driver :headless_chrome do |app|
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
   end
 
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: options)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
 Capybara.server = :puma, { Silent: true }
