@@ -64,8 +64,8 @@ module Stats
           report.run
         end
 
-        it "does not persist results" do
-          expect(report.persist_results?).to eq false
+        it "persists results" do
+          expect(report.persist_results?).to eq true
         end
 
         it "creates data for csv" do
