@@ -40,9 +40,9 @@ references:
       command: |
          sudo apt update && sudo apt install postgresql-client
 
-  update_chromedriver: &update_chromedriver
+  update_chrome: &update_chrome
     run:
-      name: Update chrome and the chromedriver
+      name: Update chrome
       command: |
         sudo curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
@@ -237,7 +237,7 @@ jobs:
       - *wait_for_db
       - *set_up_the_database
       - *rubocop
-      - *update_chromedriver
+      - *update_chrome
       - *setup_test_reporter
       - *run_unit_and_feature_tests
       - *upload_test_coverage
