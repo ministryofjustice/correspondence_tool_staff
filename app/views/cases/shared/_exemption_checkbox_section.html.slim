@@ -6,7 +6,7 @@
       span.form-hint
         = hint
 
-    / Specific to FOIs ... soz!! Abstract out to other pages as necessary
+    / Specific to FOIs. Abstract out to other pages as necessary
     = collection_check_boxes(:foi, :exemption_ids, exemptions, :id, :name) do |b|
       - content_tag :div, class: "multiple-choice" do
         - b.check_box('data-omit-for-part-refused' => b.object.omit_for_part_refused,
