@@ -17,11 +17,11 @@ class CaseTransitionDecorator < Draper::Decorator
     "<strong>#{event_desc}</strong><br>#{details}".html_safe
   end
 
-private
-
   def event_desc
     description_for_event || event_name
   end
+
+private
 
   def description_for_event
     specific_key_with_desc = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}__desc"
