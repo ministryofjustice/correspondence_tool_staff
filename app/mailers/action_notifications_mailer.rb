@@ -104,7 +104,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def commissioning_email(commissioning_document, recipient)
+  def commissioning_email(commissioning_document, kase_number, recipient)
     SentryContextProvider.set_context
 
     find_template("Commissioning")
@@ -117,7 +117,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
-      email_subject: "Subject Access Request",
+      email_subject: "Subject Access Request - #{kase_number} - #{commissioning_document.decorate.request_document}",
       email_address: recipient,
       deadline_text:,
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
