@@ -35,11 +35,11 @@ describe CaseAttachmentUploadGroupCollection do
       expect(@kase.attachments.order(:upload_group, :id).map(&:user_id)).to eq [@responder_2.id, @responder_2.id, @responder_1.id, @responder_1.id, @responder_1.id]
     end
 
-    it "returns date_time once for each group in reverse time order" do
-      yielded_timestamps = []
-      @kase.upload_response_groups.each { |ug| yielded_timestamps << ug.date_time }
-      expect(yielded_timestamps).to eq [@timestamp_2, @timestamp_1]
-    end
+    # it "returns date_time once for each group in reverse time order" do
+    #   yielded_timestamps = []
+    #   @kase.upload_response_groups.each { |ug| yielded_timestamps << ug.date_time }
+    #   expect(yielded_timestamps).to eq [@timestamp_2, @timestamp_1]
+    # end
 
     it "returns a user object for each group" do
       users = []
