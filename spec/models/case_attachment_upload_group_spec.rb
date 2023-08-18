@@ -34,10 +34,10 @@ describe CaseAttachmentUploadGroup do
   end
 
   # describe "date_time" do
-    # it "returns the formatted upload group time converted to BST" do
-    #   debugger
-      # expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
-    # end
+  # it "returns the formatted upload group time converted to BST" do
+  #   debugger
+  # expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
+  # end
   # end
 
   describe "#delete!" do
