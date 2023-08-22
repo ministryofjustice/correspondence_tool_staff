@@ -2,9 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseAttachmentUploadGroup do
-  before(:all) do
-    DbHousekeeping.clean
-
+  before do
     @upload_group = "20170608111112"
     @kase = create :case_with_response
     @responder = @kase.responding_team.users.first
@@ -13,10 +11,6 @@ describe CaseAttachmentUploadGroup do
     2.times do
       @kase.attachments << create(:correspondence_response, upload_group: @upload_group, user_id: @responder.id)
     end
-  end
-
-  after(:all) do
-    DbHousekeeping.clean(seed: true)
   end
 
   let(:upload_group) { described_class.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
@@ -34,8 +28,24 @@ describe CaseAttachmentUploadGroup do
   end
 
   describe "date_time" do
-    it "returns the formatted upload group time converted to BST" do
-      expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
+    context "when timezone offset is BST" do
+      let(:timestamp) { "20170608111112" }
+      let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
+
+      it "returns the formatted upload group time in BST" do
+        debugger
+        expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
+      end
+    end
+
+    context "when timezone offset is GMT" do
+      let(:timestamp) { "20170608101112" }
+      let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
+
+      it "returns the formatted upload group time in GMT" do
+        debugger
+        expect(upload_group.date_time).to eq "08 Jun 2017 10:11"
+      end
     end
   end
 
