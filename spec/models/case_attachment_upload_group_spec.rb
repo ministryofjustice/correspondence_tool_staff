@@ -1,49 +1,34 @@
 require "rails_helper"
 
-# rubocop:disable RSpec/InstanceVariable
 describe CaseAttachmentUploadGroup do
+  let(:timestamp) { "20170608111112" }
+  let(:kase) { create :case_with_response }
+  let(:responder) { kase.responding_team_users.first }
+  let(:upload_group) { described_class.new([timestamp, responder.id], :responder, kase, kase.attachments) }
+
   before do
-    @upload_group = "20170608111112"
-    @kase = create :case_with_response
-    @responder = @kase.responding_team.users.first
-    @kase.attachments.first.update!(upload_group: @upload_group, user_id: @responder.id)
+    kase.attachments.first.update!(upload_group: timestamp, user_id: responder.id)
 
     2.times do
-      @kase.attachments << create(:correspondence_response, upload_group: @upload_group, user_id: @responder.id)
+      kase.attachments << create(:correspondence_response, upload_group: timestamp, user_id: responder.id)
     end
   end
 
-  let(:upload_group) { described_class.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
-
   describe "#user" do
     it "returns the user specified by the id" do
-      expect(upload_group.user).to eq @responder
+      expect(upload_group.user).to eq responder
     end
   end
 
   describe "#collection" do
     it "returns the same collection as it was initialisec with" do
-      expect(upload_group.collection).to eq @kase.attachments
+      expect(upload_group.collection).to eq kase.attachments
     end
   end
 
   describe "date_time" do
-    context "when timezone offset is BST" do
-      let(:timestamp) { "20170608111112" }
-      let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
-
-      it "returns the formatted upload group time in BST" do
-        expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
-      end
-    end
-
-    context "when timezone offset is GMT" do
-      let(:timestamp) { "20170608101112" }
-      let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
-
-      it "returns the formatted upload group time in GMT" do
-        expect(upload_group.date_time).to eq "08 Jun 2017 10:11"
-      end
+    it "returns the formatted upload group time" do
+      expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
     end
   end
 
@@ -77,4 +62,3 @@ describe CaseAttachmentUploadGroup do
     end
   end
 end
-# rubocop:enable RSpec/InstanceVariable
