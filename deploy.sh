@@ -45,11 +45,11 @@ function _deploy() {
     echo "$usage"
     return 1
   fi
-  
+
   if [[ "$3" == "circleci" ]]
   then
     image_tag=$1
-  else  
+  else
     # Ensure that the first argument is a reasonable image name
     if [[ "$1" =~ ^cts- ]]
     then
@@ -114,7 +114,7 @@ function _deploy() {
     p "Authenticating to live..."
     echo -n $KUBE_ENV_LIVE_CA_CERT | base64 -d > ./live_ca.crt
     kubectl config set-cluster $KUBE_ENV_LIVE_CLUSTER_NAME --certificate-authority=./live_ca.crt --server=https://$KUBE_ENV_LIVE_CLUSTER_NAME
-    
+
     if [[ $environment == "development" ]]
     then
       live_token=$KUBE_ENV_LIVE_DEVELOPMENT_TOKEN
@@ -129,7 +129,7 @@ function _deploy() {
     then
       live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
     fi
-    
+
     if [[ $environment == "qa" ]]
     then
       live_token=$KUBE_ENV_LIVE_QA_TOKEN
@@ -186,6 +186,8 @@ function _deploy() {
   if [ $environment == "production" ]
   then
     kubectl set image -f config/kubernetes/${environment}/cronjob-anonymizer.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+    kubectl set image -f config/kubernetes/${environment}/cronjob-email-status.yaml \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 
