@@ -7,8 +7,6 @@ describe CaseAttachmentUploadGroup do
   let(:upload_group) { described_class.new([timestamp, responder.id], :responder, kase, kase.attachments) }
 
   before do
-    kase.attachments.first.update!(upload_group: timestamp, user_id: responder.id)
-
     2.times do
       kase.attachments << create(:correspondence_response, upload_group: timestamp, user_id: responder.id)
     end
