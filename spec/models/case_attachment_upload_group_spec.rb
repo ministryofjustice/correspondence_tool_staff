@@ -1,6 +1,6 @@
 require "rails_helper"
 
-# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
+# rubocop:disable RSpec/InstanceVariable
 describe CaseAttachmentUploadGroup do
   before do
     @upload_group = "20170608111112"
@@ -33,7 +33,6 @@ describe CaseAttachmentUploadGroup do
       let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
 
       it "returns the formatted upload group time in BST" do
-        debugger
         expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
       end
     end
@@ -43,7 +42,6 @@ describe CaseAttachmentUploadGroup do
       let(:upload_group) { described_class.new([timestamp, @responder.id], :responder, @kase, @kase.attachments) }
 
       it "returns the formatted upload group time in GMT" do
-        debugger
         expect(upload_group.date_time).to eq "08 Jun 2017 10:11"
       end
     end
@@ -79,4 +77,4 @@ describe CaseAttachmentUploadGroup do
     end
   end
 end
-# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll
+# rubocop:enable RSpec/InstanceVariable
