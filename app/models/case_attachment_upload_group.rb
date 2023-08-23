@@ -37,7 +37,7 @@ class CaseAttachmentUploadGroup
 
 private
 
-  def get_time(upload_group)
-    Time.find_zone("Etc/UTC").parse(upload_group).in_time_zone
+  def get_time(timestamp)
+    Time.zone.parse(timestamp)
   end
 end

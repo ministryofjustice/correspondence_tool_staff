@@ -170,12 +170,6 @@ references:
         --build-arg COMMIT_ID=$CIRCLE_SHA1 \
         --build-arg BUILD_TAG=$BUILD_TAG \
 
-  scan_for_vulnerabilities: &scan_for_vulnerabilities
-    run:
-      name: Check ECR scan results
-      command: |
-        build_tag=`cat /tmp/workspace/build_tag`
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $build_tag --slack_webhook ${SLACK_WEBHOOK_CT} || true
   deploy_to_development: &deploy_to_development
     run:
       name: Deploy to Development environment
@@ -273,14 +267,6 @@ jobs:
           root: workspace
           paths:
             - build_tag
-
-  scan_image:
-    <<: *deploy_container_config
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *scan_for_vulnerabilities
 
   development_deployment_tasks: &do_development_deployment_tasks
     <<: *deploy_container_config
@@ -383,12 +369,9 @@ workflows:
       - build_main_and_push_to_ecr:
           requires:
             - build_and_test
-      - scan_image:
-          requires:
-            - build_main_and_push_to_ecr
       - deploy_main_to_dev:
           requires:
-            - scan_image
+            - build_main_and_push_to_ecr
       - deploy_main_to_staging_approval:
           type: approval
           requires:

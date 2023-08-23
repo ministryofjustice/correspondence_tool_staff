@@ -3,8 +3,8 @@ require "rails_helper"
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseAttachmentUploadGroupCollection do
   before(:all) do
-    @upload_group_1 = "20170608101112"
-    @upload_group_2 = "20170612114201"
+    @upload_group_1 = "20170608111112"
+    @upload_group_2 = "20170612124201"
     @timestamp_1 = "08 Jun 2017 11:11"
     @timestamp_2 = "12 Jun 2017 12:42"
     @kase = create :case_with_response
@@ -31,7 +31,7 @@ describe CaseAttachmentUploadGroupCollection do
       expect(@upload_group_1).not_to eq @upload_group_2
       expect(@responder_1).not_to eq @responder_2
       expect(@kase.attachments.size).to eq 5
-      expect(@kase.attachments.order(:upload_group, :id).map(&:upload_group)).to eq %w[20170612114201 20170612114201 20170608101112 20170608101112 20170608101112]
+      expect(@kase.attachments.order(:upload_group, :id).map(&:upload_group)).to eq %w[20170612124201 20170612124201 20170608111112 20170608111112 20170608111112]
       expect(@kase.attachments.order(:upload_group, :id).map(&:user_id)).to eq [@responder_2.id, @responder_2.id, @responder_1.id, @responder_1.id, @responder_1.id]
     end
 
