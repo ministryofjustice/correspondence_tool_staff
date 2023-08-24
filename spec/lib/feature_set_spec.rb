@@ -65,7 +65,7 @@ describe FeatureSet do
   describe "#disable!" do
     context "when on an environment where it is enabled" do
       it "is disabled" do
-        ENV["ENV"] = "qa"
+        ENV["ENV"] = "dev"
         expect(described_class.sars.enabled?).to be true
         described_class.sars.disable!
         expect(described_class.sars.enabled?).to be false
