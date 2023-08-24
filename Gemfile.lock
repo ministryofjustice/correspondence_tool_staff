@@ -124,6 +124,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
+    brakeman (5.4.1)
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.4)
@@ -632,6 +633,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap (>= 1.1.0)
+  brakeman
   browser_sync_rails
   bullet (~> 7.0.1)
   business_time
