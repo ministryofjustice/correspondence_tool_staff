@@ -79,18 +79,18 @@ module Cases
     def handled_sending_to_branston_archives?
       if request.get?
         @email = ProbationCommissioningDocumentEmail.new
-        return false
+        false
+      elsif request.post?
+        @email = ProbationCommissioningDocumentEmail.new(email_params)
+        return false unless @email.valid?
+
+        if @email.email_branston_archives == "yes"
+          @data_request.update!(email_branston_archives: true)
+          @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
+        end
+
+        true
       end
-
-      @email = ProbationCommissioningDocumentEmail.new(email_params)
-      return false unless @email.valid?
-
-      if @email.email_branston_archives == "yes"
-        @data_request.update!(email_branston_archives: true)
-        @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
-      end
-
-      true
     end
 
     def set_case
