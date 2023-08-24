@@ -248,7 +248,6 @@ enabled_features:
   edit_overturned:
     Local: false
     Host-dev: false
-    Host-demo: false
     Host-staging: false
     Host-qa: false
     Host-prod: false
@@ -257,14 +256,12 @@ enabled_features:
   devise_azure_activedirectory:
     Local: true
     Host-dev: true
-    Host-demo: true
     Host-staging: true
     Host-qa: true
     Host-prod: false
   email_commissioning_document:
     Local: true
     Host-dev: true
-    Host-demo: true
     Host-staging: true
     Host-qa: true
     Host-prod: true

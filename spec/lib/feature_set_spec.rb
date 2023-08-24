@@ -7,7 +7,6 @@ describe FeatureSet do
     Settings.enabled_features.sars = Config::Options.new({
       "Local": true,
       "Host-dev": true,
-      "Host-demo": true,
       "Host-staging": false,
       "Host-production": false,
     })
@@ -33,13 +32,6 @@ describe FeatureSet do
     context "when production environment on dev server" do
       it "is enabled" do
         ENV["ENV"] = "dev"
-        expect(described_class.sars.enabled?).to be true
-      end
-    end
-
-    context "when production environment on demo server" do
-      it "is enabled" do
-        ENV["ENV"] = "demo"
         expect(described_class.sars.enabled?).to be true
       end
     end
@@ -73,7 +65,7 @@ describe FeatureSet do
   describe "#disable!" do
     context "when on an environment where it is enabled" do
       it "is disabled" do
-        ENV["ENV"] = "demo"
+        ENV["ENV"] = "qa"
         expect(described_class.sars.enabled?).to be true
         described_class.sars.disable!
         expect(described_class.sars.enabled?).to be false
