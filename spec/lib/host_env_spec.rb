@@ -85,47 +85,18 @@ describe HostEnv do
   #
   # Namespace       RAILS_ENV       ENV
   # --------------------------------------------------
-  # Demo            production      demo
   # Development     production      dev
   # Production      production      prod
   # QA              production      qa
   # Staging         production      staging
 
-  describe "5 cloud platform infrastructure environments" do
+  describe "4 cloud platform infrastructure environments" do
     before do
       k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/configmap.yaml")
       @envvars = k8s_settings["data"]
     end
 
-    describe "1. demo server" do
-      let(:namespace) { "demo" }
-
-      before do
-        ENV["RAILS_ENV"] = "production"
-        ENV["ENV"] = "demo"
-      end
-
-      after do
-        ENV["RAILS_ENV"] = "test"
-        ENV["ENV"] = nil
-      end
-
-      it "is a demo server environment" do
-        expect(described_class.demo?).to be true
-        expect_k8s_settings
-      end
-
-      it "is not another environment" do
-        expect(described_class.development?).to be false
-        expect(described_class.production?).to be false
-        expect(described_class.qa?).to be false
-        expect(described_class.staging?).to be false
-      end
-
-      include_examples "is safe?"
-    end
-
-    describe "2. development server" do
+    describe "1. development server" do
       let(:namespace) { "development" }
 
       before do
@@ -144,7 +115,6 @@ describe HostEnv do
       end
 
       it "is not another environment" do
-        expect(described_class.demo?).to be false
         expect(described_class.production?).to be false
         expect(described_class.qa?).to be false
         expect(described_class.staging?).to be false
@@ -153,7 +123,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    describe "3. production server" do
+    describe "2. production server" do
       let(:namespace) { "production" }
 
       before do
@@ -173,7 +143,6 @@ describe HostEnv do
       end
 
       it "is not another environment" do
-        expect(described_class.demo?).to be false
         expect(described_class.development?).to be false
         expect(described_class.qa?).to be false
         expect(described_class.staging?).to be false
@@ -199,7 +168,7 @@ describe HostEnv do
       end
     end
 
-    describe "4. qa server" do
+    describe "3. qa server" do
       let(:namespace) { "qa" }
 
       before do
@@ -218,7 +187,6 @@ describe HostEnv do
       end
 
       it "is not another environment" do
-        expect(described_class.demo?).to be false
         expect(described_class.development?).to be false
         expect(described_class.production?).to be false
         expect(described_class.staging?).to be false
@@ -227,7 +195,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    describe "5. staging server" do
+    describe "4. staging server" do
       let(:namespace) { "staging" }
 
       before do
@@ -246,7 +214,6 @@ describe HostEnv do
       end
 
       it "is not another environment" do
-        expect(described_class.demo?).to be false
         expect(described_class.development?).to be false
         expect(described_class.production?).to be false
         expect(described_class.qa?).to be false

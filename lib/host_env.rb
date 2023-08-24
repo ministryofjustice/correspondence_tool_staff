@@ -7,10 +7,6 @@ class HostEnv
     ENV["ENV"] == "dev"
   end
 
-  def self.demo?
-    ENV["ENV"] == "demo"
-  end
-
   def self.production?
     ENV["ENV"] == "prod"
   end
@@ -36,7 +32,7 @@ class HostEnv
   end
 
   def self.safe?
-    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.development? || HostEnv.demo? || HostEnv.qa?
+    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.development? || HostEnv.qa?
   end
 
   def self.safe
