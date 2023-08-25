@@ -24,6 +24,29 @@
       "note": ""
     },
     {
+      "warning_type": "HTTP Verb Confusion",
+      "warning_code": 118,
+      "fingerprint": "2ff3fc978995a675d31203c6ad9b557255c1e1b1d56904f5b5baf048e2af251e",
+      "check_name": "VerbConfusion",
+      "message": "Potential HTTP verb confusion. `HEAD` is routed like `GET` but `request.get?` will return `false`",
+      "file": "app/controllers/cases/data_requests_controller.rb",
+      "line": 80,
+      "link": "https://brakemanscanner.org/docs/warning_types/http_verb_confusion/",
+      "code": "if request.get? then\n  @email = ProbationCommissioningDocumentEmail.new\n  return false\nend",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::DataRequestsController",
+        "method": "handled_sending_to_branston_archives?"
+      },
+      "user_input": "request.get?",
+      "confidence": "Weak",
+      "cwe_id": [
+        352
+      ],
+      "note": "There is no danger in a HEAD request bypassing the .get? check"
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "3d91aef01954b313c312d5554cdd8a007a604f76f5ce0605085c17e999f12135",
@@ -492,6 +515,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-08-24 17:11:04 +0100",
+  "updated": "2023-08-25 09:53:48 +0100",
   "brakeman_version": "5.4.1"
 }
