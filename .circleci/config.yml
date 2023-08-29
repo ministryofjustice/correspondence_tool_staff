@@ -116,6 +116,11 @@ references:
       name: Run rubocop
       command: bundle exec rubocop
 
+  brakeman: &brakeman
+    run:
+      name: Run Brakeman
+      command: bundle exec brakeman
+
   run_unit_and_feature_tests: &run_unit_and_feature_tests
     run:
       name: Run unit and feature tests
@@ -222,6 +227,7 @@ jobs:
       - *wait_for_db
       - *set_up_the_database
       - *rubocop
+      - *brakeman
       - *update_chrome
       - *setup_test_reporter
       - *run_unit_and_feature_tests

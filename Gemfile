@@ -86,6 +86,7 @@ group :development, :test do
   gem "annotate", "~> 3.2.0"
   gem "better_errors"
   gem "binding_of_caller"
+  gem "brakeman"
   # Used to try and track down N+1 query problems
   gem "bullet", "~> 7.0.1"
   gem "colorize"
