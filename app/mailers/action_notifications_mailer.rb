@@ -108,6 +108,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     SentryContextProvider.set_context
 
     find_template("Commissioning")
+    find_reply_to("Commissioning")
 
     deadline_text = ""
     if commissioning_document.deadline.present?
@@ -157,6 +158,13 @@ private
       set_template(Settings.message_received_notify_template)
     when "Commissioning"
       set_template(Settings.commissioning_notify_template)
+    end
+  end
+
+  def find_reply_to(type)
+    case type
+    when "Commissioning"
+      set_email_reply_to(Settings.commissioning_notify_reply_to)
     end
   end
 end

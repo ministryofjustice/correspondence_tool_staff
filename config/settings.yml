@@ -40,6 +40,7 @@ assigned_to_another_user_template: '1e26c707-e7e3-4b21-835d-1241da6ea251'
 unlock_user_account_template: '9910545b-1b46-41d1-a5e3-f8b31ff450c0'
 case_closed_notify_template: '0f89383e-cee2-4a10-bc47-97879d1f6dc4'
 commissioning_notify_template: '94b66c61-feff-42f5-950d-d0af0a8205ef'
+commissioning_notify_reply_to: '879d54cc-a5f3-4acc-aa37-ca04e8f6c22d'
 
 foi_cases:
   default_managing_team: DISCLOSURE-BMT
