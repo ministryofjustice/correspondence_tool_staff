@@ -58,12 +58,13 @@ module Stats
 
     def process(offset, report_job_guid: nil, record_limit: ROWS_PER_FRAGMENT)
       CaseSelector.new(case_scope)
-      .cases_received_in_period(@period_start, @period_end)
-      .order(:id)
-      .limit(record_limit)
-      .offset(offset)
-      .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
-      .each { |kase| analyse_case(kase) }
+        .cases_received_in_period(@period_start, @period_end)
+        .order(:id)
+        .limit(record_limit)
+        .offset(offset)
+        .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
+        .each { |kase| analyse_case(kase) }
+
       unless report_job_guid.nil?
         redis = Redis.new
         redis.set(report_job_guid, @stats.stats.to_json, ex: 7.days)
@@ -108,6 +109,7 @@ module Stats
           data_collector << redis.get(job_id)
         end
       end
+
       if data_collector.count == report.job_ids.count
         report.status = Stats::BaseReport::COMPLETE
         merge_stats(data_collector)
@@ -122,8 +124,7 @@ module Stats
     end
 
     def num_fragments
-      @num_fragments ||=
-        (data_size / ROWS_PER_FRAGMENT).ceil
+      @num_fragments ||= (data_size / ROWS_PER_FRAGMENT).ceil
     end
 
     def superheadings
@@ -139,7 +140,6 @@ module Stats
       analyser = self.class.case_analyzer.new(kase)
       analyser.run
       column_key = analyser.result
-      # month = kase.received_date.month
       month = construct_year_month(kase.received_date)
       @stats.record_stats(month, column_key)
       @stats.record_stats(:total, column_key)
@@ -150,11 +150,13 @@ module Stats
       month_date = @period_start
       current_month = construct_year_month(@period_start)
       end_month = construct_year_month(@period_end)
+
       while current_month <= end_month
         month_columns << current_month
         month_date += 1.month
         current_month = construct_year_month(month_date)
       end
+
       month_columns
     end
 
