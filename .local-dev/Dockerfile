@@ -17,7 +17,7 @@ RUN mkdir -p /usr/src/app
 ADD . /usr/src/app/
 WORKDIR /usr/src/app/
 
-RUN gem install bundler -v '~> 2.2.13'
+RUN gem install bundler -v '~> 2.4.19'
 RUN bundle config --global frozen 1
 
 RUN mkdir log tmp && touch /usr/src/app/log/lograge_development.log
@@ -64,7 +64,7 @@ RUN sudo mkdir -p /usr/src/app
 ADD . /usr/src/app/
 WORKDIR /usr/src/app/
 
-RUN sudo gem install bundler -v '~> 2.2.13'
+RUN sudo gem install bundler -v '~> 2.4.19'
 
 # Add a script to be executed every time the container starts.
 COPY .local-dev/bin/*.sh /usr/bin/

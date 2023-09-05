@@ -17,11 +17,11 @@ WORKDIR /usr/src/app/
 
 COPY Gemfile* ./
 
-RUN gem install bundler -v '~> 2.2.13'
+RUN gem install bundler -v '~> 2.4.19'
 
-RUN bundle config set --global frozen 1 && \
-    bundle config set without 'development test' && \
-    bundle install
+RUN bundle config deployment true && \
+    bundle config without development test && \
+    bundle install --jobs 4 --retry 3
 
 COPY . .
 

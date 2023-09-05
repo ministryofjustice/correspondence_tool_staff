@@ -648,9 +648,9 @@ once you confirm, you can re-run `rbenv install` comand to continue the process.
 $ gem update --system
 ```
 
-4. Install bundle 2.4.13 and install those gems
+4. Install bundle 2.4.19 and install those gems
 ```
-$ gem install bundler -v 2.4.13
+$ gem install bundler -v 2.4.19
 $ bundler install
 ```
 
