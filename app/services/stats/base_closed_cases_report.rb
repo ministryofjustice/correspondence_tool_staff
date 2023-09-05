@@ -33,7 +33,7 @@ module Stats
       redis = Redis.new
       data = nil
       File.open(etl_handler.results_filepath, "r") { |f| data = f.read }
-      redis.set(report_guid, data)
+      redis.set(report_guid, data, ex: 7.days)
 
       if report
         report.report_data = {

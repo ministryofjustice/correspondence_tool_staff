@@ -35,7 +35,7 @@ class DatabaseAnonymizerTasks
       "tasks": tasks_ids,
     }
     anonymizer_job_id = "anonymizer_job_#{task_arguments[:tag]}_#{Time.zone.today.strftime('%Y%m%d')}"
-    redis.set(anonymizer_job_id, anonymizer_job_info.to_json)
+    redis.set(anonymizer_job_id, anonymizer_job_info.to_json, ex: 7.days)
   end
 
 private

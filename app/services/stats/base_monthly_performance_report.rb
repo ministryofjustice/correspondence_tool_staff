@@ -66,7 +66,7 @@ module Stats
       .each { |kase| analyse_case(kase) }
       unless report_job_guid.nil?
         redis = Redis.new
-        redis.set(report_job_guid, @stats.stats.to_json)
+        redis.set(report_job_guid, @stats.stats.to_json, ex: 7.days)
       end
     end
 
