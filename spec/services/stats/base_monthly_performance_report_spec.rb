@@ -127,7 +127,23 @@ module Stats
       end
 
       describe "#process" do
-        it "more months compared iwth period stfrom stats data " do
+        it "creates data in Redis with an expiry" do
+          guid = SecureRandom.uuid
+          redis_double = instance_double(Redis)
+          allow(Redis).to receive(:new).and_return(redis_double)
+          expect(redis_double).to receive(:set).with(guid, anything, ex: 7.days)
+
+          new_report = DummyPerformanceReport.new(
+            report_type_id: find_or_create(:report_type, :r205).id,
+            period_start: @period_start,
+            period_end: @period_end,
+          )
+          new_report.process(0, report_job_guid: guid)
+        end
+      end
+
+      describe "#report_details" do
+        it "more months compared with period from stats data" do
           redis_double = instance_double(Redis)
           allow(Redis).to receive(:new).and_return(redis_double)
 
