@@ -50,7 +50,7 @@ gem "pg", "~> 1.3"
 gem "pg_search", "~> 2.3.6"
 gem "puma", "~> 5.6"
 gem "pundit", "~>2.1"
-gem "rails", "~> 6.1", ">= 6.1.7.3"
+gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
