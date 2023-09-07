@@ -29,6 +29,10 @@ class DataRequestDecorator < Draper::Decorator
     request_type_note if request_type == "other"
   end
 
+  def display_request_type_note?
+    %w[other nomis_other].include?(request_type)
+  end
+
 private
 
   def date_format(date)
