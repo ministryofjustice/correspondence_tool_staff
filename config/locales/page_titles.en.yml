@@ -15,7 +15,6 @@ en:
     closed_cases_page: All closed cases - Track-a-query
     retention_schedules_page: Case retention schedules - Track-a-query
     create_case_page:
-      new: Creating a new case - Track-a-query
       foi: Creating an FOI case - Track-a-query
       ico: Creating an ICO case - Track-a-query
       offender_sar:
