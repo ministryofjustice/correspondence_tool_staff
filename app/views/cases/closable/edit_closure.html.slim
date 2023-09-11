@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.edit_case_page', case_number: @case.number)
+
 - content_for :heading
   = t('.heading')
 
@@ -5,6 +8,8 @@
   span.visually-hidden
     = t('common.case.header_case_number')
   = "#{@case.number} - #{@case.pretty_type}"
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
 
 = render partial: 'layouts/header'
 
