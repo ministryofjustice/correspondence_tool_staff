@@ -48,7 +48,7 @@ gem "omniauth-rails_csrf_protection"
 gem "paper_trail", "~> 12.3"
 gem "pg", "~> 1.3"
 gem "pg_search", "~> 2.3.6"
-gem "puma", "~> 5.6"
+gem "puma", "~> 6.3"
 gem "pundit", "~>2.1"
 gem "rails", "~> 6.1", ">= 6.1.7.3"
 # Reduces boot times through caching; required in config/boot.rb
