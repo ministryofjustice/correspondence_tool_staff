@@ -93,7 +93,7 @@ group :development, :test do
   gem "debug", ">= 1.0.0"
   gem "parallel_tests", "~> 3.7"
   gem "rspec-collection_matchers"
-  gem "rspec-rails", "~> 5.0"
+  gem "rspec-rails", "~> 6.0"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
   gem "spring-commands-rspec"
