@@ -1,6 +1,8 @@
 require "csv"
 
-# Generates CSV string with data for successful acceptance of cases by directorate for the following dates and case type:
+# Generates CSV string with data for successful acceptance of cases by directorate
+# Three lines per directorate showing cases accepted per day, percentage of accepted cases per day and running total of percentage accepted cases
+# for the following dates and case type:
 start_date = Date.new(2023, 1, 1)
 end_date = Date.new(2023, 8, 31)
 case_type = "Case::FOI::Standard"
@@ -33,7 +35,7 @@ Case::Base.where(received_date: start_date..end_date).where(type: case_type).fin
 end
 
 CSV.generate do |csv|
-  csv << ["total FOI cases 1st January 2023 to 31st August 2023", count]
+  csv << ["total FOI cases #{start_date} to #{end_date}", count]
   csv << ["cases not successfully accepted", no_acceptance]
   csv << []
 
@@ -45,8 +47,28 @@ CSV.generate do |csv|
   csv << heading
 
   results.each do |directorate, stats|
-    row = stats
-    row.unshift(directorate)
-    csv << row
+    # Raw numbers
+    stats.unshift(directorate)
+    csv << stats
+
+    stats.shift
+    total = stats.sum
+    p total
+
+    # individual percentages
+    percentage_row = [" "]
+    stats.each do |n|
+      percentage_row << ((n / total.to_f) * 100.to_f).to_i
+    end
+    csv << percentage_row
+
+    # overall percentages
+    overall_percentage_row = [" "]
+    running_total = 0
+    stats.each do |n|
+      running_total += n
+      overall_percentage_row << ((running_total / total.to_f) * 100.to_f).to_i
+    end
+    csv << overall_percentage_row
   end
 end
