@@ -58,7 +58,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - 'sidekiqmon | grep "track-a-query-jobs"'
+                - 'bundle exec sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 30
             periodSeconds: 90
             timeoutSeconds: 15
@@ -69,7 +69,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - 'sidekiqmon | grep "track-a-query-jobs"'
+                - 'bundle exec sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 30
             periodSeconds: 90
             timeoutSeconds: 15
