@@ -5,7 +5,7 @@ class ContactsController < ApplicationController
   before_action :set_contact_type, only: %i[update create]
 
   def index
-    @contacts = Contact.order(name: :asc).includes([:contact_type]).all.decorate
+    @contacts = Contact.includes([:contact_type]).order(:name).decorate
   end
 
   def new
