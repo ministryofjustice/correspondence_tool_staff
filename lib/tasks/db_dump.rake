@@ -39,9 +39,7 @@ require Rails.root.join("lib/tasks/rake_task_helpers/dumper_utils")
 require Rails.root.join("lib/db/users_settings_for_anonymizer")
 
 def set_up_bucket_setting(args)
-  { "bucket_key_id": args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"],
-    "bucket_access_key": args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"],
-    "bucket": args[:bucket] || Settings.case_uploads_s3_bucket }
+  { "bucket": args[:bucket] || Settings.case_uploads_s3_bucket }
 end
 
 def safeguard_dump
