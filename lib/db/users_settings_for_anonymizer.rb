@@ -43,9 +43,11 @@ class UsersSettingsForAnonymizer
 
   def load_user_settings_from_s3(s3_bucket)
     if s3_bucket
-      response = s3_bucket.get_object(USER_SETTINGS_JSON_S3_PATH)
-      content = response.body.read
-      @user_settings = JSON.parse(content)
+      begin
+        response = s3_bucket.get_object(USER_SETTINGS_JSON_S3_PATH)
+        content = response.body.read
+        @user_settings = JSON.parse(content)
+      rescue Aws::S3::Errors::NoSuchKey
     end
   end
 
