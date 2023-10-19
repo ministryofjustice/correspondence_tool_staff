@@ -48,6 +48,8 @@ class UsersSettingsForAnonymizer
         content = response.body.read
         @user_settings = JSON.parse(content)
       rescue Aws::S3::Errors::NoSuchKey
+        # Carry on if settings don't exist in bucket
+      end
     end
   end
 
