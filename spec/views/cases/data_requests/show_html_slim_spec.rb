@@ -33,6 +33,18 @@ describe "cases/data_requests/show", type: :view do
 
     let(:page) { data_request_show_page }
 
+    let(:policy) do
+      instance_double("Pundit::Policy").tap do |p|
+        allow(view).to receive(:policy).and_return(p)
+      end
+    end
+
+    let(:can_record_data_request) { true }
+
+    before do
+      allow(policy).to receive(:can_record_data_request?).and_return can_record_data_request
+    end
+
     context "when data request without commissioning document" do
       before do
         assign(:data_request, data_request)
@@ -105,6 +117,22 @@ describe "cases/data_requests/show", type: :view do
         expect(page.commissioning_document.email_row.email_address.text).to eq email_address
         expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
         expect(page.commissioning_document.email_row.status.text).to eq "Created"
+      end
+    end
+
+    context "when case is closed" do
+      let(:can_record_data_request) { false }
+
+      before do
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
+
+        render
+        data_request_show_page.load(rendered)
+      end
+
+      it "does not have edit link" do
+        expect(page).not_to have_link_edit
       end
     end
   end
