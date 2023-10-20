@@ -91,6 +91,23 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:data_request).cached_num_pages).to eq 10
       expect(assigns(:data_request).cached_date_received).to eq Time.zone.yesterday
     end
+
+    context "when closed case" do
+      let(:data_request) do
+        create(
+          :data_request,
+          offender_sar_case: create(:offender_sar_case, :closed),
+          cached_num_pages: 10,
+          completed: true,
+          cached_date_received: Time.zone.yesterday,
+        )
+      end
+
+      it "allows access" do
+        get(:show, params:)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   describe "#edit" do
@@ -116,6 +133,23 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:data_request)).to be_a DataRequest
       expect(assigns(:data_request).cached_num_pages).to eq 10
       expect(assigns(:data_request).cached_date_received).to eq Time.zone.yesterday
+    end
+
+    context "when closed case" do
+      let(:data_request) do
+        create(
+          :data_request,
+          offender_sar_case: create(:offender_sar_case, :closed),
+          cached_num_pages: 10,
+          completed: true,
+          cached_date_received: Time.zone.yesterday,
+        )
+      end
+
+      it "does not authorise access" do
+        get(:edit, params:)
+        expect(flash[:alert]).to eq "You cannot edit data request once the case has been closed."
+      end
     end
   end
 
