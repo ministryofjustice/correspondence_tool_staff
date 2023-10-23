@@ -1,9 +1,9 @@
-# require 'aws-sdk-s3'
-
 # rubocop:disable Rails/HelperInstanceVariable
 module S3BucketHelper
   class S3Bucket
     attr_accessor :bucket_name
+
+    delegate :exists?, to: :bucket
 
     def initialize(bucket: Settings.case_uploads_s3_bucket)
       @bucket_name = bucket

@@ -106,6 +106,7 @@ namespace :db do
   namespace :dump do
     desc "Help text for rake db:dump:* tasks"
     task help: :environment do
+      puts "rake db:dump:exists will check the bucket exists and is accessible".yellow
       puts "rake db:dump:prod will produce an SQL dump of the database from the ".yellow
       puts "rake db:dump:local will dump and anonymize again the database the current env/pod connects with ".yellow
       puts "rake db:dump:list_s3_dumps will list all the files under dumps folder".yellow
@@ -113,6 +114,12 @@ namespace :db do
       puts "rake db:dump:copy_s3_dump will download all the files under dumps folder".yellow
       puts "rake db:dump:decompress will decompress alt the gz files under dumps folder".yellow
       puts "rake db:dump:restore will process restore ".yellow
+    end
+
+    desc "check the bucket exists and is accessible"
+    task exists: :environment do |_task|
+      s3_bucket = init_s3_bucket(args)
+      puts "Checking bucket #{args[:bucket]} is accessible: #{s3_bucket.exists?}"
     end
 
     desc "makes a sql dump of the production database and copies to the local machine"
