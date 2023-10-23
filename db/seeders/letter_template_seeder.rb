@@ -100,7 +100,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Following inappropriate articles being found in official correspondence and subsequent security alert email issued on 5 March 2015; if you are suspicious about the content of this parcel it should be opened in the presence of the offender, contents checked and passed to them immediately.
                   <br>
-                  <br>If you have any queries relating to these instructions or concerns regarding the parcel please contact our team immediately on 01283 496066. Do not deliver the SAR to the offender or forward the parcel on to another prison. Alternatively, you can return the SAR to our team at the address above with a covering letter outlining your concerns.
+                  <br>If you have any queries relating to these instructions or concerns regarding the parcel please contact our team immediately on 01283 496 110. Do not deliver the SAR to the offender or forward the parcel on to another prison. Alternatively, you can return the SAR to our team at the address above with a covering letter outlining your concerns.
                   <br>
                   <br>Thank you for your assistance in this matter.
                   <br>
