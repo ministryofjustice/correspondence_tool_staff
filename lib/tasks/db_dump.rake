@@ -117,7 +117,7 @@ namespace :db do
     end
 
     desc "check the bucket exists and is accessible"
-    task exists: :environment do |_task|
+    task exists: :environment do |_task, args|
       s3_bucket = init_s3_bucket(args)
       puts "Checking bucket #{args[:bucket]} is accessible: #{s3_bucket.exists?}"
     end
