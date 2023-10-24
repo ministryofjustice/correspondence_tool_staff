@@ -29,7 +29,7 @@ module Stats
 
       before(:all) do
         Timecop.freeze Time.zone.local(2019, 6, 30, 12, 0, 0) do
-          @period_start = Date.new(2019, 4, 0o1) = 0.working.days
+          @period_start = Date.new(2019, 4, 0o1) + 0.working.days
           @period_end = Date.new(2019, 6, 0o1) + 0.working.days
 
           @sar_1 = create :accepted_sar, identifier: "sar-1", received_date: @period_start - 5.hours

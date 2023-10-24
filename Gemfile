@@ -15,7 +15,6 @@ gem "awesome_print"
 gem "aws-sdk-s3"
 gem "axlsx_styler"
 gem "bank_holiday", git: "https://github.com/ministryofjustice/bank_holiday.git", branch: "bundler-fix"
-gem "working_hours"
 gem "config", "~> 4.0"
 gem "devise", "~> 4.8.1"
 gem "draper", "4.0.2"
@@ -55,6 +54,7 @@ gem "rails", "~> 6.1", ">= 6.1.7.3"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
 gem "recursive-open-struct"
+gem "ruby-progressbar"
 gem "sablon"
 gem "sass-rails", "~> 6.0"
 gem "sentry-rails"
@@ -68,10 +68,9 @@ gem "table_print"
 gem "timecop"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5"
-gem "uglifier", ">= 1.3.0"
-# Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
-gem "ruby-progressbar"
 gem "tzinfo-data"
+gem "uglifier", ">= 1.3.0"
+gem "working_hours"
 
 group :test do
   gem "capybara", "~> 3.37"

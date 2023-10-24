@@ -161,7 +161,7 @@ module CTS::Cases
 
     def get_ico_external_deadline
       options.fetch(:external_deadline) do
-        get_ico_received_date = 20.working.days
+        get_ico_received_date + 20.working.days
       end
     end
 

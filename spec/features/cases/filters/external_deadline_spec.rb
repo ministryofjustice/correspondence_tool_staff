@@ -1,7 +1,7 @@
 require "rails_helper"
 
 def working_hours
-  Time.zone.today.working_day?# && Time.zone.now.during_business_hours?
+  Time.zone.today.working_day?
 end
 
 # rubocop:disable RSpec/BeforeAfterAll
