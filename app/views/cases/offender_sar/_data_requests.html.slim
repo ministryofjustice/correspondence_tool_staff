@@ -41,7 +41,7 @@
               td
                 = link_to t('cases.data_requests.show.link'), case_data_request_path(case_details, data_request), class: 'data-requests__show'
               td
-                - if allow_editing
+                - if policy(case_details).can_record_data_request? && allow_editing
                   = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__edit'
 
           - if case_details.data_requests.many?
@@ -52,4 +52,3 @@
   - if case_details.current_state != 'to_be_assessed' && allow_editing
     = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
     = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
-

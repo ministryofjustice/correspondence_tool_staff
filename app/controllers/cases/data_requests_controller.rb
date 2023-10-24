@@ -138,7 +138,11 @@ module Cases
     end
 
     def authorize_action
-      authorize @case, :can_record_data_request?
+      if action_name == "show"
+        authorize @case, :show?
+      else
+        authorize @case, :can_record_data_request?
+      end
     end
   end
 end
