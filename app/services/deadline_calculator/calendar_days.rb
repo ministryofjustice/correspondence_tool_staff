@@ -52,5 +52,12 @@ module DeadlineCalculator
     def time_units_desc_for_deadline(time_limit = 1)
       "calendar #{'day'.pluralize(time_limit)}".freeze
     end
+
+    def time_taken
+      return nil if kase.date_responded.nil?
+
+      days = (kase.date_responded - kase.received_date).to_i
+      [days, 1].max
+    end
   end
 end

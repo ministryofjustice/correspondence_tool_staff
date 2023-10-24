@@ -24,14 +24,11 @@ class Case::BaseDecorator < Draper::Decorator
   # where the case report showed 20 days to respond when in fact it was
   # 21 working days (bug CT-2119)
   def time_taken
-    business_days = received_date.business_days_until(date_responded, true)
-    I18n.t("common.case.time_taken_result", count: business_days)
+    I18n.t("common.case.time_taken_result", count: deadline_calculator.time_taken)
   end
 
   def calendar_days_taken
-    calendar_days = (date_responded - received_date).to_i
-    calendar_days = 1 if calendar_days.zero?
-    I18n.t("common.case.sar/offender.time_taken_result", count: calendar_days)
+    I18n.t("common.case.sar/offender.time_taken_result", count: deadline_calculator.time_taken)
   end
 
   def timeliness

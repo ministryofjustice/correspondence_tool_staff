@@ -69,6 +69,13 @@ module DeadlineCalculator
       "calendar #{'month'.pluralize(time_limit)}".freeze
     end
 
+    def time_taken
+      return nil if kase.date_responded.nil?
+
+      days = (kase.date_responded - kase.received_date).to_i
+      [days, 1].max
+    end
+
   private
 
     def calculate_final_date_from_time_units(time_units, base_date)

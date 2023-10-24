@@ -164,6 +164,18 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
+    describe "#time_taken" do
+      it "returns the number of business days taken to respond to a case" do
+        closed_case = create(:closed_case)
+        deadline_calculator = described_class.new(closed_case)
+        expect(deadline_calculator.time_taken).to eq 19
+      end
+
+      it "returns nil for an open case" do
+        expect(deadline_calculator.time_taken).to be_nil
+      end
+    end
+
     describe "#days_taken" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }

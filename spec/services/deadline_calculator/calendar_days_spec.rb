@@ -79,6 +79,25 @@ describe DeadlineCalculator::CalendarDays do
     end
   end
 
+  describe "#time_taken" do
+    let(:closed_case) { create(:closed_case) }
+
+    it "returns the number of calendar days taken to respond to a case" do
+      deadline_calculator = described_class.new(closed_case)
+      expect(deadline_calculator.time_taken).to eq 26
+    end
+
+    it "returns nil for an open case" do
+      expect(deadline_calculator.time_taken).to be_nil
+    end
+
+    it "returns 1 if number of days is < 1" do
+      closed_case.date_responded = closed_case.received_date
+      deadline_calculator = described_class.new(closed_case)
+      expect(deadline_calculator.time_taken).to eq 1
+    end
+  end
+
   describe "#days_taken" do
     let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
     let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
