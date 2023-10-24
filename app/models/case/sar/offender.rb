@@ -382,7 +382,8 @@ class Case::SAR::Offender < Case::Base
     # Calculate the days taken for vetting process
     days = nil
     if start_date_for_vetting
-      days = start_date_for_vetting.working_days_until(end_date_for_vetting, true)
+      days = start_date_for_vetting.working_days_until(end_date_for_vetting)
+      days += 1 if start_date_for_vetting.working_day?
     end
     days
   end

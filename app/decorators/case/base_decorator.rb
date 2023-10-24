@@ -19,12 +19,9 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
-  # Use working_days_until(to_date, inclusive: true) to ensure the
-  # date_responded is taken into account. This is due to a bug raised
-  # where the case report showed 20 days to respond when in fact it was
-  # 21 working days (bug CT-2119)
   def time_taken
-    business_days = received_date.working_days_until(date_responded, true)
+    business_days = received_date.working_days_until(date_responded)
+    business_days += 1 if received_date.working_day?
     I18n.t("common.case.time_taken_result", count: business_days)
   end
 
