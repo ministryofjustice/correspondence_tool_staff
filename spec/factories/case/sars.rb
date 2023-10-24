@@ -31,7 +31,7 @@
 FactoryBot.define do
   factory :sar_case, class: "Case::SAR::Standard" do
     transient do
-      creation_time       { 4.business_days.ago }
+      creation_time       { 4.working.days.ago }
       identifier          { "new sar case" }
       managing_team       { find_or_create :team_dacu }
       manager             { managing_team.managers.first }
@@ -225,8 +225,8 @@ FactoryBot.define do
       identifier { "closed sar" }
     end
 
-    received_date  { 22.business_days.ago }
-    date_responded { 4.business_days.ago }
+    received_date  { 22.working.days.ago }
+    date_responded { 4.working.days.ago }
 
     after(:create) do |kase, evaluator|
       if evaluator.flag_for_disclosure

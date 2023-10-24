@@ -9,7 +9,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       let(:assigned_case) do
         create :assigned_case,
                name: "Fyodor Ognievich Ilichion",
-               received_date: 10.business_days.ago,
+               received_date: 10.working.days.ago,
                subject: "The anatomy of man"
       end
       let(:assignment)      { assigned_case.responder_assignment }
@@ -33,7 +33,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
               case_current_state: "to be accepted",
               case_number: assigned_case.number,
               case_abbr: "FOI",
-              case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+              case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
               case_subject: "The anatomy of man",
               case_link: edit_case_assignment_url(assigned_case.id, assignment.id),
             })
@@ -48,14 +48,14 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       let!(:original_case) do
         create :assigned_case,
                name: "Fyodor Ognievich Ilichion",
-               received_date: 10.business_days.ago,
+               received_date: 10.working.days.ago,
                subject: "The anatomy of man"
       end
 
       let(:assigned_ico_case) do
         create :awaiting_responder_ico_foi_case,
                original_case:,
-               received_date: 10.business_days.ago
+               received_date: 10.working.days.ago
       end
       let(:assignment)          { assigned_ico_case.responder_assignment }
       let(:mail)                { described_class.new_assignment(assignment, responder.email) }
@@ -70,7 +70,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
               case_current_state: "to be accepted",
               case_number: assigned_ico_case.number,
               case_abbr: "ICO appeal (FOI)",
-              case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+              case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
               case_subject: "The anatomy of man",
               case_link: edit_case_assignment_url(assigned_ico_case.id, assignment.id),
             })
@@ -84,7 +84,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         create :awaiting_responder_ot_ico_sar,
                original_ico_appeal:,
                original_case: original_sar,
-               received_date: 10.business_days.ago
+               received_date: 10.working.days.ago
       end
 
       let(:assignment)            { awaiting_responder_ovt_sar.responder_assignment }
@@ -111,7 +111,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       let(:assigned_case) do
         create :assigned_case,
                name: "Fyodor Ognievich Ilichion",
-               received_date: 10.business_days.ago,
+               received_date: 10.working.days.ago,
                subject: "The anatomy of man"
       end
       let!(:assignment) { assigned_case.responder_assignment }
@@ -129,7 +129,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:pending_case) do
       create :pending_press_clearance_case,
              name: "Fyodor Ognievich Ilichion",
-             received_date: 10.business_days.ago,
+             received_date: 10.working.days.ago,
              subject: "The anatomy of man"
     end
     let(:assignment)      { pending_case.approver_assignments.for_team(BusinessUnit.press_office).singular }
@@ -152,7 +152,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
           case_number: pending_case.number,
           case_subject: "The anatomy of man",
           case_type: "FOI",
-          case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+          case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
           case_external_deadline: pending_case.external_deadline.strftime(Settings.default_date_format),
           case_link: case_url(pending_case.id),
         })
@@ -168,7 +168,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       let(:approved_case) do
         create :approved_case,
                name: "Fyodor Ognievich Ilichion",
-               received_date: 10.business_days.ago,
+               received_date: 10.working.days.ago,
                subject: "The anatomy of man"
       end
       let(:assignment)      { approved_case.responder_assignment }
@@ -186,7 +186,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
             case_current_state: "ready to send",
             case_number: approved_case.number,
             case_abbr: "FOI",
-            case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+            case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
             case_subject: "The anatomy of man",
             case_link: case_url(approved_case.id),
             case_draft_deadline: approved_case.internal_deadline.strftime(Settings.default_date_format),
@@ -280,7 +280,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         create :closed_ot_ico_sar,
                original_ico_appeal:,
                original_case: original_sar,
-               received_date: 10.business_days.ago
+               received_date: 10.working.days.ago
       end
       let(:mail) { described_class.notify_information_officers(closed_ovt_sar, "Case closed") }
 
@@ -300,7 +300,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
             case_number: closed_ovt_sar.number,
             case_subject: "The origin of species",
             case_abbr: "ICO overturned (SAR)",
-            case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+            case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
             case_external_deadline: closed_ovt_sar.external_deadline.strftime(Settings.default_date_format),
             case_link: case_url(closed_ovt_sar),
             case_draft_deadline: closed_ovt_sar.internal_deadline.strftime(Settings.default_date_format),
@@ -313,7 +313,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       let(:approved_case) do
         create :approved_case,
                name: "Fyodor Ognievich Ilichion",
-               received_date: 10.business_days.ago,
+               received_date: 10.working.days.ago,
                subject: "The anatomy of man"
       end
       let(:assignment) { approved_case.responder_assignment }
@@ -332,7 +332,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:kase) do
       create :closed_sar,
              name: "Semyon Aleksandrovich Romanov",
-             received_date: 10.business_days.ago,
+             received_date: 10.working.days.ago,
              subject: "Lightness of not being"
     end
     let(:assignment)      { approved_case.responder_assignment }
@@ -370,7 +370,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:accepted_case) do
       create :accepted_case,
              name: "Fyodor Ognievich Ilichion",
-             received_date: 10.business_days.ago,
+             received_date: 10.working.days.ago,
              subject: "The anatomy of man"
     end
     let(:responding_team) { accepted_case.responding_team }
@@ -395,7 +395,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
           user_name: responder.full_name,
           case_number: accepted_case.number,
           case_abbr: "FOI",
-          case_received_date: 10.business_days.ago.to_date.strftime(Settings.default_date_format),
+          case_received_date: 10.working.days.ago.to_date.strftime(Settings.default_date_format),
           case_subject: "The anatomy of man",
           case_link: case_url(accepted_case.id),
           case_external_deadline: accepted_case.external_deadline.strftime(Settings.default_date_format),

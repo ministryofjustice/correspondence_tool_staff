@@ -29,8 +29,8 @@ module Stats
 
       before(:all) do
         Timecop.freeze Time.zone.local(2019, 6, 30, 12, 0, 0) do
-          @period_start = 0.business_days.after(Date.new(2019, 4, 0o1))
-          @period_end = 0.business_days.after(Date.new(2019, 6, 0o1))
+          @period_start = 0.working.days.after(Date.new(2019, 4, 0o1))
+          @period_end = 0.working.days.after(Date.new(2019, 6, 0o1))
 
           @sar_1 = create :accepted_sar, identifier: "sar-1", received_date: @period_start - 5.hours
           @olitigation_complaint_1 = create :offender_sar_complaint, :waiting_for_data,

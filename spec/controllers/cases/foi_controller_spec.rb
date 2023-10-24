@@ -335,7 +335,7 @@ RSpec.describe Cases::FoiController, type: :controller do
     end
 
     describe "#process_date_responded" do
-      let(:kase) { create :responded_case, creation_time: 6.business_days.ago }
+      let(:kase) { create :responded_case, creation_time: 6.working.days.ago }
 
       include_examples "process date responded spec", described_class
     end

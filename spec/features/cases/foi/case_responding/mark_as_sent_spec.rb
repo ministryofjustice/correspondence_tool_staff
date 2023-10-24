@@ -5,11 +5,11 @@ feature "Mark response as sent" do
   given(:manager)      { create(:manager) }
   given(:kase)         do
     create(:case_with_response,
-           received_date: 10.business_days.ago)
+           received_date: 10.working.days.ago)
   end
   given(:another_kase) do
     create(:case_with_response,
-           received_date: 10.business_days.ago)
+           received_date: 10.working.days.ago)
   end
   given(:responder_teammate) do
     create :responder, responding_teams: responder.responding_teams

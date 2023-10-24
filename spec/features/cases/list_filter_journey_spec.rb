@@ -9,20 +9,20 @@ feature "filters whittle down search results" do
 
   before(:all) do
     @open_cases = {
-      ot_ico_foi_noff_unassigned: { received_date: 3.business_days.ago },
-      ot_ico_sar_noff_unassigned: { received_date: 3.business_days.ago },
-      sar_noff_draft: { received_date: 9.business_days.ago },
-      std_draft_foi: { received_date: 6.business_days.ago },
-      std_draft_foi_late: { received_date: 25.business_days.ago },
-      std_unassigned_irc: { received_date: 1.business_days.ago },
-      std_unassigned_irt: { received_date: 2.business_days.ago },
-      trig_responded_foi: { received_date: 7.business_days.ago },
+      ot_ico_foi_noff_unassigned: { received_date: 3.working.days.ago },
+      ot_ico_sar_noff_unassigned: { received_date: 3.working.days.ago },
+      sar_noff_draft: { received_date: 9.working.days.ago },
+      std_draft_foi: { received_date: 6.working.days.ago },
+      std_draft_foi_late: { received_date: 25.working.days.ago },
+      std_unassigned_irc: { received_date: 1.working.days.ago },
+      std_unassigned_irt: { received_date: 2.working.days.ago },
+      trig_responded_foi: { received_date: 7.working.days.ago },
     }
     @closed_cases = {
-      std_closed_foi: { received_date: 18.business_days.ago },
-      std_closed_irc: { received_date: 17.business_days.ago },
-      std_closed_irt: { received_date: 16.business_days.ago },
-      trig_closed_foi: { received_date: 15.business_days.ago },
+      std_closed_foi: { received_date: 18.working.days.ago },
+      std_closed_irc: { received_date: 17.working.days.ago },
+      std_closed_irt: { received_date: 16.working.days.ago },
+      trig_closed_foi: { received_date: 15.working.days.ago },
     }
     @all_cases = @open_cases.merge(@closed_cases)
     @setup = StandardSetup.new(only_cases: @all_cases)
@@ -145,8 +145,8 @@ feature "filters whittle down search results" do
       open_cases_page.filter_on(:timeliness, "in_time")
       open_cases_page.filter_on("open_status", "responded")
       open_cases_page.filter_on_deadline(from: Time.zone.today,
-                                         to: 15.business_days.from_now)
-      @deadline_filter_text = sprintf("Deadline %s - %s", Time.zone.today.strftime("%-d %b %Y"), 15.business_days.from_now.strftime("%-d %b %Y"))
+                                         to: 15.working.days.from_now)
+      @deadline_filter_text = sprintf("Deadline %s - %s", Time.zone.today.strftime("%-d %b %Y"), 15.working.days.from_now.strftime("%-d %b %Y"))
     end
 
     scenario "clearing individual filters", js: true do

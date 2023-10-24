@@ -259,7 +259,7 @@ describe Case::OverturnedICO::FOI do
                       original_case:,
                       received_date: Time.zone.today,
                       external_deadline: 1.month.from_now.to_date
-        expect(kase.internal_deadline).to eq 20.business_days.before(1.month.from_now).to_date
+        expect(kase.internal_deadline).to eq 20.working.days.before(1.month.from_now).to_date
       end
     end
 
@@ -267,8 +267,8 @@ describe Case::OverturnedICO::FOI do
       kase = create :overturned_ico_foi,
                     original_ico_appeal:,
                     original_case:,
-                    received_date: 0.business_days.ago,
-                    external_deadline: 30.business_days.from_now
+                    received_date: 0.working.days.ago,
+                    external_deadline: 30.working.days.from_now
       expect(kase.escalation_deadline).to eq kase.created_at.to_date
     end
   end

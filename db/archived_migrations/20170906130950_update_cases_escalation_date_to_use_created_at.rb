@@ -41,12 +41,12 @@ private
 
   def calculate_date(kase, date_to_use)
     days_after_day_one = kase.category.escalation_time_limit - 1
-    days_after_day_one.business_days.after(start_date(date_to_use))
+    start_date(date_to_use) + days_after_day_one.working.days
   end
 
   def start_date(received_date)
     date = received_date + 1
-    date += 1 until date.workday?
+    date += 1 until date.working_day?
     date
   end
 end

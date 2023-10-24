@@ -175,7 +175,7 @@ def create_overturned_ico_case_step(params = {})
 
   form = new_overturned_ico_page.form
 
-  final_deadline = 10.business_days.from_now
+  final_deadline = 10.working.days.from_now
   form.final_deadline.day.set(final_deadline.day)
   form.final_deadline.month.set(final_deadline.month)
   form.final_deadline.year.set(final_deadline.year)

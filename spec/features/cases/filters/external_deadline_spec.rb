@@ -1,7 +1,7 @@
 require "rails_helper"
 
 def working_hours
-  Time.zone.today.workday? && Time.zone.now.during_business_hours?
+  Time.zone.today.working_day?# && Time.zone.now.during_business_hours?
 end
 
 # rubocop:disable RSpec/BeforeAfterAll
@@ -18,13 +18,13 @@ feature "filtering by external deadline", if: working_hours do
       @setup = StandardSetup.new(only_cases: @all_cases)
 
       @case_due_today = create :case,
-                               received_date: 20.business_days.ago,
+                               received_date: 20.working.days.ago,
                                subject: "prison guards today"
       @case_due_next_3_days = create :case,
-                                     received_date: 18.business_days.ago,
+                                     received_date: 18.working.days.ago,
                                      subject: "prison guards next 3 days"
       @case_due_next_10_days = create :case,
-                                      received_date: 10.business_days.ago,
+                                      received_date: 10.working.days.ago,
                                       subject: "prison guards next 10 days"
 
       @all_case_numbers = @setup.cases.values.map(&:number) +
@@ -129,7 +129,7 @@ feature "filtering by external deadline", if: working_hours do
 
     def filter_next_three_days_and_expect_correct_results(page, case_numbers)
       from_date = Time.zone.today
-      to_date   = 3.business_days.from_now.to_date
+      to_date   = 3.working.days.from_now.to_date
 
       page.filter_on_deadline("In the next 3 days")
 
@@ -154,7 +154,7 @@ feature "filtering by external deadline", if: working_hours do
 
     def filter_next_ten_days_and_expect_correct_results(page, case_numbers)
       from_date = Time.zone.today
-      to_date   = 10.business_days.from_now.to_date
+      to_date   = 10.working.days.from_now.to_date
 
       page.filter_on_deadline("In the next 10 days")
 
@@ -179,8 +179,8 @@ feature "filtering by external deadline", if: working_hours do
     end
 
     def filter_custom_dates_and_expect_correct_results(page, case_numbers)
-      from_date = 5.business_days.from_now.to_date
-      to_date   = 12.business_days.from_now.to_date
+      from_date = 5.working.days.from_now.to_date
+      to_date   = 12.working.days.from_now.to_date
 
       page.filter_on_deadline(from: from_date, to: to_date)
 

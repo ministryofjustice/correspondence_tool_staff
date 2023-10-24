@@ -163,8 +163,8 @@ describe CaseSearchService do
         let!(:parent_search_query) { create(:search_query, search_text:, user_id: user.id) }
         let(:filter_case_type)           { ["", "foi-standard"] }
         let(:filter_sensitivity)         { [""] }
-        let(:external_deadline_from)     { 0.business_days.from_now.to_date }
-        let(:external_deadline_to)       { 10.business_days.from_now.to_date }
+        let(:external_deadline_from)     { 0.working.days.from_now.to_date }
+        let(:external_deadline_to)       { 10.working.days.from_now.to_date }
 
         let(:params) do
           ActionController::Parameters.new(
@@ -316,11 +316,11 @@ describe CaseSearchService do
 
           context "and filter for external deadline" do
             let(:search_text)            { "foi" }
-            let(:external_deadline_from) { 0.business_days.from_now.to_date }
-            let(:external_deadline_to)   { 10.business_days.from_now.to_date }
+            let(:external_deadline_from) { 0.working.days.from_now.to_date }
+            let(:external_deadline_to)   { 10.working.days.from_now.to_date }
 
             it "is used" do
-              @setup.std_draft_foi.update!(external_deadline: 2.business_days.from_now)
+              @setup.std_draft_foi.update!(external_deadline: 2.working.days.from_now)
               service.call
               expect(service.result_set)
                 .to match_array [

@@ -5,7 +5,7 @@ RSpec.shared_examples "process date responded spec" do |klass|
   describe klass do
     let(:manager) { find_or_create :disclosure_bmt_user }
     let(:responded_case) { kase }
-    let(:date_responded) { 5.business_days.after(responded_case.created_at) }
+    let(:date_responded) { responded_case.created_at + 5.working.days }
     let(:params) do
       {
         id: responded_case.id,

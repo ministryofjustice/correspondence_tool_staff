@@ -36,7 +36,7 @@ class Admin::CasesController < AdminController
   def index
     @dates = {}
     5.times do |n|
-      date = n.business_days.ago.to_date
+      date = n.working.days.ago.to_date
       @dates[date] = count_cases_created_on(date)
     end
     @cases = Case::Base.all.order(id: :desc).page(params[:page]).decorate

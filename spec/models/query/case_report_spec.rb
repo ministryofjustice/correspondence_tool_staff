@@ -10,8 +10,8 @@ RSpec.describe Query::CaseReport do
   let(:closed_case) { create :closed_case }
 
   before do
-    sar_case.update!(external_deadline: 20.business_days.after(sar_case.received_date))
-    foi_case.update!(external_deadline: 10.business_days.after(foi_case.received_date))
+    sar_case.update!(external_deadline: 20.working.days.after(sar_case.received_date))
+    foi_case.update!(external_deadline: 10.working.days.after(foi_case.received_date))
 
     ::Warehouse::CaseReport.generate(sar_case)
     ::Warehouse::CaseReport.generate(foi_case)

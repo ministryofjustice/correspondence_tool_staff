@@ -4,10 +4,10 @@ require "rails_helper"
 feature "joining business units" do
   before(:all) do
     @open_cases = {
-      std_draft_foi: { received_date: 6.business_days.ago },
+      std_draft_foi: { received_date: 6.working.days.ago },
     }
     @closed_cases = {
-      std_closed_foi: { received_date: 18.business_days.ago },
+      std_closed_foi: { received_date: 18.working.days.ago },
     }
     @all_cases = @open_cases.merge(@closed_cases)
     @setup = StandardSetup.new(only_cases: @all_cases)

@@ -45,8 +45,8 @@ feature "adding cases" do
       admin_cases_new_foi_page.make_radio_button_choice("case_foi_type_casefoistandard")
       admin_cases_new_foi_page.subject.set "test subject"
       admin_cases_new_foi_page.full_request.set "test message"
-      admin_cases_new_foi_page.received_date.set 1.business_days.ago.to_date.to_s
-      admin_cases_new_foi_page.created_at.set 1.business_days.ago.to_date.to_s
+      admin_cases_new_foi_page.received_date.set 1.working.days.ago.to_date.to_s
+      admin_cases_new_foi_page.created_at.set 1.working.days.ago.to_date.to_s
 
       admin_cases_new_foi_page.submit_button.click
       expect(admin_cases_page).to be_displayed
@@ -56,7 +56,7 @@ feature "adding cases" do
       expect(kase.email).to eq "test@localhost"
       expect(kase.subject).to eq "test subject"
       expect(kase.message).to eq "test message"
-      expect(kase.received_date).to eq 1.business_days.ago.to_date
+      expect(kase.received_date).to eq 1.working.days.ago.to_date
       expect(kase.current_state).to eq "drafting"
     end
 
@@ -147,8 +147,8 @@ feature "adding cases" do
 
       admin_cases_new_sar_page.subject.set "test subject"
       admin_cases_new_sar_page.full_request.set "test message"
-      admin_cases_new_sar_page.received_date.set 1.business_days.ago.to_date.to_s
-      admin_cases_new_sar_page.created_at.set 1.business_days.ago.to_date.to_s
+      admin_cases_new_sar_page.received_date.set 1.working.days.ago.to_date.to_s
+      admin_cases_new_sar_page.created_at.set 1.working.days.ago.to_date.to_s
 
       admin_cases_new_sar_page.submit_button.click
       expect(admin_cases_page).to be_displayed
@@ -158,7 +158,7 @@ feature "adding cases" do
       expect(kase.email).to eq "test@localhost"
       expect(kase.subject).to eq "test subject"
       expect(kase.message).to eq "test message"
-      expect(kase.received_date).to eq 1.business_days.ago.to_date
+      expect(kase.received_date).to eq 1.working.days.ago.to_date
       expect(kase.current_state).to eq "drafting"
     end
 

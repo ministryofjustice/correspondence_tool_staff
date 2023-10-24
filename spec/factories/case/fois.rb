@@ -25,7 +25,7 @@
 FactoryBot.define do
   factory :foi_case, aliases: [:case], class: "Case::FOI::Standard" do
     transient do
-      creation_time          { 4.business_days.ago }
+      creation_time          { 4.working.days.ago }
       identifier             { "new case" }
       managing_team          { find_or_create :team_disclosure_bmt }
       manager                { managing_team.managers.first }
@@ -132,7 +132,7 @@ FactoryBot.define do
     end
 
     trait :late do
-      received_date { 30.business_days.ago }
+      received_date { 30.working.days.ago }
       date_responded { 1.business_day.ago }
       date_draft_compliant { 1.business_day.ago }
     end
@@ -366,8 +366,8 @@ FactoryBot.define do
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
     message          { "info held, granted" }
-    received_date    { 22.business_days.ago }
-    date_responded   { 4.business_days.ago }
+    received_date    { 22.working.days.ago }
+    date_responded   { 4.working.days.ago }
     late_team_id     { responding_team.id }
 
     after(:create) do |kase, evaluator|
@@ -399,7 +399,7 @@ FactoryBot.define do
     end
 
     trait :late do
-      received_date  { 30.business_days.ago }
+      received_date  { 30.working.days.ago }
       date_responded { 1.business_day.ago }
       late_team_id   { responding_team.id }
       date_draft_compliant { 1.business_day.ago }
@@ -1040,17 +1040,17 @@ FactoryBot.define do
   trait :extended_for_pit do
     after(:create) do |kase|
       create :case_transition_extend_for_pit, case: kase
-      kase.extend_pit_deadline!(10.business_days.from_now)
+      kase.extend_pit_deadline!(10.working.days.from_now)
     end
   end
 
   trait :pit_extension_removed do
     after(:create) do |kase|
       create :case_transition_extend_for_pit, case: kase
-      kase.extend_pit_deadline!(13.business_days.from_now)
+      kase.extend_pit_deadline!(13.working.days.from_now)
 
       create :case_transition_remove_pit_extension, case: kase
-      kase.remove_pit_deadline!(13.business_days.before)
+      kase.remove_pit_deadline!(13.working.days.before)
     end
   end
 
@@ -1073,7 +1073,7 @@ FactoryBot.define do
   factory :closed_foi_ir_compliance, parent: :closed_case, class: "Case::FOI::ComplianceReview" do
     after(:create) do |kase|
       foi_case = create :closed_case
-      kase.extend_pit_deadline!(13.business_days.from_now)
+      kase.extend_pit_deadline!(13.working.days.from_now)
       @case_link = LinkedCase.new(linked_case_number: foi_case.number)
       kase.related_case_links << @case_link
       kase.reload
@@ -1083,7 +1083,7 @@ FactoryBot.define do
   factory :closed_foi_ir_timeliness, parent: :closed_case, class: "Case::FOI::TimelinessReview" do
     after(:create) do |kase|
       foi_case = create :closed_case
-      kase.extend_pit_deadline!(13.business_days.from_now)
+      kase.extend_pit_deadline!(13.working.days.from_now)
       @case_link = LinkedCase.new(linked_case_number: foi_case.number)
       kase.related_case_links << @case_link
       kase.reload

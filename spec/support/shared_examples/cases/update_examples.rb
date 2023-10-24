@@ -77,7 +77,7 @@ RSpec.shared_examples "update case spec" do
       context "when date draft compliant before received date" do
         it "has error details on the record" do
           Timecop.freeze(now) do
-            kase.date_responded = 3.business_days.after(kase.received_date)
+            kase.date_responded = 3.working.days.after(kase.received_date)
             params[correspondence_type_abbr]["date_draft_compliant_yyyy"] = "2016"
             patch(:update, params:)
             expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded cannot be before date received"]

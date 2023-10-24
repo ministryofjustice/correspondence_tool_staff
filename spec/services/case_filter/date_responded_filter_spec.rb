@@ -8,9 +8,9 @@ describe CaseFilter::DateRespondedFilter do
 
   before(:all) do
     Timecop.freeze(Time.zone.local(2018, 4, 26, 14, 57, 0)) do
-      @kase_1 = create :case, date_responded: 30.business_days.ago
-      @kase_2 = create :case, date_responded: 25.business_days.ago
-      @kase_3 = create :case, date_responded: 100.business_days.ago
+      @kase_1 = create :case, date_responded: 30.working.days.ago
+      @kase_2 = create :case, date_responded: 25.working.days.ago
+      @kase_3 = create :case, date_responded: 100.working.days.ago
     end
   end
 

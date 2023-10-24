@@ -16,14 +16,14 @@ feature "editing case closure information" do
   scenario "editing a late closed case", js: true do
     kase = create :closed_case,
                   :late,
-                  date_draft_compliant: 11.business_days.ago
+                  date_draft_compliant: 11.working.days.ago
 
     login_as manager
     cases_show_page.load(id: kase.id)
     # find some (non-current) late team ids so the test can change it to another valid one
     possible_late_team_ids = kase.transitions.map(&:acting_team_id).uniq - [kase.late_team_id]
     edit_foi_case_closure_step(kase:,
-                               date_responded: 10.business_days.ago,
+                               date_responded: 10.working.days.ago,
                                late_team_id: possible_late_team_ids.first)
   end
 
@@ -33,7 +33,7 @@ feature "editing case closure information" do
     login_as manager
     cases_show_page.load(id: kase.id)
     edit_foi_case_closure_step(kase:,
-                               date_responded: 10.business_days.ago)
+                               date_responded: 10.working.days.ago)
   end
 
   scenario "bmt edits case that had exemptions", js: true do
@@ -43,7 +43,7 @@ feature "editing case closure information" do
     cases_show_page.load(id: kase.id)
     edit_foi_case_closure_step(kase:,
                                preselected_exemptions: %w[court],
-                               date_responded: 10.business_days.ago,
+                               date_responded: 10.working.days.ago,
                                info_held_status: "held",
                                outcome: "granted",
                                refusal_reason: nil)

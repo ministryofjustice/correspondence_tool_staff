@@ -368,7 +368,7 @@ class StandardSetup
       },
       std_draft_foi_late: lambda { |attributes = {}|
         create(:accepted_case,
-               { received_date: 25.business_days.ago,
+               { received_date: 25.working.days.ago,
                  identifier: "std_draft_foi_late" }
                  .merge(attributes))
       },
@@ -376,7 +376,7 @@ class StandardSetup
         create(:accepted_case,
                { responder: responder_user,
                  identifier: "std_draft_foi_in_escalation_period",
-                 creation_time: 1.business_days.ago }
+                 creation_time: 1.working.days.ago }
                  .merge(attributes))
       },
       std_awdis_foi: lambda { |attributes = {}|
@@ -389,8 +389,8 @@ class StandardSetup
       },
       std_responded_foi_late: lambda { |attributes = {}|
         create(:responded_case,
-               { received_date: 25.business_days.ago,
-                 date_responded: 1.business_days.ago,
+               { received_date: 25.working.days.ago,
+                 date_responded: 1.working.days.ago,
                  identifier: "std_responded_foi_late" }
                  .merge(attributes))
       },
@@ -399,8 +399,8 @@ class StandardSetup
       },
       std_closed_foi_late: lambda { |attributes = {}|
         create(:closed_case,
-               { received_date: 25.business_days.ago,
-                 date_responded: 1.business_days.ago,
+               { received_date: 25.working.days.ago,
+                 date_responded: 1.working.days.ago,
                  identifier: "std_closed_foi_late" }
                  .merge(attributes))
       },
@@ -436,7 +436,7 @@ class StandardSetup
       trig_draft_foi_accepted_late: lambda { |attributes = {}|
         create(:accepted_case,
                :flagged_accepted,
-               { received_date: 25.business_days.ago,
+               { received_date: 25.working.days.ago,
                  identifier: "trig_draft_foi_accepted_late" }
                  .merge(attributes))
       },
@@ -448,7 +448,7 @@ class StandardSetup
       trig_draft_foi_late: lambda { |attributes = {}|
         create(:accepted_case,
                :flagged,
-               { received_date: 25.business_days.ago,
+               { received_date: 25.working.days.ago,
                  identifier: "trig_draft_foi_late" }
                  .merge(attributes))
       },
@@ -477,8 +477,8 @@ class StandardSetup
       },
       trig_closed_foi_late: lambda { |attributes = {}|
         create(:closed_case, :trigger,
-               { received_date: 25.business_days.ago,
-                 date_responded: 1.business_days.ago,
+               { received_date: 25.working.days.ago,
+                 date_responded: 1.working.days.ago,
                  identifier: "trig_closed_foi_late" }
                  .merge(attributes))
       },

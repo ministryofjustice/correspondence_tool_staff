@@ -60,12 +60,12 @@ module DeadlineCalculator
 
     def calculate(days, from = nil)
       from ||= next_working_day(kase.received_date)
-      (days - 1).business_days.after(from)
+      from + (days - 1).working.days
     end
 
     def next_working_day(date)
       new_date = date + 1
-      new_date += 1 until new_date.workday?
+      new_date += 1 until new_date.working_day?
       new_date
     end
 

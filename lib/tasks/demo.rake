@@ -13,7 +13,7 @@ end
 def update_case_dates(case_num, biz_days_ago)
   kase = Case::Base.find_by!(number: case_num)
   print_case(kase, "Original State")
-  date = biz_days_ago.business_days.ago
+  date = biz_days_ago.working.days.ago
   update_dates(kase, date)
   print_case(kase, "Updated State")
 end

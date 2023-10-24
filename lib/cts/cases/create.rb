@@ -137,57 +137,57 @@ module CTS::Cases
 
     def get_foi_received_date
       options.fetch(:received_date) do
-        0.business_days.after(4.business_days.ago)
+        0.working.days.after(4.working.days.ago)
       end
     end
 
     def get_ico_received_date
       options.fetch(:received_date) do
-        0.business_days.ago
+        0.working.days.ago
       end
     end
 
     def get_overturned_received_date
       options.fetch(:received_date) do
-        0.business_days.ago
+        0.working.days.ago
       end
     end
 
     def get_sar_received_date
       options.fetch(:received_date) do
-        0.business_days.ago
+        0.working.days.ago
       end
     end
 
     def get_ico_external_deadline
       options.fetch(:external_deadline) do
-        20.business_days.after(get_ico_received_date)
+        20.working.days.after(get_ico_received_date)
       end
     end
 
     def get_ico_internal_deadline
       options.fetch(:internal_deadline) do
-        10.business_days.before(get_ico_external_deadline)
+        10.working.days.before(get_ico_external_deadline)
       end
     end
 
     def get_overturned_external_deadline
       options.fetch(:external_deadline) do
-        20.business_days.after(get_overturned_received_date)
+        20.working.days.after(get_overturned_received_date)
       end
     end
 
     def get_overturned_internal_deadline
       options.fetch(:internal_deadline) do
-        10.business_days.before(get_overturned_external_deadline)
+        10.working.days.before(get_overturned_external_deadline)
       end
     end
 
     def get_created_at_date
       if options[:created_at].present?
-        0.business_days.after(Time.zone.parse(options[:created_at]))
+        0.working.days.after(Time.zone.parse(options[:created_at]))
       else
-        0.business_days.after(4.business_days.ago)
+        0.working.days.after(4.working.days.ago)
       end
     end
 
@@ -329,7 +329,7 @@ module CTS::Cases
     end
 
     def transition_to_responded(kase)
-      kase.update!(date_responded: 5.business_days.after(kase.received_date))
+      kase.update!(date_responded: 5.working.days.after(kase.received_date))
 
       responder =
         if kase.ico?

@@ -15,8 +15,8 @@ FactoryBot.define do
   factory :report do
     report_type
     correspondence_type { "FOI" }
-    period_start { 10.business_days.ago }
-    period_end { 1.business_days.ago }
+    period_start { 10.working.days.ago }
+    period_end { 1.working.days.ago }
     report_data { Faker::Hipster.paragraph }
   end
 

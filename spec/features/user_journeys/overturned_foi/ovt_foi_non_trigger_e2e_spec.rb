@@ -26,7 +26,7 @@ feature "ICO Overturned FOI case" do
 
     extend_for_pit kase:,
                    user: manager,
-                   new_deadline: 20.business_days.from_now
+                   new_deadline: 20.working.days.from_now
 
     upload_response kase:,
                     user: responder,

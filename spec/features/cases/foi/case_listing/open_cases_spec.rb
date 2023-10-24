@@ -35,12 +35,12 @@ feature "listing open cases on the system" do
     @assigned_case_team_b = create :assigned_case,
                                    responding_team: @responding_team_b
     @assigned_case_late = create :assigned_case,
-                                 received_date: 22.business_days.ago
+                                 received_date: 22.working.days.ago
     @assigned_case_flagged_for_press_office_accepted =
       create :assigned_case,
              :flagged,
              :press_office,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_case_flagged_for_press_office_accepted"
     @closed_case = create :closed_case, responder: @responder_a
   end

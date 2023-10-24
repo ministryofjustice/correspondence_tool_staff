@@ -597,17 +597,17 @@ describe CaseFinderService do
 
       Timecop.freeze(Date.new(2020, 8, 19)) do
         @foi_case_1                       = create :assigned_case,
-                                                   creation_time: 2.business_days.ago,
+                                                   creation_time: 2.working.days.ago,
                                                    identifier: "foi 1 case"
         @foi_case_2                       = create :assigned_case,
-                                                   creation_time: 1.business_days.ago,
+                                                   creation_time: 1.working.days.ago,
                                                    identifier: "foi 2 case"
         @foi_cr_case                      = create :accepted_compliance_review,
-                                                   creation_time: 1.business_days.ago
+                                                   creation_time: 1.working.days.ago
         @foi_tr_case                      = create :accepted_timeliness_review,
-                                                   creation_time: 1.business_days.ago
+                                                   creation_time: 1.working.days.ago
         @awaiting_responder_ot_ico_foi    = create :awaiting_responder_ot_ico_foi,
-                                                   creation_time: 1.business_days.ago
+                                                   creation_time: 1.working.days.ago
         @awaiting_responder_ot_ico_foi.update!(escalation_deadline: 3.days.from_now)
       end
     end

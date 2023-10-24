@@ -3,7 +3,7 @@ FactoryBot.define do
 
   factory :ico_foi_case, class: "Case::ICO::FOI" do
     transient do
-      creation_time  { 4.business_days.ago }
+      creation_time  { 4.working.days.ago }
       identifier     { "new ICO FOI case based from a closed FOI case" }
       managing_team  { find_or_create :team_dacu }
 
@@ -17,9 +17,9 @@ FactoryBot.define do
     ico_reference_number        { generate :ico_foi_reference_number }
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_case
-    received_date               { 0.business_days.ago }
-    external_deadline           { 20.business_days.after(received_date) }
-    internal_deadline           { 10.business_days.before(external_deadline) }
+    received_date               { 0.working.days.ago }
+    external_deadline           { 20.working.days.after(received_date) }
+    internal_deadline           { 10.working.days.before(external_deadline) }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     creator                     { find_or_create :manager }
     created_at                  { creation_time }
@@ -209,8 +209,8 @@ FactoryBot.define do
       attachments { [build(:case_ico_decision)] }
     end
 
-    received_date { 22.business_days.ago }
-    date_ico_decision_received { 4.business_days.ago }
+    received_date { 22.working.days.ago }
+    date_ico_decision_received { 4.working.days.ago }
     ico_decision { "upheld" }
     late_team_id { responding_team.id }
 
@@ -242,8 +242,8 @@ FactoryBot.define do
       )
       kase.reload
       kase.update!(
-        external_deadline: 20.business_days.after(evaluator.original_external_deadline),
-        internal_deadline: 10.business_days.after(evaluator.original_external_deadline),
+        external_deadline: 20.working.days.after(evaluator.original_external_deadline),
+        internal_deadline: 10.working.days.after(evaluator.original_external_deadline),
         date_responded: nil,
       )
       kase.reload

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :offender_sar_complaint, class: "Case::SAR::OffenderComplaint" do
     transient do
-      creation_time       { 4.business_days.ago }
+      creation_time       { 4.working.days.ago }
       identifier          { "New Offender SAR complaint" }
       managing_team       { find_or_create :team_branston }
       manager             { managing_team.managers.first }
@@ -200,8 +200,8 @@ FactoryBot.define do
         identifier { "Closed - Offender SAR Complaint" }
       end
 
-      received_date  { 22.business_days.ago }
-      date_responded { 4.business_days.ago }
+      received_date  { 22.working.days.ago }
+      date_responded { 4.working.days.ago }
 
       after(:create) do |kase|
         create :case_transition_data_to_be_requested, case: kase

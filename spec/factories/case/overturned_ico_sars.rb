@@ -3,7 +3,7 @@ FactoryBot.define do
           aliases: [:ot_ico_sar_noff_unassigned],
           class: "Case::OverturnedICO::SAR" do
     transient do
-      creation_time   { 4.business_days.ago }
+      creation_time   { 4.working.days.ago }
       identifier      { "unassigned overturned ico sar" }
       managing_team   { find_or_create :team_disclosure_bmt }
       manager         { managing_team.managers.first }
@@ -119,8 +119,8 @@ FactoryBot.define do
       identifier { "closed overturned ico sar case" }
     end
 
-    received_date { 4.business_days.ago }
-    date_responded { 3.business_days.ago }
+    received_date { 4.working.days.ago }
+    date_responded { 3.working.days.ago }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,

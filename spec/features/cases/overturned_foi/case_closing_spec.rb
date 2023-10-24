@@ -19,7 +19,7 @@ feature "Closing a case" do
     context "when responded-to in time" do
       given!(:fully_granted_case) do
         create :responded_ot_ico_foi,
-               received_date: 10.business_days.ago
+               received_date: 10.working.days.ago
       end
 
       given!(:responded_date) do
@@ -31,7 +31,7 @@ feature "Closing a case" do
         open_cases_page.load
         close_case(fully_granted_case)
 
-        cases_close_page.fill_in_date_responded(0.business_days.ago)
+        cases_close_page.fill_in_date_responded(0.working.days.ago)
         cases_close_page.click_on "Continue"
 
         expect(cases_closure_outcomes_page).to be_displayed
@@ -42,7 +42,7 @@ feature "Closing a case" do
         show_page = cases_show_page.case_details
 
         expect(show_page.response_details.date_responded.data.text)
-          .to eq 0.business_days.ago.strftime(Settings.default_date_format)
+          .to eq 0.working.days.ago.strftime(Settings.default_date_format)
         expect(show_page.response_details.timeliness.data.text)
           .to eq "Answered in time"
         expect(show_page.response_details.time_taken.data.text)
@@ -57,7 +57,7 @@ feature "Closing a case" do
   context "when the information is held" do
     given!(:kase) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 10.working.days.ago
     end
 
     before do
@@ -67,7 +67,7 @@ feature "Closing a case" do
 
     scenario "granted in full", js: true do
       close_page = cases_close_page
-      close_page.fill_in_date_responded(2.business_days.ago)
+      close_page.fill_in_date_responded(2.working.days.ago)
       close_page.click_on "Continue"
 
       expect(cases_closure_outcomes_page).to be_displayed
@@ -84,7 +84,7 @@ feature "Closing a case" do
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
-          .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+          .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
           .to eq "Answered in time"
       expect(show_page.time_taken.data.text)
@@ -98,7 +98,7 @@ feature "Closing a case" do
 
     scenario "refused in part", js: true do
       close_page = cases_close_page
-      close_page.fill_in_date_responded(2.business_days.ago)
+      close_page.fill_in_date_responded(2.working.days.ago)
       close_page.click_on "Continue"
 
       expect(cases_closure_outcomes_page).to be_displayed
@@ -117,7 +117,7 @@ feature "Closing a case" do
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
-          .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+          .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
           .to eq "Answered in time"
       expect(show_page.time_taken.data.text)
@@ -132,7 +132,7 @@ feature "Closing a case" do
 
     scenario "refused fully", js: true do
       close_page = cases_close_page
-      close_page.fill_in_date_responded(2.business_days.ago)
+      close_page.fill_in_date_responded(2.working.days.ago)
       close_page.click_on "Continue"
 
       expect(cases_closure_outcomes_page).to be_displayed
@@ -152,7 +152,7 @@ feature "Closing a case" do
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
-          .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+          .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
           .to eq "Answered in time"
       expect(show_page.time_taken.data.text)
@@ -169,7 +169,7 @@ feature "Closing a case" do
   context "when the information is not held" do
     given!(:no_info_held_case) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 10.working.days.ago
     end
 
     before do
@@ -179,7 +179,7 @@ feature "Closing a case" do
 
     scenario 'manager marks the response as "no information held"', js: true do
       close_page = cases_close_page
-      close_page.fill_in_date_responded(2.business_days.ago)
+      close_page.fill_in_date_responded(2.working.days.ago)
       close_page.click_on "Continue"
 
       expect(cases_closure_outcomes_page).to be_displayed
@@ -194,7 +194,7 @@ feature "Closing a case" do
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
-          .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+          .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
           .to eq "Answered in time"
       expect(show_page.time_taken.data.text)
@@ -209,13 +209,13 @@ feature "Closing a case" do
   context "when the information held = Other" do
     given!(:other_info_held_case) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 10.working.days.ago
     end
 
     before do
       open_cases_page.load
       close_case(other_info_held_case)
-      cases_close_page.fill_in_date_responded(2.business_days.ago)
+      cases_close_page.fill_in_date_responded(2.working.days.ago)
       cases_close_page.click_on "Continue"
 
       expect(cases_closure_outcomes_page).to be_displayed # rubocop:disable RSpec/ExpectInHook
@@ -237,7 +237,7 @@ feature "Closing a case" do
       show_page = cases_show_page.case_details.response_details
 
       expect(show_page.date_responded.data.text)
-        .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+        .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
         .to eq "Answered in time"
       expect(show_page.time_taken.data.text)
@@ -262,7 +262,7 @@ feature "Closing a case" do
       show_page = cases_show_page.case_details.response_details
 
       expect(show_page.date_responded.data.text)
-        .to eq 2.business_days.ago.strftime(Settings.default_date_format)
+        .to eq 2.working.days.ago.strftime(Settings.default_date_format)
       expect(show_page.timeliness.data.text)
         .to eq "Answered in time"
       expect(show_page.time_taken.data.text)

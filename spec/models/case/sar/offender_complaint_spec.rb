@@ -253,7 +253,7 @@ describe Case::SAR::OffenderComplaint do
     context "with valid values" do
       it "validates received date" do
         kase = build_stubbed :offender_sar_complaint
-        test_date = 4.business_days.ago.strftime("%d-%m-%Y")
+        test_date = 4.working.days.ago.strftime("%d-%m-%Y")
 
         expect(kase).to validate_presence_of(:received_date)
         expect(kase).to allow_values(test_date).for(:received_date)

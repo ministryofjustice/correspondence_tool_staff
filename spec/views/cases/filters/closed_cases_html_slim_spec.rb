@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe "cases/filters/closed.html.slim" do
-  let!(:case_1) { create :closed_case, received_date: 20.business_days.ago }
+  let!(:case_1) { create :closed_case, received_date: 20.working.days.ago }
   let!(:case_2) { create :closed_case }
   let(:search_query) { build_stubbed :search_query }
   let(:request) do

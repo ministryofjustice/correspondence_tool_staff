@@ -31,7 +31,7 @@
 FactoryBot.define do
   factory :sar_internal_review, class: "Case::SAR::InternalReview" do
     transient do
-      creation_time       { 4.business_days.ago }
+      creation_time       { 4.working.days.ago }
       identifier          { "new sar internal review case" }
       managing_team       { find_or_create :team_dacu }
       manager             { managing_team.managers.first }
@@ -253,8 +253,8 @@ FactoryBot.define do
   factory :closed_sar_internal_review, parent: :approved_sar_internal_review do
     missing_info { false }
 
-    received_date  { 22.business_days.ago }
-    date_responded { 4.business_days.ago }
+    received_date  { 22.working.days.ago }
+    date_responded { 4.working.days.ago }
 
     transient do
       identifier { "closed sar internal review" }
@@ -315,8 +315,8 @@ FactoryBot.define do
       identifier { "responded sar ir" }
     end
 
-    received_date  { 18.business_days.ago }
-    date_responded { 4.business_days.ago }
+    received_date  { 18.working.days.ago }
+    date_responded { 4.working.days.ago }
 
     after(:create) do |kase, evaluator|
       if evaluator.flag_for_disclosure
@@ -349,7 +349,7 @@ FactoryBot.define do
       identifier { "responded and late sar ir" }
     end
 
-    received_date  { 42.business_days.ago }
-    date_responded { 4.business_days.ago }
+    received_date  { 42.working.days.ago }
+    date_responded { 4.working.days.ago }
   end
 end

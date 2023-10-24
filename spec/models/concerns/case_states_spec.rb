@@ -169,7 +169,7 @@ RSpec.describe Case, type: :model do
       let(:responded_case) do
         Timecop.freeze(Date.new(2020, 8, 19)) do
           create :responded_case,
-                 received_date: days_taken.business_days.ago,
+                 received_date: days_taken.working.days.ago,
                  date_responded: Time.first_business_day(Time.zone.today)
         end
       end

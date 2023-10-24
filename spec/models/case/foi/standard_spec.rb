@@ -142,16 +142,16 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [7.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).to be_flagged
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -162,16 +162,16 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [7.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).not_to be_flagged
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -184,16 +184,16 @@ describe Case::FOI::Standard do
             it "returns false" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [14.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [14.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).to be_flagged
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
@@ -204,16 +204,16 @@ describe Case::FOI::Standard do
             it "returns false" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [15.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [15.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).not_to be_flagged
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
@@ -228,8 +228,8 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [12.working.days.ago, 10.working.days.ago, 7.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -237,8 +237,8 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -249,8 +249,8 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [12.working.days.ago, 10.working.days.ago, 7.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -258,8 +258,8 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -272,8 +272,8 @@ describe Case::FOI::Standard do
             it "returns false" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [17.business_days.ago, 16.business_days.ago, 14.business_days.ago],
-                                 responded_time: 1.business_days.ago)
+                                 assignment_times: [17.working.days.ago, 16.working.days.ago, 14.working.days.ago],
+                                 responded_time: 1.working.days.ago)
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -281,8 +281,8 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 1.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 1.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
@@ -293,8 +293,8 @@ describe Case::FOI::Standard do
             it "returns false" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [17.business_days.ago, 16.business_days.ago, 15.business_days.ago],
-                                 responded_time: 3.business_days.ago)
+                                 assignment_times: [17.working.days.ago, 16.working.days.ago, 15.working.days.ago],
+                                 responded_time: 3.working.days.ago)
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -302,8 +302,8 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.working.days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.working.days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
@@ -332,13 +332,13 @@ describe Case::FOI::Standard do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: false,
-                                   assignment_times: [18.business_days.ago])
+                                   assignment_times: [18.working.days.ago])
                 expect(kase).not_to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 1
                 expect(responder_assignments.first.state).to eq "accepted"
 
-                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.working.days.ago.to_date
                 expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
@@ -352,13 +352,13 @@ describe Case::FOI::Standard do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: true,
-                                   assignment_times: [8.business_days.ago])
+                                   assignment_times: [8.working.days.ago])
                 expect(kase).to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 1
                 expect(responder_assignments.first.state).to eq "accepted"
 
-                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.working.days.ago.to_date
                 expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
@@ -373,13 +373,13 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [21.business_days.ago])
+                                 assignment_times: [21.working.days.ago])
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.working.days.ago.to_date
               expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
@@ -391,13 +391,13 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [11.business_days.ago])
+                                 assignment_times: [11.working.days.ago])
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
               expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.working.days.ago.to_date
               expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
@@ -414,7 +414,7 @@ describe Case::FOI::Standard do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: false,
-                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 18.business_days.ago])
+                                   assignment_times: [30.working.days.ago, 25.working.days.ago, 18.working.days.ago])
                 expect(kase).not_to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 3
@@ -422,7 +422,7 @@ describe Case::FOI::Standard do
                 expect(responder_assignments[1].state).to eq "rejected"
                 expect(responder_assignments[2].state).to eq "accepted"
 
-                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.working.days.ago.to_date
                 expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
@@ -436,7 +436,7 @@ describe Case::FOI::Standard do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: true,
-                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 8.business_days.ago])
+                                   assignment_times: [30.working.days.ago, 25.working.days.ago, 8.working.days.ago])
                 expect(kase).to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 3
@@ -444,7 +444,7 @@ describe Case::FOI::Standard do
                 expect(responder_assignments[1].state).to eq "rejected"
                 expect(responder_assignments[2].state).to eq "accepted"
 
-                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.working.days.ago.to_date
                 expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
@@ -459,7 +459,7 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 21.business_days.ago])
+                                 assignment_times: [30.working.days.ago, 25.working.days.ago, 21.working.days.ago])
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -467,7 +467,7 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.working.days.ago.to_date
               expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
@@ -479,7 +479,7 @@ describe Case::FOI::Standard do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 11.business_days.ago])
+                                 assignment_times: [30.working.days.ago, 25.working.days.ago, 11.working.days.ago])
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
@@ -487,7 +487,7 @@ describe Case::FOI::Standard do
               expect(responder_assignments[1].state).to eq "rejected"
               expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.working.days.ago.to_date
               expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then

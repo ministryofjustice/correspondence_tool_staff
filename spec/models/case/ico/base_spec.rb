@@ -306,22 +306,22 @@ describe Case::ICO::Base do
 
   describe "updating deadlines" do
     it "uses the dates provided" do
-      today = 0.business_days.ago.to_date
+      today = 0.working.days.ago.to_date
       kase = create(:ico_foi_case,
                     received_date: today,
-                    internal_deadline: 10.business_days.after(today),
-                    external_deadline: 20.business_days.after(today))
+                    internal_deadline: 10.working.days.after(today),
+                    external_deadline: 20.working.days.after(today))
       expect(kase.received_date).to eq today
-      expect(kase.internal_deadline).to eq 10.business_days.after(today)
-      expect(kase.external_deadline).to eq 20.business_days.after(today)
+      expect(kase.internal_deadline).to eq 10.working.days.after(today)
+      expect(kase.external_deadline).to eq 20.working.days.after(today)
 
-      new_received_date = 5.business_days.ago.to_date
+      new_received_date = 5.working.days.ago.to_date
       kase.update!(received_date: new_received_date,
-                   internal_deadline: 10.business_days.after(new_received_date),
-                   external_deadline: 20.business_days.after(new_received_date))
+                   internal_deadline: 10.working.days.after(new_received_date),
+                   external_deadline: 20.working.days.after(new_received_date))
       expect(kase.received_date).to eq new_received_date
-      expect(kase.internal_deadline).to eq 10.business_days.after(new_received_date)
-      expect(kase.external_deadline).to eq 20.business_days.after(new_received_date)
+      expect(kase.internal_deadline).to eq 10.working.days.after(new_received_date)
+      expect(kase.external_deadline).to eq 20.working.days.after(new_received_date)
     end
   end
 end

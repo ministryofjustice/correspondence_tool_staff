@@ -8,7 +8,7 @@ feature "listing incoming on the system" do
   given(:assigned_case) do
     Timecop.freeze(Date.new(2020, 8, 19)) do
       create :assigned_case,
-             created_at: 1.business_days.ago,
+             created_at: 1.working.days.ago,
              identifier: "assigned_case"
     end
   end
@@ -22,7 +22,7 @@ feature "listing incoming on the system" do
     Timecop.freeze(Date.new(2020, 8, 19)) do
       create :assigned_case,
              :flagged,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_case_flagged_for_dacu_disclosure"
     end
   end
@@ -30,7 +30,7 @@ feature "listing incoming on the system" do
     Timecop.freeze(Date.new(2020, 8, 19)) do
       create :assigned_case,
              :flagged_accepted,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_case_flagged_for_dacu_disclosure_accepted"
     end
   end
@@ -39,7 +39,7 @@ feature "listing incoming on the system" do
       create :assigned_case,
              :flagged_accepted,
              :press_office,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_case_flagged_for_press_office_accepted"
     end
   end
@@ -48,7 +48,7 @@ feature "listing incoming on the system" do
       create :awaiting_responder_compliance_review,
              :flagged_accepted,
              :press_office,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_cr_case_flagged_for_press_office_accepted"
     end
   end
@@ -58,7 +58,7 @@ feature "listing incoming on the system" do
       create :assigned_case,
              :flagged_accepted,
              :private_office,
-             created_at: 2.business_days.ago,
+             created_at: 2.working.days.ago,
              identifier: "assigned_case_flagged_for_private_office_accepted"
     end
   end
@@ -88,7 +88,7 @@ feature "listing incoming on the system" do
     given(:too_old_assigned_case) do
       Timecop.freeze(Date.new(2020, 8, 19)) do
         create(:assigned_case,
-               created_at: 4.business_days.ago,
+               created_at: 4.working.days.ago,
                identifier: "too_old_assigned_case")
       end
     end
@@ -122,7 +122,7 @@ feature "listing incoming on the system" do
     given(:too_old_assigned_case) do
       Timecop.freeze(Date.new(2020, 8, 19)) do
         create :assigned_case,
-               created_at: 4.business_days.ago,
+               created_at: 4.working.days.ago,
                identifier: "too_old_assigned_case"
       end
     end

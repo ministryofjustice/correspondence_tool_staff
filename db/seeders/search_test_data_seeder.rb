@@ -110,21 +110,21 @@ class SearchTestDataSeeder
 
   def select_received_date(target_state)
     dates ||= [
-      8.business_days.ago,
-      20.business_days.ago,
-      50.business_days.ago,
-      70.business_days.ago,
+      8.working.days.ago,
+      20.working.days.ago,
+      50.working.days.ago,
+      70.working.days.ago,
     ]
     if target_state_before_response_uploaded?(target_state)
-      dates << 1.business_days.ago
-      dates << 3.business_days.ago
+      dates << 1.working.days.ago
+      dates << 3.working.days.ago
     end
 
-    0.business_days.after(dates[@case_count % dates.length]).to_date
+    0.working.days.after(dates[@case_count % dates.length]).to_date
   end
 
   def select_created_at(received_date)
-    0.business_days.after(received_date).to_s
+    0.working.days.after(received_date).to_s
   end
 
   def select_delivery_method

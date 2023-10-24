@@ -116,9 +116,9 @@ describe CaseCreateService do
     end
 
     context "when ICO case" do
-      let(:received)          { 0.business_days.ago }
-      let(:deadline)          { 28.business_days.after(received) }
-      let(:internal_deadline) { 10.business_days.before(deadline) }
+      let(:received)          { 0.working.days.ago }
+      let(:deadline)          { 28.working.days.after(received) }
+      let(:internal_deadline) { 10.working.days.before(deadline) }
       let(:foi)               { create :closed_case }
       let(:params) do
         ActionController::Parameters.new(
@@ -152,7 +152,7 @@ describe CaseCreateService do
         expect(created_ico_case.ico_officer_name).to eq "Ian C. Oldman"
         expect(created_case.ico_reference_number).to eq "ABC1344422"
         expect(created_case.external_deadline).to eq deadline.to_date
-        expect(created_case.internal_deadline).to eq(10.business_days.before(deadline).to_date)
+        expect(created_case.internal_deadline).to eq(10.working.days.before(deadline).to_date)
         expect(created_case.message).to eq "AAAAA"
         expect(created_case.subject).to eq foi.subject
         expect(created_case.current_state).to eq "unassigned"
@@ -238,7 +238,7 @@ describe CaseCreateService do
       it "sets the escalation date to 20 working days before the external deadline" do
         ccs.call
         kase = Case::OverturnedICO::SAR.last
-        expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline)
+        expect(kase.internal_deadline).to eq 20.working.days.before(kase.external_deadline)
       end
 
       it "calls #link_related_cases on the newly created case" do
@@ -325,7 +325,7 @@ describe CaseCreateService do
       it "sets the escalation date to 20 working days before the external deadline" do
         ccs.call
         kase = Case::OverturnedICO::FOI.last
-        expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline)
+        expect(kase.internal_deadline).to eq 20.working.days.before(kase.external_deadline)
       end
 
       it "calls #link_related_cases on the newly created case" do

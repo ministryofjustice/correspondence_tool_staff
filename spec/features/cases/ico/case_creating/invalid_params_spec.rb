@@ -11,9 +11,9 @@ feature "creating ICO with invalid params" do
   scenario "setting draft deadline before external", js: true do
     cases_new_ico_page.load
     cases_new_ico_page.form.fill_in_case_details(
-      received_date: 0.business_days.ago,
-      internal_deadline: 20.business_days.from_now,
-      external_deadline: 10.business_days.from_now,
+      received_date: 0.working.days.ago,
+      internal_deadline: 20.working.days.from_now,
+      external_deadline: 10.working.days.from_now,
       uploaded_request_files: [],
     )
     cases_new_ico_page.form.add_original_case(original_foi)

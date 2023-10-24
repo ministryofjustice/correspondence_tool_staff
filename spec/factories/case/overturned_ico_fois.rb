@@ -4,7 +4,7 @@ FactoryBot.define do
           parent: :foi_case,
           class: "Case::OverturnedICO::FOI" do
     transient do
-      creation_time { 4.business_days.ago }
+      creation_time { 4.working.days.ago }
       identifier    { "unassigned overturned ico foi" }
     end
 
@@ -227,8 +227,8 @@ FactoryBot.define do
       identifier { "closed overturned ico foi case" }
     end
 
-    received_date    { 4.business_days.ago }
-    date_responded   { 3.business_days.ago }
+    received_date    { 4.working.days.ago }
+    date_responded   { 3.working.days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
     late_team_id     { responding_team }
@@ -249,8 +249,8 @@ FactoryBot.define do
       identifier { "closed, approved trigger overturned ico foi case" }
     end
 
-    received_date    { 4.business_days.ago }
-    date_responded   { 2.business_days.ago }
+    received_date    { 4.working.days.ago }
+    date_responded   { 2.working.days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 
@@ -270,8 +270,8 @@ FactoryBot.define do
       identifier { "closed, approved full-approval overturned ico foi case" }
     end
 
-    received_date    { 4.business_days.ago }
-    date_responded   { 2.business_days.ago }
+    received_date    { 4.working.days.ago }
+    date_responded   { 2.working.days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 
