@@ -19,8 +19,8 @@ RSpec.describe Cases::IcoFoiController, type: :controller do
     let(:manager) { create :manager }
     let(:foi_case_for_ico) { create :closed_case }
     let(:ico_received_date) { 0.working.days.ago }
-    let(:ico_external_deadline) { 20.working.days.after(ico_received_date) }
-    let(:ico_internal_deadline) { 10.working.days.before(ico_external_deadline) }
+    let(:ico_external_deadline) { ico_received_date + 20.working.days }
+    let(:ico_internal_deadline) { ico_external_deadline - 10.working.days }
     let(:ico_params) do
       {
         correspondence_type: "ico",
@@ -43,7 +43,7 @@ RSpec.describe Cases::IcoFoiController, type: :controller do
       }
     end
     let(:deadline)          { 1.month.ago }
-    let(:internal_deadline) { 20.working.days.before(deadline) }
+    let(:internal_deadline) { deadline - 20.working.days }
 
     let(:created_case) { Case::ICO::FOI.last }
 

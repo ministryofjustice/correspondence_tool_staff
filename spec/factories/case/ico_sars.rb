@@ -18,8 +18,8 @@ FactoryBot.define do
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_sar
     received_date               { 0.working.days.ago }
-    external_deadline           { 20.working.days.after(received_date) }
-    internal_deadline           { 10.working.days.before(external_deadline) }
+    external_deadline           { received_date + 20.working.days }
+    internal_deadline           { external_deadline - 10.working.days }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     creator                     { managing_team.managers.first }
     created_at                  { creation_time }

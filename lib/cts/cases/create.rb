@@ -137,7 +137,7 @@ module CTS::Cases
 
     def get_foi_received_date
       options.fetch(:received_date) do
-        0.working.days.after(4.working.days.ago)
+        4.working.days.ago
       end
     end
 
@@ -161,33 +161,33 @@ module CTS::Cases
 
     def get_ico_external_deadline
       options.fetch(:external_deadline) do
-        20.working.days.after(get_ico_received_date)
+        get_ico_received_date = 20.working.days
       end
     end
 
     def get_ico_internal_deadline
       options.fetch(:internal_deadline) do
-        10.working.days.before(get_ico_external_deadline)
+        get_ico_external_deadline - 10.working.days
       end
     end
 
     def get_overturned_external_deadline
       options.fetch(:external_deadline) do
-        20.working.days.after(get_overturned_received_date)
+        get_overturned_received_date + 20.working.days
       end
     end
 
     def get_overturned_internal_deadline
       options.fetch(:internal_deadline) do
-        10.working.days.before(get_overturned_external_deadline)
+        get_overturned_external_deadline - 10.working.days
       end
     end
 
     def get_created_at_date
       if options[:created_at].present?
-        0.working.days.after(Time.zone.parse(options[:created_at]))
+        Time.zone.parse(options[:created_at]) + 0.working.days
       else
-        0.working.days.after(4.working.days.ago)
+        4.working.days.ago
       end
     end
 
@@ -329,7 +329,7 @@ module CTS::Cases
     end
 
     def transition_to_responded(kase)
-      kase.update!(date_responded: 5.working.days.after(kase.received_date))
+      kase.update!(date_responded: kase.received_date + 5.working.days)
 
       responder =
         if kase.ico?

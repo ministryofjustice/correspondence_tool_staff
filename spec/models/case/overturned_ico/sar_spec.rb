@@ -250,7 +250,7 @@ describe Case::OverturnedICO::SAR do
         kase = create :overturned_ico_sar,
                       received_date: Time.zone.today,
                       external_deadline: 1.month.from_now.to_date
-        expect(kase.internal_deadline).to eq 20.working.days.before(1.month.from_now).to_date
+        expect(kase.internal_deadline).to eq (1.month.from_now - 20.working.days).to_date
       end
     end
 

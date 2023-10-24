@@ -1050,7 +1050,7 @@ FactoryBot.define do
       kase.extend_pit_deadline!(13.working.days.from_now)
 
       create :case_transition_remove_pit_extension, case: kase
-      kase.remove_pit_deadline!(13.working.days.before)
+      kase.remove_pit_deadline!(13.working.days.ago)
     end
   end
 

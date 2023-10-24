@@ -31,7 +31,7 @@ describe CaseExtendForPITService do
         .to have_received(:extend_for_pit!)
         .with(acting_user: manager,
               acting_team: team_dacu,
-              final_deadline: 10.working.days.after(old_external_deadline),
+              final_deadline: old_external_deadline + 10.working.days,
               message: "I like to extend my best tests",
               original_final_deadline: old_external_deadline)
     end
@@ -39,7 +39,7 @@ describe CaseExtendForPITService do
     it "sets the external deadline on the case" do
       service.call
       expect(case_being_drafted.external_deadline)
-        .to eq 10.working.days.after(old_external_deadline)
+        .to eq old_external_deadline + 10.working.days
     end
 
     it "sets result to :ok and returns same" do
@@ -53,7 +53,7 @@ describe CaseExtendForPITService do
         described_class.new(
           manager,
           case_being_drafted,
-          10.working.days.after(Time.zone.today),
+          10.working.days.from_now,
           "",
         )
       end
@@ -108,7 +108,7 @@ describe CaseExtendForPITService do
     end
 
     context "when the extension deadline is before the final deadline" do
-      let(:new_external_deadline) { 1.working.days.before(old_external_deadline) }
+      let(:new_external_deadline) { old_external_deadline - 1.working.days }
 
       it "sets the result to :validation_error and returns it" do
         result = service.call

@@ -120,11 +120,11 @@ class SearchTestDataSeeder
       dates << 3.working.days.ago
     end
 
-    0.working.days.after(dates[@case_count % dates.length]).to_date
+    (dates[@case_count % dates.length] + 0.working_days).to_date
   end
 
   def select_created_at(received_date)
-    0.working.days.after(received_date).to_s
+    (received_date + 0.working.days).to_s
   end
 
   def select_delivery_method

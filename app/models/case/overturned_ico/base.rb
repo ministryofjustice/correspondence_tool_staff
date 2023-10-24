@@ -128,7 +128,7 @@ private
   end
 
   def set_deadlines
-    self.internal_deadline = 20.working.days.before(external_deadline)
+    self.internal_deadline = external_deadline - 20.working.days
     self.escalation_deadline = created_at.to_date
   end
 

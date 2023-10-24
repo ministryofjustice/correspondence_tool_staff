@@ -18,8 +18,8 @@ FactoryBot.define do
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
     association :original_case, factory: :closed_case
     received_date               { 0.working.days.ago }
-    external_deadline           { 20.working.days.after(received_date) }
-    internal_deadline           { 10.working.days.before(external_deadline) }
+    external_deadline           { received_date + 20.working.days }
+    internal_deadline           { external_deadline - 10.working.days }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
     creator                     { find_or_create :manager }
     created_at                  { creation_time }
@@ -242,8 +242,8 @@ FactoryBot.define do
       )
       kase.reload
       kase.update!(
-        external_deadline: 20.working.days.after(evaluator.original_external_deadline),
-        internal_deadline: 10.working.days.after(evaluator.original_external_deadline),
+        external_deadline: evaluator.original_external_deadline + 20.working.days,
+        internal_deadline: evaluator.original_external_deadline + 10.working.days,
         date_responded: nil,
       )
       kase.reload

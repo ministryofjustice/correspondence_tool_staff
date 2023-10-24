@@ -309,19 +309,19 @@ describe Case::ICO::Base do
       today = 0.working.days.ago.to_date
       kase = create(:ico_foi_case,
                     received_date: today,
-                    internal_deadline: 10.working.days.after(today),
-                    external_deadline: 20.working.days.after(today))
+                    internal_deadline: today + 10.working.days,
+                    external_deadline: today + 20.working.days)
       expect(kase.received_date).to eq today
-      expect(kase.internal_deadline).to eq 10.working.days.after(today)
-      expect(kase.external_deadline).to eq 20.working.days.after(today)
+      expect(kase.internal_deadline).to eq today + 10.working.days
+      expect(kase.external_deadline).to eq today + 20.working.days
 
       new_received_date = 5.working.days.ago.to_date
       kase.update!(received_date: new_received_date,
-                   internal_deadline: 10.working.days.after(new_received_date),
-                   external_deadline: 20.working.days.after(new_received_date))
+                   internal_deadline: new_received_date + 10.working.days,
+                   external_deadline: new_received_date + 20.working.days)
       expect(kase.received_date).to eq new_received_date
-      expect(kase.internal_deadline).to eq 10.working.days.after(new_received_date)
-      expect(kase.external_deadline).to eq 20.working.days.after(new_received_date)
+      expect(kase.internal_deadline).to eq new_received_date + 10.working.days
+      expect(kase.external_deadline).to eq new_received_date + 20.working.days
     end
   end
 end

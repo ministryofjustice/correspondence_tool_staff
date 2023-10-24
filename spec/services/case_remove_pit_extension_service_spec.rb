@@ -36,7 +36,7 @@ describe CaseRemovePITExtensionService do
     it "sets the external deadline on the case" do
       service.call
       expect(case_being_drafted.external_deadline)
-        .to eq 20.working.days.after(received_date)
+        .to eq received_date + 20.working.days
     end
 
     it "sets result to :ok and returns same" do
