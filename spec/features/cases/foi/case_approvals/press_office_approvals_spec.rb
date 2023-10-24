@@ -24,7 +24,7 @@ feature "cases requiring clearance by press office" do
 
   given!(:case_available_for_taking_on) do
     create :case_being_drafted,
-           created_at: 1.business_day.ago
+           created_at: 1.working.day.ago
   end
 
   scenario "Press Officer taking on a case", js: true do

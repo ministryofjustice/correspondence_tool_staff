@@ -2,8 +2,8 @@ require "rails_helper"
 
 feature "Sent To SSCL date" do
   given(:manager) { find_or_create :branston_user }
-  given(:offender_sar_case) { create(:offender_sar_case, :ready_for_vetting, received_date: 1.business_day.ago).decorate }
-  given(:sent_to_sscl_offender_sar_case) { create(:offender_sar_case, :ready_for_vetting, received_date: 1.business_day.ago, sent_to_sscl_at: 1.week.ago).decorate }
+  given(:offender_sar_case) { create(:offender_sar_case, :ready_for_vetting, received_date: 1.working.day.ago).decorate }
+  given(:sent_to_sscl_offender_sar_case) { create(:offender_sar_case, :ready_for_vetting, received_date: 1.working.day.ago, sent_to_sscl_at: 1.week.ago).decorate }
 
   background do
     login_as manager

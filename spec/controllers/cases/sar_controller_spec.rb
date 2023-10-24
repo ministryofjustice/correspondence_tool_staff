@@ -183,7 +183,7 @@ RSpec.describe Cases::SarController, type: :controller do
 
       let(:responder) { create :foi_responder }
       let(:manager)   { find_or_create :disclosure_bmt_user }
-      let(:new_date_responded) { 1.business_day.before(kase.date_responded) }
+      let(:new_date_responded) { kase.date_responded - 1.working.day }
       let(:params)             do
         {
           id: kase.id,
@@ -251,7 +251,7 @@ RSpec.describe Cases::SarController, type: :controller do
           patch :update_closure, params:
         end
 
-        let(:new_date_responded) { 1.business_day.ago }
+        let(:new_date_responded) { 1.working.day.ago }
         let(:kase)               { create :sar_case }
 
         it "does not change the date responded" do

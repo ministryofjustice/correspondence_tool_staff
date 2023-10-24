@@ -14,7 +14,7 @@ feature "cases requiring clearance by press office" do
   given(:other_private_officer) { create :private_officer }
   given(:case_available_for_taking_on) do
     create :case_being_drafted,
-           created_at: 1.business_day.ago
+           created_at: 1.working.day.ago
   end
   given(:pending_dacu_clearance_case) do
     create :pending_dacu_clearance_case,

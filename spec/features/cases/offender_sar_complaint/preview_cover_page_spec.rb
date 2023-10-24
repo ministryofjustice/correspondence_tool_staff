@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature "Cover page for an Offender SAR" do
   given(:manager) { find_or_create :branston_user }
-  given(:offender_sar_complaint) { create(:offender_sar_complaint, :waiting_for_data, received_date: 1.business_day.ago).decorate }
+  given(:offender_sar_complaint) { create(:offender_sar_complaint, :waiting_for_data, received_date: 1.working.day.ago).decorate }
 
   background do
     5.times do

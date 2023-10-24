@@ -131,7 +131,7 @@ RSpec.describe Cases::IcoController, type: :controller do
         let(:manager)   { find_or_create :disclosure_bmt_user }
         let(:responder) { create :foi_responder }
         let(:kase) { create :closed_ico_foi_case, :overturned_by_ico }
-        let(:new_date_responded) { 1.business_day.before(kase.date_ico_decision_received) }
+        let(:new_date_responded) { kase.date_ico_decision_received - 1.working.day }
 
         context "when closed ICO" do
           context "and change to upheld" do
@@ -243,7 +243,7 @@ RSpec.describe Cases::IcoController, type: :controller do
 
         context "when open ICO" do
           let(:kase) { create :accepted_ico_foi_case }
-          let(:new_date_responded) { 1.business_day.ago }
+          let(:new_date_responded) { 1.working.day.ago }
 
           let(:params)             do
             {

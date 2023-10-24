@@ -4,11 +4,11 @@ module DeadlineCalculator
 
     class << self
       def days_taken(start_date, end_date)
-        start_date.business_days_until(end_date, true)
+        start_date.working_days_until(end_date, true)
       end
 
       def days_late(start_date, end_date)
-        start_date.business_days_until(end_date, false)
+        start_date.working_days_until(end_date, false)
       end
     end
 

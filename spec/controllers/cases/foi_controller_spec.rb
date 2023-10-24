@@ -351,7 +351,7 @@ RSpec.describe Cases::FoiController, type: :controller do
 
       let(:responder) { create :foi_responder }
       let(:manager)   { find_or_create :disclosure_bmt_user }
-      let(:new_date_responded) { 1.business_day.before(kase.date_responded) }
+      let(:new_date_responded) { kase.date_responded - 1.working.day }
       let(:closure_params) do
         {
           info_held_status_abbreviation: "not_held",
@@ -481,7 +481,7 @@ RSpec.describe Cases::FoiController, type: :controller do
       end
 
       context "when open" do
-        let(:new_date_responded) { 1.business_day.ago }
+        let(:new_date_responded) { 1.working.day.ago }
         let(:kase)               { create :foi_case }
 
         it "does not change the date responded" do
@@ -505,7 +505,7 @@ RSpec.describe Cases::FoiController, type: :controller do
   end
 
   describe "FOICasesParams" do
-    let(:new_date_responded) { 1.business_day.before(Time.zone.today) }
+    let(:new_date_responded) { 1.working.day.ago }
 
     let(:params) do
       {

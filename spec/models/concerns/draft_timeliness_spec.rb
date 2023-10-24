@@ -4,7 +4,7 @@ module DraftTimeliness
   describe ResponseAdded do
     let(:kase) do
       create :pending_dacu_clearance_case,
-             when_response_uploaded: 1.business_day.ago
+             when_response_uploaded: 1.working.day.ago
     end
 
     let(:new_response) do

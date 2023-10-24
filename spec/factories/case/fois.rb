@@ -133,13 +133,13 @@ FactoryBot.define do
 
     trait :late do
       received_date { 30.working.days.ago }
-      date_responded { 1.business_day.ago }
-      date_draft_compliant { 1.business_day.ago }
+      date_responded { 1.working.day.ago }
+      date_draft_compliant { 1.working.day.ago }
     end
   end
 
   factory :case_within_escalation_deadline, parent: :case do
-    creation_time { 1.business_day.ago }
+    creation_time { 1.working.day.ago }
     identifier { "unassigned case within escalation deadline" }
   end
 
@@ -400,9 +400,9 @@ FactoryBot.define do
 
     trait :late do
       received_date  { 30.working.days.ago }
-      date_responded { 1.business_day.ago }
+      date_responded { 1.working.day.ago }
       late_team_id   { responding_team.id }
-      date_draft_compliant { 1.business_day.ago }
+      date_draft_compliant { 1.working.day.ago }
     end
 
     trait :granted_in_full do

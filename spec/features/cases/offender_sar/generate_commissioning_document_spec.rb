@@ -2,7 +2,7 @@ require "rails_helper"
 
 feature "Generate a commissioning document record for a data request" do
   given(:manager) { find_or_create :branston_user }
-  given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data, received_date: 1.business_day.ago).decorate }
+  given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data, received_date: 1.working.day.ago).decorate }
 
   background do
     create(:data_request, offender_sar_case:)
