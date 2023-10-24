@@ -6,11 +6,12 @@ module DeadlineCalculator
       def days_taken(start_date, end_date)
         days = start_date.working_days_until(end_date)
         days += 1 if start_date.working_day?
-        days
+        [days, 0].max
       end
 
       def days_late(start_date, end_date)
-        start_date.working_days_until(end_date)
+        days = start_date.working_days_until(end_date)
+        [days, 0].max
       end
     end
 
