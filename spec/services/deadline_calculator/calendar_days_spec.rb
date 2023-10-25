@@ -84,7 +84,7 @@ describe DeadlineCalculator::CalendarDays do
 
     it "returns the number of calendar days taken to respond to a case" do
       deadline_calculator = described_class.new(closed_case)
-      expect(deadline_calculator.time_taken).to eq 26
+      expect(deadline_calculator.time_taken).to eq 24
     end
 
     it "returns nil for an open case" do

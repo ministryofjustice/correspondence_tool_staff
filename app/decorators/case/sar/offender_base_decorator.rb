@@ -19,7 +19,7 @@ class Case::SAR::OffenderBaseDecorator < Case::BaseDecorator
   end
 
   def time_taken
-    I18n.t("common.case.sar/offender.time_taken_result", count: deadline_calculator.time_taken)
+    calendar_days_taken
   end
 
   def case_route_path
