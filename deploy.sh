@@ -180,8 +180,6 @@ function _deploy() {
 
   if [ $environment == "production" ]
   then
-    kubectl set image -f config/kubernetes/${environment}/cronjob-anonymizer.yaml \
-            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
     kubectl set image -f config/kubernetes/${environment}/cronjob-email-status.yaml \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
