@@ -386,22 +386,16 @@ We have functionality to create an anonymised copy of the production or staging 
 - trying to track the issue through Kibana
 - recreating the issue locally
 
-If the options above do not solve the issue you by create an anonymised dump of the database by running
+If the options above do not solve the issue you by create an anonymised dump of the database by connecting to a pod and running:
 
 ```
-rake db:dump:prod[host]
+rake db:dump:delete_s3_dumps[latest,false] && rake db:dump:local
 ```
 
-there are also options to create an anonymised version of the local database
+This will upload the file to an S3 bucket by default which can be loaded to an environment by connecting and running:
 
 ```
-rake db:dump:local[filename,anon]
-```
-
-or a standard copy
-
-```
-rake db:dump:local[filename,clear]
+rake db:dump:copy_s3_dumps && db:restore:local[,false,]
 ```
 
 For more help with the data dump tasks run:
