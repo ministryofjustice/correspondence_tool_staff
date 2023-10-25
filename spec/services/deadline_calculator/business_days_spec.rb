@@ -169,19 +169,19 @@ describe DeadlineCalculator::BusinessDays do
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
       it "same day" do
-        expect(deadline_calculator.class.days_taken(thu_may_18.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_taken(thu_may_18.to_date, thu_may_18.to_date))
           .to eq 1
       end
 
       it "start date ealier than end day" do
-        expect(deadline_calculator.class.days_taken(thu_may_18.to_date, tue_may_23.to_date))
+        expect(deadline_calculator.days_taken(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 4
       end
 
       it "start date later than end day" do
         thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-        expect(deadline_calculator.class.days_taken(tue_may_23.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_taken(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
       end
     end
@@ -191,19 +191,19 @@ describe DeadlineCalculator::BusinessDays do
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
       it "same day" do
-        expect(deadline_calculator.class.days_late(thu_may_18.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_late(thu_may_18.to_date, thu_may_18.to_date))
           .to eq 0
       end
 
       it "start date earlier than end day" do
-        expect(deadline_calculator.class.days_late(thu_may_18.to_date, tue_may_23.to_date))
+        expect(deadline_calculator.days_late(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 3
       end
 
       it "start date later than end day" do
         thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-        expect(deadline_calculator.class.days_late(tue_may_23.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_late(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
       end
     end

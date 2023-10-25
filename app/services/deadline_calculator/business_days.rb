@@ -2,18 +2,16 @@ module DeadlineCalculator
   class BusinessDays
     attr_reader :kase
 
-    class << self
-      def days_taken(start_date, end_date)
-        start_date.business_days_until(end_date, true)
-      end
-
-      def days_late(start_date, end_date)
-        start_date.business_days_until(end_date, false)
-      end
-    end
-
     def initialize(kase)
       @kase = kase
+    end
+
+    def days_taken(start_date, end_date)
+      start_date.business_days_until(end_date, true)
+    end
+
+    def days_late(start_date, end_date)
+      start_date.business_days_until(end_date, false)
     end
 
     def escalation_deadline(start_from = kase.created_at.to_date)
