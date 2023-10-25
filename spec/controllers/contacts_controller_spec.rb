@@ -17,7 +17,7 @@ RSpec.describe ContactsController, type: :controller do
       get :index
 
       # Extract the contacts from the controller's instance variable
-      contacts = assigns(:contacts.name)
+      contacts = assigns(:contacts)
 
       # Check if the contacts are sorted alphabetically by their name
       expect(contacts).to eq [brinsford, stafford, winsongreen]
