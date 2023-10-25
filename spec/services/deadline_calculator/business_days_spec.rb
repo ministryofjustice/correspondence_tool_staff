@@ -1,6 +1,9 @@
 require "rails_helper"
 
 describe DeadlineCalculator::BusinessDays do
+  let(:thu_oct_19) { Date.new(2023, 10, 19) }
+  let(:tue_oct_24) { Date.new(2023, 10, 24) }
+
   describe "FOI requests" do
     let(:foi_case) do
       build_stubbed :foi_case,
@@ -173,7 +176,7 @@ describe DeadlineCalculator::BusinessDays do
           .to eq 1
       end
 
-      it "start date ealier than end day" do
+      it "start date earlier than end day" do
         expect(deadline_calculator.days_taken(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 4
       end
@@ -183,6 +186,11 @@ describe DeadlineCalculator::BusinessDays do
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
         expect(deadline_calculator.days_taken(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
+      end
+
+      it "includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
       end
     end
 
@@ -205,6 +213,34 @@ describe DeadlineCalculator::BusinessDays do
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
         expect(deadline_calculator.days_late(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
+      end
+
+      it "includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        deadline_calculator.days_late(thu_oct_19, tue_oct_24)
+      end
+    end
+  end
+
+  describe "OFFENDER_SAR_COMPLAINT requests" do
+    let(:offender_sar_complaint) do
+      build_stubbed :offender_sar_complaint,
+                    received_date: Time.zone.today,
+                    created_at: Time.zone.today
+    end
+    let(:deadline_calculator) { described_class.new offender_sar_complaint }
+
+    describe "#days_taken" do
+      it "does not includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, {})
+        deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
+      end
+    end
+
+    describe "#days_late" do
+      it "does not includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, {})
+        deadline_calculator.days_late(thu_oct_19, tue_oct_24)
       end
     end
   end

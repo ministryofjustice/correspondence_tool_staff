@@ -56,6 +56,10 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
     true
   end
 
+  def all_holidays?
+    true
+  end
+
   def self.state_machine_name
     "foi"
   end

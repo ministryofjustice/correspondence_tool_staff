@@ -88,7 +88,7 @@ describe DeadlineCalculator::CalendarDays do
         .to eq 1
     end
 
-    it "start date ealier than end day" do
+    it "start date earlier than end day" do
       expect(deadline_calculator.days_taken(thu_may_18.to_date, tue_may_23.to_date))
         .to eq 6
     end
@@ -110,7 +110,7 @@ describe DeadlineCalculator::CalendarDays do
         .to eq 0
     end
 
-    it "start date ealier than end day" do
+    it "start date earlier than end day" do
       expect(deadline_calculator.days_late(thu_may_18.to_date, tue_may_23.to_date))
         .to eq 5
     end
