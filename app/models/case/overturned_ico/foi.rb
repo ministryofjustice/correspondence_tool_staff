@@ -77,4 +77,11 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
       end
     end
   end
+
+private
+
+  def set_deadlines
+    self.internal_deadline = @deadline_calculator.days_before(20, external_deadline)
+    super
+  end
 end
