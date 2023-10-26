@@ -252,14 +252,14 @@ describe Case::OverturnedICO::FOI do
   end
 
   context "when setting deadlines" do
-    it "sets the internal deadline from the external deadline" do
-      Timecop.freeze(2018, 7, 23, 10, 0, 0) do
+    it "sets the internal deadline from the external deadline including all holidays" do
+      Timecop.freeze(2023, 11, 22, 10, 0, 0) do
         kase = create :overturned_ico_foi,
                       original_ico_appeal:,
                       original_case:,
                       received_date: Time.zone.today,
-                      external_deadline: 1.month.from_now.to_date
-        expect(kase.internal_deadline).to eq 20.business_days.before(1.month.from_now).to_date
+                      external_deadline: Date.new(2023, 12, 22)
+        expect(kase.internal_deadline).to eq Date.new(2023, 11, 23)
       end
     end
 
