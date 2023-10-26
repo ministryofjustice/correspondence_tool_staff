@@ -8,7 +8,7 @@ ADDITIONAL_BANK_HOLIDAYS = [
   "2024-08-05", # Summer bank holiday
   "2024-02-12", # St Andrew's Day (substitute day)
   "2025-01-02", # 2nd January
-  "2025-03-17", # St Paricks's Day
+  "2025-03-17", # St Patricks's Day
   "2025-07-14", # Battle of the Boyne (substitute day)
   "2025-08-04", # Summer bank holiday
   "2025-12-01", # St Andrew's Day (substitute day)

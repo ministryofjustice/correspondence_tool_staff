@@ -167,6 +167,14 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
+    describe "#days_before" do
+      it "includes additional bank holidays in calculation" do
+        mon_dec_4 = Date.new(2023, 12, 4)
+        fri_nov_17 = Date.new(2023, 11, 17)
+        expect(deadline_calculator.days_before(10, mon_dec_4)).to eq fri_nov_17
+      end
+    end
+
     describe "#days_taken" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
@@ -229,6 +237,14 @@ describe DeadlineCalculator::BusinessDays do
                     created_at: Time.zone.today
     end
     let(:deadline_calculator) { described_class.new offender_sar_complaint }
+
+    describe "#days_before" do
+      it "does not includes additional holidays in calculation" do
+        mon_dec_4 = Date.new(2023, 12, 4)
+        mon_nov_20 = Date.new(2023, 11, 20)
+        expect(deadline_calculator.days_before(10, mon_dec_4)).to eq mon_nov_20
+      end
+    end
 
     describe "#days_taken" do
       it "does not includes additional holidays" do

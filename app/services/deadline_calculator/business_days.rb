@@ -15,7 +15,7 @@ module DeadlineCalculator
     end
 
     def days_before(number, date)
-      number.business_days.before(date)
+      number.business_days.before(date, options)
     end
 
     def escalation_deadline(start_from = kase.created_at.to_date)

@@ -14,6 +14,10 @@ module DeadlineCalculator
       (end_date - start_date).to_i
     end
 
+    def days_before(number, date)
+      date - number.days
+    end
+
     def escalation_deadline
       kase.created_at.to_date + kase.correspondence_type.escalation_time_limit.days
     end

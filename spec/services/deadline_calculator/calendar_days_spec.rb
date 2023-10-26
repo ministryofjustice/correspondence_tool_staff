@@ -122,4 +122,13 @@ describe DeadlineCalculator::CalendarDays do
         .to eq 5
     end
   end
+
+  describe "#days_before" do
+    let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
+    let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
+
+    it "returns the correct date" do
+      expect(deadline_calculator.days_before(5, tue_may_23.to_date)).to eq thu_may_18.to_date
+    end
+  end
 end
