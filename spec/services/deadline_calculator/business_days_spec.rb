@@ -107,6 +107,10 @@ describe DeadlineCalculator::BusinessDays do
       let(:tue_jun_01) { Time.utc(2021, 6, 1, 12, 0, 0) }
       let(:mon_may_17) { Time.utc(2021, 5, 17, 12, 0, 0) }
       let(:thu_may_06) { Time.utc(2021, 5, 6, 12, 0, 0) }
+      let(:mon_nov_27) { Time.utc(2023, 11, 27, 12, 0, 0) }
+      let(:fri_dec_01) { Time.utc(2023, 12, 1, 12, 0, 0) }
+      let(:tue_dec_12) { Time.utc(2023, 12, 12, 12, 0, 0) }
+      let(:thu_dec_28) { Time.utc(2023, 12, 28, 12, 0, 0) }
 
       describe ".escalation_deadline" do
         it "is 3 working days after received date" do
@@ -120,6 +124,13 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.escalation_deadline)
               .to eq thu_may_06.to_date
+          end
+        end
+
+        it "is 3 working days after received date - Scottish bank holiday Thu Nov 30 is not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.escalation_deadline)
+              .to eq fri_dec_01.to_date
           end
         end
       end
@@ -138,6 +149,13 @@ describe DeadlineCalculator::BusinessDays do
               .to eq tue_jun_01.to_date
           end
         end
+
+        it "is 20 working days after received date - Scottish bank holiday Thu Nov 30 and Christmas bank holidays are not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.external_deadline)
+              .to eq thu_dec_28.to_date
+          end
+        end
       end
 
       describe ".internal_deadline" do
@@ -152,6 +170,13 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.internal_deadline)
               .to eq mon_may_17.to_date
+          end
+        end
+
+        it "is 10 working days after received date - Scottish bank holiday Thu Nov 30 is not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.internal_deadline)
+              .to eq tue_dec_12.to_date
           end
         end
       end
