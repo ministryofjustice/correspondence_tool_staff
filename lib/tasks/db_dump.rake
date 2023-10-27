@@ -107,7 +107,6 @@ namespace :db do
     desc "Help text for rake db:dump:* tasks"
     task help: :environment do
       puts "rake db:dump:exists will check the bucket exists and is accessible".yellow
-      puts "rake db:dump:prod will produce an SQL dump of the database from the ".yellow
       puts "rake db:dump:local will dump and anonymize again the database the current env/pod connects with ".yellow
       puts "rake db:dump:list_s3_dumps will list all the files under dumps folder".yellow
       puts "rake db:dump:delete_s3_dumps will delete all the files under dumps folder".yellow
