@@ -20,8 +20,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def time_taken
-    business_days = received_date.business_days_until(date_responded, true)
-    I18n.t("common.case.time_taken_result", count: business_days)
+    I18n.t("common.case.time_taken_result", count: deadline_calculator.time_taken)
   end
 
   def calendar_days_taken
