@@ -200,6 +200,14 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
+    describe "#days_after" do
+      it "includes additional bank holidays in calculation" do
+        fri_nov_17 = Date.new(2023, 11, 17)
+        mon_dec_4 = Date.new(2023, 12, 4)
+        expect(deadline_calculator.days_after(10, fri_nov_17)).to eq mon_dec_4
+      end
+    end
+
     describe "#days_taken" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }

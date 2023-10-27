@@ -18,6 +18,10 @@ module DeadlineCalculator
       number.business_days.before(date, options)
     end
 
+    def days_after(number, date)
+      number.business_days.after(date, options)
+    end
+
     def escalation_deadline(start_from = kase.created_at.to_date)
       start = next_working_day(start_from)
       calculate(kase.correspondence_type.escalation_time_limit, start)
