@@ -113,7 +113,7 @@ describe "cases/overturned_sar/case_details.html.slim", type: :view do
         )
         partial = render_partial(closed_case)
 
-        expect(partial.time_taken.text).to eq "22 working days"
+        expect(partial.time_taken.text).to eq "29 calendar days"
       end
     end
   end

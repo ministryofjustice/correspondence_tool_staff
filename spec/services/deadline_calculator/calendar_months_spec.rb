@@ -155,8 +155,10 @@ describe DeadlineCalculator::CalendarMonths do
     let(:closed_case) { create(:closed_case) }
 
     it "returns the number of calendar days taken to respond to a case" do
-      deadline_calculator = described_class.new(closed_case)
-      expect(deadline_calculator.time_taken).to eq 24
+      freeze_time do
+        deadline_calculator = described_class.new(closed_case)
+        expect(deadline_calculator.time_taken).to eq 27
+      end
     end
 
     it "returns nil for an open case" do
