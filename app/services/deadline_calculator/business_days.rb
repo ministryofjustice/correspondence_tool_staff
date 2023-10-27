@@ -62,6 +62,12 @@ module DeadlineCalculator
       "business #{'day'.pluralize(time_limit)}".freeze
     end
 
+    def time_taken
+      return nil if kase.date_responded.nil?
+
+      kase.received_date.business_days_until(kase.date_responded, true)
+    end
+
   private
 
     def calculate(days, from = nil)
