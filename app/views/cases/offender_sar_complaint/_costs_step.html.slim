@@ -7,8 +7,8 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
-  = f.number_field :settlement_cost, {class: 'cost_settlement'}
+  = f.number_field :settlement_cost, class: 'cost_settlement'
 
-  = f.number_field :total_cost, class: {'cost_settlement'}
+  = f.number_field :total_cost, class: 'cost_settlement'
 
   = f.submit 'Continue', class: 'button'
