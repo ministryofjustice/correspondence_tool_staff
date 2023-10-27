@@ -122,6 +122,10 @@ class Case::FOI::Standard < Case::Base
     true
   end
 
+  def all_holidays?
+    true
+  end
+
   def self.factory(type)
     case type&.downcase
     when "standard"

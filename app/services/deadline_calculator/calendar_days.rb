@@ -2,18 +2,24 @@ module DeadlineCalculator
   class CalendarDays
     attr_reader :kase
 
-    class << self
-      def days_taken(start_date, end_date)
-        (end_date - start_date).to_i + 1
-      end
-
-      def days_late(start_date, end_date)
-        (end_date - start_date).to_i
-      end
-    end
-
     def initialize(kase)
       @kase = kase
+    end
+
+    def days_taken(start_date, end_date)
+      (end_date - start_date).to_i + 1
+    end
+
+    def days_late(start_date, end_date)
+      (end_date - start_date).to_i
+    end
+
+    def days_before(number, date)
+      date - number.days
+    end
+
+    def days_after(number, date)
+      date + number.days
     end
 
     def escalation_deadline
