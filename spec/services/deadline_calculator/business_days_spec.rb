@@ -203,7 +203,7 @@ describe DeadlineCalculator::BusinessDays do
         expect(deadline_calculator.time_taken).to be_nil
       end
     end
-    
+
     describe "#days_before" do
       it "includes additional bank holidays in calculation" do
         mon_dec_4 = Date.new(2023, 12, 4)
