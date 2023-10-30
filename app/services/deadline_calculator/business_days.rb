@@ -65,7 +65,7 @@ module DeadlineCalculator
     def time_taken
       return nil if kase.date_responded.nil?
 
-      kase.received_date.business_days_until(kase.date_responded, true)
+      days_taken(kase.received_date, kase.date_responded)
     end
 
   private
