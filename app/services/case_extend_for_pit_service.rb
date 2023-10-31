@@ -48,16 +48,14 @@ private
   end
 
   def extension_date_valid?
-    extension_limit = Settings.pit_extension_limit
-                        .business_days
-                        .after(@case.external_deadline)
+    extension_limit = @case.deadline_calculator.days_after(Settings.pit_extension_limit, @case.external_deadline)
     if @extension_deadline.blank?
       @case.errors.add(:extension_deadline, "Date cannot be blank")
       false
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_deadline,
-        "Date is more than #{Settings.pit_extension_limit} beyond the final deadline",
+        "Date is more than #{Settings.pit_extension_limit} days beyond the final deadline",
       )
       false
     elsif @extension_deadline < @case.external_deadline

@@ -686,7 +686,7 @@ class Case::Base < ApplicationRecord
   end
 
   def num_days_late
-    days = @deadline_calculator.class.days_late(
+    days = @deadline_calculator.days_late(
       external_deadline,
       benchmark_date_value_for_days_metrics,
     )
@@ -695,7 +695,7 @@ class Case::Base < ApplicationRecord
 
   def num_days_late_against_original_deadline
     if original_external_deadline.present?
-      days = @deadline_calculator.class.days_late(
+      days = @deadline_calculator.days_late(
         original_external_deadline,
         benchmark_date_value_for_days_metrics,
       )
@@ -704,7 +704,7 @@ class Case::Base < ApplicationRecord
   end
 
   def num_days_taken
-    days = @deadline_calculator.class.days_taken(
+    days = @deadline_calculator.days_taken(
       received_date,
       benchmark_date_value_for_days_metrics,
     )
@@ -714,7 +714,7 @@ class Case::Base < ApplicationRecord
   def num_days_taken_after_extension
     the_date_being_extended = find_most_recent_action_timing_for_pit_extension
     if the_date_being_extended.present?
-      days = @deadline_calculator.class.days_taken(
+      days = @deadline_calculator.days_taken(
         the_date_being_extended,
         benchmark_date_value_for_days_metrics,
       )
@@ -909,6 +909,7 @@ class Case::Base < ApplicationRecord
   def offender_sar? = false
   def offender_sar_complaint? = false
   def sar_internal_review? = false
+  def all_holidays? = false
 
   def default_managing_team
     BusinessUnit.dacu_bmt

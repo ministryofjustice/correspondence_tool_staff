@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseExtendForPITService do
-  let(:case_being_drafted) { create :case_being_drafted }
+  let(:case_being_drafted) { freeze_time { create(:case_being_drafted) } }
   let(:team_dacu) { find_or_create :team_disclosure_bmt }
   let(:manager) { find_or_create :disclosure_bmt_user }
   let(:old_external_deadline) { case_being_drafted.external_deadline }
@@ -103,7 +103,7 @@ describe CaseExtendForPITService do
       it "adds an error to the case" do
         service.call
         expect(case_being_drafted.errors[:extension_deadline])
-          .to eq ["Date is more than 20 beyond the final deadline"]
+          .to eq ["Date is more than 20 days beyond the final deadline"]
       end
     end
 
