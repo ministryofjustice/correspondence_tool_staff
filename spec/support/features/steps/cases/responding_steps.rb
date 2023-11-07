@@ -72,7 +72,7 @@ def close_sar_case_step(timeliness: "in time", tmm: false, editable: true)
   # Regex required to handle both cases of 1 or more days to respond
 
   if show_page.has_css?(".overturned-sar-basic-details")
-    expect(show_page.response_details.time_taken.data.text).to match(/\d+ working day[s{1}]?/)
+    expect(show_page.response_details.time_taken.data.text).to match(/\d+ calendar day[s{1}]?/)
   end
 
   if tmm

@@ -56,6 +56,10 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
     true
   end
 
+  def all_holidays?
+    true
+  end
+
   def self.state_machine_name
     "foi"
   end
@@ -72,5 +76,12 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
         errors.add(:original_ico_appeal, :not_ico_foi)
       end
     end
+  end
+
+private
+
+  def set_deadlines
+    self.internal_deadline = @deadline_calculator.days_before(20, external_deadline)
+    self.escalation_deadline = created_at.to_date
   end
 end
