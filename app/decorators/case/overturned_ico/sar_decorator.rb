@@ -16,4 +16,8 @@ class Case::OverturnedICO::SARDecorator < Case::OverturnedICO::BaseDecorator
   def sar_response_address
     object.send_by_email? ? object.email : object.postal_address
   end
+
+  def time_taken
+    calendar_days_taken
+  end
 end

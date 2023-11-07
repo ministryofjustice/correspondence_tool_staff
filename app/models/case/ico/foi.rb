@@ -42,4 +42,8 @@ class Case::ICO::FOI < Case::ICO::Base
   def reset_responding_assignment_flag
     responder_assignment.update(state: "pending")
   end
+
+  def all_holidays?
+    true
+  end
 end
