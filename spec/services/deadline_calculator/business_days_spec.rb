@@ -1,6 +1,9 @@
 require "rails_helper"
 
 describe DeadlineCalculator::BusinessDays do
+  let(:thu_oct_19) { Date.new(2023, 10, 19) }
+  let(:tue_oct_24) { Date.new(2023, 10, 24) }
+
   describe "FOI requests" do
     let(:foi_case) do
       build_stubbed :foi_case,
@@ -104,6 +107,10 @@ describe DeadlineCalculator::BusinessDays do
       let(:tue_jun_01) { Time.utc(2021, 6, 1, 12, 0, 0) }
       let(:mon_may_17) { Time.utc(2021, 5, 17, 12, 0, 0) }
       let(:thu_may_06) { Time.utc(2021, 5, 6, 12, 0, 0) }
+      let(:mon_nov_27) { Time.utc(2023, 11, 27, 12, 0, 0) }
+      let(:fri_dec_01) { Time.utc(2023, 12, 1, 12, 0, 0) }
+      let(:tue_dec_12) { Time.utc(2023, 12, 12, 12, 0, 0) }
+      let(:thu_dec_28) { Time.utc(2023, 12, 28, 12, 0, 0) }
 
       describe ".escalation_deadline" do
         it "is 3 working days after received date" do
@@ -117,6 +124,13 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.escalation_deadline)
               .to eq thu_may_06.to_date
+          end
+        end
+
+        it "is 3 working days after received date - Scottish bank holiday Thu Nov 30 is not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.escalation_deadline)
+              .to eq fri_dec_01.to_date
           end
         end
       end
@@ -135,6 +149,13 @@ describe DeadlineCalculator::BusinessDays do
               .to eq tue_jun_01.to_date
           end
         end
+
+        it "is 20 working days after received date - Scottish bank holiday Thu Nov 30 and Christmas bank holidays are not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.external_deadline)
+              .to eq thu_dec_28.to_date
+          end
+        end
       end
 
       describe ".internal_deadline" do
@@ -151,6 +172,13 @@ describe DeadlineCalculator::BusinessDays do
               .to eq mon_may_17.to_date
           end
         end
+
+        it "is 10 working days after received date - Scottish bank holiday Thu Nov 30 is not counted" do
+          Timecop.freeze mon_nov_27 do
+            expect(deadline_calculator.internal_deadline)
+              .to eq tue_dec_12.to_date
+          end
+        end
       end
     end
 
@@ -164,25 +192,58 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
+    describe "#time_taken" do
+      it "returns the number of business days taken to respond to a case" do
+        closed_case = create(:closed_case)
+        deadline_calculator = described_class.new(closed_case)
+        expect(deadline_calculator.time_taken).to eq 19
+      end
+
+      it "returns nil for an open case" do
+        expect(deadline_calculator.time_taken).to be_nil
+      end
+    end
+
+    describe "#days_before" do
+      it "includes additional bank holidays in calculation" do
+        mon_dec_4 = Date.new(2023, 12, 4)
+        fri_nov_17 = Date.new(2023, 11, 17)
+        expect(deadline_calculator.days_before(10, mon_dec_4)).to eq fri_nov_17
+      end
+    end
+
+    describe "#days_after" do
+      it "includes additional bank holidays in calculation" do
+        fri_nov_17 = Date.new(2023, 11, 17)
+        mon_dec_4 = Date.new(2023, 12, 4)
+        expect(deadline_calculator.days_after(10, fri_nov_17)).to eq mon_dec_4
+      end
+    end
+
     describe "#days_taken" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
       it "same day" do
-        expect(deadline_calculator.class.days_taken(thu_may_18.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_taken(thu_may_18.to_date, thu_may_18.to_date))
           .to eq 1
       end
 
-      it "start date ealier than end day" do
-        expect(deadline_calculator.class.days_taken(thu_may_18.to_date, tue_may_23.to_date))
+      it "start date earlier than end day" do
+        expect(deadline_calculator.days_taken(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 4
       end
 
       it "start date later than end day" do
         thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-        expect(deadline_calculator.class.days_taken(tue_may_23.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_taken(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
+      end
+
+      it "includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
       end
     end
 
@@ -191,20 +252,56 @@ describe DeadlineCalculator::BusinessDays do
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
       it "same day" do
-        expect(deadline_calculator.class.days_late(thu_may_18.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_late(thu_may_18.to_date, thu_may_18.to_date))
           .to eq 0
       end
 
       it "start date earlier than end day" do
-        expect(deadline_calculator.class.days_late(thu_may_18.to_date, tue_may_23.to_date))
+        expect(deadline_calculator.days_late(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 3
       end
 
       it "start date later than end day" do
         thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
         tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-        expect(deadline_calculator.class.days_late(tue_may_23.to_date, thu_may_18.to_date))
+        expect(deadline_calculator.days_late(tue_may_23.to_date, thu_may_18.to_date))
           .to eq 0
+      end
+
+      it "includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        deadline_calculator.days_late(thu_oct_19, tue_oct_24)
+      end
+    end
+  end
+
+  describe "OFFENDER_SAR_COMPLAINT requests" do
+    let(:offender_sar_complaint) do
+      build_stubbed :offender_sar_complaint,
+                    received_date: Time.zone.today,
+                    created_at: Time.zone.today
+    end
+    let(:deadline_calculator) { described_class.new offender_sar_complaint }
+
+    describe "#days_before" do
+      it "does not includes additional holidays in calculation" do
+        mon_dec_4 = Date.new(2023, 12, 4)
+        mon_nov_20 = Date.new(2023, 11, 20)
+        expect(deadline_calculator.days_before(10, mon_dec_4)).to eq mon_nov_20
+      end
+    end
+
+    describe "#days_taken" do
+      it "does not includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, {})
+        deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
+      end
+    end
+
+    describe "#days_late" do
+      it "does not includes additional holidays" do
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, {})
+        deadline_calculator.days_late(thu_oct_19, tue_oct_24)
       end
     end
   end
