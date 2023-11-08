@@ -28,7 +28,12 @@
     margin-right: $gutter;
     margin-top: $gutter;
   }
+
+  .button-high {
+    margin-top: -6px;
+  }
 }
+
 .button-left-spacing{
   margin-top: $gutter;
   margin-left: $gutter;
