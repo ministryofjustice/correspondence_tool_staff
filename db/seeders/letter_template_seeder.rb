@@ -109,7 +109,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -152,7 +152,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -272,7 +272,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -351,7 +351,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -380,7 +380,7 @@ class LetterTemplateSeeder
                   #{solictor_receiver} - #{address}
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -549,7 +549,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -594,7 +594,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>
-                  <br>Despatch Team
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
