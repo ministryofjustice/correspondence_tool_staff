@@ -30,7 +30,7 @@ module PageObjects
             element :last_updated, "td:nth-child(2)"
             element :actions, "td:nth-child(3)"
           end
-          element :button_send_email, ".button-high"
+          element :button_send_email, ".data_request_send_email"
 
           section :email_row, "tbody.email_details tr" do
             element :email_type, "td:nth-child(1)"
