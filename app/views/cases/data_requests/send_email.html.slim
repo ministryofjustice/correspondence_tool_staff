@@ -41,5 +41,5 @@ span.visually-hidden
 
     div.button-holder
       = form_for @commissioning_document, method: :post, url: send_email_case_data_request_commissioning_document_path(@case, @data_request, @commissioning_document) do |f|
-        = submit_tag t('button.send_email'), class: 'button button-high data_request_send_email', disabled: @no_email_present
+        = submit_tag t('button.send_email'), class: 'button data_request_send_email', disabled: @no_email_present
         = link_to(t('common.cancel'), case_data_request_path(@case, @data_request), class: 'acts-like-button data_request_cancel moj-style-link')
