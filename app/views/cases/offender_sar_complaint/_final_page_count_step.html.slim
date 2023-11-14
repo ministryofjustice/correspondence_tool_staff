@@ -15,7 +15,7 @@ div class="case-#{@correspondence_type_key}"
   / this does not appear in the list of steps for new cast creation as found in
   / OffenderSARCaseForm -> def steps method
   = form_for @case, url: case_sar_offender_complaint_path(@case), as: :offender_sar_complaint do |f|
-    = f.number_field :number_final_pages, style: 'width: 10%'
+    = f.number_field :number_final_pages, {class: 'pages_number'}
 
     input name="current_step" type="hidden" value=@case.current_step
 
