@@ -23,21 +23,21 @@ feature "filtering by external deadline", if: working_hours do
       @case_due_next_3_days = create :case,
                                      received_date: 18.business_days.ago,
                                      subject: "prison guards next 3 days"
-      @case_due_next_10_days = create :case,
-                                      received_date: 10.business_days.ago,
-                                      subject: "prison guards next 10 days"
+      @case_due_next_8_days = create :case,
+                                      received_date: 12.business_days.ago,
+                                      subject: "prison guards next 8 days"
 
       @all_case_numbers = @setup.cases.values.map(&:number) +
         [
           @case_due_today.number,
           @case_due_next_3_days.number,
-          @case_due_next_10_days.number,
+          @case_due_next_8_days.number,
         ]
 
       @all_open_case_numbers = [@setup.std_draft_foi.number,
                                 @case_due_today.number,
                                 @case_due_next_3_days.number,
-                                @case_due_next_10_days.number]
+                                @case_due_next_8_days.number]
 
       # add a common search term to them all
       #
@@ -161,7 +161,7 @@ feature "filtering by external deadline", if: working_hours do
       expect(page.case_numbers).to match_array [
         @case_due_today.number,
         @case_due_next_3_days.number,
-        @case_due_next_10_days.number,
+        @case_due_next_8_days.number,
       ]
 
       page.open_filter(:external_deadline)
@@ -185,7 +185,7 @@ feature "filtering by external deadline", if: working_hours do
       page.filter_on_deadline(from: from_date, to: to_date)
 
       expect(page.case_numbers).to match_array [
-        @case_due_next_10_days.number,
+        @case_due_next_8_days.number,
       ]
 
       page.open_filter(:external_deadline)
