@@ -32,7 +32,7 @@ references:
 
   deploy_container_config: &deploy_container_config
     docker:
-      - image: ministryofjustice/cloud-platform-tools:1.29
+      - image: ministryofjustice/cloud-platform-tools:2.7.0
 
   install_psql: &install_psql
     run:
