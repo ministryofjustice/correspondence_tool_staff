@@ -15,6 +15,7 @@ en:
       ready_to_dispatch: Ready to dispatch
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
+      rejected: Rejected
     case/sar/offender_complaint:
       closed: Closed
       data_to_be_requested: Data to be requested
@@ -27,6 +28,7 @@ en:
       to_be_assessed: To be assessed
       data_review_required: Data review is required
       response_required: Response is required
+      rejected: Rejected
     closed: Closed
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance
