@@ -28,7 +28,6 @@ module ConfigurableStateMachine
          to_be_assessed
          data_review_required
          response_required
-         rejected
          waiting
          closed]
     end
