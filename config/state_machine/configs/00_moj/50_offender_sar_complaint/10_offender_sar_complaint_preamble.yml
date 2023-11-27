@@ -22,4 +22,5 @@
       - ready_to_dispatch
       - response_required
       - legal_proceedings_ongoing
+      - rejected
       - closed
