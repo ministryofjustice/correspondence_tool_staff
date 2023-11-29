@@ -60,6 +60,10 @@
                 unassign_from_user:
                   transition_to: awaiting_responder
 
+              rejected:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
               closed:
                 add_message_to_case:
                 add_responses:
@@ -108,14 +112,11 @@
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
-
-              closed:
+              rejected:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                update_closure:
-                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
 
-              rejected:
+              closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 update_closure:

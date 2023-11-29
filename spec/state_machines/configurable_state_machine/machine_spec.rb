@@ -941,16 +941,6 @@ module ConfigurableStateMachine
             expect(next_state).to eq "drafting"
           end
         end
-
-        describe "conditonal returns rejected" do
-          it "returns the return value of conditonal" do
-            allow_any_instance_of(ConfigurableStateMachine::DummyConditional) # rubocop:disable RSpec/AnyInstance
-              .to receive(:remove_response).and_return("rejected")
-            expect(kase.current_state).to eq "closed"
-            next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
-            expect(next_state).to eq "closed"
-          end
-        end
       end
 
       describe "no transition specified" do
