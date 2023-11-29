@@ -96,6 +96,7 @@ class Case::Base < ApplicationRecord
   scope :non_offender_sar, -> { where(type: "Case::SAR::Standard") }
   scope :offender_sar, -> { where(type: "Case::SAR::Offender") }
   scope :offender_sar_complaint, -> { where(type: "Case::SAR::OffenderComplaint") }
+  scope :offender_sar_rejected, -> { where(current_state: "rejected") }
 
   scope :with_teams, lambda { |teams|
     includes(:assignments)
