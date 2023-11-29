@@ -157,5 +157,15 @@ describe "event machine" do
       ).with_hook("Workflows::Hooks", :notify_approver_ready_for_review)
     }
   end
+
+  describe "rejected" do
+    let(:event) { :rejected }
+
+    it {
+      expect(event).to have_after_hook(
+        %i[sar_responder sar_noff_draft],
+      ).with_hook("Workflows::Hooks", :notify_managing_team_case_rejected)
+    }
+  end
 end
 # rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

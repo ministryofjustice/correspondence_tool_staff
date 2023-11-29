@@ -115,6 +115,11 @@
                 update_closure:
                   if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
 
+              rejected:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
 
           ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
           approver:

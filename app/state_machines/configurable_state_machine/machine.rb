@@ -12,6 +12,7 @@ module ConfigurableStateMachine
     # Couldn't think of easy way to fix it, so just added missing states here
     def self.states
       %w[unassigned
+         rejected
          awaiting_responder
          drafting
          pending_dacu_clearance
@@ -33,6 +34,10 @@ module ConfigurableStateMachine
     end
 
     def self.states_for_closed_cases
+      %w[closed]
+    end
+
+    def self.states_for_rejected_cases
       %w[closed]
     end
 

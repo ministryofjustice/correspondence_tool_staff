@@ -127,6 +127,7 @@ module ConfigurableStateMachine
 
     before(:all) do
       @managing_team      = create :managing_team
+      @rejected           = create :rejected_case, :flagged_rejected
       @unassigned_case    = create :case
       @accepted_case      = create :accepted_case, :flagged_accepted
       @accepted_case1     = create :accepted_case, :flagged_accepted
@@ -155,12 +156,20 @@ module ConfigurableStateMachine
         end
       end
 
+      context "when current_state on case is set to rejected" do
+        it "returns current_state of case" do
+          allow(kase).to receive(:current_state).and_return "rejected"
+          expect(machine.current_state).to eq "rejected"
+        end
+      end
+
       context "when current_state on case is set" do
         it "returns current_state of case" do
           allow(kase).to receive(:current_state).and_return "drafting"
           expect(machine.current_state).to eq "drafting"
         end
       end
+
     end
 
     describe "permitted_events" do
@@ -930,6 +939,16 @@ module ConfigurableStateMachine
             expect(kase.current_state).to eq "awaiting_dispatch"
             next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
             expect(next_state).to eq "drafting"
+          end
+        end
+
+        describe "conditonal returns rejected" do
+          it "returns the return value of conditonal" do
+            allow_any_instance_of(ConfigurableStateMachine::DummyConditional) # rubocop:disable RSpec/AnyInstance
+              .to receive(:remove_response).and_return("rejected")
+            expect(kase.current_state).to eq "closed"
+            next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
+            expect(next_state).to eq "closed"
           end
         end
       end
