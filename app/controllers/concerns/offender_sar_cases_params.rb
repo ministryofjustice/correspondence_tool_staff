@@ -82,7 +82,7 @@ module OffenderSARCasesParams
 
   def rejected_case_params
     params.require(:offender_sar).permit(
-      is_rejected,
+      :is_rejected,
     )
   end
 
