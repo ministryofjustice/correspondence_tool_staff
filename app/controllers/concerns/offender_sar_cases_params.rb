@@ -81,12 +81,6 @@ module OffenderSARCasesParams
     )
   end
 
-  def rejected_case_params
-    params.require(:offender_sar).permit(
-      :is_rejected,
-    )
-  end
-
   def validate_reason(reason_params)
     error_message = nil
     if reason_params.empty?
