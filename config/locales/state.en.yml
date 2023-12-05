@@ -8,6 +8,7 @@ en:
       closed: "Closed - %{ico_decision} by ICO"
       responded: Closed - awaiting ICO decision
     case/sar/offender:
+      rejected: Rejected
       closed: Closed
       data_to_be_requested: Data to be requested
       ready_for_vetting: Ready for vetting
