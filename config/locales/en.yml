@@ -961,6 +961,10 @@ en:
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
+        status:
+          valid: Valid
+          rejected: Rejected
+          complaint: Complaint
       retention_schedule_form:
         state:
           <<: *retention_schedule_states
@@ -1412,6 +1416,9 @@ en:
       new_form:
         overturned_case_for: 'ICO Overturned case for:'
     select_type:
+      heading: Choose correspondence type
+      sub_heading: Create case
+    sar_select_type:
       heading: Choose correspondence type
       sub_heading: Create case
     shared:
