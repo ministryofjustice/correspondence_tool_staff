@@ -163,6 +163,7 @@ Rails.application.routes.draw do
       get "deleted" => "filters#deleted"
       get "incoming" => "filters#incoming"
       get "/" => "filters#show"
+      get "rejected" => "filters#rejected"
     end
   end
 
