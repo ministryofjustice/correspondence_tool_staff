@@ -20,10 +20,11 @@ ul#create-correspondences
   label.form-label
     = I18n.t('.helpers.label.correspondence_types.status.rejected') 
   li
-      = p link_to "Rejected Offender SAR - Offender subject access request", new_case_sar_offender_complaint_path
+      = p link_to "Rejected Offender SAR - Offender subject access request", 
+      new_case_sar_offender_path
   <br/>
 
   label.form-label
     = I18n.t('.helpers.label.correspondence_types.status.complaint')     
   li    
-      = p link_to "Offender SAR complaint - Offender subject access request complaint", new_case_sar_offender_path
+      = p link_to "Offender SAR complaint - Offender subject access request complaint", new_case_sar_offender_complaint_path
