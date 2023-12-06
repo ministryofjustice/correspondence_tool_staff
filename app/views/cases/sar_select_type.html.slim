@@ -11,12 +11,6 @@
 
 ul#create-correspondences
 
-  / - sort_correspondence_types_for_display(@permitted_correspondence_types)
-  / - @permitted_correspondence_types.each do |correspondence_type|
-  /   li
-  /     - case_type = correspondence_type == 'ICO' ? 'case_ico' : correspondence_type.sub_classes.first
-  /     = link_to correspondence_type.decorate.pretty_name, new_polymorphic_url(case_type)
- 
   label.form-label
     = I18n.t('.helpers.label.correspondence_types.status.valid')  
   li
