@@ -1,0 +1,35 @@
+- content_for :page_title do
+  = t('page_title.choose_case_type_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = t('.sub_heading')
+
+= render partial: 'layouts/header'
+
+ul#create-correspondences
+
+  / - sort_correspondence_types_for_display(@permitted_correspondence_types)
+  / - @permitted_correspondence_types.each do |correspondence_type|
+  /   li
+  /     - case_type = correspondence_type == 'ICO' ? 'case_ico' : correspondence_type.sub_classes.first
+  /     = link_to correspondence_type.decorate.pretty_name, new_polymorphic_url(case_type)
+ 
+  label.form-label
+    = I18n.t('.helpers.label.correspondence_types.status.valid')  
+  li
+      = p link_to "Offender SAR - Offender subject access request", new_case_sar_offender_path
+  <br/>    
+
+  label.form-label
+    = I18n.t('.helpers.label.correspondence_types.status.rejected') 
+  li
+      = p link_to "Rejected Offender SAR - Offender subject access request", new_case_sar_offender_complaint_path
+  <br/>
+
+  label.form-label
+    = I18n.t('.helpers.label.correspondence_types.status.complaint')     
+  li    
+      = p link_to "Offender SAR complaint - Offender subject access request complaint", new_case_sar_offender_path
