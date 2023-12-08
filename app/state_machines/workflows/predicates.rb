@@ -202,6 +202,10 @@ class Workflows::Predicates
     @kase.type == "Case::SAR::Offender" && (still_in_time? || has_caught_reason_for_lateness?)
   end
 
+  def is_rejected?
+    @kase.type == "Case::SAR::Offender" && @kase.current_state == "rejected"
+  end
+
 private
 
   def case_already_late?
