@@ -1,9 +1,9 @@
 module ViewsHelper
-  def get_offender_sar_heading(offender_sar_type, kase)
+  def get_offender_sar_heading(offender_sar_type, _kase)
     if offender_sar_type == "accepted"
-      content_tag(:span, t4c(kase, "", "case_type.accepted", case_type: kase.pretty_type), class: "page-heading--secondary")
+      content_tag(:span, t("cases.new.offender_sar.accepted"), class: "page-heading--secondary")
     else
-      content_tag(:span, t4c(kase, "", "case_type.rejected", case_type: kase.pretty_type), class: "page-heading--secondary")
+      content_tag(:span, t("cases.new.offender_sar.rejected"), class: "page-heading--secondary")
     end
   end
 end
