@@ -23,7 +23,7 @@ module Cases
       super
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = "offender_sar"
-      @offender_sar_type = "accepted"
+      @offender_sar_type = "rejected"
       @creation_optional_flags = {}
       get_reasons_for_lateness
     end

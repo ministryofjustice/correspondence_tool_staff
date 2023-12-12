@@ -1402,8 +1402,8 @@ en:
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
       offender_sar:
-        accepted: Accepted Offender SAR case
-        rejected: Rejected Offender SAR case
+        sub_heading: Create Offender SAR case
+        rejected: Create Rejected Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
