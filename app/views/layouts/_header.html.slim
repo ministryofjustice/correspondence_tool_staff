@@ -2,14 +2,10 @@
   .column-full
     header(role= 'banner')
       h1.page-heading
-        - if content_for?(:sub_heading)
-            span.page-heading--secondary
-              = yield :sub_heading
-              = ' sub_heading'
-        - elsif content_for?(:rejected)
-            span.page-heading--secondary
-              = yield :rejected
-              = ' rejected'
+        span.page-heading--secondary
+          = yield :sub_heading
+          = ' '
         span.page-heading--primary
           = yield :heading
+          = ' '
 = render partial: 'layouts/flashes' unless flash.empty?
