@@ -6,7 +6,7 @@ module Cases
     def initialize
       @correspondence_type = CorrespondenceType.sar
       @correspondence_type_key = "sar"
-      @offender_sar_type = "accepted"
+      @offender_sar_type = "rejected"
 
       super
     end
@@ -38,6 +38,10 @@ module Cases
 
     def process_date_responded_params
       respond_sar_params
+    end
+
+    def get_offender_sar_type
+      @offender_sar_type
     end
   end
 end
