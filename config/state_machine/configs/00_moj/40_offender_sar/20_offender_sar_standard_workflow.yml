@@ -89,9 +89,6 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
-              rejected:
-                close:
-                  transition_to: closed
               closed:
                 add_note_to_case:
                 send_dispatch_letter:

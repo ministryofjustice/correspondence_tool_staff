@@ -109,10 +109,6 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
 
-              rejected:
-                add_message_to_case:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?

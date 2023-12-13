@@ -2,7 +2,7 @@
   = t('.heading')
 
 - content_for :sub_heading
-  - get_offender_sar_heading(@offender_sar_type, @case)
+  = t4c(@case, '', 'sub_heading', case_type: @case.pretty_type)
 
 = render partial: "cases/#{@case.type_abbreviation.downcase}/new",
          locals: { kase: @case,

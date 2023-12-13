@@ -97,7 +97,6 @@ en:
     filter_status:
       open: 'Open'
       closed: 'Closed'
-      rejected: 'Rejected'
     filter_timeliness:
       in_time: 'In time'
       late: 'Late'
