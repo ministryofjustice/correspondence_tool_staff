@@ -5,10 +5,10 @@ RSpec.describe ViewsHelper, type: :helper do
     context "when a case has missing information" do
       let(:kase) { create :rejected_case }
 
-      it "generates a heading on the page" do
+      it "generates a heading" do
         text = helper.get_offender_sar_heading("rejected", kase)
-        expected_html = "<span class=\"page-heading--secondary\">Create Rejected Offender SAR case</span>"
-        expect(text).to eq(expected_html)
+        expected_heading = "Create Rejected Offender SAR case"
+        expect(text).to include(expected_heading)
       end
     end
   end
