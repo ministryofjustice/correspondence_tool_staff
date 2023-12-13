@@ -2,7 +2,8 @@
   .column-full
     header(role= 'banner')
       h1.page-heading
-        span.page-heading--secondary
+        - if content_for?(:sub_heading)
+          span.page-heading--secondary
           = yield :sub_heading
           = ' '
         span.page-heading--primary
