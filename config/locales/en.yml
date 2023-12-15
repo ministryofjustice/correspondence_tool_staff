@@ -1418,7 +1418,7 @@ en:
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
-    sar_select_type:
+    offender_sar_select_type:
       heading: Choose correspondence type
       sub_heading: Create case
     shared:
