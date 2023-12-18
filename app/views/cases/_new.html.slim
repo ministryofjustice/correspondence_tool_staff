@@ -2,7 +2,7 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = get_heading(kase)
+  = t4c(kase, '', 'sub_heading', case_type: kase.type_abbreviation)
 
 = render partial: 'layouts/header'
 

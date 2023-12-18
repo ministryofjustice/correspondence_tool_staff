@@ -37,9 +37,5 @@ module Cases
     def process_date_responded_params
       respond_sar_params
     end
-
-    def get_offender_sar_type
-      @offender_sar_type
-    end
   end
 end

@@ -11,6 +11,7 @@ module TranslateForCase
                 kase_or_klass.class
               end
       translation_paths = get_translation_paths(klass.to_s.underscore)
+
       default = translation_paths
                   .map { |case_path| :"#{path}.#{case_path}.#{key}" }
                   .concat([:"#{path}.#{key}"])
