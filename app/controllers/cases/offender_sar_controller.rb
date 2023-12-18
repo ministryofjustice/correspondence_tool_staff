@@ -328,6 +328,7 @@ module Cases
       # similar workaround needed for request dated
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
+      values[:current_state] = "rejected"
       correspondence_type.new(values).decorate
     end
 
