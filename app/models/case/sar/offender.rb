@@ -72,8 +72,7 @@ class Case::SAR::Offender < Case::Base
                  number_exempt_pages: :integer,
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
-                 further_actions_required: :string,
-                 is_rejected: :boolean
+                 further_actions_required: :string
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
