@@ -1,0 +1,30 @@
+- content_for :page_title do
+  = t('page_title.choose_case_type_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = t('.sub_heading')
+
+= render partial: 'layouts/header'
+
+ul#create-correspondences
+
+  label.form-label
+    = t('.helpers.label.correspondence_types.status.valid')
+  li
+      = p link_to t('.valid_offender_sar'), new_case_sar_offender_path
+  <br/>
+
+  label.form-label
+    = t('.helpers.label.correspondence_types.status.rejected')
+  li
+      = p link_to t('.rejected_offender_sar'),
+      new_case_sar_offender_path(params: {is_rejected: true})
+  <br/>
+
+  label.form-label
+    = t('.helpers.label.correspondence_types.status.complaint')
+  li
+      = p link_to t('.complaint_offender_sar'), new_case_sar_offender_complaint_path
