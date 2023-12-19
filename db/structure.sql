@@ -63,7 +63,10 @@ CREATE TYPE public.request_types AS ENUM (
     'mappa',
     'pdp',
     'court',
-    'other'
+    'other',
+    'cross_borders',
+    'cat_a',
+    'ndelius'
 );
 
 
@@ -379,8 +382,7 @@ CREATE TABLE public.cases (
     reason_for_deletion character varying,
     user_id integer DEFAULT '-100'::integer NOT NULL,
     reason_for_lateness_id bigint,
-    reason_for_lateness_note character varying,
-    offender_sar_type character varying
+    reason_for_lateness_note character varying
 );
 
 
@@ -2384,7 +2386,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230601125430'),
 ('20230706130822'),
 ('20230710161647'),
-('20230727110142'),
-('20231213151939');
-
-
+('20230727110142');

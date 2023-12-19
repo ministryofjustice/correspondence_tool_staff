@@ -54,7 +54,7 @@ class Case::Base < ApplicationRecord
 
   default_scope { where(deleted: false) }
 
-  attr_accessor :flag_for_disclosure_specialists, :uploaded_request_files, :request_amends_comment, :upload_comment, :draft_compliant, :message_text, :number_to_link, :rejected
+  attr_accessor :flag_for_disclosure_specialists, :uploaded_request_files, :request_amends_comment, :upload_comment, :draft_compliant, :message_text, :number_to_link
 
   jsonb_accessor :properties,
                  date_draft_compliant: :date,
@@ -1107,10 +1107,6 @@ private
     # to make sure the reverse link is removed.
     reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: id)
     reverse_links.each(&:delete)
-  end
-
-  def offender_sar_rejected?
-    @offender_sar_rejected == true
   end
 end
 # rubocop:enable Metrics/ClassLength

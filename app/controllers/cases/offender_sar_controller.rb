@@ -35,7 +35,6 @@ module Cases
       @case.current_step = params[:step]
       load_optional_flags_from_params
       @back_link = back_link_url
-      kase = @case
     end
 
     def create

@@ -4,8 +4,8 @@
       h1.page-heading
         - if content_for?(:sub_heading)
           span.page-heading--secondary
-          = yield :sub_heading
-          = ' '
+            = yield :sub_heading
+            = ' '
         span.page-heading--primary
           = yield :heading
 = render partial: 'layouts/flashes' unless flash.empty?
