@@ -22,12 +22,15 @@ module TranslateForCase
 
   private
 
-    def get_translation_paths(case_type)
+    def get_translation_paths(case_type, offender_sar_type) # rubocop:disable Lint/UnusedMethodArgument
       case_type_segments = case_type.split("/")
       paths = []
       while case_type_segments.any?
         paths << case_type_segments.join("/")
         case_type_segments.pop
+      end
+      if (offender_sar_type = "rejected") # rubocop:disable Lint/UselessAssignment
+        paths + ["/rejected"]
       end
       paths
     end

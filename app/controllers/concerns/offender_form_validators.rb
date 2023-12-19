@@ -57,6 +57,11 @@ private
     object.validate_received_date
   end
 
+  def validate_rejected(params)
+    set_empty_value_if_unset(params, "offender_sar_type") unless object.offender_sar_type
+    object.assign_attributes(params)
+  end
+
   def set_empty_value_if_unset(params, field)
     params.merge!(field => "") if params[field].blank?
   end
