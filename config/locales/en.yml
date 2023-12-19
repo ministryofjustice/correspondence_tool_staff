@@ -1421,6 +1421,9 @@ en:
     offender_sar_select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+      valid_offender_sar: Offender SAR - Offender subject access request
+      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
+      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
     shared:
       date_responded_form:
         close_date:  Date response sent

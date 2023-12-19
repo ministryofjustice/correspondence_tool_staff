@@ -12,19 +12,19 @@
 ul#create-correspondences
 
   label.form-label
-    = I18n.t('.helpers.label.correspondence_types.status.valid')  
+    = t('.helpers.label.correspondence_types.status.valid')
   li
-      = p link_to "Offender SAR - Offender subject access request", new_case_sar_offender_path
-  <br/>    
+      = p link_to t('.valid_offender_sar'), new_case_sar_offender_path
+  <br/>
 
   label.form-label
-    = I18n.t('.helpers.label.correspondence_types.status.rejected') 
+    = t('.helpers.label.correspondence_types.status.rejected')
   li
-      = p link_to "Rejected Offender SAR - Offender subject access request", 
+      = p link_to t('.rejected_offender_sar'),
       new_case_sar_offender_path
   <br/>
 
   label.form-label
-    = I18n.t('.helpers.label.correspondence_types.status.complaint')     
-  li    
-      = p link_to "Offender SAR complaint - Offender subject access request complaint", new_case_sar_offender_complaint_path
+    = t('.helpers.label.correspondence_types.status.complaint')
+  li
+      = p link_to t('.complaint_offender_sar'), new_case_sar_offender_complaint_path
