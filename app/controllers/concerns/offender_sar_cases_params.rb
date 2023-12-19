@@ -35,7 +35,7 @@ module OffenderSARCasesParams
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :request_method,
       :requester_reference,
-      :is_rejected,
+      :current_state,
       uploaded_request_files: []
     )
   end
