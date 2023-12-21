@@ -21,7 +21,7 @@ ul#create-correspondences
     = t('.helpers.label.correspondence_types.status.rejected')
   li
       = p link_to t('.rejected_offender_sar'),
-      new_case_sar_offender_path(params: {is_rejected: true})
+      new_case_sar_offender_path(params: {rejected: true})
   <br/>
 
   label.form-label
