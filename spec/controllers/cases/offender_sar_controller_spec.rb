@@ -70,7 +70,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     context "when starting a rejected offender sar case" do
       let(:params) do
         {
-          is_rejected: true,
+          rejected: true,
           correspondence_type: "offender_sar",
         }
       end
