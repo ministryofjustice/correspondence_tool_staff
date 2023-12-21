@@ -66,6 +66,25 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       expect(assigns(:case)).to be_a OffenderSARCaseForm
       expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender]
     end
+
+    context "when starting a rejected offender sar case" do
+      let(:params) do
+        {
+          rejected: true,
+          correspondence_type: "offender_sar",
+        }
+      end
+
+      it "renders the new template with is_rejected as true" do
+        get(:new, params:)
+        expect(response).to render_template(:new)
+      end
+
+      it "sets the current_state to 'rejected'" do
+        get(:new, params:)
+        expect(assigns(:case).current_state).to eq("rejected")
+      end
+    end
   end
 
   describe "#create" do

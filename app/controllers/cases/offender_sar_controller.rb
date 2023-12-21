@@ -29,6 +29,7 @@ module Cases
 
     def new
       permitted_correspondence_types
+      @is_rejected = params.key?("rejected")
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
@@ -328,6 +329,7 @@ module Cases
       # similar workaround needed for request dated
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
+      values["current_state"] = "rejected" if params.key?("rejected")
       correspondence_type.new(values).decorate
     end
 

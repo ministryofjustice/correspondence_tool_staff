@@ -961,6 +961,10 @@ en:
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
+        status:
+          valid: Valid
+          rejected: Rejected
+          complaint: Complaint
       retention_schedule_form:
         state:
           <<: *retention_schedule_states
@@ -1414,6 +1418,12 @@ en:
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+    offender_sar_select_type:
+      heading: Choose correspondence type
+      sub_heading: Create case
+      valid_offender_sar: Offender SAR - Offender subject access request
+      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
+      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
     shared:
       date_responded_form:
         close_date:  Date response sent
