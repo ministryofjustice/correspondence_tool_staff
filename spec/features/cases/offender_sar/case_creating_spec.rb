@@ -10,9 +10,8 @@ feature "Offender SAR Case creation by a manager", js: true do
     cases_page.load
   end
 
-  scenario "0 Data subject requesting own record" do
-    when_i_navigate_to_offender_sar_subject_page
-
+  scenario "0 Rejected Data subject requesting own record" do
+    when_i_navigate_to_rejected_offender_sar_subject_page
   end
 
   scenario "1 Data subject requesting own record" do
