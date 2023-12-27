@@ -26,6 +26,11 @@ module CaseFilter
           end
         end
       end
+
+      # To ensure 'rejected' is at the end of the hash, .delete returns the
+      # value of the given key. It is then immediately assigned back.
+      state_choices["rejected"] = state_choices.delete("rejected")
+
       { filter_open_case_status: state_choices }
     end
 
