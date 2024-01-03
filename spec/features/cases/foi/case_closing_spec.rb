@@ -56,10 +56,8 @@ feature "Closing a case" do
 
     context "when responded-to late" do
       given!(:fully_granted_case) do
-        Timecop.freeze(Date.new(2023, 12, 30)) do
-          create :responded_case,
-                 received_date: 22.business_days.ago
-        end
+        create :responded_case,
+               received_date: 22.business_days.ago
       end
 
       given!(:responded_date) do
