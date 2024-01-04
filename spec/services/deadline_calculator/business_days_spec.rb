@@ -194,7 +194,7 @@ describe DeadlineCalculator::BusinessDays do
 
     describe "#time_taken" do
       it "returns the number of business days taken to respond to a case" do
-        freeze_time do
+        Timecop.freeze mon_nov_27 do
           closed_case = create(:closed_case)
           deadline_calculator = described_class.new(closed_case)
           expect(deadline_calculator.time_taken).to eq 19
