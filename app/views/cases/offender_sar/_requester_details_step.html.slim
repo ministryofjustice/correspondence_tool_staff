@@ -18,8 +18,10 @@
         = f.text_field :third_party_company_name
         = f.text_area  :postal_address, {rows: 4, class: 'address_input'}
         = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "solicitor", bespoke_lookup_text: 'find_solicitor_address' }
-      - fieldset.radio_input(false, text_method: :humanize, class: 'multiple-choice option_without_revealing_panel')
+        = f.text_field :third_party_email, { label_options: { value: 'Email address (optional)' } }
 
+      - fieldset.radio_input(false, text_method: :humanize, class: 'multiple-choice option_without_revealing_panel')
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
+  = link_to "Cancel", open_filter_path, class: 'acts-like-button button-right-spacing'

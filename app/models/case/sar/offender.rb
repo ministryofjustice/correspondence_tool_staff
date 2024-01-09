@@ -325,6 +325,10 @@ class Case::SAR::Offender < Case::Base
     postal_address
   end
 
+  def third_party_email
+    email
+  end
+
   def requester_name
     third_party ? third_party_name : subject_name
   end

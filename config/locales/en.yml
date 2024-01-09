@@ -51,6 +51,7 @@ en:
         number_final_pages: Number of pages
         third_party : "Information requested on someone else's behalf"
         third_party_address: Address
+        third_party_email: "Email address (optional)"
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
@@ -1112,6 +1113,7 @@ en:
       subject_aliases: Alias
       third_party: Information requested on someone's behalf?
       third_party_address: Address
+      third_party_email: "Email address (optional)"
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship

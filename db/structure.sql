@@ -382,7 +382,8 @@ CREATE TABLE public.cases (
     reason_for_deletion character varying,
     user_id integer DEFAULT '-100'::integer NOT NULL,
     reason_for_lateness_id bigint,
-    reason_for_lateness_note character varying
+    reason_for_lateness_note character varying,
+    third_party_email text
 );
 
 
@@ -2386,4 +2387,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230601125430'),
 ('20230706130822'),
 ('20230710161647'),
-('20230727110142');
+('20230727110142'),
+('20240109154243');
+
+
