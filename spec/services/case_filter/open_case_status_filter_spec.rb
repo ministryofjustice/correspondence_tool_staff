@@ -22,6 +22,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       std_responded_foi
       trig_responded_foi
       full_responded_foi
+      std_rejected_sar
       std_closed_irc
     ])
   end
@@ -161,6 +162,20 @@ describe CaseFilter::OpenCaseStatusFilter do
         ]
       end
     end
+
+    describe "filtering for rejected cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_open_case_status: %w[rejected]
+      end
+
+      it "returns the correct list of cases" do
+        results = open_case_status_filter.call
+        expect(results).to match_array [
+          @setup.std_rejected_sar,
+        ]
+      end
+    end
   end
 
   describe "#crumbs" do
@@ -210,6 +225,7 @@ describe CaseFilter::OpenCaseStatusFilter do
         "pending_private_office_clearance",
         "awaiting_dispatch",
         "responded",
+        "rejected",
       ] }
       described_class.process_params!(params)
       expect(params).to eq filter_open_case_status: %w[
@@ -219,6 +235,7 @@ describe CaseFilter::OpenCaseStatusFilter do
         pending_dacu_clearance
         pending_press_office_clearance
         pending_private_office_clearance
+        rejected
         responded
         unassigned
       ]

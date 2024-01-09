@@ -43,6 +43,50 @@ FactoryBot.define do
     further_actions_required        { "no" }
   end
 
+  factory :rejected_offender_sar_case, class: "Case::SAR::Offender" do
+    transient do
+      creation_time       { 4.business_days.ago }
+      identifier          { "New Rejected Offender SAR case" }
+      managing_team       { find_or_create :team_branston }
+      manager             { managing_team.managers.first }
+      responding_team     { find_or_create :team_branston }
+      responder           { responding_team.responders.first }
+
+      approving_team      { find_or_create :team_branston }
+      approver            { approving_team.approvers.first }
+      i_am_deleted        { false }
+    end
+
+    current_state                   { "rejected" }
+    sequence(:name)                 { |n| "#{identifier} name #{n}" }
+    email                           { Faker::Internet.email(name: identifier) }
+    sequence(:subject)              { |n| "#{identifier} subject #{n}" }
+    sequence(:message)              { |n| "#{identifier} message #{n}" }
+    received_date                   { Time.zone.today.to_s }
+    date_of_birth                   { Time.zone.today.to_s }
+    sequence(:postal_address)       { |n| "#{identifier} postal address #{n}" }
+    sequence(:subject_full_name)    { |n| "Subject #{n}" }
+    sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }
+    previous_case_numbers           { "54321" }
+    prison_number                   { "123465" }
+    other_subject_ids               { "ABC 123 DEF" }
+    case_reference_number           { "123 ABC 456" }
+    subject_address                 { "22 Sample Address, Test Lane, Testingington, TE57ST" }
+    request_dated                   { Date.parse("13-07-2010") }
+    request_method                  { "email" }
+    requester_reference             { "456 ABC 123" }
+    subject_type                    { "offender" }
+    recipient                       { "subject_recipient" }
+    third_party                     { false }
+    flag_as_high_profile            { false }
+    created_at                      { creation_time }
+    creator                         { create(:user, :orphan) }
+    number_final_pages              { 5 }
+    number_exempt_pages             { 2 }
+    is_partial_case                 { false }
+    further_actions_required        { "no" }
+  end
+
   trait :third_party do
     third_party { true }
     third_party_relationship { "Solicitor" }
