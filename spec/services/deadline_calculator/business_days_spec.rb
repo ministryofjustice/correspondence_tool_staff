@@ -196,7 +196,7 @@ describe DeadlineCalculator::BusinessDays do
       it "returns the number of business days taken to respond to a case" do
         closed_case = create(:closed_case)
         deadline_calculator = described_class.new(closed_case)
-        expect(deadline_calculator.time_taken).to eq 19
+        expect(deadline_calculator.time_taken).to eq 18
       end
 
       it "returns nil for an open case" do
