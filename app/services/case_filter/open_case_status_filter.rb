@@ -27,14 +27,19 @@ module CaseFilter
         end
       end
 
-      # To ensure 'rejected' is at the end of the hash, .delete returns the
+      # To ensure 'rejected' is at the end of the filter list, .delete returns the
       # value of the given key. It is then immediately assigned back.
-      state_choices["rejected"] = state_choices.delete("rejected")
+      change_case_filter_order(state_choices, "rejected")
 
       { filter_open_case_status: state_choices }
     end
 
   private
+
+    def change_case_filter_order(filters, filter_key)
+      filters[filter_key] = filters.delete(filter_key)
+      filters
+    end
 
     def get_tranlation_of_state_for_filter(sub_class, state)
       I18n.t("filters.filter_open_case_status.#{state}", default: nil) || TranslateForCase.translate(sub_class, "state", state)
