@@ -16,7 +16,7 @@ RSpec.describe DeviseMailer, type: :mailer do
           email_subject: "Password reset",
           user_full_name: "Someone",
           edit_password_url:
-                   "http://localhost:3000/users/password/edit?reset_password_token=nEAanath7ath7at8aWF",
+                   "http://localhost:5000/users/password/edit?reset_password_token=nEAanath7ath7at8aWF",
         })
     end
 
@@ -40,7 +40,7 @@ RSpec.describe DeviseMailer, type: :mailer do
             email_subject: "Your CMS user account has been locked",
             user_full_name: "Someone",
             user_unlock_url:
-                         "http://localhost:3000/users/unlock?unlock_token=nEAanath7ath7at8aWF",
+                         "http://localhost:5000/users/unlock?unlock_token=nEAanath7ath7at8aWF",
           })
     end
 
