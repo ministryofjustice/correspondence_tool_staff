@@ -17,6 +17,7 @@
         = f.text_field :third_party_name
         = f.text_field :third_party_company_name
         = f.text_area  :postal_address, {rows: 4, class: 'address_input'}
+        = f.text_field :third_party_email, label_options: {.value: t('common.contacts.third_party_email_text_field_label') }
         = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "solicitor", bespoke_lookup_text: 'find_solicitor_address' }
       - fieldset.radio_input(false, text_method: :humanize, class: 'multiple-choice option_without_revealing_panel')
 
