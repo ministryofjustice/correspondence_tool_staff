@@ -27,16 +27,16 @@ module CaseFilter
         end
       end
 
-      # To ensure 'rejected' is at the end of the filter list, .delete returns the
-      # value of the given key. It is then immediately assigned back.
-      change_case_filter_order(state_choices, "rejected")
+      move_state_filter_option_to_end(state_choices, "rejected")
 
       { filter_open_case_status: state_choices }
     end
 
   private
 
-    def change_case_filter_order(filters, filter_key)
+    # To ensure 'rejected' is at the end of the filter list, .delete returns the
+    # value of the given key. It is then immediately assigned back.
+    def move_state_filter_option_to_end(filters, filter_key)
       filters[filter_key] = filters.delete(filter_key)
       filters
     end
