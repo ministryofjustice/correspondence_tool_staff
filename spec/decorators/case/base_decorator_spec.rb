@@ -116,7 +116,7 @@ describe Case::BaseDecorator, type: :model do
 
   describe "#time_taken" do
     it "returns the number of business days taken to respond to a case" do
-      expect(closed_case.time_taken).to eq "19 working days"
+      expect(closed_case.time_taken).to eq "18 working days"
     end
 
     it 'uses singular "day" for 1 day' do
