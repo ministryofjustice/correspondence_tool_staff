@@ -19,7 +19,7 @@ feature "Closing a case" do
     context "when responded-to in time" do
       given!(:fully_granted_case) do
         create :responded_ot_ico_foi,
-               received_date: 10.business_days.ago
+               received_date: 11.business_days.ago
       end
 
       given!(:responded_date) do
@@ -57,7 +57,7 @@ feature "Closing a case" do
   context "when the information is held" do
     given!(:kase) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 11.business_days.ago
     end
 
     before do
@@ -169,7 +169,7 @@ feature "Closing a case" do
   context "when the information is not held" do
     given!(:no_info_held_case) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 11.business_days.ago
     end
 
     before do
@@ -209,7 +209,7 @@ feature "Closing a case" do
   context "when the information held = Other" do
     given!(:other_info_held_case) do
       create :responded_ot_ico_foi,
-             received_date: 10.business_days.ago
+             received_date: 11.business_days.ago
     end
 
     before do
