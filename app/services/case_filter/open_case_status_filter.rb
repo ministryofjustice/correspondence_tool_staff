@@ -27,7 +27,7 @@ module CaseFilter
         end
       end
 
-      offender_sar_move_state_filter_option_to_end(state_choices, "rejected")
+      offender_sar_move_rejected_filter_option_to_end(state_choices)
 
       { filter_open_case_status: state_choices }
     end
@@ -37,9 +37,9 @@ module CaseFilter
     # For users dealing with Offender SARs
     # To ensure 'rejected' is at the end of the filter list, .delete returns the
     # value of the given key. It is then immediately assigned back.
-    def offender_sar_move_state_filter_option_to_end(filters, filter_key)
+    def offender_sar_move_rejected_filter_option_to_end(filters)
       if @user.permitted_correspondence_types.any? { |h| h[:abbreviation] == "OFFENDER_SAR" }
-        filters[filter_key] = filters.delete(filter_key)
+        filters["rejected"] = filters.delete("rejected")
       end
     end
 
