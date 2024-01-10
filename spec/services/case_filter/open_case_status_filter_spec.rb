@@ -218,8 +218,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       let(:user) { find_or_create :branston_user }
       let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
       let(:search_query) do
-        create :search_query,
-               filter_case_type: []
+        create :search_query
       end
 
       it "has the rejected key" do
@@ -235,12 +234,11 @@ describe CaseFilter::OpenCaseStatusFilter do
       let(:user) { find_or_create :disclosure_specialist_bmt }
       let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
       let(:search_query) do
-        create :search_query,
-               filter_case_type: []
+        create :search_query
       end
 
       it "has the rejected key" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).not_to have_key("rejected")
       end
 
       it "returns the filter list with rejected as nil" do
