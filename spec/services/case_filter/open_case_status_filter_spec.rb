@@ -213,6 +213,42 @@ describe CaseFilter::OpenCaseStatusFilter do
     end
   end
 
+  describe "#available_choices" do
+    context "when logged in as a Branston user" do
+      let(:user) { find_or_create :branston_user }
+      let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
+      let(:search_query) do
+        create :search_query,
+               filter_case_type: []
+      end
+
+      it "has the rejected key" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
+      end
+
+      it "returns the filter list with rejected as 'rejected'" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]["rejected"]).to eq "Rejected"
+      end
+    end
+
+    context "when logged in as a London Disclosure user" do
+      let(:user) { find_or_create :disclosure_specialist_bmt }
+      let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
+      let(:search_query) do
+        create :search_query,
+               filter_case_type: []
+      end
+
+      it "has the rejected key" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
+      end
+
+      it "returns the filter list with rejected as nil" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]["Rejected"]).to be_nil
+      end
+    end
+  end
+
   describe ".process_params!" do
     it "processes filter_open_case_status, sorting and removing blanks" do
       params = { filter_open_case_status: [
