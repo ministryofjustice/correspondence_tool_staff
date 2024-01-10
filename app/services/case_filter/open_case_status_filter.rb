@@ -40,7 +40,6 @@ module CaseFilter
     def offender_sar_move_state_filter_option_to_end(filters, filter_key)
       if @user.permitted_correspondence_types.any? { |h| h[:abbreviation] == "OFFENDER_SAR" }
         filters[filter_key] = filters.delete(filter_key)
-        filters
       end
     end
 
