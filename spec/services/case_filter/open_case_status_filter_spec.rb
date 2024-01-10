@@ -225,8 +225,12 @@ describe CaseFilter::OpenCaseStatusFilter do
         expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
       end
 
-      it "returns the filter list with rejected as 'rejected'" do
+      it "returns the filter list with rejected as 'Rejected'" do
         expect(open_case_status_filter.available_choices[:filter_open_case_status]["rejected"]).to eq "Rejected"
+      end
+
+      it "returns the filter list with rejected at the end" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status].keys.last).to eq "rejected"
       end
     end
 
