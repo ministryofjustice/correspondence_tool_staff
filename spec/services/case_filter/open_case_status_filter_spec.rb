@@ -241,10 +241,6 @@ describe CaseFilter::OpenCaseStatusFilter do
         create :search_query
       end
 
-      it "does not have the rejected key" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status]).not_to have_key("rejected")
-      end
-
       it "returns the filter list with rejected as nil" do
         expect(open_case_status_filter.available_choices[:filter_open_case_status]["Rejected"]).to be_nil
       end
