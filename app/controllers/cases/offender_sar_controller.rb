@@ -183,6 +183,11 @@ module Cases
       end
     end
 
+    def reason_rejected
+      check_authorization
+      render :reason_rejected
+    end
+
     def confirm_sent_to_sscl
       authorize @case, :can_edit_case?
       service = CaseUpdateSentToSsclService.new(
