@@ -66,6 +66,7 @@ class Case::SAR::Offender < Case::Base
                  third_party_relationship: :string,
                  third_party: :boolean,
                  third_party_company_name: :string,
+                 third_party_email: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
                  number_final_pages: :integer,
@@ -255,7 +256,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :is_partial_case,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid"),
-        )
+      )
     end
   end
 
@@ -264,7 +265,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :partial_case_letter_sent_dated,
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
-        )
+      )
     end
     errors[:partial_case_letter_sent_dated].any?
   end
@@ -274,7 +275,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :sent_to_sscl_at,
         I18n.t("activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed"),
-        )
+      )
     end
   end
 
@@ -283,7 +284,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
-        )
+      )
     end
   end
 
@@ -408,7 +409,7 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
-  private
+private
 
   def set_subject
     self.subject = subject_full_name
