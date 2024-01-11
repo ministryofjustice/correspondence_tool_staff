@@ -406,7 +406,7 @@ class Case::SAR::Offender < Case::Base
       end
     end
     user_for_vetting
-    end
+  end
 
 private
 
