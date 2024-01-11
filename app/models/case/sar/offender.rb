@@ -134,6 +134,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
+  validate :validate_third_party_email
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
 
@@ -239,12 +240,22 @@ class Case::SAR::Offender < Case::Base
     errors[:third_party_relationship].any?
   end
 
+  def validate_third_party_email
+    return if third_party_email.blank?
+
+    third_party_email.split =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+      errors.add(
+        :third_party_email,
+        :invalid,
+      )
+  end
+
   def validate_partial_flags
     if !is_partial_case && further_actions_required == "yes"
       errors.add(
         :is_partial_case,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid"),
-      )
+        )
     end
   end
 
@@ -253,7 +264,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :partial_case_letter_sent_dated,
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
-      )
+        )
     end
     errors[:partial_case_letter_sent_dated].any?
   end
@@ -263,7 +274,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :sent_to_sscl_at,
         I18n.t("activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed"),
-      )
+        )
     end
   end
 
@@ -272,7 +283,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
-      )
+        )
     end
   end
 
@@ -397,7 +408,7 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
-private
+  private
 
   def set_subject
     self.subject = subject_full_name
