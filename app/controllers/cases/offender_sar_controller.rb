@@ -13,9 +13,11 @@ module Cases
       move_case_back
       confirm_move_case_back
       record_reason_for_lateness
+      reason_rejected
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
+      confirm_reason_rejected
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -185,6 +187,29 @@ module Cases
 
     def reason_rejected
       render :reason_rejected
+    end
+
+    def confirm_reason_rejected
+      begin
+        service = case_updater_service.new(current_user, @case, record_reason_params)
+
+        if service.result == :error
+          if service.error_message.present?
+            flash[:alert] = service.error_message
+          end
+          render :reason_rejected
+        end
+        case service.result
+        when :ok
+          flash[:notice] = t("cases.update.case_updated")
+        when :no_changes
+          flash[:alert] = "No changes were made"
+        end
+        redirect_to case_path(@case) and return
+      rescue InputValidationError => e
+        flash.now[:alert] = e.message
+        render :reason_rejected
+      end
     end
 
     def confirm_sent_to_sscl
