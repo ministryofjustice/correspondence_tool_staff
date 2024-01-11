@@ -73,6 +73,12 @@ module OffenderSARCasesParams
     )
   end
 
+  def reason_rejected_params
+    params.require(:offender_sar).permit(
+      :reason_rejected,
+      )
+  end
+
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
       :date_responded_dd,
