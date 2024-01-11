@@ -832,6 +832,24 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        reason_rejected:
+          cctv_bwcv: CCTV / BWCV request
+          change_of_name: Change of name certificate
+          court_data_request: Court data request
+          data_previously_requested: Data previously requested
+          further_identification: Further identification
+          identification_for_ex_inmate: Identification for ex-inmate / probation
+          illegible_unreadable_content: Illegible handwriting / unreadable content
+          id_required: ID required
+          invalid_authority: Invalid Authority
+          medical_data: Medical Data
+          observation_book_entries: Observation book entries
+          police_data: Police data
+          social_services_data: Social services data
+          telephone_recordings_logs: Telephone recordings / logs
+          telephone_transcripts: Telephone transcripts
+          third_party_identification: Third party identification
+          what_no_data_requested: What data / no data requested
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
