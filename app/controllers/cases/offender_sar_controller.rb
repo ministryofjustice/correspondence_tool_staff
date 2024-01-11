@@ -184,7 +184,6 @@ module Cases
     end
 
     def reason_rejected
-      check_authorization
       render :reason_rejected
     end
 
