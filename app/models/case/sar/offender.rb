@@ -274,7 +274,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :sent_to_sscl_at,
         I18n.t("activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed"),
-        )
+      )
     end
   end
 
@@ -283,7 +283,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
-        )
+      )
     end
   end
 
