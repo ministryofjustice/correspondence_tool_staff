@@ -255,7 +255,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :is_partial_case,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid"),
-        )
+      )
     end
   end
 
@@ -264,7 +264,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :partial_case_letter_sent_dated,
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
-        )
+      )
     end
     errors[:partial_case_letter_sent_dated].any?
   end
