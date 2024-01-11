@@ -1519,6 +1519,7 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      reason_rejected_heading: Why are you rejecting this case?
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case

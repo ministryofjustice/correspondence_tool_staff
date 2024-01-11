@@ -1,0 +1,12 @@
+- content_for :page_title do
+  = t('page_title.reason_rejected', case_number: @case.number)
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+- content_for :sub_heading
+  = "#{@case.number} - #{@case.pretty_type}"
+
+- content_for :heading
+  = t('cases.offender_sar.reason_rejected_heading')
+
+= render partial: 'layouts/header'
