@@ -547,6 +547,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
+        reason_rejected: Why are you rejecting this case?
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -849,7 +850,7 @@ en:
           telephone_recordings_logs: Telephone recordings / logs
           telephone_transcripts: Telephone transcripts
           third_party_identification: Third party identification
-          what_no_data_requested: What data / no data requested
+          what_data_no_data_requested: What data / no data requested
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
@@ -1519,7 +1520,7 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
-      reason_rejected_heading: Why are you rejecting this case?
+      reason_rejected_heading: Reason offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
