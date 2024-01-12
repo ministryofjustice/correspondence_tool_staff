@@ -10,3 +10,10 @@
   = t('cases.offender_sar.reason_rejected_heading')
 
 = render partial: 'layouts/header'
+
+= form_for @case, url: confirm_reason_rejected_case_sar_offender_path(@case), as: :offender_sar do |f|
+
+  h2.heading-medium
+  = f.check_box_fieldset :reason_rejected, @reasons_rejected
+
+  = f.submit 'Continue', class: 'button'

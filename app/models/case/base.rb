@@ -602,6 +602,74 @@ class Case::Base < ApplicationRecord
     assignments.with_teams(teams).any?
   end
 
+  def cctv_bwcv
+
+  end
+
+  def change_of_name
+
+  end
+
+  def court_data_request
+
+  end
+
+  def data_previously_requested
+
+  end
+
+  def further_identification
+
+  end
+
+  def identification_for_ex_inmate
+
+  end
+
+  def illegible_unreadable_content
+
+  end
+
+  def id_required
+
+  end
+
+  def invalid_authority
+
+  end
+
+  def medical_data
+
+  end
+
+  def observation_book_entries
+
+  end
+
+  def police_data
+
+  end
+
+  def social_services_data
+
+  end
+
+  def telephone_recordings_logs
+
+  end
+
+  def telephone_transcripts
+
+  end
+
+  def third_party_identification
+
+  end
+
+  def what_no_data_requested
+
+  end
+
   def flagged_for_disclosure_specialist_clearance?
     approving_teams.include?(BusinessUnit.dacu_disclosure)
   end
