@@ -137,12 +137,12 @@ class Case::SAR::Offender < Case::Base
 
   def self.reasons_rejected_options
     %w[cctv_bwcv
-       change_of_name
+       change_of_name_certificate
        court_data_request
        data_previously_requested
        further_identification
-       identification_for_ex_inmate
-       illegible_unreadable_content
+       identification_for_ex_inmate_probation
+       illegible_handwriting_unreadable_content
        id_required
        invalid_authority
        medical_data
@@ -152,7 +152,7 @@ class Case::SAR::Offender < Case::Base
        telephone_recordings_logs
        telephone_transcripts
        third_party_identification
-       what_no_data_requested]
+       what_data_no_data_requested]
   end
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id

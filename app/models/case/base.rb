@@ -606,7 +606,7 @@ class Case::Base < ApplicationRecord
 
   end
 
-  def change_of_name
+  def change_of_name_certificate
 
   end
 
@@ -622,11 +622,11 @@ class Case::Base < ApplicationRecord
 
   end
 
-  def identification_for_ex_inmate
+  def identification_for_ex_inmate_probation
 
   end
 
-  def illegible_unreadable_content
+  def illegible_handwriting_unreadable_content
 
   end
 
@@ -666,7 +666,7 @@ class Case::Base < ApplicationRecord
 
   end
 
-  def what_no_data_requested
+  def what_data_no_data_requested
 
   end
 
