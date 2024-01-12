@@ -242,13 +242,15 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_third_party_email
-    return if third_party_email.blank?
+    if (third_party || recipient == "third_party_recipient")
+      return if third_party_email.blank?
 
-    third_party_email.split =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
-      errors.add(
-        :third_party_email,
-        :invalid,
-      )
+      third_party_email.split =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+        errors.add(
+          :third_party_email,
+          :invalid,
+        )
+    end
   end
 
   def validate_partial_flags
