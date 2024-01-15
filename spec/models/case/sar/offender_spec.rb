@@ -342,6 +342,7 @@ describe Case::SAR::Offender do
                                                  recipient: "third_party_recipient"
 
         expect(kase).not_to be_valid
+        expect(kase.errors[:third_party_email].to_sentence)
       end
 
       it "does not validate email address when there is no email address entered" do
