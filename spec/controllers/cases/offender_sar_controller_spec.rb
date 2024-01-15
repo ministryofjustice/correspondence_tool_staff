@@ -415,6 +415,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     expect(errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
     expect(errors[:third_party_relationship]).to eq ["cannot be blank"]
     expect(errors[:postal_address]).to eq ["cannot be blank"]
+    expect(errors[:third_party_email.format).to eq []
   end
 
   def remains_on_step(step)
