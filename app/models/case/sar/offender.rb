@@ -135,7 +135,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
-  validate :validate_third_party_email
+  validate :validate_third_party_email_format
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
 
@@ -241,14 +241,13 @@ class Case::SAR::Offender < Case::Base
     errors[:third_party_relationship].any?
   end
 
-  def validate_third_party_email
+  def validate_third_party_email_format
     if third_party
-      return if third_party_email.blank?
-      unless third_party_email =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+      if email.present? && email !~ /\A.+@.+\z/
         errors.add(
-          :third_party_email,
+          :email,
           :invalid,
-        )
+          )
       end
     end
   end
