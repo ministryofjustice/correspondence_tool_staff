@@ -241,7 +241,7 @@ class Case::SAR::Offender < Case::Base
     errors[:third_party_relationship].any?
   end
 
-  def validate_third_party_email
+  def validate_third_party_email_format
     if third_party
       if email.present? && email !~ /\A.+@.+\z/
         errors.add(
