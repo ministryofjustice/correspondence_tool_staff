@@ -36,7 +36,7 @@ private
     object.validate_third_party_names
     object.validate_third_party_relationship
     object.validate_third_party_address
-    object.validate_third_party_email_format
+    object.validate_third_party_email
   end
 
   def validate_recipient_details(params)
