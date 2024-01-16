@@ -137,7 +137,7 @@ class Case::SAR::Offender < Case::Base
   # end
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
-  has_many :offender_sar_reason_rejected
+  has_many :offender_sar_reason_rejecteds
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
