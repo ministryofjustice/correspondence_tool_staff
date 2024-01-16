@@ -21,7 +21,7 @@
   / = f.check_box_fieldset :reason_rejected, @reasons_rejected, { legend_text: t('cases.new.reason_rejected_legend') }
 
   = f.check_box_fieldset :reason_rejected,
-    choices: Case::SAR::OffenderSarReasonRejected::reason_rejecteds.keys do |fieldset|
+    choices: OffenderSarReasonRejected::reason_rejecteds.keys do |fieldset|
     p.form-hint
       = t('cases.new.reason_rejected_legend')
     - fieldset.check_box_input('cctv_bwcv')

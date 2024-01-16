@@ -1,5 +1,5 @@
-class Case::SAR::OffenderSarReasonRejected < Case::Base
-  belongs_to :offender, class_name: "Case::SAR::Offender"
+class OffenderSarReasonRejected < ApplicationRecord
+  belongs_to :offenders, class_name: "Case::SAR::Offender", foreign_key: "reason_rejected"
 
   enum reason_rejected: {
     cctv_bwcv: "cctv_bwcv",

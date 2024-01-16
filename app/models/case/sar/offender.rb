@@ -1,6 +1,6 @@
 class Case::SAR::Offender < Case::Base
   belongs_to :reason_for_lateness, class_name: "CategoryReference"
-  belongs_to :reason_rejected, class_name: "Case::SAR::OffenderSarReasonRejected"
+  has_many :reason_rejected, class_name: "OffenderSarReasonRejected"
 
   class << self
     def type_abbreviation
