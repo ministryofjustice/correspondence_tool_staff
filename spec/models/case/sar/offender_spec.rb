@@ -342,7 +342,7 @@ describe Case::SAR::Offender do
                                                  recipient: "third_party_recipient"
 
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_email].to_sentence)
+        expect(kase.errors[:third_party_email]).to eq ("enter an email address in the correct format, like name@example.com")
       end
 
       it "does not validate email address when there is no email address entered" do
@@ -353,9 +353,9 @@ describe Case::SAR::Offender do
         expect(kase).to be_valid
       end
 
-      it "validates email address when there is an email address entered" do
+      it "validates email address when the email address entered is the correct format" do
         kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
-                             third_party_email: "email@com", third_party_company_name: "ABC LLP",
+                             third_party_email: "email@something.com", third_party_company_name: "ABC LLP",
                              recipient: "third_party_recipient"
 
         expect(kase).to be_valid

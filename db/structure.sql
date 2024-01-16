@@ -160,10 +160,10 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.ar_internal_metadata (
-                                             key character varying NOT NULL,
-                                             value character varying,
-                                             created_at timestamp without time zone NOT NULL,
-                                             updated_at timestamp without time zone NOT NULL
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -172,15 +172,15 @@ CREATE TABLE public.ar_internal_metadata (
 --
 
 CREATE TABLE public.assignments (
-                                    id integer NOT NULL,
-                                    state public.state DEFAULT 'pending'::public.state,
-                                    case_id integer NOT NULL,
-                                    team_id integer NOT NULL,
-                                    created_at timestamp without time zone NOT NULL,
-                                    updated_at timestamp without time zone NOT NULL,
-                                    role public.team_roles,
-                                    user_id integer,
-                                    approved boolean DEFAULT false
+    id integer NOT NULL,
+    state public.state DEFAULT 'pending'::public.state,
+    case_id integer NOT NULL,
+    team_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    role public.team_roles,
+    user_id integer,
+    approved boolean DEFAULT false
 );
 
 
@@ -208,15 +208,15 @@ ALTER SEQUENCE public.assignments_id_seq OWNED BY public.assignments.id;
 --
 
 CREATE TABLE public.case_attachments (
-                                         id integer NOT NULL,
-                                         case_id integer,
-                                         type public.attachment_type,
-                                         created_at timestamp without time zone NOT NULL,
-                                         updated_at timestamp without time zone NOT NULL,
-                                         key character varying,
-                                         preview_key character varying,
-                                         upload_group character varying,
-                                         user_id integer
+    id integer NOT NULL,
+    case_id integer,
+    type public.attachment_type,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    key character varying,
+    preview_key character varying,
+    upload_group character varying,
+    user_id integer
 );
 
 
@@ -244,18 +244,18 @@ ALTER SEQUENCE public.case_attachments_id_seq OWNED BY public.case_attachments.i
 --
 
 CREATE TABLE public.case_closure_metadata (
-                                              id integer NOT NULL,
-                                              type character varying,
-                                              subtype character varying,
-                                              name character varying,
-                                              abbreviation character varying,
-                                              sequence_id integer,
-                                              created_at timestamp without time zone NOT NULL,
-                                              updated_at timestamp without time zone NOT NULL,
-                                              requires_refusal_reason boolean DEFAULT false,
-                                              requires_exemption boolean DEFAULT false,
-                                              active boolean DEFAULT true,
-                                              omit_for_part_refused boolean DEFAULT false
+    id integer NOT NULL,
+    type character varying,
+    subtype character varying,
+    name character varying,
+    abbreviation character varying,
+    sequence_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    requires_refusal_reason boolean DEFAULT false,
+    requires_exemption boolean DEFAULT false,
+    active boolean DEFAULT true,
+    omit_for_part_refused boolean DEFAULT false
 );
 
 
@@ -283,9 +283,9 @@ ALTER SEQUENCE public.case_closure_metadata_id_seq OWNED BY public.case_closure_
 --
 
 CREATE TABLE public.case_number_counters (
-                                             id integer NOT NULL,
-                                             date date NOT NULL,
-                                             counter integer DEFAULT 0
+    id integer NOT NULL,
+    date date NOT NULL,
+    counter integer DEFAULT 0
 );
 
 
@@ -313,20 +313,20 @@ ALTER SEQUENCE public.case_number_counters_id_seq OWNED BY public.case_number_co
 --
 
 CREATE TABLE public.case_transitions (
-                                         id integer NOT NULL,
-                                         event character varying,
-                                         to_state character varying NOT NULL,
-                                         metadata jsonb DEFAULT '{}'::jsonb,
-                                         sort_key integer NOT NULL,
-                                         case_id integer NOT NULL,
-                                         most_recent boolean NOT NULL,
-                                         created_at timestamp without time zone NOT NULL,
-                                         updated_at timestamp without time zone NOT NULL,
-                                         acting_user_id integer,
-                                         acting_team_id integer,
-                                         target_user_id integer,
-                                         target_team_id integer,
-                                         to_workflow character varying
+    id integer NOT NULL,
+    event character varying,
+    to_state character varying NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    sort_key integer NOT NULL,
+    case_id integer NOT NULL,
+    most_recent boolean NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    acting_user_id integer,
+    acting_team_id integer,
+    target_user_id integer,
+    target_team_id integer,
+    to_workflow character varying
 );
 
 
@@ -354,35 +354,35 @@ ALTER SEQUENCE public.case_transitions_id_seq OWNED BY public.case_transitions.i
 --
 
 CREATE TABLE public.cases (
-                              id integer NOT NULL,
-                              name character varying,
-                              email character varying,
-                              message text,
-                              created_at timestamp without time zone NOT NULL,
-                              updated_at timestamp without time zone NOT NULL,
-                              received_date date,
-                              postal_address character varying,
-                              subject character varying,
-                              properties jsonb,
-                              requester_type public.requester_type,
-                              number character varying NOT NULL,
-                              date_responded date,
-                              outcome_id integer,
-                              refusal_reason_id integer,
-                              current_state character varying,
-                              last_transitioned_at timestamp without time zone,
-                              delivery_method public.cases_delivery_methods,
-                              workflow character varying,
-                              deleted boolean DEFAULT false,
-                              info_held_status_id integer,
-                              type character varying,
-                              appeal_outcome_id integer,
-                              dirty boolean DEFAULT false,
-                              document_tsvector tsvector,
-                              reason_for_deletion character varying,
-                              user_id integer DEFAULT '-100'::integer NOT NULL,
-                              reason_for_lateness_id bigint,
-                              reason_for_lateness_note character varying
+    id integer NOT NULL,
+    name character varying,
+    email character varying,
+    message text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    received_date date,
+    postal_address character varying,
+    subject character varying,
+    properties jsonb,
+    requester_type public.requester_type,
+    number character varying NOT NULL,
+    date_responded date,
+    outcome_id integer,
+    refusal_reason_id integer,
+    current_state character varying,
+    last_transitioned_at timestamp without time zone,
+    delivery_method public.cases_delivery_methods,
+    workflow character varying,
+    deleted boolean DEFAULT false,
+    info_held_status_id integer,
+    type character varying,
+    appeal_outcome_id integer,
+    dirty boolean DEFAULT false,
+    document_tsvector tsvector,
+    reason_for_deletion character varying,
+    user_id integer DEFAULT '-100'::integer NOT NULL,
+    reason_for_lateness_id bigint,
+    reason_for_lateness_note character varying
 );
 
 
@@ -391,11 +391,11 @@ CREATE TABLE public.cases (
 --
 
 CREATE TABLE public.cases_exemptions (
-                                         id integer NOT NULL,
-                                         case_id integer,
-                                         exemption_id integer,
-                                         created_at timestamp without time zone NOT NULL,
-                                         updated_at timestamp without time zone NOT NULL
+    id integer NOT NULL,
+    case_id integer,
+    exemption_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -442,11 +442,11 @@ ALTER SEQUENCE public.cases_id_seq OWNED BY public.cases.id;
 --
 
 CREATE TABLE public.cases_outcome_reasons (
-                                              id bigint NOT NULL,
-                                              case_id bigint,
-                                              outcome_reason_id bigint,
-                                              created_at timestamp without time zone NOT NULL,
-                                              updated_at timestamp without time zone NOT NULL
+    id bigint NOT NULL,
+    case_id bigint,
+    outcome_reason_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -474,12 +474,12 @@ ALTER SEQUENCE public.cases_outcome_reasons_id_seq OWNED BY public.cases_outcome
 --
 
 CREATE TABLE public.cases_users_transitions_trackers (
-                                                         id integer NOT NULL,
-                                                         case_id integer,
-                                                         user_id integer,
-                                                         case_transition_id integer,
-                                                         created_at timestamp without time zone,
-                                                         updated_at timestamp without time zone
+    id integer NOT NULL,
+    case_id integer,
+    user_id integer,
+    case_transition_id integer,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -507,14 +507,14 @@ ALTER SEQUENCE public.cases_users_transitions_trackers_id_seq OWNED BY public.ca
 --
 
 CREATE TABLE public.category_references (
-                                            id bigint NOT NULL,
-                                            category character varying,
-                                            code character varying,
-                                            value character varying,
-                                            display_order integer,
-                                            deactivated boolean,
-                                            created_at timestamp without time zone NOT NULL,
-                                            updated_at timestamp without time zone NOT NULL
+    id bigint NOT NULL,
+    category character varying,
+    code character varying,
+    value character varying,
+    display_order integer,
+    deactivated boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -542,13 +542,13 @@ ALTER SEQUENCE public.category_references_id_seq OWNED BY public.category_refere
 --
 
 CREATE TABLE public.commissioning_documents (
-                                                id bigint NOT NULL,
-                                                data_request_id bigint,
-                                                template_name public.template_name,
-                                                sent boolean DEFAULT false,
-                                                created_at timestamp(6) without time zone NOT NULL,
-                                                updated_at timestamp(6) without time zone NOT NULL,
-                                                attachment_id bigint
+    id bigint NOT NULL,
+    data_request_id bigint,
+    template_name public.template_name,
+    sent boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    attachment_id bigint
 );
 
 
@@ -576,18 +576,18 @@ ALTER SEQUENCE public.commissioning_documents_id_seq OWNED BY public.commissioni
 --
 
 CREATE TABLE public.contacts (
-                                 id bigint NOT NULL,
-                                 name character varying,
-                                 address_line_1 character varying,
-                                 address_line_2 character varying,
-                                 town character varying,
-                                 county character varying,
-                                 postcode character varying,
-                                 data_request_emails character varying,
-                                 created_at timestamp without time zone NOT NULL,
-                                 updated_at timestamp without time zone NOT NULL,
-                                 contact_type_id bigint,
-                                 data_request_name character varying
+    id bigint NOT NULL,
+    name character varying,
+    address_line_1 character varying,
+    address_line_2 character varying,
+    town character varying,
+    county character varying,
+    postcode character varying,
+    data_request_emails character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    contact_type_id bigint,
+    data_request_name character varying
 );
 
 
@@ -615,12 +615,12 @@ ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
 --
 
 CREATE TABLE public.correspondence_types (
-                                             id integer NOT NULL,
-                                             name character varying,
-                                             abbreviation character varying,
-                                             created_at timestamp without time zone NOT NULL,
-                                             updated_at timestamp without time zone NOT NULL,
-                                             properties jsonb DEFAULT '{}'::jsonb
+    id integer NOT NULL,
+    name character varying,
+    abbreviation character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    properties jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -648,7 +648,7 @@ ALTER SEQUENCE public.correspondence_types_id_seq OWNED BY public.correspondence
 --
 
 CREATE TABLE public.data_migrations (
-                                        version character varying NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -657,14 +657,14 @@ CREATE TABLE public.data_migrations (
 --
 
 CREATE TABLE public.data_request_emails (
-                                            id bigint NOT NULL,
-                                            data_request_id bigint,
-                                            email_type integer DEFAULT 0,
-                                            email_address character varying,
-                                            notify_id character varying,
-                                            status character varying,
-                                            created_at timestamp(6) without time zone NOT NULL,
-                                            updated_at timestamp(6) without time zone NOT NULL
+    id bigint NOT NULL,
+    data_request_id bigint,
+    email_type integer DEFAULT 0,
+    email_address character varying,
+    notify_id character varying,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -692,22 +692,22 @@ ALTER SEQUENCE public.data_request_emails_id_seq OWNED BY public.data_request_em
 --
 
 CREATE TABLE public.data_requests (
-                                      id integer NOT NULL,
-                                      case_id integer NOT NULL,
-                                      user_id integer NOT NULL,
-                                      location character varying,
-                                      request_type public.request_types NOT NULL,
-                                      date_requested date NOT NULL,
-                                      cached_date_received date,
-                                      cached_num_pages integer DEFAULT 0 NOT NULL,
-                                      created_at timestamp without time zone NOT NULL,
-                                      updated_at timestamp without time zone NOT NULL,
-                                      request_type_note text DEFAULT ''::text NOT NULL,
-                                      date_from date,
-                                      date_to date,
-                                      completed boolean DEFAULT false NOT NULL,
-                                      contact_id bigint,
-                                      email_branston_archives boolean DEFAULT false
+    id integer NOT NULL,
+    case_id integer NOT NULL,
+    user_id integer NOT NULL,
+    location character varying,
+    request_type public.request_types NOT NULL,
+    date_requested date NOT NULL,
+    cached_date_received date,
+    cached_num_pages integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    request_type_note text DEFAULT ''::text NOT NULL,
+    date_from date,
+    date_to date,
+    completed boolean DEFAULT false NOT NULL,
+    contact_id bigint,
+    email_branston_archives boolean DEFAULT false
 );
 
 
@@ -735,10 +735,10 @@ ALTER SEQUENCE public.data_requests_id_seq OWNED BY public.data_requests.id;
 --
 
 CREATE TABLE public.feedback (
-                                 id integer NOT NULL,
-                                 content jsonb,
-                                 created_at timestamp without time zone NOT NULL,
-                                 updated_at timestamp without time zone NOT NULL
+    id integer NOT NULL,
+    content jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -766,15 +766,15 @@ ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
 --
 
 CREATE TABLE public.letter_templates (
-                                         id integer NOT NULL,
-                                         name character varying,
-                                         abbreviation character varying,
-                                         body character varying,
-                                         template_type character varying,
-                                         created_at timestamp without time zone NOT NULL,
-                                         updated_at timestamp without time zone NOT NULL,
-                                         letter_address character varying DEFAULT ''::character varying,
-                                         base_template_file_ref character varying DEFAULT 'ims001.docx'::character varying
+    id integer NOT NULL,
+    name character varying,
+    abbreviation character varying,
+    body character varying,
+    template_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    letter_address character varying DEFAULT ''::character varying,
+    base_template_file_ref character varying DEFAULT 'ims001.docx'::character varying
 );
 
 
@@ -802,10 +802,10 @@ ALTER SEQUENCE public.letter_templates_id_seq OWNED BY public.letter_templates.i
 --
 
 CREATE TABLE public.linked_cases (
-                                     id integer NOT NULL,
-                                     case_id integer NOT NULL,
-                                     linked_case_id integer NOT NULL,
-                                     type character varying DEFAULT 'related'::character varying
+    id integer NOT NULL,
+    case_id integer NOT NULL,
+    linked_case_id integer NOT NULL,
+    type character varying DEFAULT 'related'::character varying
 );
 
 
@@ -833,19 +833,19 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 --
 
 CREATE TABLE public.report_types (
-                                     id integer NOT NULL,
-                                     abbr character varying NOT NULL,
-                                     full_name character varying NOT NULL,
-                                     class_name character varying NOT NULL,
-                                     custom_report boolean DEFAULT false,
-                                     seq_id integer NOT NULL,
-                                     foi boolean DEFAULT false,
-                                     sar boolean DEFAULT false,
-                                     standard_report boolean DEFAULT false NOT NULL,
-                                     default_reporting_period character varying DEFAULT 'year_to_date'::character varying,
-                                     etl boolean DEFAULT false,
-                                     offender_sar boolean DEFAULT false,
-                                     offender_sar_complaint boolean DEFAULT false
+    id integer NOT NULL,
+    abbr character varying NOT NULL,
+    full_name character varying NOT NULL,
+    class_name character varying NOT NULL,
+    custom_report boolean DEFAULT false,
+    seq_id integer NOT NULL,
+    foi boolean DEFAULT false,
+    sar boolean DEFAULT false,
+    standard_report boolean DEFAULT false NOT NULL,
+    default_reporting_period character varying DEFAULT 'year_to_date'::character varying,
+    etl boolean DEFAULT false,
+    offender_sar boolean DEFAULT false,
+    offender_sar_complaint boolean DEFAULT false
 );
 
 
@@ -873,15 +873,15 @@ ALTER SEQUENCE public.report_types_id_seq OWNED BY public.report_types.id;
 --
 
 CREATE TABLE public.reports (
-                                id integer NOT NULL,
-                                report_type_id integer NOT NULL,
-                                period_start date,
-                                period_end date,
-                                report_data bytea,
-                                created_at timestamp without time zone NOT NULL,
-                                updated_at timestamp without time zone NOT NULL,
-                                guid character varying,
-                                properties jsonb
+    id integer NOT NULL,
+    report_type_id integer NOT NULL,
+    period_start date,
+    period_end date,
+    report_data bytea,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    guid character varying,
+    properties jsonb
 );
 
 
@@ -909,13 +909,13 @@ ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 --
 
 CREATE TABLE public.retention_schedules (
-                                            id bigint NOT NULL,
-                                            case_id bigint NOT NULL,
-                                            planned_destruction_date date,
-                                            erasure_date date,
-                                            created_at timestamp(6) without time zone NOT NULL,
-                                            updated_at timestamp(6) without time zone NOT NULL,
-                                            state character varying
+    id bigint NOT NULL,
+    case_id bigint NOT NULL,
+    planned_destruction_date date,
+    erasure_date date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    state character varying
 );
 
 
@@ -943,7 +943,7 @@ ALTER SEQUENCE public.retention_schedules_id_seq OWNED BY public.retention_sched
 --
 
 CREATE TABLE public.schema_migrations (
-                                          version character varying NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -952,17 +952,17 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.search_queries (
-                                       id integer NOT NULL,
-                                       user_id integer NOT NULL,
-                                       query jsonb NOT NULL,
-                                       num_results integer DEFAULT 0 NOT NULL,
-                                       num_clicks integer DEFAULT 0 NOT NULL,
-                                       highest_position integer,
-                                       created_at timestamp without time zone NOT NULL,
-                                       updated_at timestamp without time zone NOT NULL,
-                                       parent_id integer,
-                                       query_type public.search_query_type DEFAULT 'search'::public.search_query_type NOT NULL,
-                                       filter_type character varying
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    query jsonb NOT NULL,
+    num_results integer DEFAULT 0 NOT NULL,
+    num_clicks integer DEFAULT 0 NOT NULL,
+    highest_position integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    parent_id integer,
+    query_type public.search_query_type DEFAULT 'search'::public.search_query_type NOT NULL,
+    filter_type character varying
 );
 
 
@@ -990,11 +990,11 @@ ALTER SEQUENCE public.search_queries_id_seq OWNED BY public.search_queries.id;
 --
 
 CREATE TABLE public.sessions (
-                                 id integer NOT NULL,
-                                 session_id character varying NOT NULL,
-                                 data text,
-                                 created_at timestamp without time zone,
-                                 updated_at timestamp without time zone
+    id integer NOT NULL,
+    session_id character varying NOT NULL,
+    data text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -1022,17 +1022,17 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 --
 
 CREATE TABLE public.team_correspondence_type_roles (
-                                                       id integer NOT NULL,
-                                                       correspondence_type_id integer,
-                                                       team_id integer,
-                                                       view boolean DEFAULT false,
-                                                       edit boolean DEFAULT false,
-                                                       manage boolean DEFAULT false,
-                                                       respond boolean DEFAULT false,
-                                                       approve boolean DEFAULT false,
-                                                       created_at timestamp without time zone NOT NULL,
-                                                       updated_at timestamp without time zone NOT NULL,
-                                                       administer_team boolean DEFAULT false NOT NULL
+    id integer NOT NULL,
+    correspondence_type_id integer,
+    team_id integer,
+    view boolean DEFAULT false,
+    edit boolean DEFAULT false,
+    manage boolean DEFAULT false,
+    respond boolean DEFAULT false,
+    approve boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    administer_team boolean DEFAULT false NOT NULL
 );
 
 
@@ -1060,12 +1060,12 @@ ALTER SEQUENCE public.team_correspondence_type_roles_id_seq OWNED BY public.team
 --
 
 CREATE TABLE public.team_properties (
-                                        id integer NOT NULL,
-                                        team_id integer,
-                                        key character varying,
-                                        value text,
-                                        created_at timestamp without time zone NOT NULL,
-                                        updated_at timestamp without time zone NOT NULL
+    id integer NOT NULL,
+    team_id integer,
+    key character varying,
+    value text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1093,17 +1093,17 @@ ALTER SEQUENCE public.team_properties_id_seq OWNED BY public.team_properties.id;
 --
 
 CREATE TABLE public.teams (
-                              id integer NOT NULL,
-                              name character varying NOT NULL,
-                              email public.citext,
-                              created_at timestamp without time zone NOT NULL,
-                              updated_at timestamp without time zone NOT NULL,
-                              type character varying,
-                              parent_id integer,
-                              role character varying,
-                              code character varying,
-                              deleted_at timestamp without time zone,
-                              moved_to_unit_id integer
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email public.citext,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    type character varying,
+    parent_id integer,
+    role character varying,
+    code character varying,
+    deleted_at timestamp without time zone,
+    moved_to_unit_id integer
 );
 
 
@@ -1131,10 +1131,10 @@ ALTER SEQUENCE public.teams_id_seq OWNED BY public.teams.id;
 --
 
 CREATE TABLE public.teams_users_roles (
-                                          id integer NOT NULL,
-                                          team_id integer,
-                                          user_id integer,
-                                          role public.user_role NOT NULL
+    id integer NOT NULL,
+    team_id integer,
+    user_id integer,
+    role public.user_role NOT NULL
 );
 
 
@@ -1162,23 +1162,23 @@ ALTER SEQUENCE public.teams_users_roles_id_seq OWNED BY public.teams_users_roles
 --
 
 CREATE TABLE public.users (
-                              id integer NOT NULL,
-                              email character varying DEFAULT ''::character varying NOT NULL,
-                              encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-                              reset_password_token character varying,
-                              reset_password_sent_at timestamp without time zone,
-                              sign_in_count integer DEFAULT 0 NOT NULL,
-                              current_sign_in_at timestamp without time zone,
-                              last_sign_in_at timestamp without time zone,
-                              current_sign_in_ip inet,
-                              last_sign_in_ip inet,
-                              created_at timestamp without time zone NOT NULL,
-                              updated_at timestamp without time zone NOT NULL,
-                              full_name character varying NOT NULL,
-                              deleted_at timestamp without time zone,
-                              failed_attempts integer DEFAULT 0 NOT NULL,
-                              unlock_token character varying,
-                              locked_at timestamp without time zone
+    id integer NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    deleted_at timestamp without time zone,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone
 );
 
 
@@ -1206,13 +1206,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 --
 
 CREATE TABLE public.versions (
-                                 id integer NOT NULL,
-                                 item_type character varying NOT NULL,
-                                 item_id integer NOT NULL,
-                                 event character varying NOT NULL,
-                                 whodunnit character varying,
-                                 object text,
-                                 created_at timestamp without time zone
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object text,
+    created_at timestamp without time zone
 );
 
 
@@ -1240,79 +1240,79 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 --
 
 CREATE TABLE public.warehouse_case_reports (
-                                               case_id integer NOT NULL,
-                                               created_at timestamp without time zone NOT NULL,
-                                               updated_at timestamp without time zone NOT NULL,
-                                               creator_id integer,
-                                               responding_team_id integer,
-                                               responder_id integer,
-                                               casework_officer_user_id integer,
-                                               business_group_id integer,
-                                               directorate_id integer,
-                                               director_general_name_property_id integer,
-                                               director_name_property_id integer,
-                                               deputy_director_name_property_id integer,
-                                               number character varying,
-                                               case_type character varying,
-                                               current_state character varying,
-                                               responding_team character varying,
-                                               responder character varying,
-                                               date_received date,
-                                               internal_deadline date,
-                                               external_deadline date,
-                                               date_responded date,
-                                               date_compliant_draft_uploaded date,
-                                               trigger character varying,
-                                               name character varying,
-                                               requester_type character varying,
-                                               message character varying,
-                                               info_held character varying,
-                                               outcome character varying,
-                                               refusal_reason character varying,
-                                               exemptions character varying,
-                                               postal_address character varying,
-                                               email character varying,
-                                               appeal_outcome character varying,
-                                               third_party character varying,
-                                               reply_method character varying,
-                                               sar_subject_type character varying,
-                                               sar_subject_full_name character varying,
-                                               business_unit_responsible_for_late_response character varying,
-                                               extended character varying,
-                                               extension_count integer,
-                                               deletion_reason character varying,
-                                               casework_officer character varying,
-                                               created_by character varying,
-                                               date_created timestamp without time zone,
-                                               business_group character varying,
-                                               directorate_name character varying,
-                                               director_general_name character varying,
-                                               director_name character varying,
-                                               deputy_director_name character varying,
-                                               draft_in_time character varying,
-                                               in_target character varying,
-                                               number_of_days_late integer,
-                                               info_held_status_id integer,
-                                               refusal_reason_id integer,
-                                               outcome_id integer,
-                                               appeal_outcome_id integer,
-                                               number_of_days_taken integer,
-                                               number_of_exempt_pages integer,
-                                               number_of_final_pages integer,
-                                               third_party_company_name character varying,
-                                               number_of_days_taken_after_extension integer,
-                                               complaint_subtype character varying,
-                                               priority character varying,
-                                               total_cost numeric(10,2),
-                                               settlement_cost numeric(10,2),
-                                               user_dealing_with_vetting character varying,
-                                               user_id_dealing_with_vetting integer,
-                                               number_of_days_for_vetting integer,
-                                               original_external_deadline date,
-                                               original_internal_deadline date,
-                                               num_days_late_against_original_deadline integer,
-                                               request_method character varying,
-                                               sent_to_sscl date
+    case_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    creator_id integer,
+    responding_team_id integer,
+    responder_id integer,
+    casework_officer_user_id integer,
+    business_group_id integer,
+    directorate_id integer,
+    director_general_name_property_id integer,
+    director_name_property_id integer,
+    deputy_director_name_property_id integer,
+    number character varying,
+    case_type character varying,
+    current_state character varying,
+    responding_team character varying,
+    responder character varying,
+    date_received date,
+    internal_deadline date,
+    external_deadline date,
+    date_responded date,
+    date_compliant_draft_uploaded date,
+    trigger character varying,
+    name character varying,
+    requester_type character varying,
+    message character varying,
+    info_held character varying,
+    outcome character varying,
+    refusal_reason character varying,
+    exemptions character varying,
+    postal_address character varying,
+    email character varying,
+    appeal_outcome character varying,
+    third_party character varying,
+    reply_method character varying,
+    sar_subject_type character varying,
+    sar_subject_full_name character varying,
+    business_unit_responsible_for_late_response character varying,
+    extended character varying,
+    extension_count integer,
+    deletion_reason character varying,
+    casework_officer character varying,
+    created_by character varying,
+    date_created timestamp without time zone,
+    business_group character varying,
+    directorate_name character varying,
+    director_general_name character varying,
+    director_name character varying,
+    deputy_director_name character varying,
+    draft_in_time character varying,
+    in_target character varying,
+    number_of_days_late integer,
+    info_held_status_id integer,
+    refusal_reason_id integer,
+    outcome_id integer,
+    appeal_outcome_id integer,
+    number_of_days_taken integer,
+    number_of_exempt_pages integer,
+    number_of_final_pages integer,
+    third_party_company_name character varying,
+    number_of_days_taken_after_extension integer,
+    complaint_subtype character varying,
+    priority character varying,
+    total_cost numeric(10,2),
+    settlement_cost numeric(10,2),
+    user_dealing_with_vetting character varying,
+    user_id_dealing_with_vetting integer,
+    number_of_days_for_vetting integer,
+    original_external_deadline date,
+    original_internal_deadline date,
+    num_days_late_against_original_deadline integer,
+    request_method character varying,
+    sent_to_sscl date
 );
 
 
@@ -2223,167 +2223,167 @@ ALTER TABLE ONLY public.data_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-                                              ('20160722121207'),
-                                              ('20160802130203'),
-                                              ('20160802134012'),
-                                              ('20160803094147'),
-                                              ('20160804155742'),
-                                              ('20160811181245'),
-                                              ('20160811182008'),
-                                              ('20160811185359'),
-                                              ('20160815103852'),
-                                              ('20161017062721'),
-                                              ('20161017120533'),
-                                              ('20161031133532'),
-                                              ('20161103104520'),
-                                              ('20161114143107'),
-                                              ('20161116150744'),
-                                              ('20161116153411'),
-                                              ('20161125115930'),
-                                              ('20161130164018'),
-                                              ('20161209220224'),
-                                              ('20170111115617'),
-                                              ('20170111161049'),
-                                              ('20170116161424'),
-                                              ('20170118154824'),
-                                              ('20170118154954'),
-                                              ('20170128230814'),
-                                              ('20170208133053'),
-                                              ('20170222171317'),
-                                              ('20170223130158'),
-                                              ('20170303140119'),
-                                              ('20170306093700'),
-                                              ('20170307083809'),
-                                              ('20170309134800'),
-                                              ('20170309153815'),
-                                              ('20170315152035'),
-                                              ('20170320112822'),
-                                              ('20170320121845'),
-                                              ('20170406112015'),
-                                              ('20170407091658'),
-                                              ('20170420120713'),
-                                              ('20170420122223'),
-                                              ('20170424133127'),
-                                              ('20170523131602'),
-                                              ('20170609094110'),
-                                              ('20170626153411'),
-                                              ('20170627112545'),
-                                              ('20170713094438'),
-                                              ('20170727101532'),
-                                              ('20170727112001'),
-                                              ('20170727162325'),
-                                              ('20170728154625'),
-                                              ('20170731101430'),
-                                              ('20170816155918'),
-                                              ('20170818082409'),
-                                              ('20170830162157'),
-                                              ('20170831091142'),
-                                              ('20170906130950'),
-                                              ('20170908083205'),
-                                              ('20170908142318'),
-                                              ('20170913124313'),
-                                              ('20170925142730'),
-                                              ('20171003080427'),
-                                              ('20171003153752'),
-                                              ('20171013134445'),
-                                              ('20171023134233'),
-                                              ('20171023142558'),
-                                              ('20171025142614'),
-                                              ('20171027112328'),
-                                              ('20171101171629'),
-                                              ('20171114111458'),
-                                              ('20171116102127'),
-                                              ('20171123170106'),
-                                              ('20171205092729'),
-                                              ('20171205102155'),
-                                              ('20171215103720'),
-                                              ('20171220135129'),
-                                              ('20171227223627'),
-                                              ('20171228145707'),
-                                              ('20171230113732'),
-                                              ('20180106124709'),
-                                              ('20180119121951'),
-                                              ('20180123164057'),
-                                              ('20180125100559'),
-                                              ('20180125111431'),
-                                              ('20180126120726'),
-                                              ('20180202171348'),
-                                              ('20180205120050'),
-                                              ('20180206100800'),
-                                              ('20180208161547'),
-                                              ('20180214162943'),
-                                              ('20180214163355'),
-                                              ('20180222125345'),
-                                              ('20180228174550'),
-                                              ('20180321094200'),
-                                              ('20180322183946'),
-                                              ('20180406145035'),
-                                              ('20180410142138'),
-                                              ('20180410143714'),
-                                              ('20180419103640'),
-                                              ('20180419130340'),
-                                              ('20180420173415'),
-                                              ('20180424150445'),
-                                              ('20180508131152'),
-                                              ('20180517140929'),
-                                              ('20180522132456'),
-                                              ('20180524132031'),
-                                              ('20180613141421'),
-                                              ('20180620135756'),
-                                              ('20180621094208'),
-                                              ('20180622153909'),
-                                              ('20180705184513'),
-                                              ('20180711151118'),
-                                              ('20180716150951'),
-                                              ('20180717211105'),
-                                              ('20180806100827'),
-                                              ('20190228142249'),
-                                              ('20190312104101'),
-                                              ('20190325082640'),
-                                              ('20190326113949'),
-                                              ('20190609165906'),
-                                              ('20190609185907'),
-                                              ('20190730133328'),
-                                              ('20190731151806'),
-                                              ('20190817185027'),
-                                              ('20190912142741'),
-                                              ('20191002003615'),
-                                              ('20191028094210'),
-                                              ('20200705225914'),
-                                              ('20200811151902'),
-                                              ('20200811154406'),
-                                              ('20200811222853'),
-                                              ('20200812115318'),
-                                              ('20200812142406'),
-                                              ('20200819133514'),
-                                              ('20200819171428'),
-                                              ('20200824130200'),
-                                              ('20200914160132'),
-                                              ('20200925100514'),
-                                              ('20201113130611'),
-                                              ('20210115230915'),
-                                              ('20210518085422'),
-                                              ('20210625113911'),
-                                              ('20210723160533'),
-                                              ('20210727143427'),
-                                              ('20210914110858'),
-                                              ('20210914111215'),
-                                              ('20210917113753'),
-                                              ('20220117091139'),
-                                              ('20220319002602'),
-                                              ('20220401091216'),
-                                              ('20220506131034'),
-                                              ('20220511130149'),
-                                              ('20220928103707'),
-                                              ('20221205165722'),
-                                              ('20221212155458'),
-                                              ('20221214144147'),
-                                              ('20230123110812'),
-                                              ('20230126140604'),
-                                              ('20230127153614'),
-                                              ('20230203153008'),
-                                              ('20230207153942'),
-                                              ('20230601125430'),
-                                              ('20230706130822'),
-                                              ('20230710161647'),
-                                              ('20230727110142');
+('20160722121207'),
+('20160802130203'),
+('20160802134012'),
+('20160803094147'),
+('20160804155742'),
+('20160811181245'),
+('20160811182008'),
+('20160811185359'),
+('20160815103852'),
+('20161017062721'),
+('20161017120533'),
+('20161031133532'),
+('20161103104520'),
+('20161114143107'),
+('20161116150744'),
+('20161116153411'),
+('20161125115930'),
+('20161130164018'),
+('20161209220224'),
+('20170111115617'),
+('20170111161049'),
+('20170116161424'),
+('20170118154824'),
+('20170118154954'),
+('20170128230814'),
+('20170208133053'),
+('20170222171317'),
+('20170223130158'),
+('20170303140119'),
+('20170306093700'),
+('20170307083809'),
+('20170309134800'),
+('20170309153815'),
+('20170315152035'),
+('20170320112822'),
+('20170320121845'),
+('20170406112015'),
+('20170407091658'),
+('20170420120713'),
+('20170420122223'),
+('20170424133127'),
+('20170523131602'),
+('20170609094110'),
+('20170626153411'),
+('20170627112545'),
+('20170713094438'),
+('20170727101532'),
+('20170727112001'),
+('20170727162325'),
+('20170728154625'),
+('20170731101430'),
+('20170816155918'),
+('20170818082409'),
+('20170830162157'),
+('20170831091142'),
+('20170906130950'),
+('20170908083205'),
+('20170908142318'),
+('20170913124313'),
+('20170925142730'),
+('20171003080427'),
+('20171003153752'),
+('20171013134445'),
+('20171023134233'),
+('20171023142558'),
+('20171025142614'),
+('20171027112328'),
+('20171101171629'),
+('20171114111458'),
+('20171116102127'),
+('20171123170106'),
+('20171205092729'),
+('20171205102155'),
+('20171215103720'),
+('20171220135129'),
+('20171227223627'),
+('20171228145707'),
+('20171230113732'),
+('20180106124709'),
+('20180119121951'),
+('20180123164057'),
+('20180125100559'),
+('20180125111431'),
+('20180126120726'),
+('20180202171348'),
+('20180205120050'),
+('20180206100800'),
+('20180208161547'),
+('20180214162943'),
+('20180214163355'),
+('20180222125345'),
+('20180228174550'),
+('20180321094200'),
+('20180322183946'),
+('20180406145035'),
+('20180410142138'),
+('20180410143714'),
+('20180419103640'),
+('20180419130340'),
+('20180420173415'),
+('20180424150445'),
+('20180508131152'),
+('20180517140929'),
+('20180522132456'),
+('20180524132031'),
+('20180613141421'),
+('20180620135756'),
+('20180621094208'),
+('20180622153909'),
+('20180705184513'),
+('20180711151118'),
+('20180716150951'),
+('20180717211105'),
+('20180806100827'),
+('20190228142249'),
+('20190312104101'),
+('20190325082640'),
+('20190326113949'),
+('20190609165906'),
+('20190609185907'),
+('20190730133328'),
+('20190731151806'),
+('20190817185027'),
+('20190912142741'),
+('20191002003615'),
+('20191028094210'),
+('20200705225914'),
+('20200811151902'),
+('20200811154406'),
+('20200811222853'),
+('20200812115318'),
+('20200812142406'),
+('20200819133514'),
+('20200819171428'),
+('20200824130200'),
+('20200914160132'),
+('20200925100514'),
+('20201113130611'),
+('20210115230915'),
+('20210518085422'),
+('20210625113911'),
+('20210723160533'),
+('20210727143427'),
+('20210914110858'),
+('20210914111215'),
+('20210917113753'),
+('20220117091139'),
+('20220319002602'),
+('20220401091216'),
+('20220506131034'),
+('20220511130149'),
+('20220928103707'),
+('20221205165722'),
+('20221212155458'),
+('20221214144147'),
+('20230123110812'),
+('20230126140604'),
+('20230127153614'),
+('20230203153008'),
+('20230207153942'),
+('20230601125430'),
+('20230706130822'),
+('20230710161647'),
+('20230727110142');
