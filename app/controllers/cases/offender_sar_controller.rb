@@ -27,7 +27,7 @@ module Cases
       @correspondence_type_key = "offender_sar"
       @creation_optional_flags = {}
       get_reasons_for_lateness
-      @reasons_rejected = Case::SAR::Offender.reasons_rejected_options.map(&:to_sym)
+      # @reasons_rejected = Case::SAR::Offender.reasons_rejected_options.map(&:to_sym)
     end
 
     def new

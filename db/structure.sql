@@ -830,6 +830,37 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 
 --
+-- Name: reason_rejected; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reason_rejected (
+    id bigint NOT NULL,
+    reasons character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reason_rejected_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reason_rejected_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reason_rejected_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reason_rejected_id_seq OWNED BY public.reason_rejected.id;
+
+
+--
 -- Name: report_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1444,6 +1475,13 @@ ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: reason_rejected id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reason_rejected ALTER COLUMN id SET DEFAULT nextval('public.reason_rejected_id_seq'::regclass);
+
+
+--
 -- Name: report_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1678,6 +1716,14 @@ ALTER TABLE ONLY public.letter_templates
 
 ALTER TABLE ONLY public.linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reason_rejected reason_rejected_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reason_rejected
+    ADD CONSTRAINT reason_rejected_pkey PRIMARY KEY (id);
 
 
 --
@@ -2388,6 +2434,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230706130822'),
 ('20230710161647'),
 ('20230727110142'),
-('20240111144753');
+('20240111144753'),
+('20240116105342');
 
 

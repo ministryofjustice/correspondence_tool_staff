@@ -1,5 +1,6 @@
 class Case::SAR::Offender < Case::Base
   belongs_to :reason_for_lateness, class_name: "CategoryReference"
+  belongs_to :reason_rejected, class_name: "Case::SAR::OffenderSarReasonRejected"
 
   class << self
     def type_abbreviation
@@ -107,25 +108,26 @@ class Case::SAR::Offender < Case::Base
     unknown: "unknown",
   }
 
-  enum reason_rejected: {
-    cctv_bwcv: "cctv_bwcv",
-    change_of_name_certificate: "change_of_name_certificate",
-    court_data_request: "Court_data_request",
-    data_previously_requested: "data_previously_requested",
-    further_identification: "further_identification",
-    identification_for_ex_inmate_probation: "identification_for_ex_inmate_probation",
-    illegible_handwriting_unreadable_content: "illegible_handwriting_unreadable_content",
-    id_required: "id_required",
-    invalid_authority: "invalid_authority",
-    medical_data: "medical_data",
-    observation_book_entries: "observation_book_entries",
-    police_data: "police_data",
-    social_services_data: "social_services_data",
-    telephone_recordings_logs: "telephone_recordings_logs",
-    telephone_transcripts: "telephone_transcripts",
-    third_party_identification: "third_party_identification",
-    what_data_no_data_requested: "what_data_no_data_requested",
-  }
+  # enum reason_rejected: {
+  #   cctv_bwcv: "cctv_bwcv",
+  #   change_of_name_certificate: "change_of_name_certificate",
+  #   court_data_request: "Court_data_request",
+  #   data_previously_requested: "data_previously_requested",
+  #   further_identification: "further_identification",
+  #   identification_for_ex_inmate_probation: "identification_for_ex_inmate_probation",
+  #   illegible_handwriting_unreadable_content: "illegible_handwriting_unreadable_content",
+  #   id_required: "id_required",
+  #   invalid_authority: "invalid_authority",
+  #   medical_data: "medical_data",
+  #   observation_book_entries: "observation_book_entries",
+  #   police_data: "police_data",
+  #   social_services_data: "social_services_data",
+  #   telephone_recordings_logs: "telephone_recordings_logs",
+  #   telephone_transcripts: "telephone_transcripts",
+  #   third_party_identification: "third_party_identification",
+  #   what_data_no_data_requested: "what_data_no_data_requested",
+  #   other: "other",
+  # }
 
   has_paper_trail only: %i[
     name
@@ -135,27 +137,28 @@ class Case::SAR::Offender < Case::Base
     received_date
   ]
 
-  def self.reasons_rejected_options
-    %w[cctv_bwcv
-       change_of_name_certificate
-       court_data_request
-       data_previously_requested
-       further_identification
-       identification_for_ex_inmate_probation
-       illegible_handwriting_unreadable_content
-       id_required
-       invalid_authority
-       medical_data
-       observation_book_entries
-       police_data
-       social_services_data
-       telephone_recordings_logs
-       telephone_transcripts
-       third_party_identification
-       what_data_no_data_requested]
-  end
+  # def self.reasons_rejected_options
+  #   %w[cctv_bwcv
+  #      change_of_name_certificate
+  #      court_data_request
+  #      data_previously_requested
+  #      further_identification
+  #      identification_for_ex_inmate_probation
+  #      illegible_handwriting_unreadable_content
+  #      id_required
+  #      invalid_authority
+  #      medical_data
+  #      observation_book_entries
+  #      police_data
+  #      social_services_data
+  #      telephone_recordings_logs
+  #      telephone_transcripts
+  #      third_party_identification
+  #      what_data_no_data_requested]
+  # end
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
+  has_many :offender_sar_reason_rejected
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
@@ -196,6 +199,82 @@ class Case::SAR::Offender < Case::Base
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
+
+  def cctv_bwcv
+
+  end
+
+  def change_of_name_certificate
+
+  end
+
+  def court_data_request
+
+  end
+
+  def data_previously_requested
+
+  end
+
+  def further_identification
+
+  end
+
+  def identification_for_ex_inmate_probation
+
+  end
+
+  def illegible_handwriting_unreadable_content
+
+  end
+
+  def id_required
+
+  end
+
+  def invalid_authority
+
+  end
+
+  def medical_data
+
+  end
+
+  def observation_book_entries
+
+  end
+
+  def police_data
+
+  end
+
+  def social_services_data
+
+  end
+
+  def telephone_recordings_logs
+
+  end
+
+  def telephone_transcripts
+
+  end
+
+  def third_party_identification
+
+  end
+
+  def what_data_no_data_requested
+
+  end
+
+  def other
+
+  end
+
+  def reason_rejected_note
+
+  end
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
