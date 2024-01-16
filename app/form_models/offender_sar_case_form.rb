@@ -6,6 +6,7 @@ module OffenderSARCaseForm
   def steps
     %w[subject-details
        requester-details
+       reason-rejected
        recipient-details
        requested-info
        request-details

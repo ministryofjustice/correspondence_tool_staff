@@ -1146,6 +1146,7 @@ en:
       who_its_with: With
       reason_for_lateness: Reason for lateness
       reason_for_lateness_note: Note for reason for lateness
+      reason_rejected: Reason rejected
       original_external_deadline: Original external deadline
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
