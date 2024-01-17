@@ -192,7 +192,7 @@ module Cases
 
     def confirm_reason_rejected
       begin
-        service = case_updater_service.new(current_user, @case, record_reason_params)
+        service = case_updater_service.new(current_user, @case, reason_rejected_params)
 
         if service.result == :error
           if service.error_message.present?
