@@ -1,6 +1,6 @@
 class Case::SAR::Offender < Case::Base
   belongs_to :reason_for_lateness, class_name: "CategoryReference"
-  has_many :reason_rejected, class_name: "OffenderSarReasonRejected"
+  has_many :reason_rejected, class_name: "OffenderSarReasonRejecteds"
 
   class << self
     def type_abbreviation
@@ -172,6 +172,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
+  validate :validate_reason_rejected
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -371,6 +372,16 @@ class Case::SAR::Offender < Case::Base
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
       )
+    end
+  end
+
+  def validate_reason_rejected
+    if reason_rejected.blank?
+      errors.add(
+        :reason_rejected,
+        I18n.t("activerecord.errors.models.case.attributes.reason_rejected.blank"),
+      )
+      errors[:reason_rejected].any?
     end
   end
 

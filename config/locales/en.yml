@@ -114,6 +114,8 @@ en:
               not_allowed: "not allowed if there is a removal reason"
             remove_sent_to_sscl_reason:
               blank: "cannot be blank if sent date is removed"
+            reason_rejected:
+              blank: "cannot be blank"
 
         case/foi/standard:
           attributes: &foi_attr
