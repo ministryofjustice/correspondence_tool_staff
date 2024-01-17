@@ -54,7 +54,6 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
-        third_party_email: "Email address (optional)"
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -550,6 +549,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
+
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -691,6 +691,7 @@ en:
         add_to_conversation: Add to conversation
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
+        third_party_email: Email address
       data_request:
         location: Location
         request_type:
