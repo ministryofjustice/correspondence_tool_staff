@@ -76,7 +76,7 @@ module OffenderSARCasesParams
   def reason_rejected_params
     params.require(:offender_sar).permit(
       :reason_rejected,
-      )
+    )
   end
 
   def respond_offender_sar_params
