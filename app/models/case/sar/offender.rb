@@ -242,13 +242,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_third_party_email_format
-    if third_party
-      if third_party_email.present? && third_party_email !~ /\A.+@.+\z/
-        errors.add(
-          :third_party_email,
-          :invalid,
-        )
-      end
+    if third_party && (third_party_email.present? && third_party_email !~ /\A.+@.+\z/)
+      errors.add(
+        :third_party_email,
+        :invalid,
+      )
     end
   end
 

@@ -354,8 +354,8 @@ describe Case::SAR::Offender do
 
       it "validates email address when the email address entered is the correct format" do
         kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
-                             third_party_email: "email@something.com", third_party_company_name: "ABC LLP",
-                             recipient: "third_party_recipient"
+                                                 third_party_email: "email@something.com", third_party_company_name: "ABC LLP",
+                                                 recipient: "third_party_recipient"
 
         expect(kase).to be_valid
       end
