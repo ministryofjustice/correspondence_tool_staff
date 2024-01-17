@@ -54,6 +54,7 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        third_party_email: "Email address (optional)"
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
