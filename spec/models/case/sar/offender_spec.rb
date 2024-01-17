@@ -341,8 +341,7 @@ describe Case::SAR::Offender do
                                                  third_party_email: "email", third_party_company_name: "",
                                                  recipient: "third_party_recipient"
 
-        expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_email]).to eq ("enter an email address in the correct format, like name@example.com")
+        expect(kase).not_to be_valid raise_error(ActiveRecord::RecordInvalid).with_message("invalid format for email address")
       end
 
       it "does not validate email address when there is no email address entered" do

@@ -244,7 +244,7 @@ class Case::SAR::Offender < Case::Base
   def validate_third_party_email
     if third_party
       return if third_party_email.blank?
-      unless third_party_email =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+      unless URI::MailTo::EMAIL_REGEXP.match?(third_party_email)
         errors.add(
           :third_party_email,
           :invalid,
