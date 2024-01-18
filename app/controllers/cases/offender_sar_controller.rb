@@ -13,11 +13,9 @@ module Cases
       move_case_back
       confirm_move_case_back
       record_reason_for_lateness
-      reason_rejected
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
-      confirm_reason_rejected
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -27,7 +25,6 @@ module Cases
       @correspondence_type_key = "offender_sar"
       @creation_optional_flags = {}
       get_reasons_for_lateness
-      # @reasons_rejected = Case::SAR::Offender.reasons_rejected_options.map(&:to_sym)
     end
 
     def new
