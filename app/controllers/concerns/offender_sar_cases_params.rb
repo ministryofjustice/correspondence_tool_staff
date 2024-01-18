@@ -36,7 +36,8 @@ module OffenderSARCasesParams
       :request_method,
       :requester_reference,
       :current_state,
-      uploaded_request_files: []
+      uploaded_request_files: [],
+      reason_rejected_ids: []
     )
   end
 
@@ -70,12 +71,6 @@ module OffenderSARCasesParams
     params.require(:offender_sar).permit(
       :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
       :remove_sent_to_sscl_reason
-    )
-  end
-
-  def reason_rejected_params
-    params.require(:offender_sar).permit(
-      :reason_rejected,
     )
   end
 

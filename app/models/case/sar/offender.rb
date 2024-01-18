@@ -75,6 +75,7 @@ class Case::SAR::Offender < Case::Base
                  partial_case_letter_sent_dated: :date,
                  further_actions_required: :string
 
+
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
@@ -116,26 +117,6 @@ class Case::SAR::Offender < Case::Base
     received_date
   ]
 
-  # def self.reasons_rejected_options
-  #   %w[cctv_bwcv
-  #      change_of_name_certificate
-  #      court_data_request
-  #      data_previously_requested
-  #      further_identification
-  #      identification_for_ex_inmate_probation
-  #      illegible_handwriting_unreadable_content
-  #      id_required
-  #      invalid_authority
-  #      medical_data
-  #      observation_book_entries
-  #      police_data
-  #      social_services_data
-  #      telephone_recordings_logs
-  #      telephone_transcripts
-  #      third_party_identification
-  #      what_data_no_data_requested]
-  # end
-
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
   has_many :offender_sar_reason_rejecteds
   accepts_nested_attributes_for :data_requests
@@ -172,7 +153,6 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_reason_rejected
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -372,16 +352,6 @@ class Case::SAR::Offender < Case::Base
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
       )
-    end
-  end
-
-  def validate_reason_rejected
-    if reason_rejected.blank?
-      errors.add(
-        :reason_rejected,
-        I18n.t("activerecord.errors.models.case.attributes.reason_rejected.blank"),
-      )
-      errors[:reason_rejected].any?
     end
   end
 

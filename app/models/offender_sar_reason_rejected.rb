@@ -1,6 +1,10 @@
 class OffenderSarReasonRejected < ApplicationRecord
   belongs_to :offenders, class_name: "Case::SAR::Offender", foreign_key: "reason_rejected"
 
+  jsonb_accessor :properties,
+                 reason_rejected_ids: [:string, { array: true, default: [] }]
+
+
   enum reason_rejected: {
     cctv_bwcv: "cctv_bwcv",
     change_of_name_certificate: "change_of_name_certificate",
