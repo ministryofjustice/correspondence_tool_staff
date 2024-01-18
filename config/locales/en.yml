@@ -54,6 +54,7 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        third_party_email: Email address
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -691,7 +692,6 @@ en:
         add_to_conversation: Add to conversation
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
-        third_party_email: Email address
       data_request:
         location: Location
         request_type:
@@ -867,6 +867,7 @@ en:
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
+        third_party_email: Email address (optional)
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
         is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
@@ -1119,6 +1120,7 @@ en:
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship
+      third_party_email: Email address
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
