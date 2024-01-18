@@ -1,11 +1,10 @@
 require "rails_helper"
 
-describe "Creating an offender sar case"
-  context "when user is adding a rejected offender sar case"
-    it "should set H1 title" do
-      page_title("Create a rejected offender sar")
-      render "layouts/header"
-      rendered.should have_selector('title:contains("Create a rejected offender sar")')
+describe "Creating an offender sar" do
+  context "adding a rejected offender sar case" do
+    it "should display the title for a rejected offender sar" do
+      @kase = described_class.new
+      expect(get_headings(kase, "cases.new.offender_sar.rejected").to eq("Create a rejected offender sar"))
     end
   end
 end
