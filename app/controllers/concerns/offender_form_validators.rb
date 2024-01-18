@@ -57,11 +57,6 @@ private
     object.validate_received_date
   end
 
-  def validate_reason_rejected(params)
-    set_empty_value_if_unset(params, "reason_rejected")
-    object.validate_reason_rejected
-  end
-
   def set_empty_value_if_unset(params, field)
     params.merge!(field => "") if params[field].blank?
   end
