@@ -8,29 +8,7 @@
 
 = form_for @case.object, url: url, as: :offender_sar do |f|
 
-  = f.check_box_fieldset :reason_rejected,
-    choices: OffenderSarReasonRejected::reason_rejecteds.keys do |fieldset|
-    p.form-hint
-      = t('cases.new.reason_rejected_legend')
-    - fieldset.check_box_input('cctv_bwcv')
-    - fieldset.check_box_input('change_of_name_certificate')
-    - fieldset.check_box_input('court_data_request')
-    - fieldset.check_box_input('data_previously_requested')
-    - fieldset.check_box_input('further_identification')
-    - fieldset.check_box_input('identification_for_ex_inmate_probation')
-    - fieldset.check_box_input('illegible_handwriting_unreadable_content')
-    - fieldset.check_box_input('id_required')
-    - fieldset.check_box_input('invalid_authority')
-    - fieldset.check_box_input('medical_data')
-    - fieldset.check_box_input('observation_book_entries')
-    - fieldset.check_box_input('police_data')
-    - fieldset.check_box_input('social_services_data')
-    - fieldset.check_box_input('telephone_recordings_logs')
-    - fieldset.check_box_input('telephone_transcripts')
-    - fieldset.check_box_input('third_party_identification')
-    - fieldset.check_box_input('what_data_no_data_requested')
-    - fieldset.check_box_input('other')
-      = f.text_area :reason_rejected_note
+  = f.collection_check_boxes :offender_sar_reason_rejecteds, I18n.t("helpers.label.offender_sar.offender_sar_reason_rejecteds") || [], :first, :second
 
   input name="current_step" type="hidden" value=@case.current_step
 

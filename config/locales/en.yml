@@ -114,7 +114,7 @@ en:
               not_allowed: "not allowed if there is a removal reason"
             remove_sent_to_sscl_reason:
               blank: "cannot be blank if sent date is removed"
-            reason_rejected:
+            offender_sar_reason_rejecteds:
               blank: "cannot be blank"
 
         case/foi/standard:
@@ -549,7 +549,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
-        reason_rejected: Why are you rejecting this case?
+        offender_sar_reason_rejecteds: Why are you rejecting this case?
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -835,9 +835,9 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
-        reason_rejected:
+        offender_sar_reason_rejecteds:
           cctv_bwcv: CCTV / BWCV request
-          change_of_name: Change of name certificate
+          change_of_name_certificate: Change of name certificate
           court_data_request: Court data request
           data_previously_requested: Data previously requested
           further_identification: Further identification
@@ -853,7 +853,7 @@ en:
           telephone_transcripts: Telephone transcripts
           third_party_identification: Third party identification
           what_data_no_data_requested: What data / no data requested
-        reason_rejected_note: Give reason for rejecting this case
+          reason_rejected_note: Give reason for rejecting this case
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject

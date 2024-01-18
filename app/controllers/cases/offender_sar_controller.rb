@@ -46,6 +46,7 @@ module Cases
       @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       load_optional_flags_from_params
+
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -183,33 +184,6 @@ module Cases
       rescue InputValidationError => e
         flash.now[:alert] = e.message
         render :record_reason_for_lateness
-      end
-    end
-
-    def reason_rejected
-      render :reason_rejected
-    end
-
-    def confirm_reason_rejected
-      begin
-        service = case_updater_service.new(current_user, @case, reason_rejected_params)
-
-        if service.result == :error
-          if service.error_message.present?
-            flash[:alert] = service.error_message
-          end
-          render :reason_rejected
-        end
-        case service.result
-        when :ok
-          flash[:notice] = t("cases.update.case_updated")
-        when :no_changes
-          flash[:alert] = "No changes were made"
-        end
-        redirect_to case_path(@case) and return
-      rescue InputValidationError => e
-        flash.now[:alert] = e.message
-        render :reason_rejected
       end
     end
 
@@ -367,6 +341,7 @@ module Cases
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
       values["current_state"] = "rejected" if params.key?("rejected")
+
       correspondence_type.new(values).decorate
     end
 
