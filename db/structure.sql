@@ -835,6 +835,7 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 CREATE TABLE public.offender_sar_reason_rejecteds (
     id bigint NOT NULL,
+    case_id bigint,
     reason_rejected character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -2101,10 +2102,10 @@ CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON
 
 
 --
--- Name: index_offender_sar_reason_rejecteds_on_reason_rejected; Type: INDEX; Schema: public; Owner: -
+-- Name: index_offender_sar_reason_rejecteds_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_offender_sar_reason_rejecteds_on_reason_rejected ON public.offender_sar_reason_rejecteds USING btree (reason_rejected);
+CREATE INDEX index_offender_sar_reason_rejecteds_on_case_id ON public.offender_sar_reason_rejecteds USING btree (case_id);
 
 
 --
