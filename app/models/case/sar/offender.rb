@@ -73,7 +73,8 @@ class Case::SAR::Offender < Case::Base
                  number_exempt_pages: :integer,
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
-                 further_actions_required: :string
+                 further_actions_required: :string,
+                 offender_sar_reason_rejected: [:string, { array: true, default: [] }]
 
 
   attribute :number_final_pages, :integer, default: 0
@@ -118,7 +119,7 @@ class Case::SAR::Offender < Case::Base
   ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
-  has_many :offender_sar_reason_rejecteds
+  
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
