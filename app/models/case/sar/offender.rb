@@ -161,17 +161,6 @@ class Case::SAR::Offender < Case::Base
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
 
-  def validate_offender_sar_reason_rejected
-    debugger
-    if offender_sar_reason_rejected.all?(&:blank?)
-      errors.add(
-        :offender_sar_reason_rejected,
-        I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_reason_rejected.blank"),
-      )
-    end
-    errors[:offender_sar_reason_rejected].any?
-  end
-
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
       errors.add(
@@ -288,6 +277,15 @@ class Case::SAR::Offender < Case::Base
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
       )
+    end
+  end
+
+  def validate_offender_sar_reason_rejected
+    if offender_sar_reason_rejected.all?(&:blank?)
+      errors.add(
+        :offender_sar_reason_rejected,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_reason_rejected.blank"),
+        )
     end
   end
 
