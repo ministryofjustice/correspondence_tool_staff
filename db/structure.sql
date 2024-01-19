@@ -830,38 +830,6 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 
 --
--- Name: offender_sar_reason_rejecteds; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.offender_sar_reason_rejecteds (
-    id bigint NOT NULL,
-    case_id bigint,
-    reason_rejected character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: offender_sar_reason_rejecteds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.offender_sar_reason_rejecteds_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: offender_sar_reason_rejecteds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.offender_sar_reason_rejecteds_id_seq OWNED BY public.offender_sar_reason_rejecteds.id;
-
-
---
 -- Name: reason_rejected; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1507,13 +1475,6 @@ ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: offender_sar_reason_rejecteds id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.offender_sar_reason_rejecteds ALTER COLUMN id SET DEFAULT nextval('public.offender_sar_reason_rejecteds_id_seq'::regclass);
-
-
---
 -- Name: reason_rejected id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1755,14 +1716,6 @@ ALTER TABLE ONLY public.letter_templates
 
 ALTER TABLE ONLY public.linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
-
-
---
--- Name: offender_sar_reason_rejecteds offender_sar_reason_rejecteds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.offender_sar_reason_rejecteds
-    ADD CONSTRAINT offender_sar_reason_rejecteds_pkey PRIMARY KEY (id);
 
 
 --
@@ -2099,13 +2052,6 @@ CREATE INDEX index_linked_cases_on_case_id ON public.linked_cases USING btree (c
 --
 
 CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON public.linked_cases USING btree (case_id, linked_case_id, type);
-
-
---
--- Name: index_offender_sar_reason_rejecteds_on_case_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_offender_sar_reason_rejecteds_on_case_id ON public.offender_sar_reason_rejecteds USING btree (case_id);
 
 
 --
@@ -2488,7 +2434,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230706130822'),
 ('20230710161647'),
 ('20230727110142'),
-('20240111144753'),
-('20240117095616');
+('20240111144753');
 
 
