@@ -9,12 +9,10 @@ require "rails_helper"
 
           it "creates an offender object" do
             # Use the factory to create an instance of Case::Sar::Offender
-            kase = FactoryBot.build(:case)
+            kase = FactoryBot.build(Case::Sar::Offender)
 
-            # Assuming get_headings returns a string
-            headings = get_headings(kase, "OFFENDER_SAR")
+            headings = get_headings(kase, "rejections", OFFENDER_SAR")
 
-            # Replace "Your expected title" with the actual expected result
             expect(headings).to eq("Create a rejected offender sar")
           end
         end
