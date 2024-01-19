@@ -119,7 +119,7 @@ class Case::SAR::Offender < Case::Base
   ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
-  
+
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
@@ -160,82 +160,6 @@ class Case::SAR::Offender < Case::Base
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
-
-  def cctv_bwcv
-
-  end
-
-  def change_of_name_certificate
-
-  end
-
-  def court_data_request
-
-  end
-
-  def data_previously_requested
-
-  end
-
-  def further_identification
-
-  end
-
-  def identification_for_ex_inmate_probation
-
-  end
-
-  def illegible_handwriting_unreadable_content
-
-  end
-
-  def id_required
-
-  end
-
-  def invalid_authority
-
-  end
-
-  def medical_data
-
-  end
-
-  def observation_book_entries
-
-  end
-
-  def police_data
-
-  end
-
-  def social_services_data
-
-  end
-
-  def telephone_recordings_logs
-
-  end
-
-  def telephone_transcripts
-
-  end
-
-  def third_party_identification
-
-  end
-
-  def what_data_no_data_requested
-
-  end
-
-  def other
-
-  end
-
-  def reason_rejected_note
-
-  end
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
