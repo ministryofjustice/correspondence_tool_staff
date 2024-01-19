@@ -272,6 +272,8 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            offender_sar_reason_rejected:
+              blank: cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -549,7 +551,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
-        offender_sar_reason_rejected_ids: Why are you rejecting this case?
+        offender_sar_reason_rejected: Why are you rejecting this case?
       assignment:
         state: What do you want to do?
         team_id: Assign to
