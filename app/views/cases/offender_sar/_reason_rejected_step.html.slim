@@ -8,7 +8,7 @@
 
 = form_for @case.object, url: url, as: :offender_sar do |f|
 
-  = f.collection_check_boxes :offender_sar_reason_rejected, OffenderSarReasonRejected.reason_rejecteds || [], :first, :second
+  = f.collection_check_boxes :offender_sar_reason_rejected, I18n.t("helpers.label.offender_sar.offender_sar_reason_rejecteds"), :first, :second
 
   input name="current_step" type="hidden" value=@case.current_step
 
