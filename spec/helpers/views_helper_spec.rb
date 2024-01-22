@@ -1,21 +1,22 @@
 require "rails_helper"
-  describe ViewsHelper, type: :helper do
-    include ViewsHelper
 
+RSpec.describe ViewsHelper, type: :helper do
+  describe "#Create a rejected offender sar" do
+    context "with valid params" do
+      subject(:data_request) do
+        described_class.new(
+          offender_sar_case: build(:offender_sar_case),
+          user: build_stubbed(:user),
+          location: "X" * 500, # Max length
+          request_type: "all_prison_records",
+          request_type_note: "",
 
-    describe "Creating an offender sar" do
-      context "adding a rejected offender sar case" do
-        describe Case, type: :model do
+          )
 
-          it "creates an offender object" do
-            # Use the factory to create an instance of Case::Sar::Offender
-            kase = FactoryBot.build(Case::Sar::Offender)
+        data_request_title = get_headings(offender_sar_case, "cases.new.offender_sar.rejected")
+        expect(data_request_title).to eq("Create a rejected offender sar")
 
-            headings = get_headings(kase, "rejections", OFFENDER_SAR")
-
-            expect(headings).to eq("Create a rejected offender sar")
-          end
-        end
       end
     end
   end
+end
