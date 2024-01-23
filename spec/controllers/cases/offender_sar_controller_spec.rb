@@ -183,6 +183,26 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
+      describe "rejected offender sar" do
+        context "with step reason-rejected" do
+          context "when reason absent" do
+            let(:params) do
+              {
+                current_step: "reason-rejected",
+                offender_sar: {
+                  offender_sar_reason_rejected: [""],
+                },
+              }
+            end
+
+            it "required a reason-rejected option to be set" do
+              remains_on_step "reason-rejected"
+              expect(errors[:offender_sar_reason_rejected]).to eq ["cannot be blank"]
+            end
+          end
+        end
+      end
+
       context "with step recipient-details" do
         context "when recipient absent" do
           let(:params) do
