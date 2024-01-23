@@ -309,14 +309,7 @@ module Cases
       if params[:previous_button]
         obj.previous_step
       elsif params[:commit]
-        non_rejected_skip_reason_rejected_step(obj)
         obj.next_step
-      end
-    end
-
-    def non_rejected_skip_reason_rejected_step(obj)
-      if @case.current_state != "rejected" && obj.current_step == "requester-details"
-        obj.next_step["recipient-details"]
       end
     end
 
