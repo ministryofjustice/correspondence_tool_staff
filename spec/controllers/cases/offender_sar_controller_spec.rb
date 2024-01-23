@@ -195,7 +195,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
               }
             end
 
-            it "required a reason-rejected option to be set" do
+            it "requires a reason-rejected option to be set" do
               remains_on_step "reason-rejected"
               expect(errors[:offender_sar_reason_rejected]).to eq ["cannot be blank"]
             end
