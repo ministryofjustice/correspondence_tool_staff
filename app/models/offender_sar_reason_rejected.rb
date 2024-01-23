@@ -1,5 +1,4 @@
 class OffenderSarReasonRejected < ApplicationRecord
-
   enum reason_rejected: {
     cctv_bwcv: "cctv_bwcv",
     change_of_name_certificate: "change_of_name_certificate",

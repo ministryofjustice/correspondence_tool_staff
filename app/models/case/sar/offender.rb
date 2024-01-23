@@ -75,7 +75,6 @@ class Case::SAR::Offender < Case::Base
                  further_actions_required: :string,
                  offender_sar_reason_rejected: [:string, { array: true, default: [] }]
 
-
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
@@ -285,7 +284,7 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :offender_sar_reason_rejected,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_reason_rejected.blank"),
-        )
+      )
     end
   end
 
