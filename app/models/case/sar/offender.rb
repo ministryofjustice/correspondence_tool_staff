@@ -73,7 +73,7 @@ class Case::SAR::Offender < Case::Base
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
                  further_actions_required: :string,
-                 offender_sar_reason_rejected: [:string, { array: true, default: [] }]
+                 offender_sar_rejected: [:string, { array: true, default: [] }]
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -152,7 +152,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_offender_sar_reason_rejected, if: :rejected_offender_sar?
+  validate :validate_offender_sar_rejected, if: :rejected_offender_sar?
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -279,11 +279,11 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-  def validate_offender_sar_reason_rejected
-    if offender_sar_reason_rejected.all?(&:blank?)
+  def validate_offender_sar_rejected
+    if offender_sar_rejected.all?(&:blank?)
       errors.add(
-        :offender_sar_reason_rejected,
-        I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_reason_rejected.blank"),
+        :offender_sar_rejected,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_rejected.blank"),
       )
     end
   end

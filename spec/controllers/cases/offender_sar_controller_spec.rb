@@ -190,14 +190,14 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
               {
                 current_step: "reason-rejected",
                 offender_sar: {
-                  offender_sar_reason_rejected: [""],
+                  offender_sar_rejected: [""],
                 },
               }
             end
 
             it "requires a reason-rejected option to be set" do
               remains_on_step "reason-rejected"
-              expect(errors[:offender_sar_reason_rejected]).to eq ["cannot be blank"]
+              expect(errors[:offender_sar_rejected]).to eq ["cannot be blank"]
             end
           end
         end

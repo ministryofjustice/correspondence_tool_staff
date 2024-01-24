@@ -59,7 +59,7 @@ private
 
   def validate_reason_rejected(params)
     object.assign_attributes(params)
-    object.validate_offender_sar_reason_rejected
+    object.validate_offender_sar_rejected
   end
 
   def set_empty_value_if_unset(params, field)
