@@ -54,6 +54,7 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        third_party_email: Email address
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -281,6 +282,8 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
+            third_party_email:
+              invalid: enter an email address in the correct format, like name@example.com
             is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
@@ -547,6 +550,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
+
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -863,6 +867,7 @@ en:
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
+        third_party_email: Email address (optional)
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
         is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
@@ -1115,6 +1120,7 @@ en:
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship
+      third_party_email: Email address
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"

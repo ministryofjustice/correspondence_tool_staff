@@ -22,6 +22,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       std_responded_foi
       trig_responded_foi
       full_responded_foi
+      std_rejected_sar
       std_closed_irc
     ])
   end
@@ -161,6 +162,20 @@ describe CaseFilter::OpenCaseStatusFilter do
         ]
       end
     end
+
+    describe "filtering for rejected cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_open_case_status: %w[rejected]
+      end
+
+      it "returns the correct list of cases" do
+        results = open_case_status_filter.call
+        expect(results).to match_array [
+          @setup.std_rejected_sar,
+        ]
+      end
+    end
   end
 
   describe "#crumbs" do
@@ -198,6 +213,40 @@ describe CaseFilter::OpenCaseStatusFilter do
     end
   end
 
+  describe "#available_choices" do
+    context "when logged in as a Branston user" do
+      let(:user) { find_or_create :branston_user }
+      let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
+      let(:search_query) do
+        create :search_query
+      end
+
+      it "has the rejected key" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
+      end
+
+      it "returns the filter list with rejected as 'Rejected'" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]["rejected"]).to eq "Rejected"
+      end
+
+      it "returns the filter list with rejected at the end" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status].keys.last).to eq "rejected"
+      end
+    end
+
+    context "when logged in as a London Disclosure user" do
+      let(:user) { find_or_create :disclosure_specialist_bmt }
+      let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
+      let(:search_query) do
+        create :search_query
+      end
+
+      it "does not have the rejected key" do
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).not_to have_key("rejected")
+      end
+    end
+  end
+
   describe ".process_params!" do
     it "processes filter_open_case_status, sorting and removing blanks" do
       params = { filter_open_case_status: [
@@ -210,6 +259,7 @@ describe CaseFilter::OpenCaseStatusFilter do
         "pending_private_office_clearance",
         "awaiting_dispatch",
         "responded",
+        "rejected",
       ] }
       described_class.process_params!(params)
       expect(params).to eq filter_open_case_status: %w[
@@ -219,6 +269,7 @@ describe CaseFilter::OpenCaseStatusFilter do
         pending_dacu_clearance
         pending_press_office_clearance
         pending_private_office_clearance
+        rejected
         responded
         unassigned
       ]
