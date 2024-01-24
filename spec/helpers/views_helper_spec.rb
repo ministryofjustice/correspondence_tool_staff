@@ -19,9 +19,6 @@ describe ViewsHelper, type: :helper do
 
         expect(view_title).to eq("Create Rejected Offender SAR case")
       end
-    end
-
-    describe "#get_headings" do
 
       it "#text for a sub_heading" do
 
