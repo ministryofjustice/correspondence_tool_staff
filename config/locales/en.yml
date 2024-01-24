@@ -832,6 +832,7 @@ en:
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
+        other_rejected_reason: Give reason for rejecting this case
         other_subject_ids: "Police national computer number (PNC)"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
