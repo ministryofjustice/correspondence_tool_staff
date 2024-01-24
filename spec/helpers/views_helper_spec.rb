@@ -1,22 +1,37 @@
 require "rails_helper"
 
-RSpec.describe ViewsHelper, type: :helper do
-  describe "#Create a rejected offender sar" do
-    context "with valid params" do
-      subject(:data_request) do
-        described_class.new(
-          offender_sar_case: build(:offender_sar_case),
-          user: build_stubbed(:user),
-          location: "X" * 500, # Max length
-          request_type: "all_prison_records",
-          request_type_note: "",
+RSpec.configure do |config|
+  config.include AbstractController::Translation
+  end
 
-          )
+describe ViewsHelper, type: :helper do
 
-        data_request_title = get_headings(offender_sar_case, "cases.new.offender_sar.rejected")
-        expect(data_request_title).to eq("Create a rejected offender sar")
+  include CasesHelper
 
+    describe "#get_headings" do
+      it "text for rejected case type heading" do
+
+        test_kase = build(:offender_sar_case, :rejected)
+
+        test_correspondence_type = build(:offender_sar_correspondence_type)
+
+        view_title = get_headings(test_kase, test_correspondence_type)
+
+        expect(view_title).to eq("Create Rejected Offender SAR case")
       end
     end
-  end
+
+    describe "#get_headings" do
+
+      it "#text for a sub_heading" do
+
+        test_kase = build(:offender_sar_case)
+
+        test_correspondence_type = build(:offender_sar_correspondence_type)
+
+        view_title = get_headings(test_kase, test_correspondence_type)
+
+        expect(view_title).to eq("Create Offender SAR case")
+      end
+    end
 end
