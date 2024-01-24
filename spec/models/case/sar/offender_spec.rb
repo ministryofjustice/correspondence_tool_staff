@@ -31,9 +31,17 @@
 require "rails_helper"
 
 describe Case::SAR::Offender do
-  context "when factory should be valid" do
+  context "when valid offender factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_case
+
+      expect(kase).to be_valid
+    end
+  end
+
+  context "when rejected offender factory should be valid" do
+    it "is valid" do
+      kase = build_stubbed :rejected_offender_sar_case
 
       expect(kase).to be_valid
     end
@@ -72,6 +80,11 @@ describe Case::SAR::Offender do
     end
 
     describe "#rejected_offender_sar?" do
+      it "is a rejected_offender_sar" do
+        kase = build_stubbed :rejected_offender_sar_case
+        expect(kase.rejected_offender_sar?).to be true
+      end
+
       it "is not a rejected_offender_sar" do
         kase = build_stubbed :offender_sar_case
         expect(kase.rejected_offender_sar?).to be false

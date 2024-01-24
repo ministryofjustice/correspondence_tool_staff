@@ -41,6 +41,11 @@ FactoryBot.define do
     number_exempt_pages             { 2 }
     is_partial_case                 { false }
     further_actions_required        { "no" }
+
+    factory :rejected_offender_sar_case do
+      current_state     { "rejected" }
+      rejected_reasons  { %w[cctv_bwcv] }
+    end
   end
 
   trait :third_party do
