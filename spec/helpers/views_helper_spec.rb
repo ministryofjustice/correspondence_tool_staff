@@ -8,24 +8,18 @@ describe ViewsHelper, type: :helper do
   include CasesHelper
 
   describe "#get_headings" do
-    it "text for rejected case type heading" do
-      test_kase = build(:offender_sar_case, :rejected)
+    let (:test_correspondence_type) { build(:offender_sar_correspondence_type) }
 
-      test_correspondence_type = build(:offender_sar_correspondence_type)
-
-      view_title = get_headings(test_kase, test_correspondence_type)
-
-      expect(view_title).to eq("Create Rejected Offender SAR case")
+    it "returns text for rejected case type heading" do
+      test_case = build(:offender_sar_case, :rejected)
+      page_title = get_headings(test_case, test_correspondence_type)
+      expect(page_title).to eq("Create Rejected Offender SAR case")
     end
 
-    it "#text for a sub_heading" do
-      test_kase = build(:offender_sar_case)
-
-      test_correspondence_type = build(:offender_sar_correspondence_type)
-
-      view_title = get_headings(test_kase, test_correspondence_type)
-
-      expect(view_title).to eq("Create Offender SAR case")
+    it "returns text for sub_heading" do
+      test_case = build(:offender_sar_case)
+      page_title = get_headings(test_case, test_correspondence_type)
+      expect(page_title).to eq("Create Offender SAR case")
     end
   end
 end
