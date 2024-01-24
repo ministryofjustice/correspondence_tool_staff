@@ -30,6 +30,7 @@ module OffenderSARCasesParams
       :third_party_name,
       :third_party_relationship,
       :third_party_company_name,
+      :third_party_email,
       :date_responded_dd, :date_responded_mm, :date_responded_yyyy,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,

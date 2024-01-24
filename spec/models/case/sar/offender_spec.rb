@@ -307,7 +307,7 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
-      it "does not validate third_party names when ecipient is not third party too" do
+      it "does not validate third_party names when recipient is not third party too" do
         kase = build_stubbed :offender_sar_case, third_party: false, third_party_name: "",
                                                  third_party_company_name: "", recipient: "subject_recipient"
         expect(kase).to be_valid
@@ -328,9 +328,35 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
-      it "does not validates presence of third party relationship when recipient is not third party" do
+      it "does not validate presence of third party relationship when recipient is not third party" do
         kase = build_stubbed :offender_sar_case, third_party: false, third_party_relationship: "",
-                                                 recipient: "subject_recipient"
+                                                 third_party_email: "", third_party_company_name: "", recipient: "subject_recipient"
+        expect(kase).to be_valid
+      end
+    end
+
+    describe "third party email" do
+      it "validates email address when there is an email address entered" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "email", third_party_company_name: "",
+                                                 recipient: "third_party_recipient"
+
+        expect(kase).not_to be_valid raise_error(ActiveRecord::RecordInvalid).with_message("invalid format for email address")
+      end
+
+      it "does not validate email address when there is no email address entered" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "", third_party_company_name: "ABC LLP",
+                                                 recipient: "third_party_recipient"
+
+        expect(kase).to be_valid
+      end
+
+      it "validates email address when the email address entered is the correct format" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "email@something.com", third_party_company_name: "ABC LLP",
+                                                 recipient: "third_party_recipient"
+
         expect(kase).to be_valid
       end
     end
