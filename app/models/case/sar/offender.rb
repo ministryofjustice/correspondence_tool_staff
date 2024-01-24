@@ -42,6 +42,27 @@ class Case::SAR::Offender < Case::Base
     sent_to_sscl_at
   ].freeze
 
+  REJECTED_REASONS = {
+    "cctv_bwcv" => "CCTV",
+    "change_of_name_certificate" => "Change of name certificate",
+    "court_data_request" => "court_data_request",
+    "data_previously_requested" => "data_previously_requested",
+    "further_identification" => "further_identification",
+    "identification_for_ex_inmate_probation" => "identification_for_ex_inmate_probation",
+    "illegible_handwriting_unreadable_content" => "illegible_handwriting_unreadable_content",
+    "id_required" => "id_required",
+    "invalid_authority" => "invalid_authority",
+    "medical_data" => "medical_data",
+    "observation_book_entries" => "observation_book_entries",
+    "police_data" => "police_data",
+    "social_services_data" => "social_services_data",
+    "telephone_recordings_logs" => "telephone_recordings_logs",
+    "telephone_transcripts" => "telephone_transcripts",
+    "third_party_identification" => "third_party_identification",
+    "what_data_no_data_requested" => "what_data_no_data_requested",
+    "other" => "other",
+  }.freeze
+
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -73,7 +94,7 @@ class Case::SAR::Offender < Case::Base
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
                  further_actions_required: :string,
-                 offender_sar_rejected: [:string, { array: true, default: [] }]
+                 rejected_reasons: [:string, { array: true, default: [] }]
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -280,10 +301,10 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_offender_sar_rejected
-    if offender_sar_rejected.all?(&:blank?)
+    if rejected_reasons.all?(&:blank?)
       errors.add(
-        :offender_sar_rejected,
-        I18n.t("activerecord.errors.models.case/sar/offender.attributes.offender_sar_rejected.blank"),
+        :rejected_reasons,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.rejected_reasons.blank"),
       )
     end
   end

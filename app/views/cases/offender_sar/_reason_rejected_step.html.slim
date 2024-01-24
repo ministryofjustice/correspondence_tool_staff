@@ -6,10 +6,9 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for @case.object, url: url, as: :offender_sar do |f|
-
-  = f.collection_check_boxes :offender_sar_rejected, I18n.t("helpers.label.offender_sar.offender_sar_rejecteds"), :first, :second
+= form_for @case, url: url, as: :offender_sar do |f|
+  = f.collection_check_boxes :rejected_reasons, Case::SAR::Offender::REJECTED_REASONS, :first, :last
 
   input name="current_step" type="hidden" value=@case.current_step
 
-    = f.submit 'Continue', class: 'button'
+  = f.submit 'Continue', class: 'button'

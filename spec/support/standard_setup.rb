@@ -305,7 +305,7 @@ class StandardSetup
       },
       std_rejected_sar: lambda { |attributes = {}|
         create(:offender_sar_case,
-               { identifier: "std_rejected_sar", current_state: "rejected", offender_sar_rejected: %w[cctv_bwcv] }.merge(attributes))
+               { identifier: "std_rejected_sar", current_state: "rejected", rejected_reasons: %w[cctv_bwcv] }.merge(attributes))
       },
       ot_ico_sar_noff_unassigned: lambda { |attributes = {}|
         create(:ot_ico_sar_noff_unassigned,
