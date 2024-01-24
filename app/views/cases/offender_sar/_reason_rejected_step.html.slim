@@ -9,6 +9,9 @@
 = form_for @case, url: url, as: :offender_sar do |f|
   = f.collection_check_boxes :rejected_reasons, Case::SAR::Offender::REJECTED_REASONS, :first, :last
 
+  div[class="#{@case.rejected_reasons.include?("other") ? "" : "display-none"}"]
+    = f.text_area :other_rejected_reason
+
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
