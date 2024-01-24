@@ -70,6 +70,13 @@ describe Case::SAR::Offender do
         expect(kase.offender_sar_complaint?).to be false
       end
     end
+
+    describe "#rejected_offender_sar?" do
+      it "is not a rejected_offender_sar" do
+        kase = build_stubbed :offender_sar_case
+        expect(kase.rejected_offender_sar?).to be false
+      end
+    end
   end
 
   describe "#request_method" do
