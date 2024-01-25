@@ -55,9 +55,13 @@ feature "Closing a case" do
     end
 
     context "when responded-to late" do
+      let(:mon_nov_01) { Date.new(2023, 11, 1) }
+
       given!(:fully_granted_case) do
-        create :responded_case,
-               received_date: 22.business_days.ago
+        Timecop.freeze(mon_nov_01) do
+          create :responded_case,
+                 received_date: 22.business_days.ago
+        end
       end
 
       given!(:responded_date) do
@@ -66,23 +70,25 @@ feature "Closing a case" do
       end
 
       scenario "the case is responded-to late", js: true do
-        open_cases_page.load(timeliness: "late")
-        close_case(fully_granted_case)
+        Timecop.freeze(mon_nov_01) do
+          open_cases_page.load(timeliness: "late")
+          close_case(fully_granted_case)
 
-        cases_close_page.fill_in_date_responded(0.business_days.ago)
-        cases_close_page.click_on "Continue"
+          cases_close_page.fill_in_date_responded(0.business_days.ago)
+          cases_close_page.click_on "Continue"
 
-        expect(cases_closure_outcomes_page).to be_displayed
-        cases_closure_outcomes_page.is_info_held.yes.click
-        cases_closure_outcomes_page.wait_until_outcome_visible
-        cases_closure_outcomes_page.outcome.granted_in_full.click
-        cases_closure_outcomes_page.submit_button.click
+          expect(cases_closure_outcomes_page).to be_displayed
+          cases_closure_outcomes_page.is_info_held.yes.click
+          cases_closure_outcomes_page.wait_until_outcome_visible
+          cases_closure_outcomes_page.outcome.granted_in_full.click
+          cases_closure_outcomes_page.submit_button.click
 
-        show_page = cases_show_page.case_details
-        expect(show_page.response_details.timeliness.data.text)
-          .to eq "Answered late"
-        expect(show_page.response_details.time_taken.data.text)
-          .to eq "23 working days"
+          show_page = cases_show_page.case_details
+          expect(show_page.response_details.timeliness.data.text)
+            .to eq "Answered late"
+          expect(show_page.response_details.time_taken.data.text)
+            .to eq "23 working days"
+        end
       end
     end
   end
