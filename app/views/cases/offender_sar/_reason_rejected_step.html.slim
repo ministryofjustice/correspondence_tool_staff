@@ -7,6 +7,8 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case, url: url, as: :offender_sar do |f|
+
+  = f.label :rejected_reasons, :class => "form-label-bold"
   = f.collection_check_boxes :rejected_reasons, Case::SAR::Offender::REJECTED_REASONS, :first, :last
 
   div[class="#{@case.rejected_reasons.include?("other") ? "" : "display-none"}"]

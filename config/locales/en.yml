@@ -551,7 +551,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
-        rejected_reasons: Why are you rejecting this case?
+        rejected_reasons: Select all that apply.
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -838,6 +838,7 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        rejected_reasons: Why are you rejecting this case?
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
