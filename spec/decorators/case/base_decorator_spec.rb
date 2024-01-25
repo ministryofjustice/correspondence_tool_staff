@@ -115,8 +115,12 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#time_taken" do
+    let(:mon_nov_27) { Time.utc(2023, 11, 27, 12, 0, 0) }
+
     it "returns the number of business days taken to respond to a case" do
-      expect(closed_case.time_taken).to eq "19 working days"
+      Timecop.freeze mon_nov_27 do
+        expect(closed_case.time_taken).to eq "19 working days"
+      end
     end
 
     it 'uses singular "day" for 1 day' do

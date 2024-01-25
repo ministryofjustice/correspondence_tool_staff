@@ -193,10 +193,14 @@ describe DeadlineCalculator::BusinessDays do
     end
 
     describe "#time_taken" do
+      let(:mon_nov_27) { Date.new(2023, 11, 27) }
+
       it "returns the number of business days taken to respond to a case" do
-        closed_case = create(:closed_case)
-        deadline_calculator = described_class.new(closed_case)
-        expect(deadline_calculator.time_taken).to eq 19
+        Timecop.freeze mon_nov_27 do
+          closed_case = create(:closed_case)
+          deadline_calculator = described_class.new(closed_case)
+          expect(deadline_calculator.time_taken).to eq 19
+        end
       end
 
       it "returns nil for an open case" do
