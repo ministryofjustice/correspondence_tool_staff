@@ -1,15 +1,14 @@
-moj.Modules.OffenderRejectedDynamicCheckbox = {
+moj.Modules.OffenderRejectedDynamicTextArea = {
   // Offender SAR reason-rejected cases partial
   // Provides a dynamic text_area which displays when the user chooses the 'other' checkbox
   init: function () {
     const other_checkbox = document.getElementById('offender_sar_rejected_reasons_other');
-    const text_area = document.querySelector('.display-none #offender_sar_other_rejected_reason');
-    const text_area_parent_div = text_area.closest('.display-none');
+    const text_area = document.querySelector('div.display-none');
     other_checkbox.addEventListener('click', function () {
       if (other_checkbox.checked) {
-        text_area_parent_div.classList.remove("display-none")
+        text_area.classList.remove("display-none")
       } else {
-        text_area_parent_div.classList.add("display-none")
+        text_area.classList.add("display-none")
       }
     })
 
