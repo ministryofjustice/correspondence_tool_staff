@@ -273,7 +273,7 @@ en:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
             rejected_reasons:
-              blank: cannot be blank
+              blank: ""
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -838,7 +838,8 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
-        rejected_reasons: Why are you rejecting this case?
+        rejected_reason: Why are you rejecting this case?
+        rejected_reasons: Select all reasons you are rejecting this case
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
