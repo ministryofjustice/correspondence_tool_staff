@@ -1,29 +1,59 @@
+---
 en:
   event:
     accept_approver_assignment: Clearance level added
     accept_responder_assignment: Accepted by Business unit
     add_data_received: Data request edited
     add_message_to_case: Message added - see messages section above
-    add_note_to_case: "Note added:"
+    add_note_to_case: 'Note added:'
     add_response_to_flagged_case: Response uploaded
     add_response_to_flagged_case_and_approve: Response uploaded and cleared
     add_responses: Response uploaded
+    annotate_retention_changes: Retention details edited
+    annotate_system_retention_changes: Retention details edited - System update
     approve: Response cleared
     approve_and_bypass: Cleared - further clearance not required
     assign_responder: Assign responder
-    assign_to_team_member: Assign responder
     assign_to_new_team: Assign to new team
+    assign_to_team_member: Assign responder
+    capture_reason_for_lateness: Record reason for lateness
+    capture_reason_for_lateness_add: Reason for lateness added
+    capture_reason_for_lateness_change: Reason for lateness changed
+    case/ico:
+      require_further_action_message: Case details updated. Assigned back to %{team}
+      require_further_action_to_responder_team_message: Case details updated. Assigned to %{team}
+      require_further_action_unassigned_message: Case details updated. Need to reassign the case to a team
+      respond: Response sent to ICO
     close: Case closed
     create: Case created
     date_sent_to_sscl_removed: SSCL date sent removed
-    send_day_1_email: Day 1 commissioning email sent
-    destroy_case: Case deleted
     destroy: Destroyed
+    destroy_case: Case deleted
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
     extend_sar_deadline: Extended SAR deadline
     flag_for_clearance: Clearance level added
     link_a_case: Case linked
+    mark_as_awaiting_response_for_partial_case: Case marked as awaiting response following SSCL letter
+    mark_as_data_to_be_requested: Requires data
+    mark_as_further_actions_required: Case marked as SSCL managing case
+    mark_as_legal_proceedings_ongoing: Mark as ongoing legal case
+    mark_as_legal_proceedings_ongoing_desc: Legal proceedings ongoing
+    mark_as_partial_case: Case marked as SSCL partial case
+    mark_as_ready_for_vetting: Mark as ready for vetting
+    mark_as_ready_for_vetting_desc: Case is ready for vetting
+    mark_as_ready_to_copy: Mark as ready to copy
+    mark_as_ready_to_copy_desc: Case is ready to copy
+    mark_as_ready_to_dispatch: Mark as ready to dispatch
+    mark_as_ready_to_dispatch_desc: Case is ready to dispatch
+    mark_as_require_data_review: Requires data review
+    mark_as_require_response: Requires response
+    mark_as_vetting_in_progress: Mark as vetting in progress
+    mark_as_vetting_in_progress_desc: Vetting is in progress
+    mark_as_waiting_for_data: Mark as waiting for data
+    mark_as_waiting_for_data_desc: Case is waiting for data
+    move_case_back: Reverted case back
+    move_case_back_desc: Reverted case back to "%{state}"
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
     record_sent_to_sscl: Sent to SSCL for Vetting
@@ -35,58 +65,27 @@ en:
     remove_sar_deadline_extension: Deadline extension removed
     request_amends: Request amends
     request_further_clearance: Request further clearance
+    require_further_action_desc: Further information requested by the ICO
+    require_further_action_to_responder_team_desc: Further information requested by the ICO
+    require_further_action_unassigned_desc: Further information requested by the ICO
+    reset_to_initial_state: Case type changed, and status reset
     respond: Response sent to requester
+    send_back: Send back
+    send_back_desc: Case was sent back for change
+    send_day_1_email: Day 1 commissioning email sent
     take_on_for_approval: Clearance level added
     unaccept_approver_assignment: Clearance level removed
     unassign_from_user: Assigned responder deactivated
     unflag_for_clearance: Clearance level removed
+    unmark_as_further_actions_required: Case marked as SSCL not managing case
+    unmark_as_partial_case: Case marked as not an SSCL partial case
     update_closure: Closure details edited
     upload_response_and_approve: Response uploaded and cleared
     upload_response_and_return_for_redraft: Changes uploaded for redraft
     upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
-    case/ico:
-      respond: Response sent to ICO
-      require_further_action_message: Case details updated. Assigned back to %{team}
-      require_further_action_unassigned_message: Case details updated. Need to reassign the case to a team
-      require_further_action_to_responder_team_message: Case details updated. Assigned to %{team}
-
-    mark_as_waiting_for_data: Mark as waiting for data
-    mark_as_waiting_for_data_desc: Case is waiting for data
-    mark_as_ready_for_vetting: Mark as ready for vetting
-    mark_as_ready_for_vetting_desc: Case is ready for vetting
-    mark_as_vetting_in_progress: Mark as vetting in progress
-    mark_as_vetting_in_progress_desc: Vetting is in progress
-    mark_as_ready_to_copy: Mark as ready to copy
-    mark_as_ready_to_copy_desc: Case is ready to copy
-    mark_as_ready_to_dispatch: Mark as ready to dispatch
-    mark_as_ready_to_dispatch_desc: Case is ready to dispatch
-    mark_as_data_to_be_requested: Requires data
-    mark_as_require_data_review: Requires data review
-    mark_as_require_response: Requires response
-    reset_to_initial_state: Case type changed, and status reset
-    mark_as_legal_proceedings_ongoing: Mark as ongoing legal case
-    mark_as_legal_proceedings_ongoing_desc: Legal proceedings ongoing
-    send_back: Send back
-    send_back_desc: Case was sent back for change
-    move_case_back: Reverted case back
-    move_case_back_desc: Reverted case back to "%{state}"
-    capture_reason_for_lateness: Record reason for lateness
-    capture_reason_for_lateness_add: Reason for lateness added
-    capture_reason_for_lateness_change: Reason for lateness changed
-    mark_as_partial_case: Case marked as SSCL partial case
-    unmark_as_partial_case: Case marked as not an SSCL partial case
-    mark_as_further_actions_required: Case marked as SSCL managing case
-    unmark_as_further_actions_required: Case marked as SSCL not managing case
-    mark_as_awaiting_response_for_partial_case: Case marked as awaiting response following SSCL letter
-    require_further_action_desc: Further information requested by the ICO
-    require_further_action_unassigned_desc: Further information requested by the ICO
-    require_further_action_to_responder_team_desc: Further information requested by the ICO
-    annotate_retention_changes: Retention details edited
-    annotate_system_retention_changes: Retention details edited - System update
-
   retention_schedule_case_notes:
-    update:
-      state: Retention status changed from %{from} to %{to}
-      planned_destruction_date: Destruction date changed from %{from} to %{to}
     create:
       planned_destruction_date: Destruction date set to %{to}
+    update:
+      planned_destruction_date: Destruction date changed from %{from} to %{to}
+      state: Retention status changed from %{from} to %{to}

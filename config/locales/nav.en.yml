@@ -1,5 +1,6 @@
+---
 en:
-  homepage_nav: 
+  homepage_nav:
     pages:
       closed_cases: Closed cases
       incoming_cases: New cases
@@ -14,17 +15,19 @@ en:
       incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: Cases
-      search_cases: Search
       rrd_pending: RRD Pending
+      search_cases: Search
+      stats: Reports
+      system_admin: Admin
       teams:
         one: Team
         other: Teams
-      stats: Reports
-      system_admin: Admin
     tabs:
-      in_time_html: |
-        <span class="visuallyhidden">View tab </span>In time (%{count})
-      late_html: |
-        <span class="visuallyhidden">View tab </span>Late (%{count})
-      ready_for_removal: Ready for removal
+      in_time_html: '<span class="visuallyhidden">View tab </span>In time (%{count})
+
+        '
+      late_html: '<span class="visuallyhidden">View tab </span>Late (%{count})
+
+        '
       pending_removal: Pending removal
+      ready_for_removal: Ready for removal
