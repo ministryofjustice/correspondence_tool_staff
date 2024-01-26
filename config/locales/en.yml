@@ -1,391 +1,5 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
+---
 en:
-  dictionary:
-    date_hint_text: &date_hint_text "For example, 31 07 2019"
-    retention_schedule_states: &retention_schedule_states
-      not_set: Not set
-      retain: Retain
-      review: Review
-      to_be_anonymised: Destroy
-      anonymised: Anonymised
-
-  activerecord:
-    attributes:
-      business_unit:
-        correspondence_type_ids: "Correspondence types"
-      case/base:
-        date_draft_compliant: Date compliant draft uploaded
-      case/ico/base:
-        uploaded_ico_decision_files: ''
-        internal_deadline: Draft deadline
-        date_ico_decision_received: "Date ICO's decision received at MOJ"
-      case/overturned_ico/sar:
-        external_deadline: Final deadline
-      case/sar:
-        third_party: ''
-      commissioning_document:
-        template_name: Data request document
-      report:
-        correspondence_type: Case type
-      case/sar/offender:
-        number_final_pages: Number of pages
-        third_party : "Information requested on someone else's behalf"
-        third_party_address: Address
-        third_party_company_name : "Company name"
-        third_party_name : "Full name of the representative"
-        third_party_relationship: "Relationship to the subject"
-        third_party_email: Email address
-      case/sar/offender_complaint:
-        ico_contact_name: ICO contact name
-        ico_contact_email: ICO contact email
-        ico_contact_phone: ICO contact phone
-        ico_reference: ICO reference number
-        gld_contact_name: GLD contact name
-        gld_contact_email: GLD contact email
-        gld_contact_phone: GLD contact phone
-        gld_reference: GLD reference number
-
-    errors:
-      models:
-        business_unit:
-          attributes:
-            correspondence_type_ids:
-              blank: cannot be blank
-        case:
-          attributes:
-            email:
-              blank: "and address cannot both be blank"
-            external_deadline:
-              too_far_past_received: 'cannot be more than a year past the date received'
-              before_received: "cannot be before date received"
-              before_internal: "cannot be before draft deadline"
-            internal_deadline:
-              after_external: "cannot be after final deadline"
-              before_received: "cannot be before date received"
-            received_date:
-              not_in_future: "cannot be in the future."
-              past: too far in past.
-            date_draft_compliant:
-              before_received: "cannot be before date received"
-              not_in_future: "cannot be in the future."
-              after_date_responded: "cannot be after the date responded"
-            date_of_birth:
-              not_in_future: "cannot be in the future."
-            related_case_links:
-              not_empty: "are not empty. Please remove all linked cases in order to delete this case."
-            number_final_pages:
-              not_whole_number: 'must be a positive whole number'
-            number_exempt_pages:
-              not_whole_number: 'must be a positive whole number'
-            request_dated:
-              not_in_future: "cannot be in the future."
-            partial_case_letter_sent_dated:
-              not_in_future: "cannot be in the future."
-            postal_address:
-              blank: "and email cannot both be blank"
-            number:
-              duplication: |
-                An error has occurred and your case could not be created.
-                Please try again.
-            requester_type:
-              blank: must be selected
-            flag_for_disclosure_specialists:
-              blank: Please choose yes or no
-            sent_to_sscl_at:
-              not_allowed: "not allowed if there is a removal reason"
-            remove_sent_to_sscl_reason:
-              blank: "cannot be blank if sent date is removed"
-
-        case/foi/standard:
-          attributes: &foi_attr
-            received_date:
-              blank: cannot be blank
-            email:
-              blank: cannot be blank
-            name:
-              blank: cannot be blank
-            postal_address:
-              blank: cannot be blank
-            requester_type:
-              blank: cannot be blank
-            delivery_method:
-              blank: cannot be blank
-            subject:
-              blank: cannot be blank
-            flag_for_disclosure_specialists:
-              blank: cannot be blank
-            date_responded:
-              before_received: "cannot be before date received"
-              future: "cannot be in the future"
-              blank: cannot be blank
-            message:
-              optional_blank: "and uploaded request files cannot both be blank"
-            uploaded_request_files:
-              optional_blank: "and message box for saving request detail cannot both be blank"
-
-        case/ico:
-          attributes:
-            received_date:
-              past: "cannot be over 10 years in the past"
-            external_deadline:
-              past: "cannot be in the past"
-            internal_deadline:
-              past: "cannot be in the past"
-          original_case_number:
-            blank: "Enter original case number"
-            missing: "Original case not found"
-            not_authorised: "Not authorised to view case"
-            wrong_type: "Original case must be one of the [%{case_types}]."
-          related_case_number:
-            already_linked: "Case is already linked"
-            blank: "Enter related case number"
-            missing: "Related case not found"
-            not_authorised: "Not authorised to view case"
-        case/ico/base:
-          original_case_already_related: 'already linked as the original case'
-        case/ico/foi:
-          attributes:
-            date_responded:
-              before_received: "cannot be before date received"
-              future: "cannot be in the future"
-              blank: cannot be blank
-          related_case_number:
-            does_not_match_original: >-
-              You've linked an FOI case as the original for this appeal. You
-              can now only link other FOI cases or internal reviews as related
-              to this cases.
-        case/ico/sar:
-          attributes:
-            date_responded:
-              before_received: "cannot be before date received"
-              future: "cannot be in the future"
-              blank: cannot be blank
-          related_case_number:
-            does_not_match_original: >-
-              You've linked a SAR case as the original for this appeal. You
-              can now only link other SAR cases as related to this cases.
-        case/overturned_ico/sar:
-          attributes:
-            received_date:
-              future: cannot be in the future
-              past: of decision from ICO must be within 40 days of today
-              blank: cannot be blank
-            external_deadline:
-              past: cannot be in the past
-              future: is too far in the future
-              blank: cannot be blank
-            original_ico_appeal:
-              not_ico_sar: is not an ICO appeal for a SAR case
-              blank: cannot be blank
-            original_case:
-              not_sar: is not a SAR case
-              blank: cannot be blank
-            email:
-              blank: cannot be blank
-            postal_address:
-              blank: cannot be blank
-            ico_officer_name:
-              blank: cannot be blank
-
-        case/overturned_ico/foi:
-          attributes:
-            <<: *foi_attr
-            received_date:
-              future: cannot be in the future
-              past: of decision from ICO must be within 40 days of today
-              blank: cannot be blank
-            external_deadline:
-              past: cannot be in the past
-              future: is too far in the future
-              blank: cannot be blank
-            original_ico_appeal:
-              not_ico_foi: is not an ICO appeal for a FOI case
-              blank: cannot be blank
-            original_case:
-              not_foi: is not a FOI case
-              blank: cannot be blank
-        case/sar:
-          attributes:
-            third_party:
-              inclusion: Please choose yes or no
-        case/sar/standard:
-          attributes:
-            subject_full_name:
-              blank: cannot be blank
-            request_method:
-              blank: cannot be blank
-            subject_type:
-              blank: cannot be blank
-            email:
-              blank: cannot be blank
-            postal_address:
-              blank: cannot be blank
-            name:
-              blank: cannot be blank
-            third_party_relationship:
-              blank: cannot be blank
-            received_date:
-              blank: cannot be blank
-            reply_method:
-              blank: cannot be blank
-            subject:
-              blank: cannot be blank
-        case/sar/internal_review:
-          attributes:
-            original_case:
-              not_authorised: can't be authorised to link this case
-            sar_ir_subtype:
-              blank: cannot be blank
-            date_responded:
-              before_received: "cannot be before date received at MoJ"
-              future: "cannot be in the future"
-              blank: cannot be blank
-            linked_case:
-              wrong_type: must be a SAR (Subject Access Request) correspondence type
-            other_option_details:
-              present: must be only be present if 'other' reason selected
-              absent: must be submitted if 'other' reason selected
-
-        case/sar/offender:
-          attributes:
-            date_responded:
-              before_received: "cannot be before date received"
-              future: "cannot be in the future"
-            recipient:
-              third_party: cannot be third_party_recipient if third party requester
-              blank: cannot be blank
-            third_party_company_name:
-              blank: cannot be blank if representative name not given
-            third_party_name:
-              blank: cannot be blank if company name not given
-            third_party_relationship:
-              blank: cannot be blank
-            third_party_address:
-              blank: cannot be blank
-            third_party_email:
-              invalid: enter an email address in the correct format, like name@example.com
-            is_partial_case:
-              invalid: Cannot be marked if case is marked as SSCL managing case
-            subject_full_name:
-              blank: cannot be blank
-            subject_address:
-              blank: cannot be blank
-            subject_type:
-              blank: cannot be blank
-            received_date:
-              blank: cannot be blank
-            date_of_birth:
-              blank: cannot be blank
-        case/sar/offender_complaint:
-          attributes:
-            ico_contact_name:
-              blank: cannot be blank
-            ico_contact_email:
-              blank: cannot be blank if ICO contact phone not given
-            ico_contact_phone:
-              blank: cannot be blank if ICO contact email not given
-            ico_reference:
-              blank: cannot be blank
-            gld_contact_name:
-              blank: cannot be blank
-            gld_contact_email:
-              blank: cannot be blank if GLD contact phone not given
-            gld_contact_phone:
-              blank: cannot be blank if GLD contact email not given
-            gld_reference:
-              blank: cannot be blank
-            linked_cases:
-              original_case_already_related: already linked as the original case
-            external_deadline:
-              before_received: "cannot be before date received"
-              past: cannot be in the past
-            original_case:
-              blank: cannot be blank
-              not_authorised: cannot be authorised to link this case
-              wrong_type: Original case must be Offender SAR
-            complaint_type:
-              blank: cannot be blank
-            complaint_subtype:
-              blank: cannot be blank
-            priority:
-              blank: cannot be blank
-
-        assignment:
-          attributes:
-            state:
-              blank: You must either accept or reject this case
-            approved:
-              true: Cannot be true for non-approving roles
-        case_attachment:
-          attributes:
-            url:
-              bad_file_type: "unnacceptable type %{type} for file: %{filename}"
-              invalid_url: "url is invalid for file: %{filename}"
-        commissioning_document:
-          attributes:
-            template_name:
-              blank: is required
-        data_request:
-          attributes:
-            date_from:
-              order: cannot be later than date to
-            date_received:
-              blank: must be completed
-              future: cannot be in the future
-            request_type_note:
-              blank: cannot be blank
-            cached_date_received:
-              blank: must be provided if request is complete
-              future: cannot be in the future
-              not_empty: should be blank if the request is not complete
-            request_type:
-              blank: cannot be blank
-            location:
-              blank: cannot be blank
-        linked_case:
-          missing: "does not exist"
-          references_self: "cannot link to the same case"
-          wrong_type: "cannot link a %{case_class} case to a %{linked_case_class} as a %{type} case"
-        report:
-          attributes:
-            correspondence_type:
-              blank: "cannot be blank"
-            period_start: &report_dates
-              in_future: "cannot be in the future."
-            period_end:
-              <<: *report_dates
-              before_start_date: "cannot be after Date to"
-            report_type_id:
-              blank: cannot be blank
-        user:
-          attributes:
-            email:
-              blank: cannot be blank
-        case_transition:
-          attributes:
-            message:
-              blank: cannot be blank
-
   activemodel:
     attributes:
       probation_commissioning_document_email:
@@ -395,589 +9,437 @@ en:
         state: Status
     errors:
       models:
-        retention_schedule_form:
-          attributes:
-            planned_destruction_date:
-              blank: cannot be blank
-              before_closure: must be after case closed date
-            state:
-              inclusion: is not a valid status
-              forbidden: cannot be changed once case is anonymised
         probation_commissioning_document_email:
           attributes:
             email_branston_archives:
-              blank: ""
-
-  pundit:
-    assignment_policy:
-      can_assign_to_new_team?: You are not authorised to assign this case to another team
-
-    case_policy: &case_policy
-      can_add_attachment?: 'You are not authorised to upload attachments to this case.'
-      can_add_case?: 'You are not authorised to create new cases.'
-      can_assign_case?: 'Case could not be assigned'
-      can_accept_or_reject_case?: 'You are not authorised to view to this assignment.'
-      can_accept_or_reject_responder_assignment?: 'You are not authorised to view to this case assignment.'
-      can_approve_case?: 'You are not authorised to approve this cases response.'
-      can_delete_case?: You are not authorised to delete this case.
-      can_download_stats?: You are not authorised to view or download statistics.
-      can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
-      can_view_case_details?: 'You are not authorised to view this case.'
-      delete?: You are not authorised to delete this case.
-      edit?: You are not authorised to edit this case.
-      new_case_link?: You are not authorised to link other cases to this case.
-      show?: You are not authorised to view this case.
-      unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
-      update?: You are not authorised to edit this case.
-      update_closure?: You are not authorised to edit this case.
-      upload_responses?: You are not authorised to upload a response for this case.
-      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
-      can_be_reopened?: You are not authorised to reopen this case.
-    case/ico/foi_policy:
-      <<: *case_policy
-      can_close_case?: You are not authorised to close this case
-      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
-    case/ico/sar_policy:
-      <<: *case_policy
-      can_close_case?: You are not authorised to close this case
-      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
-    case/foi/standard_policy:
-      <<: *case_policy
-    case/foi/compliance_review_policy:
-      <<: *case_policy
-    case/foi/timeliness_review_policy:
-      <<: *case_policy
-    case/sar/standard_policy:
-      <<: *case_policy
-      extend_sar_deadline?: 'SAR deadline cannot be extended'
-      remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
-    case/sar/internal_review_policy:
-      can_close_case?: You are not authorised to close this case
-      respond_and_close?: You are not authorised to close this case
-      <<: *case_policy
-    case/sar/offender_policy:
-      <<: *case_policy
-      can_record_data_request?: You cannot edit data request once the case has been closed.
-      can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
-      can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
-      can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
-    case/sar/offender_complaint_policy:
-      <<: *case_policy
-      can_record_data_request?: You cannot edit data request once the case has been closed.
-    team_policy:
-      index?: 'You are not authorised to view a list of teams'
-      show?: 'You are not authorised to view this team'
-      new?: 'You are not authorised to add new teams'
-      create?: 'You are not authorised to add new teams'
-      edit?: 'You are not authorised to edit this team'
-      destroy?: 'You are not authorised to deactivate teams'
-    nil_class: 'Authorisation failed due to internal error.'
-    case/overturned_ico/base_policy:
-      new_overturned_ico?: 'You are not authorised to create an overturned ICO case'
-    case/overturned_ico/sar_policy:
-      respond_and_close?: You are not authorised to close this case
-      <<: *case_policy
-    user_policy:
-      destroy?: 'You are not authorised to deactivate users'
-
-  roles:
-    responders: Information officers
-
-  team_leads:
-    deputy_director: Deputy director
-    director: Director
-    director_general: Director general
-
-  team_lead_types:
-    business_group: Director general
-    directorate: Director
-    business_unit: Deputy director
-
-  team_types:
-    business_group: Business group
-    directorate: Directorate
-    business_unit: Business unit
-
-  date:
-    formats:
-      default: "%-d %b %Y"
-      compact: "%d-%m-%Y"
-
-  time:
-    formats:
-      default: "%-d %b %Y %H:%M"
-
-  button:
-    add_to_case_history: Add to case history
-    assign: Assign to %{business_unit_name}
-    move: Move to %{directorate}
-    move_directorate: Move to %{business_group}
-    confirm: Confirm
-    continue: Continue
-    create_case: Create case
-    feedback: Send feedback
-    final_page_count: Update final page count
-    exempt_pages: Update exempt pages
-    next_page_assign: Create case
-    request_amends: Request amends
-    save_changes: Save changes
-    search: Search
-    edit: Edit
-    delete: Delete
-    update_partial_flags: Update partial case
-    select_document: Select Day 1 request document
-    download_document: Download Day 1 request document
-    generate_document: Generate Day 1 request document
-    send_email: Send commissioning email
-
-  helpers:
-    fieldset:
-      letter:
-        letter_template_id: "Choose a letter template to use:"
-      bypass_approval_manager:
-        press_office_approval: 'Does Press office need to clear this response?'
-      data_request:
-        completed: Is this request now complete?
-        request_type: What data is needed?
-        date_from: Date from
-        date_to: Date to
-        date_requested: Date requested
-      commissioning_document:
-        template_name: Which data request document would you like to use for the Day 1 email?
-      offender_sar:
-        flag_for_disclosure_specialists: "Flag as high profile case?"
-        info_held_status_abbreviation: Was the information held?
-        subject_type: "What is their relationship to the MOJ?"
-        third_party: Please choose yes or no
-        request_method: How was the request received by MOJ?
-
-      assignment:
-        state: What do you want to do?
-        team_id: Assign to
-        user_id: Choose a new team member for this case
-      foi:
-        appeal_outcome_name: What was the appeal outcome?
-        flag_for_disclosure_specialists: Flag for disclosure specialists
-        info_held_status_abbreviation: Was the information held?
-        late_team_id: Business unit responsible for late response
-        name: "Who is the requestor?"
-        outcome_abbreviation: What was the outcome?
-        refusal_reason_abbreviation: What was the outcome?
-        requester_type: Requester type
-        type: Type
-      ico:
-        delivery_method: How and where should the information be sent?
-        ico_decision: The original case has been
-        late_team_id_html: " "
-        type: Original Case Type
-      overturned_foi:
-        reply_method: 'How should this information be sent to the requester?'
-      overturned_sar:
-        reply_method: 'How should this information be sent to the requester?'
-      sar:
-        flag_for_disclosure_specialists: Flag for disclosure specialist?
-        late_team_id: Business unit responsible for late response
-        missing_info: "Was the response asking for missing information (e.g. proof of ID) or
-          clarification, i.e. a TMM?"
-        reply_method_html: |
-          <div class="heading-medium">Where the information should be sent</div>
-        subject_type: Who is the person the information is being requested about?
-        third_party: Is the information being requested on someone's behalf?
-        request_method: How was the request received by MOJ?
-      sar_internal_review:
-        sar_ir_subtypes:
-          compliance: Compliance
-          timeliness: Timeliness
-        third_party: Is this information being requested on someone else's behalf?
-        sar_ir_subtype: Case type
-        name:  Full name of the requestor
-        late_team_id: Who was responsible for lateness?
-        sar_ir_outcome: SAR IR Outcome?
-        team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
-        over_overturned: Please provide more details
-      offender_sar_complaint:
-        original_case_number: Is this the correct case?
-        complaint_type: What sort of complaint is this?
-        complaint_subtype: What is the nature of the complaint?
-        priority: Choose a priority level
-        approval_flag_ids: Approval options
-        outcome_id: Was the claim successful?
-      report:
-        correspondence_type: Which type of cases do you want to report on?
-        report_type_id: What should this report cover?
-      state_selector:
-        selected_states: Filter by status
-      search_query:
-        common_exemption_ids: Most frequently used
-        exemption_ids: All exemptions
-        filter_assigned_to_ids: Matching business units
-        filter_case_type: Type
-        filter_open_case_status: Status
-        filter_sensitivity: Sensitivity
-        filter_complaint_type: Complaint type
-        filter_complaint_priority: Priority
-        filter_complaint_subtype: Complaint sub type
-        filter_status: Status
-        filter_timeliness: Timeliness
-        filter_high_profile: Flag as high profile?
-        filter_retention_state: Status
-      team:
-        role: What will the business unit be responsible for?
-        correspondence_type_ids: Correspondence types
-      retention_schedule_form:
-        state: What is the retention status?
-    hint:
-      shared:
-        date_example: *date_hint_text
-      case:
-        linked_case_number: " For example 170131001"
-        upload_comment: This will be added to the converstation section of the case.
-      contact:
-        data_request_emails: Add multiple email addresses on separate lines
-      data_request:
-        location: Where is the data held?
-      feedback:
-        comment: |
-          Let us know what you were doing and what could be improved or fixed.
-      ico:
-        original_case_number_html: |
-          Enter original case  reference number to link to.  For example 170131001.<br>
-          We'll use the original case title for the appeal title.
-        related_case_number:  Enter related case  reference number, for example 170131001.
-      offender_sar:
-        case_reference_number: "You can include multiple numbers separated by a comma or a space."
-        message_hint: Include any details that will be useful for processing the case (optional)
-        reason_for_lateness_note_hint: Please provide details to why this case is late
-        number_exempt_pages: "Pages removed from the SAR as exemptions"
-        number_final_pages: "Final page count including exempt pages"
-        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
-        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
-        prison_number: "You can include multiple numbers separated by a comma or a space."
-        subject_aliases: "You can include multiple aliases separated by a comma or a space."
-      sar:
-        third_party_relationship: For example, solicitor, parent or guardian
-      search_query:
-        business_unit_name_filter: For example, Legal Aid Agency
-      team_property:
-        value: Please provide one area at a time and be as concise as possible
-    label:
-      bypass_approval_manager:
-        press_office_approval:
-          true_html: 'Yes'
-          false_html: No, the response is ready to send
-        message: 'Why is further clearance not required?'
-      assignment:
-        assignee_id: Business unit
-        reasons_for_rejection: Why are you rejecting this case?
-        state:
-          accepted: Accept
-          rejected: Reject
-        user_id: Business unit
-      state_selector:
-        unassigned: Needs reassigning
-        awaiting_responder: To be accepted
-        awaiting_responder_email: Waiting to be accepted
-        awaiting_dispatch: Ready to send
-        drafting: Draft in progress
-        pending_dacu_clearance: Pending clearance - Disclosure
-        pending_press_office_clearance: Pending clearance - Press office
-        pending_private_office_clearance: Pending clearance - Private office
-        responded: Ready to close
-        closed: Closed
-        case/ico:
-          awaiting_dispatch: Ready to send to ICO
-          responded: Closed - awaiting ICO decision
-          closed: "Closed - %{ico_decision} by ICO"
-      case:
-        add_to_conversation: Add to conversation
-        add_note: Add a note to this case
-        linked_case_number: Case number For example 170131001
-      data_request:
-        location: Location
-        request_type:
-          nomis_records: NOMIS records
-          nomis_contact_logs: NOMIS contact logs
-          nomis_other: NOMIS other
-          cctv_and_bwcf: CCTV & BWCF
-          court: Court
-          telephone_pin_logs: Telephone PIN logs
-          telephone_recordings: Telephone recordings
-          mappa: MAPPA
-          pdp: PDP
-          all_prison_records: All prison records
-          security_records: Security records
-          probation_records: Probation records
-          probation_archive: Probation archive
-          other: Other
-          cross_borders: Cross Borders
-          cat_a: CAT A
-          ndelius: Ndelius contact lists
-        request_type_note: Please provide more details
-        cached_date_received: Date when data request is complete
-        cached_num_pages: Number of pages received
-        completed: "Yes, all data received"
-        date_completed: Date completed
-        send_email_note_text: "Email will be sent to the following recipients:"
-      data_request_email:
-        email_type:
-          commissioning_email: Day 1 commissioning email
-      commissioning_document:
-        template_name:
-          cat_a: CAT A
-          cctv: CCTV & BWCF
-          cross_border: Cross Borders
-          mappa: MAPPA
-          pdp: PDP
-          prison: Prison records
-          probation: Probation records
-          security: Security records
-          telephone: Telephone recordings
-      types:
-        Case::FOI::Standard: FOI
-        Case::FOI::TimelinessReview: FOI - Internal review for timeliness
-        Case::FOI::ComplianceReview: FOI - Internal review for compliance
-        Case::SAR::Standard: SAR - Non-offender
-      case_foi_standard:
-        name: Full name
-        email: Email address
-      foi:
-        requester_type:
-          academic_business_charity: Academic/Business/Charity
-          staff_judiciary: Staff/Judiciary
-          what_do_they_know: WhatDoTheyKnow
-        user_id: 'Drafter'
-        name: Full name
-        email: Email address
-        subject: Subject of request
-        message: Full request
-        postal_address: Address
-        flag_for_disclosure_specialists:
-          Clearance required by Disclosure?
-        request_amends_comment: Add amends/comments
-        upload_comment: Add message (optional)
-        type:
-          case/foi/timeliness_review: FOI - Internal review for timeliness
-          case/foi/compliance_review: FOI - Internal review for compliance
-          case/foi/standard: FOI
-          Case::FOI::Standard: FOI
-          Case::FOI::TimelinessReview: FOI - Internal review for timeliness
-          Case::FOI::ComplianceReview: FOI - Internal review for compliance
-      case_ico_foi:
-        external_deadline: Final deadline
-        ico_officer_name: Name of the ICO information officer who's handling this case
-        ico_reference_number: ICO case reference number
-        message: ICO's request details cannot be blank
-        original_case:
-        received_date: Date received at MOJ
-      ico:
-        email: "Recipient email address"
-        ico_decision:
-          upheld: Upheld by ICO
-          overturned: Overturned by ICO
-        ico_decision_comment: "Details of ICO's decision"
-        ico_officer_name: "Name of the ICO information officer who's handling this case"
-        ico_reference_number: "ICO case reference number"
-        message: "ICO's request details"
-        original_case_type:
-          Case::ICO::FOI: FOI
-          Case::ICO::SAR: SAR
-        postal_address: "Recipient postal address"
-        related_case_number: "Link a related case"
-      overturned_ico: &overturned_ico
-        email: "Requester's email"
-        ico_officer_name: "Name of the ICO information officer who's handling this case"
-        postal_address: "Requester's postal address"
-        reply_method:
-          send_by_email: "By email"
-          send_by_post: "By post"
-      overturned_foi:
-        <<: *overturned_ico
-      overturned_sar:
-        <<: *overturned_ico
-      case_sar_standard:
-        message: Full case details
-        postal_address: Recipient postal address
-        reply_method: How and where should the information be sent?
-        subject: Case summary
-        subject_full_name: "Full name of the person about whom information is being requested (data subject)"
-        subject_type: Who is the person the information is being requested about?
-        third_party: Is the information being requested on someone's behalf?
-        request_method: How was the request received by MOJ?
-      sar:
-        email: "Recipient email address"
-        message: Full case details
-        name: "Full name of the requestor"
-        postal_address: "Recipient postal address"
-        received_date: "Received at MOJ"
-        reply_method: How and where should the information be sent?
-        subject: "Case summary"
-        subject_full_name: "Full name of the person about whom information is being requested (data subject)"
-        subject_type: Who is the person the information is being requested about?
-        third_party: Is the information being requested on someone's behalf?
-        request_method: How was the request received by MOJ?
-      case_sar_offender:
-        postal_address: Recipient postal address
-        request_dated: What is the date on the complaint?
-        received_date: When was the SAR received?
-        recipient: The information should be sent to
-        subject_full_name: "Full name of data subject"
-        subject_address: "What is the location of the data subject?"
-        subject_type: What is their relationship to the MOJ?
-        request_method: How was the request received by MOJ?
-      offender_sar:
-        case_reference_number: Case reference number (CRN)
-        external_reference: Requester reference (optional)
-        high_profile: High profile
-        message: Additional case information
-        number_dispatched_pages: "Number of pages"
-        number_exempt_pages: "Number of pages"
-        other_subject_ids: "Police national computer number (PNC)"
-        postal_address: "Recipient postal address"
-        previous_case_numbers: "Previous SAR cases"
-        prison_number: "What is the subject's relevant prison number?"
-        received_date: "Received at MOJ"
-        recipient:
-          requester_recipient: The person making the request
-          subject_recipient: The data subject
-          third_party_recipient: Third party
-        recipient_details: "The information should be sent to:"
-        recipient_type:
-          data_subject: The data subject
-          recipient: Requester
-          third_party: Third party
-        remove_sent_to_sscl_reason: Reason for removing date
-        requester_reference: Requester reference (optional)
-        subject: "Case summary"
-        subject_address: "What is the location of the data subject?"
-        subject_aliases: "Subject's alias if applicable"
-        subject_full_name: "Full name of data subject"
-        subject_type:
-          detainee: Detainee
-          ex_detainee: Ex-detainee
-          ex_offender: Ex-offender
-          ex_probation_service_user: "Ex-probation service user"
-          offender: Offender
-          probation_service_user: "Probation service user"
-        request_method:
-           post: "Post"
-           email: "Email"
-           web_portal: "Web portal"
-           unknown: "Unknown"
-        third_party: Is this information being requested on someone else's behalf?
-        third_party_company_name: Company name (optional)
-        third_party_name: "Full name of the representative (optional)"
-        third_party_relationship: Relationship to the subject
-        third_party_email: Email address (optional)
-        total: Total
-        capture_reason_for_lateness: Please select reason why the case is out of time?
-        is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
-        partial_case_letter_sent_dated: Date letter sent from SSCL
-        further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
-      case_sar_offender_complaint:
-        complaint_type: What sort of complaint is this?
-        complaint_subtype: What is the nature of the complaint?
-        external_deadline: Final deadline
-        postal_address: Recipient postal address
-        priority: Choose a priority level
-        request_dated: What is the date on the complaint?
-        received_date: When was the complaint received at MOJ?
-      offender_sar_complaint:
-        case_reference_number: Case reference number (CRN)
-        complaint_type:
-          litigation_complaint: Litigation
-          ico_complaint: ICO
-          standard_complaint: Standard
-        external_reference: Requester reference (optional)
-        high_profile: High profile
-        message: Additional case information
-        number_dispatched_pages: "Number of pages"
-        number_exempt_pages: "Number of pages"
-        other_subject_ids: "Police national computer number (PNC)"
-        postal_address: "Recipient postal address"
-        previous_case_numbers: "Previous SAR cases"
-        prison_number: "What is the subject's relevant prison number?"
-        received_date: "Received at MOJ"
-        recipient:
-          requester_recipient: The person making the request
-          subject_recipient: The data subject
-          third_party_recipient: Third party
-        recipient_details: "The information should be sent to:"
-        recipient_type:
-          data_subject: The data subject
-          recipient: Requester
-          third_party: Third party
-        requester_reference: Requester reference (optional)
-        subject: "Case summary"
-        subject_address: "What is the location of the data subject?"
-        subject_aliases: "Subject's alias if applicable"
-        subject_full_name: "Full name of data subject"
-        subject_type:
-          detainee: Detainee
-          ex_detainee: Ex-detainee
-          ex_offender: Ex-offender
-          ex_probation_service_user: "Ex-probation service user"
-          offender: Offender
-          probation_service_user: "Probation service user"
-        third_party: Is this information being requested on someone else's behalf?
-        third_party_company_name: Company name (optional)
-        third_party_name: "Full name of the representative (optional)"
-        third_party_relationship: Relationship to the subject
-        total: Total
-        settlement_cost: Enter settlement cost
-        total_cost: Enter total costs
-        complaint_subtype:
-          sscl_partial_case: SSCL partial case
-          covid_partial_response: COVID partial response
-          missing_data: Missing data
-          inaccurate_data: Inaccurate data
-          redacted_data: Redacted data
-          timeliness: Timeliness
-          not_applicable: Not applicable
-      feedback:
-        comment: Help make this service better
-      search_query:
-        business_unit_name_filter: Business unit
-      business_group:
-        name: Business group name
-      directorate:
-        name: Directorate name
+              blank: ''
+        retention_schedule_form:
+          attributes:
+            planned_destruction_date:
+              before_closure: must be after case closed date
+              blank: cannot be blank
+            state:
+              forbidden: cannot be changed once case is anonymised
+              inclusion: is not a valid status
+  activerecord:
+    attributes:
       business_unit:
-        id: Business Unit
-        name: Business unit name
-        role: What will the business unit be responsible for?
-        correspondence_type_roles: Correspondence types
-      team:
-        name: Business unit name
-        email: Business unit group email
-        team_lead: Deputy director
-        role:
-          responder: Drafting
-          approver: Clearance
-          manager: Case management
-      team_property:
-        value: "Add area"
-      correspondence_types:
-        offender_sar: Offender SAR
-        offender_sar_complaint: Offender SAR complaint
-        foi: FOI
-        sar: SAR
-        sar_internal_review: SAR IR
-        sar_internal_review_long: SAR Internal Review%{formatted_sar_ir_subtype}
-        ico: ICO
-        overturned_sar: Overturned SAR
-        overturned_foi: Overturned FOI
-        status:
-          valid: Valid
-          rejected: Rejected
-          complaint: Complaint
-      retention_schedule_form:
-        state:
-          <<: *retention_schedule_states
-    links:
-      case_details:
-        edit_case: 'Edit case details'
-        edit_closure: 'Edit closure details'
-
+        correspondence_type_ids: Correspondence types
+      case/base:
+        date_draft_compliant: Date compliant draft uploaded
+      case/ico/base:
+        date_ico_decision_received: Date ICO's decision received at MOJ
+        internal_deadline: Draft deadline
+        uploaded_ico_decision_files: ''
+      case/overturned_ico/sar:
+        external_deadline: Final deadline
+      case/sar:
+        third_party: ''
+      case/sar/offender:
+        number_final_pages: Number of pages
+        third_party: Information requested on someone else's behalf
+        third_party_address: Address
+        third_party_company_name: Company name
+        third_party_email: Email address
+        third_party_name: Full name of the representative
+        third_party_relationship: Relationship to the subject
+      case/sar/offender_complaint:
+        gld_contact_email: GLD contact email
+        gld_contact_name: GLD contact name
+        gld_contact_phone: GLD contact phone
+        gld_reference: GLD reference number
+        ico_contact_email: ICO contact email
+        ico_contact_name: ICO contact name
+        ico_contact_phone: ICO contact phone
+        ico_reference: ICO reference number
+      commissioning_document:
+        template_name: Data request document
+      report:
+        correspondence_type: Case type
+    errors:
+      models:
+        assignment:
+          attributes:
+            approved:
+              'true': Cannot be true for non-approving roles
+            state:
+              blank: You must either accept or reject this case
+        business_unit:
+          attributes:
+            correspondence_type_ids:
+              blank: cannot be blank
+        case:
+          attributes:
+            date_draft_compliant:
+              after_date_responded: cannot be after the date responded
+              before_received: cannot be before date received
+              not_in_future: cannot be in the future.
+            date_of_birth:
+              not_in_future: cannot be in the future.
+            email:
+              blank: and address cannot both be blank
+            external_deadline:
+              before_internal: cannot be before draft deadline
+              before_received: cannot be before date received
+              too_far_past_received: cannot be more than a year past the date received
+            flag_for_disclosure_specialists:
+              blank: Please choose yes or no
+            internal_deadline:
+              after_external: cannot be after final deadline
+              before_received: cannot be before date received
+            number:
+              duplication: |
+                An error has occurred and your case could not be created.
+                Please try again.
+            number_exempt_pages:
+              not_whole_number: must be a positive whole number
+            number_final_pages:
+              not_whole_number: must be a positive whole number
+            partial_case_letter_sent_dated:
+              not_in_future: cannot be in the future.
+            postal_address:
+              blank: and email cannot both be blank
+            received_date:
+              not_in_future: cannot be in the future.
+              past: too far in past.
+            related_case_links:
+              not_empty: are not empty. Please remove all linked cases in order to delete this case.
+            remove_sent_to_sscl_reason:
+              blank: cannot be blank if sent date is removed
+            request_dated:
+              not_in_future: cannot be in the future.
+            requester_type:
+              blank: must be selected
+            sent_to_sscl_at:
+              not_allowed: not allowed if there is a removal reason
+        case/foi/standard:
+          attributes:
+            date_responded:
+              before_received: cannot be before date received
+              blank: cannot be blank
+              future: cannot be in the future
+            delivery_method:
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            flag_for_disclosure_specialists:
+              blank: cannot be blank
+            message:
+              optional_blank: and uploaded request files cannot both be blank
+            name:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            requester_type:
+              blank: cannot be blank
+            subject:
+              blank: cannot be blank
+            uploaded_request_files:
+              optional_blank: and message box for saving request detail cannot both be blank
+        case/ico:
+          attributes:
+            external_deadline:
+              past: cannot be in the past
+            internal_deadline:
+              past: cannot be in the past
+            received_date:
+              past: cannot be over 10 years in the past
+          original_case_number:
+            blank: Enter original case number
+            missing: Original case not found
+            not_authorised: Not authorised to view case
+            wrong_type: Original case must be one of the [%{case_types}].
+          related_case_number:
+            already_linked: Case is already linked
+            blank: Enter related case number
+            missing: Related case not found
+            not_authorised: Not authorised to view case
+        case/ico/base:
+          original_case_already_related: already linked as the original case
+        case/ico/foi:
+          attributes:
+            date_responded:
+              before_received: cannot be before date received
+              blank: cannot be blank
+              future: cannot be in the future
+          related_case_number:
+            does_not_match_original: You've linked an FOI case as the original for this appeal. You can now only link other FOI cases or internal reviews as related to this cases.
+        case/ico/sar:
+          attributes:
+            date_responded:
+              before_received: cannot be before date received
+              blank: cannot be blank
+              future: cannot be in the future
+          related_case_number:
+            does_not_match_original: You've linked a SAR case as the original for this appeal. You can now only link other SAR cases as related to this cases.
+        case/overturned_ico/foi:
+          attributes:
+            date_responded:
+              before_received: cannot be before date received
+              blank: cannot be blank
+              future: cannot be in the future
+            delivery_method:
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            external_deadline:
+              blank: cannot be blank
+              future: is too far in the future
+              past: cannot be in the past
+            flag_for_disclosure_specialists:
+              blank: cannot be blank
+            message:
+              optional_blank: and uploaded request files cannot both be blank
+            name:
+              blank: cannot be blank
+            original_case:
+              blank: cannot be blank
+              not_foi: is not a FOI case
+            original_ico_appeal:
+              blank: cannot be blank
+              not_ico_foi: is not an ICO appeal for a FOI case
+            postal_address:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              past: of decision from ICO must be within 40 days of today
+            requester_type:
+              blank: cannot be blank
+            subject:
+              blank: cannot be blank
+            uploaded_request_files:
+              optional_blank: and message box for saving request detail cannot both be blank
+        case/overturned_ico/sar:
+          attributes:
+            email:
+              blank: cannot be blank
+            external_deadline:
+              blank: cannot be blank
+              future: is too far in the future
+              past: cannot be in the past
+            ico_officer_name:
+              blank: cannot be blank
+            original_case:
+              blank: cannot be blank
+              not_sar: is not a SAR case
+            original_ico_appeal:
+              blank: cannot be blank
+              not_ico_sar: is not an ICO appeal for a SAR case
+            postal_address:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              past: of decision from ICO must be within 40 days of today
+        case/sar:
+          attributes:
+            third_party:
+              inclusion: Please choose yes or no
+        case/sar/internal_review:
+          attributes:
+            date_responded:
+              before_received: cannot be before date received at MoJ
+              blank: cannot be blank
+              future: cannot be in the future
+            linked_case:
+              wrong_type: must be a SAR (Subject Access Request) correspondence type
+            original_case:
+              not_authorised: can't be authorised to link this case
+            other_option_details:
+              absent: must be submitted if 'other' reason selected
+              present: must be only be present if 'other' reason selected
+            sar_ir_subtype:
+              blank: cannot be blank
+        case/sar/offender:
+          attributes:
+            date_of_birth:
+              blank: cannot be blank
+            date_responded:
+              before_received: cannot be before date received
+              future: cannot be in the future
+            is_partial_case:
+              invalid: Cannot be marked if case is marked as SSCL managing case
+            received_date:
+              blank: cannot be blank
+            recipient:
+              blank: cannot be blank
+              third_party: cannot be third_party_recipient if third party requester
+            subject_address:
+              blank: cannot be blank
+            subject_full_name:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            third_party_address:
+              blank: cannot be blank
+            third_party_company_name:
+              blank: cannot be blank if representative name not given
+            third_party_email:
+              invalid: enter an email address in the correct format, like name@example.com
+            third_party_name:
+              blank: cannot be blank if company name not given
+            third_party_relationship:
+              blank: cannot be blank
+        case/sar/offender_complaint:
+          attributes:
+            complaint_subtype:
+              blank: cannot be blank
+            complaint_type:
+              blank: cannot be blank
+            external_deadline:
+              before_received: cannot be before date received
+              past: cannot be in the past
+            gld_contact_email:
+              blank: cannot be blank if GLD contact phone not given
+            gld_contact_name:
+              blank: cannot be blank
+            gld_contact_phone:
+              blank: cannot be blank if GLD contact email not given
+            gld_reference:
+              blank: cannot be blank
+            ico_contact_email:
+              blank: cannot be blank if ICO contact phone not given
+            ico_contact_name:
+              blank: cannot be blank
+            ico_contact_phone:
+              blank: cannot be blank if ICO contact email not given
+            ico_reference:
+              blank: cannot be blank
+            linked_cases:
+              original_case_already_related: already linked as the original case
+            original_case:
+              blank: cannot be blank
+              not_authorised: cannot be authorised to link this case
+              wrong_type: Original case must be Offender SAR
+            priority:
+              blank: cannot be blank
+        case/sar/standard:
+          attributes:
+            email:
+              blank: cannot be blank
+            name:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            reply_method:
+              blank: cannot be blank
+            request_method:
+              blank: cannot be blank
+            subject:
+              blank: cannot be blank
+            subject_full_name:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            third_party_relationship:
+              blank: cannot be blank
+        case_attachment:
+          attributes:
+            url:
+              bad_file_type: 'unnacceptable type %{type} for file: %{filename}'
+              invalid_url: 'url is invalid for file: %{filename}'
+        case_transition:
+          attributes:
+            message:
+              blank: cannot be blank
+        commissioning_document:
+          attributes:
+            template_name:
+              blank: is required
+        data_request:
+          attributes:
+            cached_date_received:
+              blank: must be provided if request is complete
+              future: cannot be in the future
+              not_empty: should be blank if the request is not complete
+            date_from:
+              order: cannot be later than date to
+            date_received:
+              blank: must be completed
+              future: cannot be in the future
+            location:
+              blank: cannot be blank
+            request_type:
+              blank: cannot be blank
+            request_type_note:
+              blank: cannot be blank
+        linked_case:
+          missing: does not exist
+          references_self: cannot link to the same case
+          wrong_type: cannot link a %{case_class} case to a %{linked_case_class} as a %{type} case
+        report:
+          attributes:
+            correspondence_type:
+              blank: cannot be blank
+            period_end:
+              before_start_date: cannot be after Date to
+              in_future: cannot be in the future.
+            period_start:
+              in_future: cannot be in the future.
+            report_type_id:
+              blank: cannot be blank
+        user:
+          attributes:
+            email:
+              blank: cannot be blank
+  admin:
+    cases:
+      index:
+        Case::FOI::ComplianceReview: FOI Compliance Review
+        Case::FOI::Standard: FOI
+        Case::FOI::TimelinessReview: FOI Timeliness Review
+        Case::ICO::FOI: ICO FOI Appeal
+        Case::ICO::SAR: ICO SAR Appeal
+        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+        Case::SAR::NonOffender: Non-offender SAR
+        Case::SAR::Standard: SAR
+        case_type: Case Type
+        created_at: Created
+        date: Date
+        deadlines: Deadlines
+        download_audit_csv_file: Download Audit CSV File
+        draft_deadline: Draft Deadline
+        external: External
+        external_deadline: External Deadline
+        heading: Cases
+        id: ID
+        internal: Internal
+        no_of_cases: No. of Cases
+        number: Case No
+        received_date: Received
+        request: Request
+        status: Status
+        subheadings:
+          existing_cases: Existing cases
+          number_of_cases_created_over_past_week: No of Cases created over the past week
+        who_its_with: Who Its With
+      new:
+        create: Create
+        heading: New Case
+        ico:
+          headings:
+            only_for_closed_cases: ONLY for closed clases
+        sar:
+          headings:
+            about_case: About the case
+            about_data_subject: About the data subject
+            where_information_should_be_sent: Where the information should be sent
+        sub_heading: Admin
+      select_type:
+        heading: Choose correspondence type
+        sub_heading: Admin
+    users:
+      index:
+        cases: Cases
+        email: Email
+        full_name: Name
+        heading: Users
+        teams: Teams
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -986,8 +448,10 @@ en:
       <strong>Important notice</strong><br>
       This case is being reviewed for sensitivity.
       Don't send out the response until <strong>after %{escalation_deadline}</strong>.
-    response_upload_error: Errors detected with uploaded files.
-    response_upload_blank?: Please select the file(s) you used in your response.
+    offender_sar:
+      reason_for_lateness:
+        blank: Please provide the detail of the reason
+        invalid: Invalid reason
     respond_point_of_no_return_html: |
       <p class="notice">
         <i class="icon icon-important">
@@ -995,280 +459,77 @@ en:
         </i>
         <strong>You cannot update a response after marking it as sent.</strong>
       </p>
-    offender_sar:
-      reason_for_lateness:
-        blank: Please provide the detail of the reason
-        invalid: Invalid reason
-
-  notices:
-    case_cleared: "%{team} has been notified that the response is %{status}."
-    case_closed: "You've closed this case"
-    closure_details_updated: You have updated the closure details for this case.
-    commissioning_document_uploaded: You have uploaded the document.
-    no_commissioning_document_uploaded: No changes were made.
-    response_uploaded: You have uploaded the response for this case.
-    request_uploaded: You have uploaded the request files for this case.
-    no_request_uploaded: No changes were made.
-    progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
-    case/ico:
-      case_cleared: "The response has been cleared and is ready to be sent to the ICO"
-      required_further_action:
-        same_responder: "The responding team has been notified and the case is ready for redrafting."
-        same_team: "The responding team has been notified and the case is ready for acceptance."
-        reassign: "The responding team has been deactivated. Please reassign it to another team."
-
-  common:
-    accessibility: Accessibility
-    alert_banner_html: "This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
-    case:
-      actions: Actions
-      answered_in_time: Answered in time
-      answered_late: Answered late
-      appeal_outcome: Appeal Outcome
-      assign: Assign to a responder
-      case-details: Case details
-      case/ico:
-        date_responded: Date response sent to ICO
-      clear_response: Clear response
-      clearance_copy: 'You are clearing the response to: '
-      complaint_type: What sort of complaint is this?
-      complaint_subtype: What is the nature of the complaint?
-      priority: Priority
-      compliant_in_time: Uploaded in time
-      compliant_late: Uploaded late
-      compliant_unknown: Unknown draft compliancy
-      create_overturned: Create an ICO Overturned case
-      crn_acronym_html: '<abbr title="Case reference number">CRN</abbr>'
-      date_draft_uploaded: Date draft uploaded
-      date_ico_decision_received: Date ICO's decision was received
-      date_of_birth: Date of birth
-      date_responded: Date response sent to requester
-      data_subject: Full name of subject
-      data_subject_type: Subject type
-      request_method: request_method
-      draft_timeliness: Draft timeliness
-      download_link_html: |
-        Download <span class="visuallyhidden">file %{filename}.</span>
-      email: "Requester’s email"
-      exemptions_heading: Exemptions
-      extend_for_pit: Extend for Public Interest Test
-      extend_sar_deadline: Extend deadline
-      external_deadline: Final deadline
-      filename: File name
-      gld_contact_name: GLD contact name
-      gld_contact_email: GLD contact email
-      gld_contact_phone: GLD contact phone
-      gld_reference: GLD reference
-      header_case_number: "You are viewing case number "
-      header_subject: "Case subject, "
-      internal_deadline: Draft deadline
-      ico_contact_name: ICO contact name
-      ico_contact_email: ICO contact email
-      ico_contact_phone: ICO contact phone
-      ico_reference: ICO reference
-      ico_case_number: ICO case reference number
-      ico_officer_name: ICO information officer handling this case
-      late_team: Business unit responsible for late response
-      name: Requester
-      original-case-details: Original case details
-      outcome: Outcome
-      pages_exempt: Exempt pages
-      pages_final_count: Final page count
-      pages_received: Pages received
-      retention_details:
-        destruction_date: Destruction date
-        status: Retention status
-        anonymised_at: Anonymised on
-      pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
-      postal_address: "Requester’s postal address"
-      previous_case_numbers: Previous SAR cases
-      prison_number: "Prison number"
-      progress_for_clearance: "Ready for Disclosure clearance"
-      reason_for_refusal: Outcome
-      outcome_reason: Reason for appeal outcome
-      team_responsible_for_outcome: Business unit responsible for appeal outcome
-      reassign_case: "Change team member"
-      received_date: Date request received at MOJ
-      remove_link_html: |
-        Remove <span class="visuallyhidden">file %{filename}</span>
-      remove_linked_case_html: |
-        Remove link<span class="visuallyhidden"> to %{case_number}</span>
-      remove_pit_extension: Remove all Public Interest Test extensions
-      remove_sar_deadline_extension: Remove deadline extension
-      request: "Request"
-      request_amends: Request amends
-      request_dated: "Date on the request"
-      request_method: How was the request received by MOJ?
-      requester_reference: Requester reference
-      requester_type: "Type of requester"
-      respond: Mark response as sent
-      responders:
-        one: Information Officer
-        other: Information Officers
-      responding_team: Business unit
-      sar_response_address: Where should the data be sent?
-      sar/offender:
-        time_taken_result:
-          one: "%{count} calendar day"
-          other: "%{count} calendar days"
-      sent_to_sscl: Sent to SSCL
-      status: Status
-      subject_address: Location
-      subject_aliases: Alias
-      third_party: Information requested on someone's behalf?
-      third_party_address: Address
-      third_party_company_name: Company name
-      third_party_name: Representative name
-      third_party_relationship: Relationship
-      third_party_email: Email address
-      time_taken: Time taken
-      time_taken_result:
-        one: "%{count} working day"
-        other: "%{count} working days"
-      timeliness: Timeliness
-      upload_and_redraft: Upload changes for redraft
-      upload_approve: 'Upload response and clear'
-      upload_response: Upload response
-      who_its_with: With
-      reason_for_lateness: Reason for lateness
-      reason_for_lateness_note: Note for reason for lateness
-      original_external_deadline: Original external deadline
-      original_internal_deadline: Original internal deadline
-      original_date_responded: Original date response sent to ICO
-      other_option_details: More details on other reason for outcome
-    case/ico:
-      close: "Record ICO's decision"
-      respond: Mark as sent to ICO
-      request: "ICO's request"
-    case/ico_foi:
-      record_further_action: Start further ICO request
-    case/offender_sar:
-      start_complaint: Start complaint
-      complaint_case_link_message: Complaint received for this case on %{received_date}
-      move_case_back: Move case back
-      record_reason_for_lateness: Record reason for lateness
-    case/offender_sar_complaint:
-      add_approval_flags_for_ico: Add approval
-      add_approval_flags_for_litigation: Add approval
-      add_complaint_appeal_outcome: Add outcome
-      add_complaint_outcome: Add outcome
-      add_complaint_costs: Add costs
-    case_list:
-      flag: 'Flag'
-      draft_deadline: Draft deadline
-      external_deadline: Final deadline
-      message_notification: Conversations
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      request: 'Request'
-      request_detail: Request detail
-      status: Status
-      type: 'Type'
-      view_case: "Case number "
-      who_its_with: With
-    contacts:
-      address_page_heading: Organisation address book
-      address_page_subheading: Private addresses should not be entered
-      add_new_address: Add new address
-      delete_address_confirmation: Are you sure you want to delete this address?
-      delete_error: Cannot delete an address that is in use
-      find_address: Find an address
-      find_solicitor_address: Find a solicitor address
-      add_or_edit_address: Add or edit addresses (opens in new window)
-      address_search_label: Organisation name search
-      relationship_to_subject_label: Relationship to subject
-      is_solicitor_label: Solicitor
-      is_other_label: Other
-      third_party_relationship_text_field_label: Please specify relationship to the subject
-    choose: Choose...
-    choose_file: Choose a file
-    close: Close case
-    error: error
-    greeting: Hello %{user}
-    links:
-      change: Change
-    new_case_button: Create case
-    show_search_result_order_by_newest_first: Show newest cases first
-    show_search_result_order_by_oldest_first: Show oldest cases first
-    show_search_result_order_by_newest_destruction_date: Show newest destruction date first
-    show_search_result_order_by_oldest_destruction_date: Show oldest destruction date first
-    phase_banner: |
-      This is a new service.
-    service_name: Track a query
-    signout: Sign out
-    stats_custom_button: Create report
-    summary_error: 'prevented this form from being submitted:'
-    view_case: "Case number "
-    note: "Note: "
-    cancel: Cancel
-
-  admin:
-    cases:
-      index:
-        created_at: Created
-        draft_deadline: Draft Deadline
-        external_deadline: External Deadline
-        heading: Cases
-        subheadings:
-          number_of_cases_created_over_past_week: No of Cases created over the past week
-          existing_cases: Existing cases
-        date: Date
-        no_of_cases: No. of Cases
-        id: ID
-        number: Case No
-        case_type: Case Type
-        received_date: Received
-        internal: Internal
-        external: External
-        request: Request
-        deadlines: Deadlines
-        status: Status
-        who_its_with: Who Its With
-        download_audit_csv_file: Download Audit CSV File
-
-        Case::FOI::Standard: FOI
-        Case::FOI::ComplianceReview: FOI Compliance Review
-        Case::FOI::TimelinessReview: FOI Timeliness Review
-        Case::SAR::NonOffender: Non-offender SAR
-        Case::SAR::Standard: SAR
-        Case::ICO::FOI: ICO FOI Appeal
-        Case::ICO::SAR: ICO SAR Appeal
-        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
-      new:
-        create: Create
-        heading: New Case
-        sub_heading: Admin
-        ico:
-          headings:
-            only_for_closed_cases: ONLY for closed clases
-        sar:
-          headings:
-            about_data_subject: About the data subject
-            about_case: About the case
-            where_information_should_be_sent: Where the information should be sent
-      select_type:
-        heading: Choose correspondence type
-        sub_heading: Admin
-
-    users:
-      index:
-        cases: Cases
-        email: Email
-        full_name: Name
-        heading: Users
-        teams: Teams
-
+    response_upload_blank?: Please select the file(s) you used in your response.
+    response_upload_error: Errors detected with uploaded files.
+  assignments:
+    accept:
+      already_accepted: Case already accepted by %{name}
+      success: Case taken on
+    assign_to_new_team:
+      heading: Assign to another team
+    assign_to_team:
+      case_assigned: Case successfully assigned
+      case_created: Case assigned to %{business_unit_name}
+    assign_to_team_member:
+      action: Assign responder
+      heading: Assign to a responder
+    execute_assign_to_new_team:
+      case_assigned: Case has been assigned to %{business_unit_name}
+    new:
+      assignment: Existing case
+      heading: Assign case
+      new_assignment: Create case
+    reassign_user:
+      action: Change team member
+      heading: Change team member
+    select_team:
+      heading: Select team
+    take_case_on:
+      already_accepted: Case already accepted by %{name}
+      success: Case taken on
+  button:
+    add_to_case_history: Add to case history
+    assign: Assign to %{business_unit_name}
+    confirm: Confirm
+    continue: Continue
+    create_case: Create case
+    delete: Delete
+    download_document: Download Day 1 request document
+    edit: Edit
+    exempt_pages: Update exempt pages
+    feedback: Send feedback
+    final_page_count: Update final page count
+    generate_document: Generate Day 1 request document
+    move: Move to %{directorate}
+    move_directorate: Move to %{business_group}
+    next_page_assign: Create case
+    request_amends: Request amends
+    save_changes: Save changes
+    search: Search
+    select_document: Select Day 1 request document
+    send_email: Send commissioning email
+    update_partial_flags: Update partial case
   cases:
     approvals:
       new:
-        heading: Clear response
         approve_message:
-          foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-          ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-          overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-          overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-          sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-          sar_internal_review: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+          foi: Once you clear this response the assigned Information Officer will be notified they can send the response.
+          ico: Once you clear this response, %{managing_team} can send the response and close the case.
+          overturned_foi: Once you clear this response the assigned Information Officer will be notified they can send the response.
+          overturned_sar: Once you clear this response the assigned Information Officer will be notified they can send the response and close the case.
+          sar: Once you clear this response the assigned Information Officer will be notified they can send the response and close the case.
+          sar_internal_review: Once you clear this response the assigned Information Officer will be notified they can send the response.
+        heading: Clear response
+    attachments:
+      upload_hint_copy: |
+        You can upload different file types such as Word, Excel,
+        PDF and JPEG up to 20MB per file.
+      upload_request_files_heading: Upload request files
+    bypass_approvals_form:
+      affirmative: 'Yes'
+      negative: No, the response is ready to send
+      press_clearance_reqd: Does Press office need to clear this response?
+      why_not: Why is further clearance not required?
     closable:
       close:
         heading: Close case
@@ -1290,272 +551,34 @@ en:
             <li>uploaded the response and any supporting documents</li>
             <li>sent the response to the person who made the request</li>
           </ul>
-    cover_sheet:
-      vet_date: Vet date
-      vet_by: By
-      vetter_name: 'Name:'
-      first_vet_date: 'First vet date:'
-      second_vet_date: 'Second vet date:'
-      final_deadline: 'Final deadline:'
-    bypass_approvals_form:
-      press_clearance_reqd: Does Press office need to clear this response?
-      affirmative: 'Yes'
-      negative: 'No, the response is ready to send'
-      why_not: 'Why is further clearance not required?'
-    pit_extensions:
+    commissioning_documents:
+      edit:
+        heading: Select Day 1 request document
+      email_history_table_headings:
+        date_sent: Date sent
+        email_address: Email address
+        email_type: Email type
+        status: Status
       new:
-        heading: Extend for Public Interest Test (PIT)
-        extension_date: Date of extension deadline
-        extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
-    ico:
-      close_form:
-        date_ico_decision_received_date: Date decision was received at MoJ
-      form:
-        uploaded_request_files: Upload relevant files (optional)
-    ico_foi:
-      record_further_action:
-        heading: Further ICO request
-      require_further_action:
-        heading: Set new deadlines
-      extend_internal_deadline: New draft deadline date
-      extend_external_deadline: New final deadline date
-    index: &cases_list
-      heading_all_cases: Cases
-      heading_my_cases: My open cases
-      view_case: "Case number "
-      message_notification: Conversations
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      flag: Flag
-      type: 'Type'
-      request: Request
-      request_detail: Request detail
-      draft_deadline: Draft deadline
-      external_deadline: Final deadline
-      status: Status
-      who_its_with: With
-    edit:
-      heading: Edit case details
-      date_draft_compliant: Date compliant draft was uploaded
-      offender_sar:
-        number_final_pages: 'Update final page count'
-        number_exempt_pages: 'Update exempt pages'
-        date_responded: 'Edit case closure details'
-        sub_heading: Edit Offender SAR case
-      offender_sar_complaint:
-        sub_heading: Edit Complaint case
-      sar_internal_review:
-        sub_heading: Edit SAR Internal Review case
-    update:
-      case_updated: Case updated
-      case_partial_flag_updated: Case updated
-    filters:
-      index:
-        <<: *cases_list
-      closed:
-        heading: Closed cases
-        number: Case number
-        number_html: 'Case <abbr title="number">No.</abbr>'
-        name-subject: Name/Subject
-        view_case: Case number
-      incoming:
-        heading: New cases
-        view_case: Case number
-        number: Case number
-        number_html: 'Case <abbr title="number">No.</abbr>'
-        request: Request
-        actions: Actions
-      retention:
-        heading: Retain, Review, or Destroy (RRD)
-    fixed_details:
-      requester: Requester
-      email_address: Email address
-      escalation_deadline: Escalation deadline
-      external_deadline: Final deadline
-      message: Full request
-      details: Details
-    links:
-      new:
-        linked_case_number: Case number For example 170131001
-        heading: 'Link case'
-    new:
-      correspondence_type_errors:
-        unknown: "Unknown correspondence type \"%{type}\""
-        not_authorised: "You are not authorised to create \"%{type}\" correspondences"
-      request_dated_legend: What is the date on the request?
-      complaint_request_dated_legend: What is the date on the complaint?
-      date_sar_received_legend: When was the complaint received at MOJ?
-      date_offender_sar_received_legend: When was the SAR received?
-      date_sent_to_sscl_legend: Date data sent to SSCL for Vetting?
-      date_of_birth: "Date of birth"
-      external_deadline: "Final deadline"
-      internal_deadline: Draft deadline
-      heading: Add case details
-      created_at: Created at
-      created_at_copy: 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
-      received_date: Date received at MOJ
-      received_date_short: Received date
-      received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
-      only_select_one: Please only select one.
-      case/ico:
-        internal_deadline_copy: >-
-          This should be calculated as half of the final deadline, or 10 working days if
-          no deadline has been provided by the ICO.<br>
-          You will be able to change this date later.
-        external_deadline_copy: >-
-          This should be taken from the ICO investigation letter or email, or calculated
-          as 20 working days if no deadline has been provided.<br>
-          You will be able to change this date later.
-        sub_heading: Create an ICO appeal case
-      case/overturned_ico/sar:
-        sub_heading: Create an ICO Overturned (SAR) case
-      case/overturned_ico/foi:
-        sub_heading: Create an ICO Overturned (FOI) case
-      offender_sar:
-        rejected: Create Rejected Offender SAR case
-        sub_heading: Create Offender SAR case
-      sub_heading: Create %{case_type} case
-      uploaded_request_files_hint: |
-        You can upload different file types such as Word, Excel,
-        PDF and JPEG up to 20MB per file.
-
-    overturned_shared:
-      new_form:
-        overturned_case_for: 'ICO Overturned case for:'
-    select_type:
-      heading: Choose correspondence type
-      sub_heading: Create case
-    offender_sar_select_type:
-      heading: Choose correspondence type
-      sub_heading: Create case
-      valid_offender_sar: Offender SAR - Offender subject access request
-      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
-      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
-    shared:
-      date_responded_form:
-        close_date:  Date response sent
-        date_ico_decision_received_date: Date decision received from ICO
-    show:
-      case/ico:
-        attachments_heading: Appeal response
-      case:
-        attachments_heading: Response
-    request_amends:
-      heading: Request amends
-    responses:
-      upload_responses:
-        heading: Upload response
-        upload_response: 'Upload response'
-      upload_response_and_approve:
-        heading: Upload response
-        upload_response: 'Upload response'
-      upload_response_and_return_for_redraft:
-        heading: Upload response
-        upload_response: 'Upload response'
-      response_upload_form:
-        upload_hint_copy: |
-          You can upload different file types such as Word, Excel,
-          PDF and JPEG up to 20MB per file.
+        heading: Select Day 1 request document
+      replace:
+        heading: Upload document
+      table_headings:
+        action: Action
+        last_updated: Last updated
+        request_document: Request document
     confirm_respond:
       success: The response has been marked as sent.
-    foi:
-      case_details:
-        cannot_update_closure_html: "This is an old case with closure details that cannot be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
-      close_form:
-        close_date:  Date response sent
-      send_back_heading: 'Send case back for change'
-    sar:
-      new_form_common:
-        dropzone: "Requestor's proof of ID and other documents"
-      close_form:
-        close_date:  Date response sent
-    sar_extensions:
-      create:
-        success: Case extended for SAR
-        error: Unable to perform SAR extension on case %{case_number}
-      destroy:
-        success: Deadline extension removed
-        error: Unable to remove SAR deadline extension
-      new:
-        extension_period: How long would you like to extend by?
-        extend_further: The deadline for this case will be extended by a further %{time_period_description}.
-    sar_internal_review:
-      link_sar_case_heading: Link case details
-      check_sar_details_heading: Check details of the SAR
-      case_details: Add case details
-      edit_case_details: Edit case details
-      new_form_common:
-        dropzone: Requestor's proof of ID and other documents
-      outcome_reasons:
-        heading: Reason(s) for outcome being partially upheld or overturned?
-        hint: Select all that apply
-      other_option_details: Please provide more details
-    search_bar:
-      heading: Case number, requester name or keyword
-      hint: For example, 170113001, John Smith or prison meals
-    searches:
-      show:
-        heading: Search
-        date_from: From
-        date_to: To
-    offender_sar:
-      subject_heading: Who is the subject?
-      requester_heading: Who is making the subject access request?
-      recipient_details_heading: Where should the subject access request be sent?
-      requested_info_heading: Is there other information relevant for this request?
-      request_details_heading: What is the date on the request?
-      date_received_heading: When was the SAR received?
-      request_info_hint: Use this space to store additional case information
-      move_case_back_heading: Reason for reverting case status
-      record_reason_for_lateness_heading: Reason for lateness
-      edit_partial_case_flags_heading: Edit partial case information
-      partial_case_flags_heading: SSCL COVID-19 partial case
-      is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
-      partial_case_letter_sent_dated_heading: Date letter sent from SSCL
-      further_actions_required_heading: SSCL managing case
-      flag_choice_yes: "Yes"
-      flag_choice_no: "No"
-      sent_to_sscl_heading: "Data sent to SSCL"
-    offender_sar_complaint:
-      link_offender_sar_heading: Link SAR case
-      check_sar_details_heading: Check details of the SAR
-      external_deadline_heading: Set a deadline for this complaint
-      approval_flags_heading: Confirm levels of approval
-      complaint_types_heading: What is the complaint type?
-      costs_heading: Confirm costs for this case
-      settlement_cost: Settlement cost
-      total_cost: Total cost
-      appeal_outcome:
-        heading: Choose ICO appeal outcome
-        title: ICO appeal outcome
-      outcome:
-        heading: Confirm the outcome
-        title: Was the case successful?
-      received_date:
-        heading: When was the complaint received at MOJ?
-      reopen_reset_external_deadline_heading: 'Reopen: set a new deadline'
-      recipient_details_heading: Where should the complaint response be sent?
-      requester_heading: Who is making the complaint?
-      request_details_heading: What is the date on the complaint?
-      requested_info_heading: Is there other information relevant to this complaint?
-    attachments:
-      upload_request_files_heading: Upload request files
-      upload_hint_copy: |
-        You can upload different file types such as Word, Excel,
-        PDF and JPEG up to 20MB per file.
-    remove_clearance:
-      heading: 'Remove Clearance'
-      explanation: 'You are removing clearance level of Disclosure for the case:'
-      why: 'Reason for removing clearance'
+    cover_sheet:
+      final_deadline: 'Final deadline:'
+      first_vet_date: 'First vet date:'
+      second_vet_date: 'Second vet date:'
+      vet_by: By
+      vet_date: Vet date
+      vetter_name: 'Name:'
     data_requests:
       create:
         success: Data request successfully recorded
-      show:
-        heading: View data request
-        link: View
-        edit_link: Edit data request
-        emails_header: Commissioning emails
-        emails_history_header: Email history
       edit:
         heading: Edit data request
         link: Edit
@@ -1565,125 +588,1346 @@ en:
         heading: Data requested
         none: No data requests recorded
       new:
-        heading: Record data request
         date_from_copy: Request all data held from this date onward
         date_to_copy: Request all data held up until this date
-      onwards: "onwards"
-      update:
-        log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
-        log_pages: {
-          zero: pages,
-          one: page,
-          other: pages
-        }
-        success: Data request updated
-        unprocessed: No changes made
-      upto: "Up to"
+        heading: Record data request
+      onwards: onwards
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
-    commissioning_documents:
-      new:
-        heading: Select Day 1 request document
-      edit:
-        heading: Select Day 1 request document
-      replace:
-        heading: Upload document
-      table_headings:
-        request_document: Request document
-        last_updated: Last updated
-        action: Action
-      email_history_table_headings:
-        email_type: Email type
-        email_address: Email address
-        date_sent: Date sent
+      show:
+        edit_link: Edit data request
+        emails_header: Commissioning emails
+        emails_history_header: Email history
+        heading: View data request
+        link: View
+      update:
+        log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
+        log_pages:
+          one: page
+          other: pages
+          zero: pages
+        success: Data request updated
+        unprocessed: No changes made
+      upto: Up to
+    edit:
+      date_draft_compliant: Date compliant draft was uploaded
+      heading: Edit case details
+      offender_sar:
+        date_responded: Edit case closure details
+        number_exempt_pages: Update exempt pages
+        number_final_pages: Update final page count
+        sub_heading: Edit Offender SAR case
+      offender_sar_complaint:
+        sub_heading: Edit Complaint case
+      sar_internal_review:
+        sub_heading: Edit SAR Internal Review case
+    filters:
+      closed:
+        heading: Closed cases
+        name-subject: Name/Subject
+        number: Case number
+        number_html: Case <abbr title="number">No.</abbr>
+        view_case: Case number
+      incoming:
+        actions: Actions
+        heading: New cases
+        number: Case number
+        number_html: Case <abbr title="number">No.</abbr>
+        request: Request
+        view_case: Case number
+      index:
+        draft_deadline: Draft deadline
+        external_deadline: Final deadline
+        flag: Flag
+        heading_all_cases: Cases
+        heading_my_cases: My open cases
+        message_notification: Conversations
+        number: Case number
+        number_html: Case <abbr title="number">No.</abbr>
+        request: Request
+        request_detail: Request detail
         status: Status
+        type: Type
+        view_case: 'Case number '
+        who_its_with: With
+      retention:
+        heading: Retain, Review, or Destroy (RRD)
+    fixed_details:
+      details: Details
+      email_address: Email address
+      escalation_deadline: Escalation deadline
+      external_deadline: Final deadline
+      message: Full request
+      requester: Requester
+    foi:
+      case_details:
+        cannot_update_closure_html: This is an old case with closure details that cannot be edited. If you need to edit this case <a href="#new_feedback">let us know</a>.
+      close_form:
+        close_date: Date response sent
+      send_back_heading: Send case back for change
+    ico:
+      close_form:
+        date_ico_decision_received_date: Date decision was received at MoJ
+      form:
+        uploaded_request_files: Upload relevant files (optional)
+    ico_foi:
+      extend_external_deadline: New final deadline date
+      extend_internal_deadline: New draft deadline date
+      record_further_action:
+        heading: Further ICO request
+      require_further_action:
+        heading: Set new deadlines
+    index:
+      draft_deadline: Draft deadline
+      external_deadline: Final deadline
+      flag: Flag
+      heading_all_cases: Cases
+      heading_my_cases: My open cases
+      message_notification: Conversations
+      number: Case number
+      number_html: Case <abbr title="number">No.</abbr>
+      request: Request
+      request_detail: Request detail
+      status: Status
+      type: Type
+      view_case: 'Case number '
+      who_its_with: With
+    links:
+      new:
+        heading: Link case
+        linked_case_number: Case number For example 170131001
+    new:
+      case/ico:
+        external_deadline_copy: This should be taken from the ICO investigation letter or email, or calculated as 20 working days if no deadline has been provided.<br> You will be able to change this date later.
+        internal_deadline_copy: This should be calculated as half of the final deadline, or 10 working days if no deadline has been provided by the ICO.<br> You will be able to change this date later.
+        sub_heading: Create an ICO appeal case
+      case/overturned_ico/foi:
+        sub_heading: Create an ICO Overturned (FOI) case
+      case/overturned_ico/sar:
+        sub_heading: Create an ICO Overturned (SAR) case
+      complaint_request_dated_legend: What is the date on the complaint?
+      correspondence_type_errors:
+        not_authorised: You are not authorised to create "%{type}" correspondences
+        unknown: Unknown correspondence type "%{type}"
+      created_at: Created at
+      created_at_copy: Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
+      date_of_birth: Date of birth
+      date_offender_sar_received_legend: When was the SAR received?
+      date_sar_received_legend: When was the complaint received at MOJ?
+      date_sent_to_sscl_legend: Date data sent to SSCL for Vetting?
+      external_deadline: Final deadline
+      heading: Add case details
+      internal_deadline: Draft deadline
+      offender_sar:
+        rejected: Create Rejected Offender SAR case
+        sub_heading: Create Offender SAR case
+      only_select_one: Please only select one.
+      received_date: Date received at MOJ
+      received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
+      received_date_short: Received date
+      request_dated_legend: What is the date on the request?
+      sub_heading: Create %{case_type} case
+      uploaded_request_files_hint: |
+        You can upload different file types such as Word, Excel,
+        PDF and JPEG up to 20MB per file.
+    offender_sar:
+      date_received_heading: When was the SAR received?
+      edit_partial_case_flags_heading: Edit partial case information
+      flag_choice_no: 'No'
+      flag_choice_yes: 'Yes'
+      further_actions_required_heading: SSCL managing case
+      is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
+      move_case_back_heading: Reason for reverting case status
+      partial_case_flags_heading: SSCL COVID-19 partial case
+      partial_case_letter_sent_dated_heading: Date letter sent from SSCL
+      recipient_details_heading: Where should the subject access request be sent?
+      record_reason_for_lateness_heading: Reason for lateness
+      request_details_heading: What is the date on the request?
+      request_info_hint: Use this space to store additional case information
+      requested_info_heading: Is there other information relevant for this request?
+      requester_heading: Who is making the subject access request?
+      sent_to_sscl_heading: Data sent to SSCL
+      subject_heading: Who is the subject?
+    offender_sar_complaint:
+      appeal_outcome:
+        heading: Choose ICO appeal outcome
+        title: ICO appeal outcome
+      approval_flags_heading: Confirm levels of approval
+      check_sar_details_heading: Check details of the SAR
+      complaint_types_heading: What is the complaint type?
+      costs_heading: Confirm costs for this case
+      external_deadline_heading: Set a deadline for this complaint
+      link_offender_sar_heading: Link SAR case
+      outcome:
+        heading: Confirm the outcome
+        title: Was the case successful?
+      received_date:
+        heading: When was the complaint received at MOJ?
+      recipient_details_heading: Where should the complaint response be sent?
+      reopen_reset_external_deadline_heading: 'Reopen: set a new deadline'
+      request_details_heading: What is the date on the complaint?
+      requested_info_heading: Is there other information relevant to this complaint?
+      requester_heading: Who is making the complaint?
+      settlement_cost: Settlement cost
+      total_cost: Total cost
+    offender_sar_select_type:
+      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
+      heading: Choose correspondence type
+      helpers:
+        label:
+          correspondence_types:
+            status:
+              complaint: Complaint
+              rejected: Rejected
+              valid: Valid
+      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
+      sub_heading: Create case
+      valid_offender_sar: Offender SAR - Offender subject access request
+    overturned_shared:
+      new_form:
+        overturned_case_for: 'ICO Overturned case for:'
+    pit_extensions:
+      new:
+        extension_date: Date of extension deadline
+        extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+        heading: Extend for Public Interest Test (PIT)
+    remove_clearance:
+      explanation: 'You are removing clearance level of Disclosure for the case:'
+      heading: Remove Clearance
+      why: Reason for removing clearance
+    request_amends:
+      heading: Request amends
+    responses:
+      response_upload_form:
+        upload_hint_copy: |
+          You can upload different file types such as Word, Excel,
+          PDF and JPEG up to 20MB per file.
+      upload_response_and_approve:
+        heading: Upload response
+        upload_response: Upload response
+      upload_response_and_return_for_redraft:
+        heading: Upload response
+        upload_response: Upload response
+      upload_responses:
+        heading: Upload response
+        upload_response: Upload response
+    sar:
+      close_form:
+        close_date: Date response sent
+      new_form_common:
+        dropzone: Requestor's proof of ID and other documents
+    sar_extensions:
+      create:
+        error: Unable to perform SAR extension on case %{case_number}
+        success: Case extended for SAR
+      destroy:
+        error: Unable to remove SAR deadline extension
+        success: Deadline extension removed
+      new:
+        extend_further: The deadline for this case will be extended by a further %{time_period_description}.
+        extension_period: How long would you like to extend by?
+    sar_internal_review:
+      case_details: Add case details
+      check_sar_details_heading: Check details of the SAR
+      edit_case_details: Edit case details
+      link_sar_case_heading: Link case details
+      new_form_common:
+        dropzone: Requestor's proof of ID and other documents
+      other_option_details: Please provide more details
+      outcome_reasons:
+        heading: Reason(s) for outcome being partially upheld or overturned?
+        hint: Select all that apply
+    search_bar:
+      heading: Case number, requester name or keyword
+      hint: For example, 170113001, John Smith or prison meals
+    searches:
+      show:
+        date_from: From
+        date_to: To
+        heading: Search
+    select_type:
+      heading: Choose correspondence type
+      sub_heading: Create case
+    shared:
+      date_responded_form:
+        close_date: Date response sent
+        date_ico_decision_received_date: Date decision received from ICO
+    show:
+      case:
+        attachments_heading: Response
+      case/ico:
+        attachments_heading: Appeal response
     types:
+      Case::FOI::ComplianceReview: FOI - Internal review for compliance
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
-      Case::FOI::ComplianceReview: FOI - Internal review for compliance
       Case::ICO::FOI: ICO Appeal - FOI
       Case::ICO::SAR: ICO Appeal - SAR
-      Case::SAR::Standard: Non-offender SAR
-      Case::SAR::InternalReview:  SAR Internal review
-      Case::SAR::Offender: Offender SAR
-      Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+      Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
+      Case::SAR::InternalReview: SAR Internal review
+      Case::SAR::Offender: Offender SAR
       Case::SAR::OffenderComplaint: Complaint
-  assignments:
-    accept:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-    assign_to_new_team:
-      heading: 'Assign to another team'
-    assign_to_team:
-      case_assigned: Case successfully assigned
-      case_created: Case assigned to %{business_unit_name}
-    execute_assign_to_new_team:
-      case_assigned: Case has been assigned to %{business_unit_name}
-    new:
-      heading: Assign case
-      new_assignment: Create case
-      assignment: Existing case
-    reassign_user:
-      heading: Change team member
-      action: Change team member
-    assign_to_team_member:
-      heading: Assign to a responder
-      action: Assign responder
-    select_team:
-      heading: Select team
-    take_case_on:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
+      Case::SAR::Standard: Non-offender SAR
+    update:
+      case_partial_flag_updated: Case updated
+      case_updated: Case updated
+  common:
+    accessibility: Accessibility
+    alert_banner_html: This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience.
+    cancel: Cancel
+    case:
+      actions: Actions
+      answered_in_time: Answered in time
+      answered_late: Answered late
+      appeal_outcome: Appeal Outcome
+      assign: Assign to a responder
+      case-details: Case details
+      case/ico:
+        date_responded: Date response sent to ICO
+      clear_response: Clear response
+      clearance_copy: 'You are clearing the response to: '
+      complaint_subtype: What is the nature of the complaint?
+      complaint_type: What sort of complaint is this?
+      compliant_in_time: Uploaded in time
+      compliant_late: Uploaded late
+      compliant_unknown: Unknown draft compliancy
+      create_overturned: Create an ICO Overturned case
+      crn_acronym_html: <abbr title="Case reference number">CRN</abbr>
+      data_subject: Full name of subject
+      data_subject_type: Subject type
+      date_draft_uploaded: Date draft uploaded
+      date_ico_decision_received: Date ICO's decision was received
+      date_of_birth: Date of birth
+      date_responded: Date response sent to requester
+      download_link_html: 'Download <span class="visuallyhidden">file %{filename}.</span>
 
+        '
+      draft_timeliness: Draft timeliness
+      email: Requester’s email
+      exemptions_heading: Exemptions
+      extend_for_pit: Extend for Public Interest Test
+      extend_sar_deadline: Extend deadline
+      external_deadline: Final deadline
+      filename: File name
+      gld_contact_email: GLD contact email
+      gld_contact_name: GLD contact name
+      gld_contact_phone: GLD contact phone
+      gld_reference: GLD reference
+      header_case_number: 'You are viewing case number '
+      header_subject: 'Case subject, '
+      ico_case_number: ICO case reference number
+      ico_contact_email: ICO contact email
+      ico_contact_name: ICO contact name
+      ico_contact_phone: ICO contact phone
+      ico_officer_name: ICO information officer handling this case
+      ico_reference: ICO reference
+      internal_deadline: Draft deadline
+      late_team: Business unit responsible for late response
+      name: Requester
+      original-case-details: Original case details
+      original_date_responded: Original date response sent to ICO
+      original_external_deadline: Original external deadline
+      original_internal_deadline: Original internal deadline
+      other_option_details: More details on other reason for outcome
+      outcome: Outcome
+      outcome_reason: Reason for appeal outcome
+      pages_exempt: Exempt pages
+      pages_final_count: Final page count
+      pages_received: Pages received
+      pnc_acronym_html: <abbr title="Police national computer">PNC</abbr> number
+      postal_address: Requester’s postal address
+      previous_case_numbers: Previous SAR cases
+      priority: Priority
+      prison_number: Prison number
+      progress_for_clearance: Ready for Disclosure clearance
+      reason_for_lateness: Reason for lateness
+      reason_for_lateness_note: Note for reason for lateness
+      reason_for_refusal: Outcome
+      reassign_case: Change team member
+      received_date: Date request received at MOJ
+      remove_link_html: 'Remove <span class="visuallyhidden">file %{filename}</span>
+
+        '
+      remove_linked_case_html: 'Remove link<span class="visuallyhidden"> to %{case_number}</span>
+
+        '
+      remove_pit_extension: Remove all Public Interest Test extensions
+      remove_sar_deadline_extension: Remove deadline extension
+      request: Request
+      request_amends: Request amends
+      request_dated: Date on the request
+      request_method: How was the request received by MOJ?
+      requester_reference: Requester reference
+      requester_type: Type of requester
+      respond: Mark response as sent
+      responders:
+        one: Information Officer
+        other: Information Officers
+      responding_team: Business unit
+      retention_details:
+        anonymised_at: Anonymised on
+        destruction_date: Destruction date
+        status: Retention status
+      sar/offender:
+        time_taken_result:
+          one: "%{count} calendar day"
+          other: "%{count} calendar days"
+      sar_response_address: Where should the data be sent?
+      sent_to_sscl: Sent to SSCL
+      status: Status
+      subject_address: Location
+      subject_aliases: Alias
+      team_responsible_for_outcome: Business unit responsible for appeal outcome
+      third_party: Information requested on someone's behalf?
+      third_party_address: Address
+      third_party_company_name: Company name
+      third_party_email: Email address
+      third_party_name: Representative name
+      third_party_relationship: Relationship
+      time_taken: Time taken
+      time_taken_result:
+        one: "%{count} working day"
+        other: "%{count} working days"
+      timeliness: Timeliness
+      upload_and_redraft: Upload changes for redraft
+      upload_approve: Upload response and clear
+      upload_response: Upload response
+      who_its_with: With
+    case/ico:
+      close: Record ICO's decision
+      request: ICO's request
+      respond: Mark as sent to ICO
+    case/ico_foi:
+      record_further_action: Start further ICO request
+    case/offender_sar:
+      complaint_case_link_message: Complaint received for this case on %{received_date}
+      move_case_back: Move case back
+      record_reason_for_lateness: Record reason for lateness
+      start_complaint: Start complaint
+    case/offender_sar_complaint:
+      add_approval_flags_for_ico: Add approval
+      add_approval_flags_for_litigation: Add approval
+      add_complaint_appeal_outcome: Add outcome
+      add_complaint_costs: Add costs
+      add_complaint_outcome: Add outcome
+    case_list:
+      draft_deadline: Draft deadline
+      external_deadline: Final deadline
+      flag: Flag
+      message_notification: Conversations
+      number: Case number
+      number_html: Case <abbr title="number">No.</abbr>
+      request: Request
+      request_detail: Request detail
+      status: Status
+      type: Type
+      view_case: 'Case number '
+      who_its_with: With
+    choose: Choose...
+    choose_file: Choose a file
+    close: Close case
+    contacts:
+      add_new_address: Add new address
+      add_or_edit_address: Add or edit addresses (opens in new window)
+      address_page_heading: Organisation address book
+      address_page_subheading: Private addresses should not be entered
+      address_search_label: Organisation name search
+      delete_address_confirmation: Are you sure you want to delete this address?
+      delete_error: Cannot delete an address that is in use
+      find_address: Find an address
+      find_solicitor_address: Find a solicitor address
+      is_other_label: Other
+      is_solicitor_label: Solicitor
+      relationship_to_subject_label: Relationship to subject
+      third_party_relationship_text_field_label: Please specify relationship to the subject
+    error: error
+    greeting: Hello %{user}
+    links:
+      change: Change
+    new_case_button: Create case
+    note: 'Note: '
+    phase_banner: 'This is a new service.
+
+      '
+    service_name: Track a query
+    show_search_result_order_by_newest_destruction_date: Show newest destruction date first
+    show_search_result_order_by_newest_first: Show newest cases first
+    show_search_result_order_by_oldest_destruction_date: Show oldest destruction date first
+    show_search_result_order_by_oldest_first: Show oldest cases first
+    signout: Sign out
+    stats_custom_button: Create report
+    summary_error: 'prevented this form from being submitted:'
+    view_case: 'Case number '
+  date:
+    formats:
+      compact: "%d-%m-%Y"
+      default: "%-d %b %Y"
+  devise:
+    omniauth:
+      providers_sign_in:
+        azure_activedirectory_v2: Sign in with Justice account
+    registrations:
+      destroyed: Team member has been deactivated
+      error: Unable to deactivate.
+      has_live_cases: Team member could not be deactivated, as open cases are currently assigned to them
+    users:
+      password:
+        edit:
+          button: Create password
+          title: Create password
+        new:
+          button: Send me password reset instructions
+          hint: Enter your email address and we'll send you a link to create a new password.
+          title: Reset password
+      sign_in:
+        button: Sign in
+        title: Sign in
+      unlock:
+        heading: Resend unlock instructions
+  dictionary:
+    date_hint_text: For example, 31 07 2019
+    retention_schedule_states:
+      anonymised: Anonymised
+      not_set: Not set
+      retain: Retain
+      review: Review
+      to_be_anonymised: Destroy
+  directorates:
+    move:
+      confirm_heading: Confirm move
+      error: 'Failed to move this directorate due to reason: #{reason}'
+      heading: Move directorate
+      intro:
+        bullet1: all business units will move with it
+        bullet2: all open cases and users under each business unit will move with it
+        bullet3: all members under each business unit will be able to view closed cases
+        bullet4: performance reports for the unit both before and after the move are available
+        paragraph: 'Moving a directorate means:'
+      moved_successfully: "%{team_name} has been moved to %{destination_business_group_name}"
+      moving_to: Moving to
+      subhead: 'Directorate: %{team_name}'
+      team_currently_located: This is where the team is currently located
+      will_be_moved: The users and open cases assigned to the business units under %{team_name} will be moved to %{target_business_group_name}
+    unreversible: This action cannot be reversed
   feedback:
-    error_html: |
-      <strong>The following error(s) occurred:</strong>
-    success_html: |
-      <strong>Your feedback has been submitted.</strong>
+    error_html: "<strong>The following error(s) occurred:</strong>\n"
+    success_html: "<strong>Your feedback has been submitted.</strong>\n"
+  helpers:
+    fieldset:
+      assignment:
+        state: What do you want to do?
+        team_id: Assign to
+        user_id: Choose a new team member for this case
+      bypass_approval_manager:
+        press_office_approval: Does Press office need to clear this response?
+      commissioning_document:
+        template_name: Which data request document would you like to use for the Day 1 email?
+      data_request:
+        completed: Is this request now complete?
+        date_from: Date from
+        date_requested: Date requested
+        date_to: Date to
+        request_type: What data is needed?
+      foi:
+        appeal_outcome_name: What was the appeal outcome?
+        flag_for_disclosure_specialists: Flag for disclosure specialists
+        info_held_status_abbreviation: Was the information held?
+        late_team_id: Business unit responsible for late response
+        name: Who is the requestor?
+        outcome_abbreviation: What was the outcome?
+        refusal_reason_abbreviation: What was the outcome?
+        requester_type: Requester type
+        type: Type
+      ico:
+        delivery_method: How and where should the information be sent?
+        ico_decision: The original case has been
+        late_team_id_html: " "
+        type: Original Case Type
+      letter:
+        letter_template_id: 'Choose a letter template to use:'
+      offender_sar:
+        flag_for_disclosure_specialists: Flag as high profile case?
+        info_held_status_abbreviation: Was the information held?
+        request_method: How was the request received by MOJ?
+        subject_type: What is their relationship to the MOJ?
+        third_party: Please choose yes or no
+      offender_sar_complaint:
+        approval_flag_ids: Approval options
+        complaint_subtype: What is the nature of the complaint?
+        complaint_type: What sort of complaint is this?
+        original_case_number: Is this the correct case?
+        outcome_id: Was the claim successful?
+        priority: Choose a priority level
+      overturned_foi:
+        reply_method: How should this information be sent to the requester?
+      overturned_sar:
+        reply_method: How should this information be sent to the requester?
+      report:
+        correspondence_type: Which type of cases do you want to report on?
+        report_type_id: What should this report cover?
+      retention_schedule_form:
+        state: What is the retention status?
+      sar:
+        flag_for_disclosure_specialists: Flag for disclosure specialist?
+        late_team_id: Business unit responsible for late response
+        missing_info: Was the response asking for missing information (e.g. proof of ID) or clarification, i.e. a TMM?
+        reply_method_html: '<div class="heading-medium">Where the information should be sent</div>
 
+          '
+        request_method: How was the request received by MOJ?
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
+      sar_internal_review:
+        late_team_id: Who was responsible for lateness?
+        name: Full name of the requestor
+        over_overturned: Please provide more details
+        sar_ir_outcome: SAR IR Outcome?
+        sar_ir_subtype: Case type
+        sar_ir_subtypes:
+          compliance: Compliance
+          timeliness: Timeliness
+        team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
+        third_party: Is this information being requested on someone else's behalf?
+      search_query:
+        common_exemption_ids: Most frequently used
+        exemption_ids: All exemptions
+        filter_assigned_to_ids: Matching business units
+        filter_case_type: Type
+        filter_complaint_priority: Priority
+        filter_complaint_subtype: Complaint sub type
+        filter_complaint_type: Complaint type
+        filter_high_profile: Flag as high profile?
+        filter_open_case_status: Status
+        filter_retention_state: Status
+        filter_sensitivity: Sensitivity
+        filter_status: Status
+        filter_timeliness: Timeliness
+      state_selector:
+        selected_states: Filter by status
+      team:
+        correspondence_type_ids: Correspondence types
+        role: What will the business unit be responsible for?
+    hint:
+      case:
+        linked_case_number: " For example 170131001"
+        upload_comment: This will be added to the converstation section of the case.
+      contact:
+        data_request_emails: Add multiple email addresses on separate lines
+      data_request:
+        location: Where is the data held?
+      feedback:
+        comment: 'Let us know what you were doing and what could be improved or fixed.
+
+          '
+      ico:
+        original_case_number_html: |
+          Enter original case  reference number to link to.  For example 170131001.<br>
+          We'll use the original case title for the appeal title.
+        related_case_number: Enter related case  reference number, for example 170131001.
+      offender_sar:
+        case_reference_number: You can include multiple numbers separated by a comma or a space.
+        message_hint: Include any details that will be useful for processing the case (optional)
+        number_exempt_pages: Pages removed from the SAR as exemptions
+        number_final_pages: Final page count including exempt pages
+        other_subject_ids: You can include multiple numbers separated by a comma or a space.
+        previous_case_numbers: You can include multiple cases separated by a comma or a space.
+        prison_number: You can include multiple numbers separated by a comma or a space.
+        reason_for_lateness_note_hint: Please provide details to why this case is late
+        subject_aliases: You can include multiple aliases separated by a comma or a space.
+      sar:
+        third_party_relationship: For example, solicitor, parent or guardian
+      search_query:
+        business_unit_name_filter: For example, Legal Aid Agency
+      shared:
+        date_example: For example, 31 07 2019
+      team_property:
+        value: Please provide one area at a time and be as concise as possible
+    label:
+      assignment:
+        assignee_id: Business unit
+        reasons_for_rejection: Why are you rejecting this case?
+        state:
+          accepted: Accept
+          rejected: Reject
+        user_id: Business unit
+      business_group:
+        name: Business group name
+      business_unit:
+        correspondence_type_roles: Correspondence types
+        id: Business Unit
+        name: Business unit name
+        role: What will the business unit be responsible for?
+      bypass_approval_manager:
+        message: Why is further clearance not required?
+        press_office_approval:
+          false_html: No, the response is ready to send
+          true_html: 'Yes'
+      case:
+        add_note: Add a note to this case
+        add_to_conversation: Add to conversation
+        linked_case_number: Case number For example 170131001
+      case_foi_standard:
+        email: Email address
+        name: Full name
+      case_ico_foi:
+        external_deadline: Final deadline
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        ico_reference_number: ICO case reference number
+        message: ICO's request details cannot be blank
+        original_case:
+        received_date: Date received at MOJ
+      case_sar_offender:
+        postal_address: Recipient postal address
+        received_date: When was the SAR received?
+        recipient: The information should be sent to
+        request_dated: What is the date on the complaint?
+        request_method: How was the request received by MOJ?
+        subject_address: What is the location of the data subject?
+        subject_full_name: Full name of data subject
+        subject_type: What is their relationship to the MOJ?
+      case_sar_offender_complaint:
+        complaint_subtype: What is the nature of the complaint?
+        complaint_type: What sort of complaint is this?
+        external_deadline: Final deadline
+        postal_address: Recipient postal address
+        priority: Choose a priority level
+        received_date: When was the complaint received at MOJ?
+        request_dated: What is the date on the complaint?
+      case_sar_standard:
+        message: Full case details
+        postal_address: Recipient postal address
+        reply_method: How and where should the information be sent?
+        request_method: How was the request received by MOJ?
+        subject: Case summary
+        subject_full_name: Full name of the person about whom information is being requested (data subject)
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
+      commissioning_document:
+        template_name:
+          cat_a: CAT A
+          cctv: CCTV & BWCF
+          cross_border: Cross Borders
+          mappa: MAPPA
+          pdp: PDP
+          prison: Prison records
+          probation: Probation records
+          security: Security records
+          telephone: Telephone recordings
+      correspondence_types:
+        foi: FOI
+        ico: ICO
+        offender_sar: Offender SAR
+        offender_sar_complaint: Offender SAR complaint
+        overturned_foi: Overturned FOI
+        overturned_sar: Overturned SAR
+        sar: SAR
+        sar_internal_review: SAR IR
+        sar_internal_review_long: SAR Internal Review%{formatted_sar_ir_subtype}
+        status:
+          complaint: Complaint
+          rejected: Rejected
+          valid: Valid
+      data_request:
+        cached_date_received: Date when data request is complete
+        cached_num_pages: Number of pages received
+        completed: Yes, all data received
+        date_completed: Date completed
+        location: Location
+        request_type:
+          all_prison_records: All prison records
+          cat_a: CAT A
+          cctv_and_bwcf: CCTV & BWCF
+          court: Court
+          cross_borders: Cross Borders
+          mappa: MAPPA
+          ndelius: Ndelius contact lists
+          nomis_contact_logs: NOMIS contact logs
+          nomis_other: NOMIS other
+          nomis_records: NOMIS records
+          other: Other
+          pdp: PDP
+          probation_archive: Probation archive
+          probation_records: Probation records
+          security_records: Security records
+          telephone_pin_logs: Telephone PIN logs
+          telephone_recordings: Telephone recordings
+        request_type_note: Please provide more details
+        send_email_note_text: 'Email will be sent to the following recipients:'
+      data_request_email:
+        email_type:
+          commissioning_email: Day 1 commissioning email
+      directorate:
+        name: Directorate name
+      feedback:
+        comment: Help make this service better
+      foi:
+        email: Email address
+        flag_for_disclosure_specialists: Clearance required by Disclosure?
+        message: Full request
+        name: Full name
+        postal_address: Address
+        request_amends_comment: Add amends/comments
+        requester_type:
+          academic_business_charity: Academic/Business/Charity
+          staff_judiciary: Staff/Judiciary
+          what_do_they_know: WhatDoTheyKnow
+        subject: Subject of request
+        type:
+          Case::FOI::ComplianceReview: FOI - Internal review for compliance
+          Case::FOI::Standard: FOI
+          Case::FOI::TimelinessReview: FOI - Internal review for timeliness
+          case/foi/compliance_review: FOI - Internal review for compliance
+          case/foi/standard: FOI
+          case/foi/timeliness_review: FOI - Internal review for timeliness
+        upload_comment: Add message (optional)
+        user_id: Drafter
+      ico:
+        email: Recipient email address
+        ico_decision:
+          overturned: Overturned by ICO
+          upheld: Upheld by ICO
+        ico_decision_comment: Details of ICO's decision
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        ico_reference_number: ICO case reference number
+        message: ICO's request details
+        original_case_type:
+          Case::ICO::FOI: FOI
+          Case::ICO::SAR: SAR
+        postal_address: Recipient postal address
+        related_case_number: Link a related case
+      offender_sar:
+        capture_reason_for_lateness: Please select reason why the case is out of time?
+        case_reference_number: Case reference number (CRN)
+        external_reference: Requester reference (optional)
+        further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
+        high_profile: High profile
+        is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
+        message: Additional case information
+        number_dispatched_pages: Number of pages
+        number_exempt_pages: Number of pages
+        other_subject_ids: Police national computer number (PNC)
+        partial_case_letter_sent_dated: Date letter sent from SSCL
+        postal_address: Recipient postal address
+        previous_case_numbers: Previous SAR cases
+        prison_number: What is the subject's relevant prison number?
+        received_date: Received at MOJ
+        recipient:
+          requester_recipient: The person making the request
+          subject_recipient: The data subject
+          third_party_recipient: Third party
+        recipient_details: 'The information should be sent to:'
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
+        remove_sent_to_sscl_reason: Reason for removing date
+        request_method:
+          email: Email
+          post: Post
+          unknown: Unknown
+          web_portal: Web portal
+        requester_reference: Requester reference (optional)
+        subject: Case summary
+        subject_address: What is the location of the data subject?
+        subject_aliases: Subject's alias if applicable
+        subject_full_name: Full name of data subject
+        subject_type:
+          detainee: Detainee
+          ex_detainee: Ex-detainee
+          ex_offender: Ex-offender
+          ex_probation_service_user: Ex-probation service user
+          offender: Offender
+          probation_service_user: Probation service user
+        third_party: Is this information being requested on someone else's behalf?
+        third_party_company_name: Company name (optional)
+        third_party_email: Email address (optional)
+        third_party_name: Full name of the representative (optional)
+        third_party_relationship: Relationship to the subject
+        total: Total
+      offender_sar_complaint:
+        case_reference_number: Case reference number (CRN)
+        complaint_subtype:
+          covid_partial_response: COVID partial response
+          inaccurate_data: Inaccurate data
+          missing_data: Missing data
+          not_applicable: Not applicable
+          redacted_data: Redacted data
+          sscl_partial_case: SSCL partial case
+          timeliness: Timeliness
+        complaint_type:
+          ico_complaint: ICO
+          litigation_complaint: Litigation
+          standard_complaint: Standard
+        external_reference: Requester reference (optional)
+        high_profile: High profile
+        message: Additional case information
+        number_dispatched_pages: Number of pages
+        number_exempt_pages: Number of pages
+        other_subject_ids: Police national computer number (PNC)
+        postal_address: Recipient postal address
+        previous_case_numbers: Previous SAR cases
+        prison_number: What is the subject's relevant prison number?
+        received_date: Received at MOJ
+        recipient:
+          requester_recipient: The person making the request
+          subject_recipient: The data subject
+          third_party_recipient: Third party
+        recipient_details: 'The information should be sent to:'
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
+        requester_reference: Requester reference (optional)
+        settlement_cost: Enter settlement cost
+        subject: Case summary
+        subject_address: What is the location of the data subject?
+        subject_aliases: Subject's alias if applicable
+        subject_full_name: Full name of data subject
+        subject_type:
+          detainee: Detainee
+          ex_detainee: Ex-detainee
+          ex_offender: Ex-offender
+          ex_probation_service_user: Ex-probation service user
+          offender: Offender
+          probation_service_user: Probation service user
+        third_party: Is this information being requested on someone else's behalf?
+        third_party_company_name: Company name (optional)
+        third_party_name: Full name of the representative (optional)
+        third_party_relationship: Relationship to the subject
+        total: Total
+        total_cost: Enter total costs
+      overturned_foi:
+        email: Requester's email
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        postal_address: Requester's postal address
+        reply_method:
+          send_by_email: By email
+          send_by_post: By post
+      overturned_ico:
+        email: Requester's email
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        postal_address: Requester's postal address
+        reply_method:
+          send_by_email: By email
+          send_by_post: By post
+      overturned_sar:
+        email: Requester's email
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        postal_address: Requester's postal address
+        reply_method:
+          send_by_email: By email
+          send_by_post: By post
+      retention_schedule_form:
+        state:
+          anonymised: Anonymised
+          not_set: Not set
+          retain: Retain
+          review: Review
+          to_be_anonymised: Destroy
+      sar:
+        email: Recipient email address
+        message: Full case details
+        name: Full name of the requestor
+        postal_address: Recipient postal address
+        received_date: Received at MOJ
+        reply_method: How and where should the information be sent?
+        request_method: How was the request received by MOJ?
+        subject: Case summary
+        subject_full_name: Full name of the person about whom information is being requested (data subject)
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
+      search_query:
+        business_unit_name_filter: Business unit
+      state_selector:
+        awaiting_dispatch: Ready to send
+        awaiting_responder: To be accepted
+        awaiting_responder_email: Waiting to be accepted
+        case/ico:
+          awaiting_dispatch: Ready to send to ICO
+          closed: Closed - %{ico_decision} by ICO
+          responded: Closed - awaiting ICO decision
+        closed: Closed
+        drafting: Draft in progress
+        pending_dacu_clearance: Pending clearance - Disclosure
+        pending_press_office_clearance: Pending clearance - Press office
+        pending_private_office_clearance: Pending clearance - Private office
+        responded: Ready to close
+        unassigned: Needs reassigning
+      team:
+        email: Business unit group email
+        name: Business unit name
+        role:
+          approver: Clearance
+          manager: Case management
+          responder: Drafting
+        team_lead: Deputy director
+      team_property:
+        value: Add area
+      types:
+        Case::FOI::ComplianceReview: FOI - Internal review for compliance
+        Case::FOI::Standard: FOI
+        Case::FOI::TimelinessReview: FOI - Internal review for timeliness
+        Case::SAR::Standard: SAR - Non-offender
+    links:
+      case_details:
+        edit_case: Edit case details
+        edit_closure: Edit closure details
+  mailer:
+    commissioning_email:
+      deadline: The information is required in Branston no later than %{date}.
+  notices:
+    case/ico:
+      case_cleared: The response has been cleared and is ready to be sent to the ICO
+      required_further_action:
+        reassign: The responding team has been deactivated. Please reassign it to another team.
+        same_responder: The responding team has been notified and the case is ready for redrafting.
+        same_team: The responding team has been notified and the case is ready for acceptance.
+    case_cleared: "%{team} has been notified that the response is %{status}."
+    case_closed: You've closed this case
+    closure_details_updated: You have updated the closure details for this case.
+    commissioning_document_uploaded: You have uploaded the document.
+    no_commissioning_document_uploaded: No changes were made.
+    no_request_uploaded: No changes were made.
+    progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
+    request_uploaded: You have uploaded the request files for this case.
+    response_uploaded: You have uploaded the response for this case.
+  pagination:
+    next: 'Next '
+    previous: 'Previous '
+  pundit:
+    assignment_policy:
+      can_assign_to_new_team?: You are not authorised to assign this case to another team
+    case/foi/compliance_review_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/foi/standard_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/foi/timeliness_review_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/ico/foi_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_close_case?: You are not authorised to close this case
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/ico/sar_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_close_case?: You are not authorised to close this case
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/overturned_ico/base_policy:
+      new_overturned_ico?: You are not authorised to create an overturned ICO case
+    case/overturned_ico/sar_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      respond_and_close?: You are not authorised to close this case
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/sar/internal_review_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_close_case?: You are not authorised to close this case
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      respond_and_close?: You are not authorised to close this case
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/sar/offender_complaint_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/sar/offender_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
+      can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
+      can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
+      can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case/sar/standard_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      extend_sar_deadline?: SAR deadline cannot be extended
+      new_case_link?: You are not authorised to link other cases to this case.
+      remove_sar_deadline_extension?: Deadline extension cannot be removed
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    case_policy:
+      can_accept_or_reject_case?: You are not authorised to view to this assignment.
+      can_accept_or_reject_responder_assignment?: You are not authorised to view to this case assignment.
+      can_add_attachment?: You are not authorised to upload attachments to this case.
+      can_add_case?: You are not authorised to create new cases.
+      can_approve_case?: You are not authorised to approve this cases response.
+      can_assign_case?: Case could not be assigned
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_be_reopened?: You are not authorised to reopen this case.
+      can_delete_case?: You are not authorised to delete this case.
+      can_download_stats?: You are not authorised to view or download statistics.
+      can_remove_attachment?: You are not authorised to remove attachments from this case.
+      can_view_case_details?: You are not authorised to view this case.
+      delete?: You are not authorised to delete this case.
+      edit?: You are not authorised to edit this case.
+      new_case_link?: You are not authorised to link other cases to this case.
+      show?: You are not authorised to view this case.
+      unflag_for_clearance?: You are not authorised to remove clearance from this case
+      update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
+    nil_class: Authorisation failed due to internal error.
+    team_policy:
+      create?: You are not authorised to add new teams
+      destroy?: You are not authorised to deactivate teams
+      edit?: You are not authorised to edit this team
+      index?: You are not authorised to view a list of teams
+      new?: You are not authorised to add new teams
+      show?: You are not authorised to view this team
+    user_policy:
+      destroy?: You are not authorised to deactivate users
+  retention_schedules:
+    buttons:
+      destroy: Destroy cases
+      mark_for_destroy: Mark for destruction
+      retain: Retain
+      review: Further review needed
+    edit:
+      heading: What are the retention details?
+      planned_destruction_date:
+        hint: For example, 31 12 2026
+        legend: What is the destruction date?
+      subheading: Edit retention details
+      submit: Continue
+    misc:
+      destroy_alert_message: Are you sure you want to permanently destroy these cases?
+    table_headings:
+      case_number: Case .no
+      case_type: Type
+      destruction_date: Destruction date
+      links: Linked case
+      status: Retention status
+      subject_name: Name / subject
+    update:
+      flash:
+        success: Retention details successfully updated
+  roles:
+    responders: Information officers
   stats:
     common:
-      period_start: Date from
       period_end: Date to
-    show:
-      success: Your report has been created.
-      waiting: Your report will be available shortly.
+      period_start: Date from
     create:
       success: Your custom report has been created.
       waiting: Your custom report will be available shortly.
-    new:
-      timescale_copy: Which time period should this report cover?
     download_custom:
       waiting: Your custom report will be ready soon. Try again shortly.
-
+    new:
+      timescale_copy: Which time period should this report cover?
+    show:
+      success: Your report has been created.
+      waiting: Your report will be available shortly.
+  team_lead_types:
+    business_group: Director general
+    business_unit: Deputy director
+    directorate: Director
+  team_leads:
+    deputy_director: Deputy director
+    director: Director
+    director_general: Director general
+  team_types:
+    business_group: Business group
+    business_unit: Business unit
+    directorate: Directorate
   teams:
     browse_by_business_group: Browse by business group
     business_group: Business group
     business_group_detail:
       destroy: Are you sure you want to deactivate this business group?
-    business_unit_list:
-      team_members: Team members
     business_unit_detail:
       destroy: Are you sure you want to deactivate this business unit?
-      team_members: Team members
       new_team_member: New team member
+      team_members: Team members
+    business_unit_list:
+      team_members: Team members
+    deactivate_info:
+      business_group: To deactivate this business group you need to first deactivate all directorates within it.
+      business_unit: To deactivate this business unit you need to first deactivate all users within it.
+      directorate: To deactivate this directorate you need to first deactivate all business units within it.
+    destroyed: "%{team_name} %{team_type} has now been deactivated"
     directorate: Directorate
     directorate_detail:
       destroy: Are you sure you want to deactivate this directorate?
     edit:
       edit: Edit %{team_type}
-    new:
-      new: New %{team_type}
-    destroyed: "%{team_name} %{team_type} has now been deactivated"
     error: Unable to deactive this team
-    deactivate_info:
-      directorate: To deactivate this directorate you need to first deactivate all business units within it.
-      business_unit: To deactivate this business unit you need to first deactivate all users within it.
-      business_group: To deactivate this business group you need to first deactivate all directorates within it.
-    labels:
-      select_business_group: Select a business group
-      select_directorate: Select a directorate
     join:
       cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
       confirm_heading: Confirm join
@@ -1692,13 +1936,16 @@ en:
         bullet1: all open cases and users will move to the destination business unit
         bullet2: all members (existing and new) of the new business unit will be able to view closed cases
         bullet3: performance reports for the unit before the join are still available
-        paragraph: "Joining with another business unit means:"
+        paragraph: 'Joining with another business unit means:'
+      join_with_this_team: Join with this team
       joined_successfully: "%{team_name} has been joined with %{target_team}"
       joining_with: Joining with
-      join_with_this_team: Join with this team
-      subhead: "Business unit: %{team_name}"
+      subhead: 'Business unit: %{team_name}'
       team_your_working_with: This is the team you're working with
       will_be_joined: "%{team_name}'s users and open cases will be joined with %{target_team_name}'s business unit"
+    labels:
+      select_business_group: Select a business group
+      select_directorate: Select a directorate
     move:
       confirm_heading: Confirm move
       heading: Move business unit
@@ -1706,99 +1953,40 @@ en:
         bullet1: all open cases and users will move with it
         bullet2: all members of the unit will be able to view closed cases
         bullet3: performance reports for the unit both before and after the move are available
-        paragraph: "Moving a business unit means:"
+        paragraph: 'Moving a business unit means:'
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       moving_to: Moving to
-      subhead: "Business unit: %{team_name}"
+      subhead: 'Business unit: %{team_name}'
       team_currently_located: This is where the team is currently located
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
+    new:
+      new: New %{team_type}
     team: Business unit
     unreversible: This action cannot be reversed
-  directorates:
-    move:
-      confirm_heading: Confirm move
-      heading: Move directorate
-      intro:
-        bullet1: all business units will move with it
-        bullet2: all open cases and users under each business unit will move with it
-        bullet3: all members under each business unit will be able to view closed cases
-        bullet4: performance reports for the unit both before and after the move are available
-        paragraph: "Moving a directorate means:"
-      moved_successfully: "%{team_name} has been moved to %{destination_business_group_name}"
-      moving_to: Moving to
-      subhead: "Directorate: %{team_name}"
-      team_currently_located: This is where the team is currently located
-      will_be_moved: "The users and open cases assigned to the business units under %{team_name} will be moved to %{target_business_group_name}"
-      error: "Failed to move this directorate due to reason: #{reason}"
-    unreversible: This action cannot be reversed
-  retention_schedules:
-    buttons:
-      review: Further review needed
-      retain: Retain
-      mark_for_destroy: Mark for destruction
-      destroy: Destroy cases
-    table_headings:
-      case_number: Case .no
-      case_type: Type
-      subject_name: Name / subject
-      destruction_date: Destruction date
-      links: Linked case
-      status: Retention status
-    misc:
-      destroy_alert_message: Are you sure you want to permanently destroy these cases?
-    edit:
-      heading: What are the retention details?
-      subheading: Edit retention details
-      submit: Continue
-      planned_destruction_date:
-        legend: What is the destruction date?
-        hint: For example, 31 12 2026
-    update:
-      flash:
-        success: Retention details successfully updated
-
+  time:
+    formats:
+      default: "%-d %b %Y %H:%M"
   users:
-    new:
-      create: Create user
-      heading: "New team member"
-    edit:
-      edit: Edit team member
-      heading: "Edit %{role}"
-    show:
-      <<: *cases_list
     confirm_destroy:
       heading: Deactivate team member
-
-  devise:
-    omniauth:
-      providers_sign_in:
-        azure_activedirectory_v2: Sign in with Justice account
-    registrations:
-      destroyed: "Team member has been deactivated"
-      has_live_cases: "Team member could not be deactivated, as open cases are currently assigned to them"
-      error: "Unable to deactivate."
-    passwords:
-      send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
-    users:
-      password:
-        edit:
-          title: Create password
-          button: Create password
-        new:
-          hint: Enter your email address and we'll send you a link to create a new password.
-          title: Reset password
-          button: Send me password reset instructions
-      unlock:
-        heading: Resend unlock instructions
-
-      sign_in:
-        title: Sign in
-        button: Sign in
-
-  pagination:
-    next: "Next "
-    previous: "Previous "
-
-  mailer:
-    commissioning_email:
-      deadline: "The information is required in Branston no later than %{date}."
+    edit:
+      edit: Edit team member
+      heading: Edit %{role}
+    new:
+      create: Create user
+      heading: New team member
+    show:
+      draft_deadline: Draft deadline
+      external_deadline: Final deadline
+      flag: Flag
+      heading_all_cases: Cases
+      heading_my_cases: My open cases
+      message_notification: Conversations
+      number: Case number
+      number_html: Case <abbr title="number">No.</abbr>
+      request: Request
+      request_detail: Request detail
+      status: Status
+      type: Type
+      view_case: 'Case number '
+      who_its_with: With
