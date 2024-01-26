@@ -2,7 +2,7 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = get_headings(@case, @correspondence_type, '')
+  = get_headings(@case, @correspondence_type)
 
 = render partial: "cases/#{@case.type_abbreviation.downcase}/new",
          locals: { kase: @case,
