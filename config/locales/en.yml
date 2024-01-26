@@ -1120,6 +1120,7 @@ en:
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship
+      third_party_email: Email address
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -1411,6 +1412,7 @@ en:
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
       offender_sar:
+        rejected: Create Rejected Offender SAR case
         sub_heading: Create Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
