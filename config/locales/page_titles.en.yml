@@ -2,9 +2,6 @@
 en:
   page_title:
     accessibility_statement: Accessibility statement
-    add_an_address: Add an address - Track-a-query
-    add_request_attachment_page: Upload new files for this request
-    address_book: Organisation Address book - Track-a-query
     admin_case_creation: Admin case creation - Track-a-query
     admin_case_list: Admin case list - Track-a-query
     admin_user_list: Admin user list - Track-a-query
@@ -12,78 +9,67 @@ en:
     all_new_cases: All new cases - Track-a-query
     approve_page: Clearing response - %{case_number} - Track-a-query
     assign_case_page: Assigning case to a business unit - %{case_number} - Track-a-query
-    assign_to_team_member_page: Assign responder - %{case_number} - Track-a-query
-    bu_areas: Areas covered for %{team_name} - Track-a-query
     change_password: Forgot your password - Track-a-query
     choose_case_type_page: Choosing a correspondence type - Track-a-query
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
-    confirm_move_directorate_page: Confirm Move directorate - %{team_name} - Track-a-query
-    confirm_move_team_page: Confirm Move business unit - %{team_name} - Track-a-query
+    retention_schedules_page: Case retention schedules - Track-a-query
     create_case_page:
       foi: Creating an FOI case - Track-a-query
       ico: Creating an ICO case - Track-a-query
       offender_sar:
-        date_received_step: Date SAR received - Creating an Offender SAR case - Track-a-query
-        recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
-        request_details_step: Request details - Creating an Offender SAR case - Track-a-query
-        requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
-        requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
         subject_details_step: Subject details - Creating an Offender SAR case - Track-a-query
+        requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
+        recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
+        requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
+        request_details_step: Request details - Creating an Offender SAR case - Track-a-query
+        date_received_step: Date SAR received - Creating an Offender SAR case - Track-a-query
       offender_sar_complaint:
-        complaint_type_step: Complaint type - Creating an Offender SAR Complaint case - Track-a-query
-        confirm_offender_sar_step: Confirm Offender SAR details - Creating an Offender SAR Complaint case - Track-a-query
-        date_received_step: Date received - Creating an Offender SAR Complaint case - Track-a-query
         link_offender_sar_case_step: Link Offender SAR case - Creating an Offender SAR Complaint case - Track-a-query
-        recipient_details_step: Recipient details - Creating an Offender SAR Complaint case - Track-a-query
-        request_details_step: Request details - Creating an Offender SAR Complaint case - Track-a-query
-        requested_info_step: Request information - Creating an Offender SAR Complaint case - Track-a-query
+        confirm_offender_sar_step: Confirm Offender SAR details - Creating an Offender SAR Complaint case - Track-a-query
+        complaint_type_step: Complaint type - Creating an Offender SAR Complaint case - Track-a-query
         requester_details_step: Requester details - Creating an Offender SAR Complaint case - Track-a-query
+        recipient_details_step: Recipient details - Creating an Offender SAR Complaint case - Track-a-query
+        requested_info_step: Request information - Creating an Offender SAR Complaint case - Track-a-query
+        request_details_step: Request details - Creating an Offender SAR Complaint case - Track-a-query
+        date_received_step: Date received - Creating an Offender SAR Complaint case - Track-a-query
         set_deadline_step: Set deadline - Creating an Offender SAR Complaint case - Track-a-query
       sar: Creating a SAR case - Track-a-query
       sar_internal_review:
-        case_details_step: Add SAR IR details - Creating a SAR Internal Review case - Track-a-query
-        confirm_sar_step: Confirm Linked SAR details - Creating a SAR Internal Review case - Track-a-query
-        edit_case_details: Edit SAR IR details - Editing a SAR Internal Review case - Track-a-query
         link_sar_case_step: Link SAR case - Creating a SAR Internal Review case - Track-a-query
+        confirm_sar_step: Confirm Linked SAR details - Creating a SAR Internal Review case - Track-a-query
+        case_details_step: Add SAR IR details - Creating a SAR Internal Review case - Track-a-query
+        edit_case_details: Edit SAR IR details - Editing a SAR Internal Review case - Track-a-query
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
-    data_request_edit_page: Update page count
     data_request_page: Record data request
-    data_request_send_email_page: Are you sure you want to send the commissioning email?
+    data_request_edit_page: Update page count
     data_request_send_probation_email_page: Do you want to send the commissioning email to Branston Archives?
+    data_request_send_email_page: Are you sure you want to send the commissioning email?
     data_request_show_page: View data request
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
-    edit_an_address: Edit an address - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
-    edit_case_page: Editing a case - %{case_number} - Track-a-query
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
+    edit_case_page: Editing a case - %{case_number} - Track-a-query
     edit_user_page: Edit team member - %{team_name} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
-    ico_foi:
-      require_further_action: Require further action - %{case_number} - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query
     login: Login - Track-a-query
     mark_as_sent_page: Marking response as sent - %{case_number} - Track-a-query
     marking_response_as_sent: Mark response as sent
-    move_case_back: Revert case back - %{case_number} - Track-a-query
-    move_directorate_page: Move a directorate - %{team_name} - Track-a-query
-    move_team_page: Move a business unit - %{team_name} - Track-a-query
     my_cases: My open cases - Track-a-query
+    bu_areas: Areas covered for %{team_name} - Track-a-query
     new_commissioning_document_page: Select Day 1 request document
     new_letter_page: Generate a letter - Track-a-query
     new_org_entity: New %{team_type} - Track-a-query
     new_user_page: New team member - %{team_name} - Track-a-query
-    partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
     pit_extension_page: Extend for Public Interest Test (PIT) - %{case_number} - Track-a-query
     preview_cover_page: Preview cover page - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
-    record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
+    assign_to_team_member_page: Assign responder - %{case_number} - Track-a-query
     request_amends_page: Requesting amendments - %{case_number} - Track-a-query
-    resend_unlock: Resend unlock instructions - Track-a-query
-    retention_schedules_page: Case retention schedules - Track-a-query
     search: Searching for a case - Track-a-query
     settings: Business groups - Track-a-query
     settings_business_group: Business group - %{business_group} - Track-a-query
@@ -93,5 +79,19 @@ en:
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
+    resend_unlock: Resend unlock instructions - Track-a-query
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
     user_detail_page: Open cases - %{full_name} - Track-a-query
+    move_team_page: Move a business unit - %{team_name} - Track-a-query
+    confirm_move_team_page: Confirm Move business unit - %{team_name} - Track-a-query
+    move_directorate_page: Move a directorate - %{team_name} - Track-a-query
+    confirm_move_directorate_page: Confirm Move directorate - %{team_name} - Track-a-query
+    add_request_attachment_page: Upload new files for this request
+    move_case_back: Revert case back - %{case_number} - Track-a-query
+    record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
+    address_book: Organisation Address book - Track-a-query
+    add_an_address: Add an address - Track-a-query
+    edit_an_address: Edit an address - Track-a-query
+    partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
+    ico_foi:
+      require_further_action: Require further action - %{case_number} - Track-a-query

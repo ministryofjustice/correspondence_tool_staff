@@ -1,118 +1,104 @@
----
 en:
   filters:
+    filter_case_type:
+      foi-standard: 'FOI - Standard'
+      foi-ir-compliance: 'FOI - Internal review for compliance'
+      foi-ir-timeliness: 'FOI - Internal review for timeliness'
+      sar-non-offender: 'SAR - Non-offender'
+      sar-ir-compliance: 'SAR - Internal review for compliance'
+      sar-ir-timeliness: 'SAR - Internal review for timeliness'
+      ico-appeal: 'ICO appeals'
+      overturned-ico: 'ICO overturned'
+      offender-sar: 'Offender SAR'
+      offender-sar-complaint: 'Offender Complaint'
     crumbs:
-      date_responded: Date responded %{from_date} - %{to_date}
+      list_filter_type: &list_filter_type
+        one: "%{first_value}"
+        other: "%{first_value} + %{remaining_values_count} more"
       exemptions:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      external_deadline: Deadline %{from_date} - %{to_date}
+        <<: *list_filter_type
+      external_deadline: "Deadline %{from_date} - %{to_date}"
+      internal_deadline: "Draft deadline %{from_date} - %{to_date}"
+      received_date: "Received date %{from_date} - %{to_date}"
+      date_responded: "Date responded %{from_date} - %{to_date}"
+      planned_destruction_date: "Destruction due %{from_date} - %{to_date}"
       filter_case_type:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_caseworker:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_complaint_priority:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_complaint_subtype:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_complaint_type:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_high_profile:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
+        <<: *list_filter_type
       filter_open_case_status:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_partial_case_flag:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      filter_retention_state:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
+        <<: *list_filter_type
       filter_sensitivity:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
+        <<: *list_filter_type
       filter_status:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
+        <<: *list_filter_type
       filter_timeliness:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      internal_deadline: Draft deadline %{from_date} - %{to_date}
-      list_filter_type:
-        one: "%{first_value}"
-        other: "%{first_value} + %{remaining_values_count} more"
-      planned_destruction_date: Destruction due %{from_date} - %{to_date}
-      received_date: Received date %{from_date} - %{to_date}
+        <<: *list_filter_type
+      filter_complaint_type:
+        <<: *list_filter_type
+      filter_complaint_subtype:
+        <<: *list_filter_type
+      filter_complaint_priority:
+        <<: *list_filter_type
+      filter_high_profile:
+        <<: *list_filter_type
+      filter_caseworker:
+        <<: *list_filter_type
+      filter_partial_case_flag:
+        <<: *list_filter_type
+      filter_retention_state:
+        <<: *list_filter_type
+    headings:
+      filter_status: Filter by open/closed cases
+      filter_cases: Filter cases
+      filter_open_case_status: Filter by status
+      filter_case_type: Filter case type
+      filter_timeliness: Filter by timeliness
+      filter_external_deadline: Filter by final deadline
+      filter_internal_deadline: Filter by draft deadline
+      filter_received_date: Filter by date case was received
+      filter_date_responded: Filter by date of case response
+      filter_exemption: Filter by exemptions
+      filter_sensitivity: Filter by sensitivity
+      filter_complaint_type: Filter by complaint type
+      filter_complaint_subtype: Filter by complaint sub type
+      filter_complaint_priority: Filter by priority
+      filter_high_profile: Filter by sensitivity
+      filter_caseworker: Filter by complaint caseworker
+      filter_retention_state: Filter by GDPR RRD status
+      filter_planned_destruction_date: Filter by GDPR destruction deadline
+      date_headings:
+        filter_received_date: 'Received between'
+        filter_date_responded: 'Responded between'
+        filter_external_deadline: 'Due'
+        filter_internal_deadline: 'Due'
+        filter_planned_destruction_date: 'Destruction'
     date_range:
       planned_destruction_date:
         due: Due
-        four_months: In 4 months
         one_month: In 1 month
-        three_months: In 3 months
         two_months: In 2 months
-    filter_case_type:
-      foi-ir-compliance: FOI - Internal review for compliance
-      foi-ir-timeliness: FOI - Internal review for timeliness
-      foi-standard: FOI - Standard
-      ico-appeal: ICO appeals
-      offender-sar: Offender SAR
-      offender-sar-complaint: Offender Complaint
-      overturned-ico: ICO overturned
-      sar-ir-compliance: SAR - Internal review for compliance
-      sar-ir-timeliness: SAR - Internal review for timeliness
-      sar-non-offender: SAR - Non-offender
+        three_months: In 3 months
+        four_months: In 4 months
+    filter_open_case_status:
+      pending_dacu_clearance: 'Pending clearance - Disclosure'
+      pending_press_office_clearance: 'Pending clearance - Press office'
+      pending_private_office_clearance: 'Pending clearance - Private office'
+      awaiting_dispatch: 'Ready to send'
+      responded: 'Ready to close'
+      destroyed: Case destroyed
+    filter_sensitivity:
+      non-trigger: 'Non-trigger'
+      trigger: 'Trigger'
+    filter_high_profile:
+      high-profile: High profile 
+      not-high-profile: Not high profile 
+    filter_partial_case_flag:
+      partial-case: Is partial case
+      not-partial-case: Is not partial case
+    filter_status:
+      open: 'Open'
+      closed: 'Closed'
+    filter_timeliness:
+      in_time: 'In time'
+      late: 'Late'
     filter_caseworker:
       not_assigned: Not assigned yet
-    filter_high_profile:
-      high-profile: High profile
-      not-high-profile: Not high profile
-    filter_open_case_status:
-      awaiting_dispatch: Ready to send
-      destroyed: Case destroyed
-      pending_dacu_clearance: Pending clearance - Disclosure
-      pending_press_office_clearance: Pending clearance - Press office
-      pending_private_office_clearance: Pending clearance - Private office
-      responded: Ready to close
-    filter_partial_case_flag:
-      not-partial-case: Is not partial case
-      partial-case: Is partial case
-    filter_sensitivity:
-      non-trigger: Non-trigger
-      trigger: Trigger
-    filter_status:
-      closed: Closed
-      open: Open
-    filter_timeliness:
-      in_time: In time
-      late: Late
-    headings:
-      date_headings:
-        filter_date_responded: Responded between
-        filter_external_deadline: Due
-        filter_internal_deadline: Due
-        filter_planned_destruction_date: Destruction
-        filter_received_date: Received between
-      filter_case_type: Filter case type
-      filter_cases: Filter cases
-      filter_caseworker: Filter by complaint caseworker
-      filter_complaint_priority: Filter by priority
-      filter_complaint_subtype: Filter by complaint sub type
-      filter_complaint_type: Filter by complaint type
-      filter_date_responded: Filter by date of case response
-      filter_exemption: Filter by exemptions
-      filter_external_deadline: Filter by final deadline
-      filter_high_profile: Filter by sensitivity
-      filter_internal_deadline: Filter by draft deadline
-      filter_open_case_status: Filter by status
-      filter_planned_destruction_date: Filter by GDPR destruction deadline
-      filter_received_date: Filter by date case was received
-      filter_retention_state: Filter by GDPR RRD status
-      filter_sensitivity: Filter by sensitivity
-      filter_status: Filter by open/closed cases
-      filter_timeliness: Filter by timeliness
