@@ -4,13 +4,15 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
   init: function () {
     const other_checkbox = document.getElementById('offender_sar_rejected_reasons_other');
     const text_area = document.querySelector('div.display-none');
-    other_checkbox.addEventListener('click', function () {
+
+
+    if (document.body.contains(other_checkbox)) { other_checkbox.addEventListener('click', function () {
       if (other_checkbox.checked) {
         text_area.classList.remove("display-none")
       } else {
         text_area.classList.add("display-none")
       }
-    })
+    })}
 
     // Replaces the forms legend class styling to match form-hint
     // as collection_check_boxes requires a legend and form-hint.
