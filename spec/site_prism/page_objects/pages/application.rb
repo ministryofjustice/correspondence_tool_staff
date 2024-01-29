@@ -42,6 +42,7 @@ module PageObjects
         case_new_sar_ir_case_details: "Cases::New::SarInternalReviewCaseDetailsPage",
 
         cases_new_offender_sar_subject_details: "Cases::New::OffenderSARPageSubjectDetails",
+        cases_new_offender_sar_reason_rejected: "Cases::New::OffenderSARPageReasonRejected",
         cases_new_offender_sar_requester_details: "Cases::New::OffenderSARPageRequesterDetails",
         cases_new_offender_sar_recipient_details: "Cases::New::OffenderSARPageRecipientDetails",
         cases_new_offender_sar_requested_info: "Cases::New::OffenderSARPageRequestedInfo",
