@@ -174,7 +174,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_offender_sar_rejected, if: :rejected_offender_sar?
+  validate :validate_offender_sar_rejected, if: -> { rejected? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
