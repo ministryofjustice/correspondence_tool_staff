@@ -160,7 +160,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_new_offender_sar_reason_rejected_page).to be_displayed
   end
 
-  def and_fill_in_reason_rejected_page(params = nil)
+  def and_fill_in_reason_rejected_page
     cases_new_offender_sar_reason_rejected_page.choose_rejected_reason("cctv_bwcv")
     click_on "Continue"
     expect(cases_new_offender_sar_recipient_details_page).to be_displayed
