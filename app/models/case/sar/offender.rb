@@ -326,10 +326,6 @@ class Case::SAR::Offender < Case::Base
     true
   end
 
-  def rejected_offender_sar?
-    current_state == "rejected"
-  end
-
   def responding_team
     managing_team # both responding and managing - Branston are the only team who work on offender SARs
   end
