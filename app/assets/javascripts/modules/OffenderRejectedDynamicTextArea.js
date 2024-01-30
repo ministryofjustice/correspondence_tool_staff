@@ -8,15 +8,15 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
 
     if (document.body.contains(other_checkbox)) { other_checkbox.addEventListener('click', function () {
       if (other_checkbox.checked) {
-        text_area.classList.remove("display-none")
+        text_area.classList.remove("display-none");
       } else {
-        text_area.classList.add("display-none")
+        text_area.classList.add("display-none");
       }
     })}
 
     // Replaces the forms legend class styling to match form-hint
     // as collection_check_boxes requires a legend and form-hint.
     const form_label = document.querySelectorAll("span.form-label-bold");
-    form_label[0].classList.replace("form-label-bold", "form-hint")
+    form_label[0].classList.replace("form-label-bold", "form-hint");
   }
 };
