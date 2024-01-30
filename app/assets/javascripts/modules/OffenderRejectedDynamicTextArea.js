@@ -6,6 +6,7 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
     const text_area = document.querySelector('div.display-none');
 
     if (!other_checkbox) return;
+
     other_checkbox.addEventListener('click', function () {
       if (other_checkbox.checked) {
         text_area.classList.remove("display-none");
