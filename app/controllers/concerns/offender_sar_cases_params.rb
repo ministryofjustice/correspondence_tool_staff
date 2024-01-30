@@ -14,6 +14,7 @@ module OffenderSARCasesParams
       :name,
       :number_final_pages,
       :number_exempt_pages,
+      :other_rejected_reason,
       :other_subject_ids,
       :postal_address,
       :prison_number,
