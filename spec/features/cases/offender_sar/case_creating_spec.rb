@@ -10,6 +10,11 @@ feature "Offender SAR Case creation by a manager", js: true do
     cases_page.load
   end
 
+  scenario "0 Rejected Data subject requesting own record" do
+    when_i_navigate_to_rejected_offender_sar_subject_page
+    and_fill_in_subject_details_page
+  end
+
   scenario "1 Data subject requesting own record" do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
@@ -118,6 +123,15 @@ feature "Offender SAR Case creation by a manager", js: true do
 
     cases_new_page.create_link_for_correspondence("Offender SAR").click
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
+  end
+
+  def when_i_navigate_to_rejected_offender_sar_subject_page
+    expect(cases_page).to have_new_case_button
+    cases_page.new_case_button.click
+    expect(cases_new_page).to be_displayed
+    cases_new_page.create_link_for_correspondence("Rejected Offender SAR - Offender subject access request").click
+    expect(cases_new_offender_sar_subject_details_page).to be_displayed
+    expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create Rejected Offender SAR case")
   end
 
   def and_fill_in_subject_details_page(params = nil)
