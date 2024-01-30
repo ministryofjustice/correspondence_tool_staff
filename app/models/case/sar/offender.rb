@@ -48,7 +48,7 @@ class Case::SAR::Offender < Case::Base
     "court_data_request" => "Court data request",
     "data_previously_requested" => "Data previously provided",
     "further_identification" => "Further identification",
-    "identification_for_ex_inmate_probation" => "Identification for ex-inmate / probation",
+    "identification_for_ex_offender_probation" => "Identification for ex-offender / probation",
     "illegible_handwriting_unreadable_content" => "Illegible handwriting / unreadable content",
     "id_required" => "ID required",
     "invalid_authority" => "Invalid authority",
