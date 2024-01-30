@@ -87,6 +87,7 @@ class Case::SAR::Offender < Case::Base
                  third_party_relationship: :string,
                  third_party: :boolean,
                  third_party_company_name: :string,
+                 third_party_email: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
                  number_final_pages: :integer,
@@ -158,6 +159,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
+  validate :validate_third_party_email_format
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
 
@@ -262,6 +264,15 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:third_party_relationship].any?
+  end
+
+  def validate_third_party_email_format
+    if third_party && (third_party_email.present? && third_party_email !~ /\A.+@.+\z/)
+      errors.add(
+        :third_party_email,
+        :invalid,
+      )
+    end
   end
 
   def validate_partial_flags
