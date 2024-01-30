@@ -54,6 +54,7 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        rejected_reasons: ""
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -837,7 +838,6 @@ en:
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
         rejected_reason: Why are you rejecting this case?
-        rejected_reasons: Select all reasons you are rejecting this case
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
