@@ -19,5 +19,10 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
     // as collection_check_boxes requires a legend and form-hint.
     const form_label = document.querySelectorAll("span.form-label-bold");
     form_label[0].classList.replace("form-label-bold", "form-hint");
+
+    // Adds a vertical grey bar to the left of the text_area form-group
+    const text_area_group = document.getElementsByClassName('form-group')[1];
+    text_area_group.classList.add("panel", "panel-border-narrow");
+    console.log(text_area_group);
   }
 };
