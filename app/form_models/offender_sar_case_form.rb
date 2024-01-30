@@ -12,12 +12,12 @@ module OffenderSARCaseForm
              date-received].freeze
 
   def steps
-    skip_reason_rejected_step?(STEPS)
+    skip_reason_rejected_step(STEPS)
   end
 
 private
 
-  def skip_reason_rejected_step?(steps)
+  def skip_reason_rejected_step(steps)
     if current_state != "rejected"
       steps = steps.reject { |x| x == "reason-rejected" }
     end
