@@ -23,6 +23,5 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
     // Adds a vertical grey bar to the left of the text_area form-group
     const text_area_group = document.getElementsByClassName('form-group')[1];
     text_area_group.classList.add("panel", "panel-border-narrow");
-    console.log(text_area_group);
   }
 };
