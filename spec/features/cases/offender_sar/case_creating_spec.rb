@@ -10,6 +10,18 @@ feature "Offender SAR Case creation by a manager", js: true do
     cases_page.load
   end
 
+  scenario "0 Rejected Data subject requesting own record" do
+    when_i_navigate_to_rejected_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_reason_rejected_page
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_open_cases_page_to_be_correct
+  end
+
   scenario "1 Data subject requesting own record" do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
@@ -73,18 +85,6 @@ feature "Offender SAR Case creation by a manager", js: true do
     then_expect_no_third_party_info_stored("6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1")
   end
 
-  scenario "6 Responder rejecting a case" do
-    when_i_navigate_to_offender_sar_subject_page_for_rejected_case
-    and_fill_in_subject_details_page
-    and_fill_in_requester_details_page_for_rejected_case(:third_party)
-    and_fill_in_reason_rejected_page
-    and_fill_in_recipient_details_page(recipient: "subject_recipient")
-    and_fill_in_requested_info_page
-    and_fill_in_request_details_page
-    and_fill_in_date_received_page
-    then_expect_open_cases_page_to_be_correct
-  end
-
   def then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     basic_details_of_show_page_are_correct
     expect(cases_show_page).to have_content "Information requested on someone's behalf? Yes"
@@ -132,13 +132,13 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
   end
 
-  def when_i_navigate_to_offender_sar_subject_page_for_rejected_case
+  def when_i_navigate_to_rejected_offender_sar_subject_page
     expect(cases_page).to have_new_case_button
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-
-    cases_new_page.create_link_for_correspondence("Rejected").click
+    cases_new_page.create_link_for_correspondence("Rejected Offender SAR - Offender subject access request").click
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
+    expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create Rejected Offender SAR case")
   end
 
   def and_fill_in_subject_details_page(params = nil)

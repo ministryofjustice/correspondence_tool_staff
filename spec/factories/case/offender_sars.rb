@@ -58,6 +58,10 @@ FactoryBot.define do
     recipient { "requester_recipient" }
   end
 
+  trait :rejected do
+    current_state { "rejected" }
+  end
+
   trait :data_to_be_requested do
     # Default state for a new offender_sar_case
   end
