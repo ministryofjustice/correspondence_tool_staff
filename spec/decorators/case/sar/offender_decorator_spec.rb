@@ -53,7 +53,7 @@ describe Case::SAR::OffenderDecorator do
         build_stubbed(
           :offender_sar_case, :rejected,
           date_responded: Date.new(2020, 1, 10),
-          received_date: Date.new(2020, 1, 1),
+          received_date: Date.new(2020, 1, 1)
         ).decorate
       end
 
