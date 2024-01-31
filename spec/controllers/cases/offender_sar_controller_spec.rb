@@ -214,7 +214,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
             it "requires an other reason-rejected option to be given" do
               remains_on_step "reason-rejected"
-              expect(errors[:other_rejected_reason]).to eq ["Reason for rejecting the case cannot be blank"]
+              expect(errors[:other_rejected_reason]).to eq ["Other reason for rejecting the case cannot be blank"]
             end
           end
         end
