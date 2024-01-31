@@ -176,7 +176,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_offender_sar_rejected, if: -> { rejected? }
+  validate :validate_rejected_reason, if: -> { rejected? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -312,11 +312,18 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-  def validate_offender_sar_rejected
+  def validate_rejected_reason
     if rejected_reasons.all?(&:blank?)
       errors.add(
         :rejected_reasons,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.rejected_reasons.blank"),
+      )
+    end
+
+    if rejected_reasons.include?("other") && other_rejected_reason.empty?
+      errors.add(
+        :other_rejected_reason,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.other_rejected_reason.blank"),
       )
     end
   end

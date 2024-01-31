@@ -55,6 +55,7 @@ en:
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
         rejected_reasons: ""
+        other_rejected_reason: ""
         third_party_email: Email address
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
@@ -273,6 +274,8 @@ en:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
             rejected_reasons:
+              blank: Reason for rejecting the case cannot be blank
+            other_rejected_reason:
               blank: Reason for rejecting the case cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester

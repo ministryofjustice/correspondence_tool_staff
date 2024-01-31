@@ -200,6 +200,40 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
               expect(errors[:rejected_reasons]).to eq ["Reason for rejecting the case cannot be blank"]
             end
           end
+
+          context "when other option is chosen but no reason given" do
+            let(:params) do
+              {
+                current_step: "reason-rejected",
+                offender_sar: {
+                  rejected_reasons: %w[other],
+                  other_rejected_reason: "",
+                },
+              }
+            end
+
+            it "requires an other reason-rejected option to be given" do
+              remains_on_step "reason-rejected"
+              expect(errors[:other_rejected_reason]).to eq ["Reason for rejecting the case cannot be blank"]
+            end
+          end
+
+          context "when a standard and other option is chosen but no other reason given" do
+            let(:params) do
+              {
+                current_step: "reason-rejected",
+                offender_sar: {
+                  rejected_reasons: %w[cctv_bwcv other],
+                  other_rejected_reason: "",
+                },
+              }
+            end
+
+            it "is valid" do
+              remains_on_step "reason-rejected"
+              expect(errors[:other_rejected_reason]).not_to eq ["Reason for rejecting the case cannot be blank"]
+            end
+          end
         end
       end
 
