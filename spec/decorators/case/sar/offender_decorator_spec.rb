@@ -49,29 +49,28 @@ describe Case::SAR::OffenderDecorator do
     end
 
     context "when a rejected offender sar" do
-      let(:rejected_offender_sar_case) do
+      let(:offender_sar_case) do
         build_stubbed(
-          :offender_sar_case,
+          :offender_sar_case, :rejected,
           date_responded: Date.new(2020, 1, 10),
           received_date: Date.new(2020, 1, 1),
-          current_state: "rejected",
         ).decorate
       end
 
       it "returns each subsequent step as a partial filename" do
-        expect(rejected_offender_sar_case.get_step_partial).to eq "subject_details_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "requester_details_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "reason_rejected_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "recipient_details_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "requested_info_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "request_details_step"
-        rejected_offender_sar_case.next_step
-        expect(rejected_offender_sar_case.get_step_partial).to eq "date_received_step"
+        expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requester_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "reason_rejected_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "recipient_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requested_info_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "request_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "date_received_step"
       end
     end
   end

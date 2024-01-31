@@ -39,14 +39,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  context "when rejected offender factory should be valid" do
-    it "is valid" do
-      kase = build_stubbed :rejected_offender_sar_case
-
-      expect(kase).to be_valid
-    end
-  end
-
   context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
       kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
