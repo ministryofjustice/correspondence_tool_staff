@@ -21,7 +21,7 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
     form_label[0].classList.replace("form-label-bold", "form-hint");
 
     // Adds a vertical grey bar to the left of the text_area form-group
-    const text_area_group = document.getElementsByClassName('form-group')[1];
+    const text_area_group = document.getElementById('error_offender_sar_other_rejected_reason');
     text_area_group.classList.add("panel", "panel-border-narrow");
   }
 };
