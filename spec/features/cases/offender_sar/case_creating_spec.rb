@@ -13,6 +13,13 @@ feature "Offender SAR Case creation by a manager", js: true do
   scenario "0 Rejected Data subject requesting own record" do
     when_i_navigate_to_rejected_offender_sar_subject_page
     and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_reason_rejected_page
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_open_cases_page_to_be_correct
   end
 
   scenario "1 Data subject requesting own record" do
@@ -143,6 +150,18 @@ feature "Offender SAR Case creation by a manager", js: true do
 
   def and_fill_in_requester_details_page(params = nil)
     cases_new_offender_sar_requester_details_page.fill_in_case_details(params)
+    click_on "Continue"
+    expect(cases_new_offender_sar_recipient_details_page).to be_displayed
+  end
+
+  def and_fill_in_requester_details_page_for_rejected_case(params = nil)
+    cases_new_offender_sar_requester_details_page.fill_in_case_details(params)
+    click_on "Continue"
+    expect(cases_new_offender_sar_reason_rejected_page).to be_displayed
+  end
+
+  def and_fill_in_reason_rejected_page
+    cases_new_offender_sar_reason_rejected_page.choose_rejected_reason("cctv_bwcv")
     click_on "Continue"
     expect(cases_new_offender_sar_recipient_details_page).to be_displayed
   end

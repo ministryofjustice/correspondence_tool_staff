@@ -54,6 +54,8 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        rejected_reasons: ""
+        other_rejected_reason: ""
         third_party_email: Email address
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
@@ -271,6 +273,10 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            rejected_reasons:
+              blank: Reason for rejecting the case cannot be blank
+            other_rejected_reason:
+              blank: Other reason for rejecting the case cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -550,7 +556,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
-
+        rejected_reasons: Select all that apply.
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -831,11 +837,13 @@ en:
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
+        other_rejected_reason: Give reason for rejecting this case
         other_subject_ids: "Police national computer number (PNC)"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        rejected_reason: Why are you rejecting this case?
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
@@ -1508,6 +1516,7 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      reason_rejected_heading: Reason offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case

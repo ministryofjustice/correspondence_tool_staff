@@ -31,7 +31,7 @@
 require "rails_helper"
 
 describe Case::SAR::Offender do
-  context "when factory should be valid" do
+  context "when valid offender factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_case
 

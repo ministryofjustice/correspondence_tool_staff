@@ -43,6 +43,7 @@ module Cases
       @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       load_optional_flags_from_params
+
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -330,6 +331,7 @@ module Cases
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
       values["current_state"] = "rejected" if params.key?("rejected")
+
       correspondence_type.new(values).decorate
     end
 

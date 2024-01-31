@@ -20,6 +20,7 @@ en:
       offender_sar:
         subject_details_step: Subject details - Creating an Offender SAR case - Track-a-query
         requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
+        reason_rejected_step: Reason rejected - Creating an Offender SAR case - Track-a-query
         recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
         requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
         request_details_step: Request details - Creating an Offender SAR case - Track-a-query
