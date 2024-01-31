@@ -1140,7 +1140,6 @@ en:
       who_its_with: With
       reason_for_lateness: Reason for lateness
       reason_for_lateness_note: Note for reason for lateness
-      reason_rejected: Reason rejected
       original_external_deadline: Original external deadline
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
@@ -1396,7 +1395,6 @@ en:
       date_sar_received_legend: When was the complaint received at MOJ?
       date_offender_sar_received_legend: When was the SAR received?
       date_sent_to_sscl_legend: Date data sent to SSCL for Vetting?
-      reason_rejected_legend: Select all that apply.
       date_of_birth: "Date of birth"
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
