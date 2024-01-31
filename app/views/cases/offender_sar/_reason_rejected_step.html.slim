@@ -11,7 +11,7 @@
   = f.label :rejected_reason, :class => "form-label-bold"
   = f.collection_check_boxes :rejected_reasons, Case::SAR::Offender::REJECTED_REASONS, :first, :last
 
-  div[class="#{@case.rejected_reasons.include?("other") ? "" : "display-none"}"]
+  div[id="other-text-area-container" class="#{@case.rejected_reasons.include?("other") ? "" : "display-none"}"]
     = f.text_area :other_rejected_reason
 
   input name="current_step" type="hidden" value=@case.current_step

@@ -3,7 +3,7 @@ moj.Modules.OffenderRejectedDynamicTextArea = {
   // Provides a dynamic text_area which displays when the user chooses the 'other' checkbox
   init: function () {
     const other_checkbox = document.getElementById('offender_sar_rejected_reasons_other');
-    const text_area = document.querySelector('div.display-none');
+    const text_area = document.getElementById('other-text-area-container');
 
     if (!other_checkbox) return;
 
