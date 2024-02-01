@@ -152,6 +152,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
+  # validate :validate_get_rejected_case_number
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -406,6 +407,17 @@ class Case::SAR::Offender < Case::Base
       end
     end
     user_for_vetting
+  end
+
+  def next_seq_for_rejected_case_number(received_date)
+    if Case::Base.where(received_date:).exists?
+      counter = Case::Base.where(received_date:).count || 0
+      counter_str = "-#{counter.to_s.rjust(3, '0')}"
+      rejected_case_number = "R#{received_date.strftime('%y%m%d')}#{counter_str}"
+    else
+      rejected_case_number = "R#{received_date.strftime('%y%m%d')}001"
+    end
+    rejected_case_number
   end
 
 private
