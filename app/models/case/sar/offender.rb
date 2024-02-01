@@ -95,6 +95,7 @@ class Case::SAR::Offender < Case::Base
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
                  further_actions_required: :string,
+                 case_originally_rejected: :boolean,
                  other_rejected_reason: :string,
                  rejected_reasons: [:string, { array: true, default: [] }]
 
@@ -183,6 +184,7 @@ class Case::SAR::Offender < Case::Base
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
+  before_save :set_case_originally_rejected, if: -> { rejected? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
@@ -457,6 +459,10 @@ private
 
   def use_subject_as_requester
     self.name = subject_full_name
+  end
+
+  def set_case_originally_rejected
+    self.case_originally_rejected = true
   end
 
   def ensure_third_party_states_consistent
