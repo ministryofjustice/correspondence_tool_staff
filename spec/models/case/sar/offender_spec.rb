@@ -290,6 +290,13 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "when creating a rejected case" do
+    it "sets case_originally_rejected to true" do
+      kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
+      expect(kase.case_originally_rejected).to eq true
+    end
+  end
+
   describe "third party details" do
     describe "with third_party_names" do
       it "validates third party names when third party is true" do
