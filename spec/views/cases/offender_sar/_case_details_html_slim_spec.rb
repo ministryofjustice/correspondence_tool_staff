@@ -61,6 +61,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.requester_reference.data.text).to eq "FOOG1234"
       expect(partial.third_party_company_name.data.text).to eq "Foogle and Sons Solicitors at Law"
       expect(partial.third_party_email.data.text).to eq "foogle@solicitors.com"
+      expect(partial.rejected_reason.data.text).to eq "ID required, Court data request, further identification, police data"
     end
 
     it "does not display Business unit responsible for late response when case closed" do
