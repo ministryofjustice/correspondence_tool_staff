@@ -16,7 +16,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
   before { login_as branston_user }
 
   describe "basic_details" do
-    it "displays the initial case details (non third party case)" do
+    it "displays offender sars initial case details (non third party case)" do
       assign(:case, offender_sar_case)
       render partial: "cases/offender_sar/case_details",
              locals: { case_details: offender_sar_case,
@@ -60,6 +60,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.third_party_name.data.text).to eq "Rick Westor"
       expect(partial.requester_reference.data.text).to eq "FOOG1234"
       expect(partial.third_party_company_name.data.text).to eq "Foogle and Sons Solicitors at Law"
+      expect(partial.third_party_email.data.text).to eq "foogle@solicitors.com"
     end
 
     it "does not display Business unit responsible for late response when case closed" do

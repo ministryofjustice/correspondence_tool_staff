@@ -37,6 +37,10 @@ module PageObjects
               element :data, "td"
             end
 
+            section :third_party_email, "tr.third-party-email" do
+              element :data, "td"
+            end
+
             section :prison_number, "tr.prison-number" do
               element :data, "td"
             end
