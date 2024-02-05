@@ -252,11 +252,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_rejected_reason
-    if current_state=("rejected") && (rejected_reason) == ""
+    if current_state == "rejected" && rejected_reason == ""
       errors.add(
         :rejected_reason,
         :invalid,
-        )
+      )
     end
   end
 
@@ -429,7 +429,7 @@ class Case::SAR::Offender < Case::Base
     rejected_case_number
   end
 
-  private
+private
 
   def set_subject
     self.subject = subject_full_name
