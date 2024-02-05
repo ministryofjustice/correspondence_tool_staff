@@ -331,12 +331,12 @@ module Cases
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
 
-      rejected_set_current_state(params, values)
+      rejected_set_current_state(values)
 
       correspondence_type.new(values).decorate
     end
 
-    def rejected_set_current_state(params, values)
+    def rejected_set_current_state(values)
       case params["rejected"]
       when "true"
         values["current_state"] = "rejected"
