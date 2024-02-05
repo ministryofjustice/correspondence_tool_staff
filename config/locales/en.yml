@@ -1121,6 +1121,7 @@ en:
       third_party_name: Representative name
       third_party_relationship: Relationship
       third_party_email: Email address
+      rejected_reason: Rejected reason
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
