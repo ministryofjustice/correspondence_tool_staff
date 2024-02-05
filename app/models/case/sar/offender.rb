@@ -152,7 +152,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_rejected_reason
+  validate :validate_rejected_reasons
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -251,7 +251,7 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-  def validate_rejected_reason
+  def validate_rejected_reasons
     if current_state == "rejected" && rejected_reason == ""
       errors.add(
         :rejected_reason,

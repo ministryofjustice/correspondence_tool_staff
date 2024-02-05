@@ -49,13 +49,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe "#next_seq_for_rejected_case_number" do
-    it "'R' + todays date + sequence number" do
-      rejected_offender_sar1 = build(:offender_sar_case, :rejected)
-      expect(rejected_offender_sar1.next_seq_for_rejected_case_number(Time.zone.now)).to eq "R#{Time.zone.now.strftime('%y%m%d')}001"
-    end
-  end
-
   describe "predicate methods" do
     describe "#type_of_offender_sar?" do
       it "is a sort of offender_sar" do

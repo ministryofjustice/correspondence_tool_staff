@@ -1030,7 +1030,11 @@ private
   end
 
   def set_number
-    self.number = next_number
+    if current_state == "rejected"
+      self.number = "R#{next_number}"
+    else
+      self.number = next_number
+    end
   end
 
   def next_number
