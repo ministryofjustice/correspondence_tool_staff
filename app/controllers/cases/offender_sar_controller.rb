@@ -341,7 +341,7 @@ module Cases
       when "true"
         values["current_state"] = "rejected"
       when "false"
-        values["current_state"] = "data_to_be_requested"
+        values.delete("current_state")
       end
     end
 
