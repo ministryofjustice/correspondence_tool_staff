@@ -32,8 +32,6 @@
     - fieldset.radio_input(true, text_method: :humanize)
     - fieldset.radio_input(false, text_method: :humanize)
 
-  = f.hidden_field :current_state, value: "#{@is_rejected == "true" ? 'rejected' : 'data_to_be_requested'}"
-
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
