@@ -181,6 +181,7 @@ class Case::SAR::Offender < Case::Base
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
+  before_create :set_number
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
@@ -486,5 +487,12 @@ private
       self.recipient = "requester_recipient"
     end
   end
-end
+
+  def set_number
+    self.number = if current_state == "rejected"
+                    "R#{next_number}"
+                  else
+                    next_number
+                  end
+  end
 # rubocop:enable Metrics/ClassLength

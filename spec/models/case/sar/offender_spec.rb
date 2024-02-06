@@ -72,6 +72,17 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#set_number" do
+
+    it "assigns a case number to rejected offender sar" do
+      kase = build_stubbed :offender_sar_case, :rejected
+      Timecop.freeze Date.new(2024, 2, 5) do
+        debugger
+        expect(kase.case_reference_number).to eq "R240205001"
+      end
+    end
+  end
+
   describe "#request_method" do
     context "with valid values" do
       it "does not error" do
