@@ -31,7 +31,7 @@
 require "rails_helper"
 
 describe Case::SAR::Offender do
-  context "when factory should be valid" do
+  context "when valid offender factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_case
 
@@ -287,6 +287,13 @@ describe Case::SAR::Offender do
         kase = build_stubbed(:offender_sar_case, number_final_pages: 4835)
         expect(kase).to be_valid
       end
+    end
+  end
+
+  describe "when creating a rejected case" do
+    it "sets case_originally_rejected to true" do
+      kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
+      expect(kase.case_originally_rejected).to eq true
     end
   end
 

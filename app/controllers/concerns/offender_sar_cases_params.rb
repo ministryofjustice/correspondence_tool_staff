@@ -14,6 +14,7 @@ module OffenderSARCasesParams
       :name,
       :number_final_pages,
       :number_exempt_pages,
+      :other_rejected_reason,
       :other_subject_ids,
       :postal_address,
       :prison_number,
@@ -37,7 +38,8 @@ module OffenderSARCasesParams
       :request_method,
       :requester_reference,
       :current_state,
-      uploaded_request_files: []
+      uploaded_request_files: [],
+      rejected_reasons: []
     )
   end
 

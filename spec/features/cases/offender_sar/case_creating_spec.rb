@@ -13,6 +13,14 @@ feature "Offender SAR Case creation by a manager", js: true do
   scenario "0 Rejected Data subject requesting own record" do
     when_i_navigate_to_rejected_offender_sar_subject_page
     and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_reason_rejected_page
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_case_state_to_be_rejected
+    then_expect_open_cases_page_to_be_correct
   end
 
   scenario "1 Data subject requesting own record" do
@@ -76,6 +84,25 @@ feature "Offender SAR Case creation by a manager", js: true do
       "6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1",
     )
     then_expect_no_third_party_info_stored("6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1")
+  end
+
+  scenario "6 user starts a rejected case but restarts midway to a valid case" do
+    when_i_navigate_to_rejected_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_reason_rejected_page
+
+    # User decides to cancel a rejected case and switches to creating a valid case.
+    cases_page.load
+    when_i_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page(:third_party)
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_case_state_to_be_data_to_be_requested
+    then_expect_open_cases_page_to_be_correct
   end
 
   def then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
@@ -147,6 +174,18 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_new_offender_sar_recipient_details_page).to be_displayed
   end
 
+  def and_fill_in_requester_details_page_for_rejected_case(params = nil)
+    cases_new_offender_sar_requester_details_page.fill_in_case_details(params)
+    click_on "Continue"
+    expect(cases_new_offender_sar_reason_rejected_page).to be_displayed
+  end
+
+  def and_fill_in_reason_rejected_page
+    cases_new_offender_sar_reason_rejected_page.choose_rejected_reason("cctv_bwcv")
+    click_on "Continue"
+    expect(cases_new_offender_sar_recipient_details_page).to be_displayed
+  end
+
   def and_fill_in_recipient_details_page(params = nil)
     cases_new_offender_sar_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
@@ -174,6 +213,18 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Case created successfully"
     expect(cases_show_page.page_heading).to have_content "Sabrina Adams"
+  end
+
+  def then_expect_case_state_to_be_data_to_be_requested
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Case created successfully"
+    expect(cases_show_page.case_status).to have_content "Data to be requested"
+  end
+
+  def then_expect_case_state_to_be_rejected
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Case created successfully"
+    expect(cases_show_page.case_status).to have_content "Rejected"
   end
 
   def then_expect_open_cases_page_to_be_correct

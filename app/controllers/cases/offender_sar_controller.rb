@@ -29,7 +29,7 @@ module Cases
 
     def new
       permitted_correspondence_types
-      @is_rejected = params.key?("rejected")
+      @rejected = params["rejected"]
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
@@ -43,6 +43,7 @@ module Cases
       @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       load_optional_flags_from_params
+
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -329,8 +330,19 @@ module Cases
       # similar workaround needed for request dated
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
-      values["current_state"] = "rejected" if params.key?("rejected")
+
+      rejected_set_current_state(values)
+
       correspondence_type.new(values).decorate
+    end
+
+    def rejected_set_current_state(values)
+      case params["rejected"]
+      when "true"
+        values["current_state"] = "rejected"
+      when "false"
+        values.delete("current_state")
+      end
     end
 
     def session_persist_state(params)
