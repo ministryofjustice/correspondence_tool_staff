@@ -29,7 +29,7 @@ module Cases
 
     def new
       permitted_correspondence_types
-      @is_rejected = params["rejected"]
+      @rejected = params["rejected"]
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
