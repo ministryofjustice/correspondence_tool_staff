@@ -484,4 +484,6 @@ private
                     next_number
                   end
   end
+
 # rubocop:enable Metrics/ClassLength
+  end

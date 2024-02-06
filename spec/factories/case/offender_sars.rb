@@ -56,7 +56,8 @@ FactoryBot.define do
 
   trait :rejected do
     current_state { "rejected" }
-    rejected_reason { "further id required" }
+    case_reference_number { "R240205001" }
+    rejected_reasons { "further id required" }
   end
 
   trait :data_to_be_requested do
