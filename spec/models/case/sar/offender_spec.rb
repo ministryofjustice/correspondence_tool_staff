@@ -290,7 +290,7 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe "when creating a rejected cases" do
+  describe "when creating a rejected case" do
     it "sets case_originally_rejected to true" do
       kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
       expect(kase.case_originally_rejected).to eq true
