@@ -251,15 +251,6 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-  def validate_rejected_reasons
-    if current_state == "rejected" && rejected_reason == ""
-      errors.add(
-        :rejected_reason,
-        :invalid,
-      )
-    end
-  end
-
   def validate_partial_flags
     if !is_partial_case && further_actions_required == "yes"
       errors.add(
