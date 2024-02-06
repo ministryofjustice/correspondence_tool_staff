@@ -1420,7 +1420,7 @@ en:
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
       offender_sar:
-        rejected: Create rejected offender SAR case
+        rejected: Create rejected Offender SAR case
         sub_heading: Create Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
