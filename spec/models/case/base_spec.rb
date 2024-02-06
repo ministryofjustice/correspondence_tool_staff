@@ -195,7 +195,7 @@ RSpec.describe Case::Base, type: :model do
     let(:case_two)   { create(:case, received_date: Date.parse("11/01/2017")) }
     let(:case_three) { create(:case, received_date: Date.parse("12/01/2017")) }
     let(:case_four)  { create(:case, received_date: Date.parse("12/01/2017")) }
-    let(:case_rejected) { create(:case, :rejected, received_date: Date.parse("05/02/2024")) }}
+    let(:case_rejected) { create(:case, :rejected, received_date: Date.parse("05/02/2024")) }
 
     it "is composed of the received date and an incremented suffix" do
       Timecop.freeze Date.new(2017, 1, 15) do
@@ -209,9 +209,8 @@ RSpec.describe Case::Base, type: :model do
     it "is prefixed with R if rejected offender sar case is being created" do
       Timecop.freeze Date.new(2024, 2, 5) do
         expect(case_rejected).to eq "R240205001"
+      end
     end
-
-
 
     it "cannot be set on create" do
       Timecop.freeze Date.new(2017, 1, 20) do
