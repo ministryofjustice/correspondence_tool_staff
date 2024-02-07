@@ -181,7 +181,6 @@ class Case::SAR::Offender < Case::Base
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
-  before_create :set_number
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
