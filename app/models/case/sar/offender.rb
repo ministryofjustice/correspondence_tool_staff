@@ -484,5 +484,5 @@ private
                   end
   end
 
-# rubocop:enable Metrics/ClassLength
-  end
+  # rubocop:enable Metrics/ClassLength
+end

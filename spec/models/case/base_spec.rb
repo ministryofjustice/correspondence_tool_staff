@@ -196,7 +196,6 @@ RSpec.describe Case::Base, type: :model do
     let(:case_three) { create(:case, received_date: Date.parse("12/01/2017")) }
     let(:case_four)  { create(:case, received_date: Date.parse("12/01/2017")) }
 
-
     it "is composed of the received date and an incremented suffix" do
       Timecop.freeze Date.new(2017, 1, 15) do
         expect(case_one.number).to eq   "170111001"
@@ -205,8 +204,6 @@ RSpec.describe Case::Base, type: :model do
         expect(case_four.number).to eq  "170112002"
       end
     end
-
-
 
     it "cannot be set on create" do
       Timecop.freeze Date.new(2017, 1, 20) do
