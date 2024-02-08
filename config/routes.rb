@@ -311,8 +311,9 @@ Rails.application.routes.draw do
     end
   end
 
-  scope :api do
+  namespace :api do
     post "rpi" => "rpi#create"
+    get "rpi" => "rpi#index"
   end
 
   get "ping", to: "heartbeat#ping", format: :json
