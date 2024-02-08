@@ -61,7 +61,20 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.requester_reference.data.text).to eq "FOOG1234"
       expect(partial.third_party_company_name.data.text).to eq "Foogle and Sons Solicitors at Law"
       expect(partial.third_party_email.data.text).to eq "foogle@solicitors.com"
-      expect(partial.rejected_reason.data.text).to eq "ID required, Court data request, further identification, police data"
+    end
+
+    it "displays rejected details if present" do
+      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: "ID required, Court data request, further identification, police data" ).decorate
+      # rejected_case = build_stubbed :offender_sar_case, :rejected
+      assign(:case, rejected_case)
+      render partial: "cases/offender_sar/case_details", locals: {
+        case_details: rejected_case,
+        link_type: nil,
+        allow_editing: true,
+      }
+
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
+      expect(partial.rejected_reasons.data.text).to eq "ID required, Court data request, further identification, police data"
     end
 
     it "does not display Business unit responsible for late response when case closed" do
