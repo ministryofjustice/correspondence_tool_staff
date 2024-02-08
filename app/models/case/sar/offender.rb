@@ -157,7 +157,7 @@ class Case::SAR::Offender < Case::Base
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
   before_save :use_subject_as_requester,
-              if: -> { name.blank? }
+              if -> { name.blank? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
