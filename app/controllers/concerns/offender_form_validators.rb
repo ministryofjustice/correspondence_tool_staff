@@ -59,9 +59,8 @@ private
     object.validate_received_date
   end
 
-  def validate_information_received(params)
+  def validate_received_information(params)
     object.assign_attributes(params)
-    # set_empty_value_if_unset(params, "information_received")
     object.validate_information_received
   end
 
