@@ -10,7 +10,6 @@ module OffenderSARCasesParams
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :requester_reference,
       :flag_as_high_profile,
-      :information_received,
       :message,
       :name,
       :number_final_pages,
@@ -74,6 +73,12 @@ module OffenderSARCasesParams
     params.require(:offender_sar).permit(
       :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
       :remove_sent_to_sscl_reason
+    )
+  end
+
+  def information_received_params
+    params.require(:offender_sar).permit(
+      :information_received,
     )
   end
 
