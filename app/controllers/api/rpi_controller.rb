@@ -38,7 +38,7 @@ module Api
     end
 
     def jwe_key
-      "2d7eca8ec82b142b5736fa34d8e916dd9980f31ac2a176b5ae30662c0bdfdbdd7ccebebbab41a7907f4a151a187c76049c87c75bb9d23457eaa42f4bdcf0f573"
+      Settings.rpi_jwe_key
     end
   end
 end

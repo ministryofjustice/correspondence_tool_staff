@@ -28,6 +28,8 @@ cts_email_port: 3000
 
 s3_upload_max_tries: 5
 
+rpi_jwe_key: "not a real key"
+
 govuk_notify_api_key: 'never-put-real-api-key-here-use-env-vars'
 new_assignment_notify_template: '6f4d8e34-96cb-482c-9428-a5c1d5efa519'
 ready_for_press_or_private_review_notify_template: 'fe9a1e2a-2707-4e10-bb63-aae142f10382'
