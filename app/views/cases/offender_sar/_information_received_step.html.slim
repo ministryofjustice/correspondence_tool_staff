@@ -1,12 +1,7 @@
-- content_for :page_title do
-  = t('page_title.information_received', case_number: @case.number)
+/ - content_for :page_title do
+/   = t('page_title.information_received', case_number: @case.number)
 
-= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
-
-- content_for :sub_heading
-  = "#{@case.number} - #{@case.pretty_type}"
-
-- content_for :heading
+- content_for :heading, flush: true
   = t('cases.offender_sar.information_received_heading')
 
 = render partial: 'layouts/header'
@@ -14,10 +9,14 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
   "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for @case, url: confirm_information_received_case_sar_offender_path(@case), as: :offender_sar do |f|
-  = f.radio_button_fieldset(:information_received) do |fieldset|
-    - fieldset.radio_input(true, text_method: :humanize)
-    - fieldset.radio_input(false, text_method: :humanize)
+div class="case-#{@correspondence_type_key}"
+  / NOTE: this uses the step mechanism to change the information_received
+  / this does not appear in the list of steps for new cast creation as found in
+  / OffenderSARCaseForm -> def steps method
 
-  .button-holder
-    = f.submit t('button.continue'), { class: 'button', role: 'button' }
+  = form_for @case, url: edit_step_case_sar_offender_path(@case, 'reason-rejected'), as: :offender_sar, method: :get do |f|
+    = f.radio_button_fieldset :information_received
+
+    input name="current_step" type="hidden" value=@case.current_step
+
+    = f.submit 'Continue', {class: 'button'}
