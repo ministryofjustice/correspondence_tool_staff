@@ -64,7 +64,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
     end
 
     it "displays rejected details if present" do
-      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: "ID required, Court data request, further identification, police data" ).decorate
+      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: "ID required, Court data request, further identification, police data").decorate
       # rejected_case = build_stubbed :offender_sar_case, :rejected
       assign(:case, rejected_case)
       render partial: "cases/offender_sar/case_details", locals: {
