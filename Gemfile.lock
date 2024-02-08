@@ -289,6 +289,7 @@ GEM
       activerecord (>= 5.0)
       activesupport (>= 5.0)
       pg (>= 0.18.1)
+    jwe (0.4.0)
     jwt (2.7.0)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
@@ -656,6 +657,7 @@ DEPENDENCIES
   jquery-rails (~> 4.5)
   jquery-ui-rails
   jsonb_accessor (~> 1.3.2)
+  jwe
   kaminari
   libreconv (~> 0.9.5)
   listen (~> 3.7.1)
