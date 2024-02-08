@@ -311,6 +311,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope :api do
+    post "rpi" => "rpi#create"
+  end
+
   get "ping", to: "heartbeat#ping", format: :json
   get "healthcheck", to: "heartbeat#healthcheck", as: "healthcheck", format: :json
   post "/feedback" => "feedback#create"
