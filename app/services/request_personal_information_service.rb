@@ -3,7 +3,5 @@ class RequestPersonalInformationService
     @json_data = json_data
   end
 
-  def build
-
-  end
+  def build; end
 end
