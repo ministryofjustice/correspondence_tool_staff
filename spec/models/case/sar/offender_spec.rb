@@ -73,15 +73,14 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_number" do
-    let(:case_rejected)  { create(:offender_sar_case, :rejected, received_date: Date.parse("08/02/2024") ) }
+    let(:case_rejected)  { create(:offender_sar_case, :rejected, received_date: Date.parse("08/02/2024")) }
 
-      it "is composed of prefix R, received date and an incremented suffix" do
-        Timecop.freeze Date.new(2024, 2, 15) do
-          kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
-          expect(kase.number[0]).to eq('R')
-        end
-
+    it "is composed of prefix R, received date and an incremented suffix" do
+      Timecop.freeze Date.new(2024, 2, 15) do
+        kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
+        expect(kase.number[0]).to eq("R")
       end
+    end
   end
 
   describe "#request_method" do
