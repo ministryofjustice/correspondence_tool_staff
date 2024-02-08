@@ -16,6 +16,8 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
+      information_received
+      confirm_information_received
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
