@@ -38,7 +38,6 @@ module OffenderSARCasesParams
       :request_method,
       :requester_reference,
       :current_state,
-      :rejected,
       uploaded_request_files: [],
       rejected_reasons: []
     )
