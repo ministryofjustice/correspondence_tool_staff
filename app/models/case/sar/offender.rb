@@ -478,7 +478,7 @@ private
 
   def set_number
     self.number = if current_state == "rejected"
-                    "R{base.next_number}"
+                    "R#{next_number}"
                   else
                     next_number
                   end

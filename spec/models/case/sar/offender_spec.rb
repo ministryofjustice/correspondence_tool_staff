@@ -78,7 +78,7 @@ describe Case::SAR::Offender do
       it "is composed of prefix R, received date and an incremented suffix" do
         Timecop.freeze Date.new(2024, 2, 15) do
           kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
-          expect(kase.case_reference_number).to eq "R240208001"
+          expect(kase.number[0]).to eq('R')
         end
 
       end

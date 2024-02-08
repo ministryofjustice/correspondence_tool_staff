@@ -56,7 +56,6 @@ FactoryBot.define do
 
   trait :rejected do
     current_state { "rejected" }
-    case_reference_number = "R{base.next_number}"
     rejected_reasons { ["further identification"] }
   end
 
