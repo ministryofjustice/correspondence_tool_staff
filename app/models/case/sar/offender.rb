@@ -478,11 +478,9 @@ private
 
   def set_number
     self.number = if current_state == "rejected"
-                    "R#{next_number}"
+                    "R{base.next_number}"
                   else
                     next_number
                   end
   end
-
-  # rubocop:enable Metrics/ClassLength
 end
