@@ -10,6 +10,7 @@ module OffenderSARCasesParams
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :requester_reference,
       :flag_as_high_profile,
+      :information_received,
       :message,
       :name,
       :number_final_pages,
