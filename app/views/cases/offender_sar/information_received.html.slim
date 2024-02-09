@@ -1,0 +1,20 @@
+- content_for :page_title do
+  = t('page_title.information_received', case_number: @case.number)
+
+- content_for :heading, flush: true
+  = t('cases.offender_sar.information_received_heading')
+
+- content_for :sub_heading
+  = t('cases.edit.offender_sar.rejected_sub_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case, url: confirm_information_received_case_sar_offender_path(@case), as: :offender_sar do |f|
+  = f.radio_button_fieldset :information_received, choices: [:yes, :no]
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', {class: 'button'}
