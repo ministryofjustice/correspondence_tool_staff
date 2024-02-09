@@ -1,4 +1,6 @@
 class RequestPersonalInformationService
+  attr_reader :rpi
+
   def initialize(json_data)
     @json_data = json_data
     @rpi = RequestPersonalInformation.new
@@ -120,7 +122,7 @@ class RequestPersonalInformationService
 private
 
   def answers
-    json_data["submissionAnswers"]
+    @json_data["submissionAnswers"]
   end
 
   def requesting_own_data
