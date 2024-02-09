@@ -3,18 +3,21 @@ module Api
     before_action :authenticate_request, except: :index
 
     class << self
-      attr_accessor :json
+      attr_accessor :rpi
      end
 
     def index
-      render json: self.class.try(:json) || "no data"
+      if self.class.rpi.blank?
+        render plain: "no data"
+      end
     end
 
     def create
-      Rails.logger.info("RPI API auth successful")
       # RequestPersonalInformationJob.perform_later(@decrypted_body)
-      self.class.json = @decrypted_body
-      render plain: "ok"
+      rpi = RequestPersonalInformationService.new(@decrypted_body)
+      rpi.build
+      self.class.rpi = rpi
+      head :ok
     end
 
     def render_unauthorized
@@ -24,8 +27,6 @@ module Api
   private
 
     def authenticate_request
-      Rails.logger.info("RPI API request received")
-      self.class.json = { request: "received" }
       encrypted_payload = request.raw_post
       return render_unauthorized if encrypted_payload.blank?
 
