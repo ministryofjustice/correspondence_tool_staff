@@ -27,6 +27,7 @@ class RequestPersonalInformation
                 :prison_data_from,
                 :prison_data_to,
                 :probation_service_data,
+                :probation_office,
                 :probation_information,
                 :probation_information_other,
                 :probation_data_from,

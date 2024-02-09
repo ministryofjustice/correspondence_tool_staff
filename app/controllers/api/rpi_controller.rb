@@ -12,9 +12,8 @@ module Api
 
     def create
       self.class.json = @decrypted_body
-      rpi = RequestPersonalInformationService.new(@decrypted_body)
-      rpi.build
-      ActionNotificationsMailer.rpi_email(rpi).deliver_now
+      rpi_service = RequestPersonalInformationService.new(@decrypted_body)
+      ActionNotificationsMailer.rpi_email(rpi_service.build).deliver_now
       head :ok
     end
 
@@ -29,7 +28,7 @@ module Api
       return render_unauthorized if encrypted_payload.blank?
 
       begin
-        @decrypted_body = JSON.parse(JWE.decrypt(encrypted_payload, jwe_key), symbolize_names: true)
+        @decrypted_body = JSON.parse(JWE.decrypt(encrypted_payload, jwe_key))
       rescue JWE::DecodeError => e
         Rails.logger.info("returning unauthorized due to JWE::DecodeError '#{e}'")
         render_unauthorized

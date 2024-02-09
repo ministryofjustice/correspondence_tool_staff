@@ -175,7 +175,7 @@ RSpec.describe Api::RpiController, type: :controller do
       it "decrypts the body" do
         encrypted_json = JWE.encrypt(unencrypted_json, Settings.rpi_jwe_key, alg: "dir")
         post(:create, body: encrypted_json)
-        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json, symbolize_names: true)
+        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json)
       end
     end
   end

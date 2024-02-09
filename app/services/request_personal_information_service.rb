@@ -9,6 +9,7 @@ class RequestPersonalInformationService
   def build
     build_who
     build_where
+    rpi
   end
 
 private
@@ -33,8 +34,6 @@ private
     rpi.subject_full_name = personal_data_full_name
     rpi.subject_other_name = personal_data_other_name
     rpi.subject_dob = personal_data_dob
-    rpi.photo_id_file_name = photo_id_name
-    rpi.proof_of_address_file_name = proof_of_address_file_name
     rpi.subject_photo_id_file_name = photo_id_file_name
     rpi.subject_proof_of_address_file_name = proof_of_address_file_name
   end
