@@ -102,7 +102,7 @@ class Case::SAR::Offender < Case::Base
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
-  attribute :information_received, :boolean, default: false
+  # attribute :information_received, :boolean, default: false
 
   attr_accessor :remove_sent_to_sscl_reason
 
@@ -148,7 +148,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :validate_information_received, presence: true, if: -> { rejected? }
+  # validates :validate_information_received, presence: true, if: -> { rejected? }
   validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
@@ -291,6 +291,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_information_received
+    # debugger
     if information_received.nil?
       errors.add(
         :information_received,

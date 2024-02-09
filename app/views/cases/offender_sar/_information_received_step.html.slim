@@ -14,8 +14,10 @@ div class="case-#{@correspondence_type_key}"
   / this does not appear in the list of steps for new cast creation as found in
   / OffenderSARCaseForm -> def steps method
 
-  = form_for @case, url: edit_step_case_sar_offender_path(@case, 'reason-rejected'), as: :offender_sar, method: :get do |f|
-    = f.radio_button_fieldset :information_received
+  = form_for @case, url: case_sar_offender_path(@case), as: :offender_sar do |f|
+    = f.radio_button_fieldset :information_received do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
+      - fieldset.radio_input(false, text_method: :humanize)
 
     input name="current_step" type="hidden" value=@case.current_step
 
