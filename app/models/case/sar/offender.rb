@@ -478,9 +478,9 @@ private
 
   def set_rejected_prefix
     self.number = if current_state == "rejected"
-                    "R#{next_number}"
+                    "R#{base.next_number}"
                   else
-                    next_number
+                    base.next_number
                   end
   end
 end
