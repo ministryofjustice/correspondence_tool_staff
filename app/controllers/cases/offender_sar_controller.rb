@@ -212,6 +212,27 @@ module Cases
       redirect_to case_path(@case) and return
     end
 
+    def information_received
+      render :information_received
+    end
+
+    def confirm_information_received
+      # NoMethodError is raised if calling :information_received
+      # as its default value is nil
+      information_received = params[:offender_sar].try(:[], :information_received)
+
+      if information_received
+        case information_received
+        when "yes"
+          redirect_to edit_step_case_sar_offender_path(@case, "date_received")
+        when "no"
+          redirect_to edit_step_case_sar_offender_path(@case, "reason_rejected")
+        end
+
+      end
+
+    end
+
   private
 
     def flags_process(flag_params)
