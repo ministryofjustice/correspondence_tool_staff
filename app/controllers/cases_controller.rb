@@ -93,6 +93,7 @@ class CasesController < ApplicationController
   end
 
   def update
+    debugger
     @case = Case::Base.find(params[:id])
     authorize @case
     @case = @case.decorate

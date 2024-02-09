@@ -10,6 +10,7 @@ module OffenderSARCasesParams
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :requester_reference,
       :flag_as_high_profile,
+      :information_received,
       :message,
       :name,
       :number_final_pages,
@@ -76,11 +77,11 @@ module OffenderSARCasesParams
     )
   end
 
-  def information_received_params
-    params.require(:offender_sar).permit(
-      :information_received,
-    )
-  end
+  # def information_received_params
+  #   params.require(:offender_sar).permit(
+  #     :information_received,
+  #   )
+  # end
 
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
