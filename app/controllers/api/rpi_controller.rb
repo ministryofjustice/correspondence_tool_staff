@@ -3,20 +3,18 @@ module Api
     before_action :authenticate_request, except: :index
 
     class << self
-      attr_accessor :rpi
+      attr_accessor :json
      end
 
     def index
-      if self.class.rpi.blank?
-        render plain: "no data"
-      end
+      render json: self.class.try(:json) || "no data"
     end
 
     def create
-      # RequestPersonalInformationJob.perform_later(@decrypted_body)
+      self.class.json = @decrypted_body
       rpi = RequestPersonalInformationService.new(@decrypted_body)
       rpi.build
-      self.class.rpi = rpi
+      ActionNotificationsMailer.rpi_email(rpi).deliver_now
       head :ok
     end
 

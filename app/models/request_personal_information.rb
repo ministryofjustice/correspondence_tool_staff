@@ -84,4 +84,16 @@ class RequestPersonalInformation
   def needed_for_court?
     needed_for_court.downcase == YES
   end
+
+  def content
+    <<~HERE
+      # This is a test
+      # # sub heading
+
+      Are you requesting your own information or on behalf of someone else?     #{requesting_own_data}
+
+      What is your name?    #{subject_full_name}
+
+    HERE
+  end
 end

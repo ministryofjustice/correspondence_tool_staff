@@ -11,6 +11,8 @@ class RequestPersonalInformationService
     build_where
   end
 
+private
+
   def build_who
     rpi.requesting_own_data = requesting_own_data
     if rpi.requesting_own_data?
@@ -118,8 +120,6 @@ class RequestPersonalInformationService
     rpi.other_data_to = other_data_to
     rpi.other_where = other_where
   end
-
-private
 
   def answers
     @json_data["submissionAnswers"]
