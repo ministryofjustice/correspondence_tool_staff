@@ -76,7 +76,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
 
       # expect(partial.has_selector?("rejected")).to eq true
       expect(partial.has_selector?(".rejected_reasons")).to eq(true)
-      expect(partial.rejected_reason.data.text).to eq "[ID required, Court data request, further identification, police data]"
+      expect(partial.rejected_reason.data.text).to eq "[further identification]"
     end
 
     it "does not display Business unit responsible for late response when case closed" do
