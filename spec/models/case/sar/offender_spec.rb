@@ -76,7 +76,7 @@ describe Case::SAR::Offender do
     let(:case_rejected) { create(:offender_sar_case, :rejected) }
     let(:case) { create(:offender_sar_case) }
 
-    it "is composed of prefix R, received date and an incremented suffix" do
+    it "sets the prefix for rejected case" do
       kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
       expect(kase.number[0]).to eq("R")
     end
