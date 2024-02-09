@@ -73,17 +73,17 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_rejected_prefix" do
-    let(:case_rejected)  { create(:offender_sar_case, :rejected) }
-    let(:case)  { create(:offender_sar_case) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected) }
+    let(:case) { create(:offender_sar_case) }
 
     it "is composed of prefix R, received date and an incremented suffix" do
-        kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
-        expect(kase.number[0]).to eq("R")
+      kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
+      expect(kase.number[0]).to eq("R")
     end
 
     it "does not set the prefix for an accepted case" do
       kase = create :offender_sar_case
-      expect(kase.number[0]).to ("2")
+      expect(kase.number[0]).to("2")
     end
   end
 
