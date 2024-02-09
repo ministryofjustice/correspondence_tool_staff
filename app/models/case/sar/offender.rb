@@ -71,7 +71,6 @@ class Case::SAR::Offender < Case::Base
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
-                 information_received: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -102,9 +101,8 @@ class Case::SAR::Offender < Case::Base
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
-  # attribute :information_received, :boolean, default: false
 
-  attr_accessor :remove_sent_to_sscl_reason
+  attr_accessor :remove_sent_to_sscl_reason, :information_received
 
   enum subject_type: {
     offender: "offender",
@@ -148,7 +146,6 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  # validates :validate_information_received, presence: true, if: -> { rejected? }
   validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
@@ -158,7 +155,7 @@ class Case::SAR::Offender < Case::Base
   validates :recipient, presence: true
 
   validate :validate_date_of_birth
-  # validate :validate_information_received, if: -> { rejected? }
+  validates :information_received, presence: true
   validate :validate_received_date
   validate :validate_third_party_names
   validate :validate_recipient
@@ -181,7 +178,6 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_rejected_reason, if: -> { rejected? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -286,16 +282,6 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :is_partial_case,
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid"),
-      )
-    end
-  end
-
-  def validate_information_received
-    # debugger
-    if information_received.nil?
-      errors.add(
-        :information_received,
-        I18n.t("activerecord.errors.models.case/sar/offender.attributes.information_received.blank"),
       )
     end
   end
