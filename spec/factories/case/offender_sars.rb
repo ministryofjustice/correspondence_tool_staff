@@ -51,12 +51,10 @@ FactoryBot.define do
     third_party_name { "Mr J. Smith" }
     postal_address { "22 High Street" }
     recipient { "requester_recipient" }
-    third_party_email { "foogle@solicitors.com" }
   end
 
   trait :rejected do
     current_state { "rejected" }
-    rejected_reasons { ["further identification"] }
   end
 
   trait :data_to_be_requested do
