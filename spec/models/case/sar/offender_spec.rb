@@ -83,7 +83,7 @@ describe Case::SAR::Offender do
 
     it "does not set the prefix for an accepted case" do
       kase = create :offender_sar_case
-      expect(kase.number[0]).to("2")
+      expect(kase.number[0]).to eq("2")
     end
   end
 
