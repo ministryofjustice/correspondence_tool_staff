@@ -74,14 +74,14 @@ describe Case::SAR::Offender do
 
   describe "#set_rejected_prefix" do
     let(:case_rejected) { create(:offender_sar_case, :rejected) }
-    let(:case) { create(:offender_sar_case) }
+    let(:kase) { create(:offender_sar_case) }
 
     it "sets the prefix for rejected case" do
       expect(case_rejected.number[0]).to eq("R")
     end
 
     it "does not set the prefix for a non rejected case" do
-      expect(case.number[0]).to eq("2")
+      expect(kase.number[0]).to eq("2")
     end
   end
 
