@@ -1,8 +1,4 @@
-tr.rejected_reason
-  th
-    = t('common.case.rejected_reason')
-  td
-    = case_details.rejected_reasons.join if case_details.rejected_reasons.present?
-  - if allow_editing
-      td
-        = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "reason_rejected")
+tr.rejected_reasons
+  th = t('common.case.rejected_reason') if case_details.rejected_reasons.present?
+  td = case_details.rejected_reasons.join(', ')
+  td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "rejected_reasons")

@@ -72,14 +72,18 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe "#set_number" do
-    let(:case_rejected)  { create(:offender_sar_case, :rejected, received_date: Date.parse("08/02/2024")) }
+  describe "#set_rejected_prefix" do
+    let(:case_rejected)  { create(:offender_sar_case, :rejected) }
+    let(:case)  { create(:offender_sar_case) }
 
     it "is composed of prefix R, received date and an incremented suffix" do
-      Timecop.freeze Date.new(2024, 2, 15) do
         kase = create :offender_sar_case, :rejected, rejected_reasons: %w[cctv_bwcv]
         expect(kase.number[0]).to eq("R")
-      end
+    end
+
+    it "does not set the prefix for an accepted case" do
+      kase = create :offender_sar_case
+      expect(kase.number[0]).to ("2")
     end
   end
 

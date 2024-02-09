@@ -65,7 +65,6 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
 
     it "displays rejected details if present" do
       rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: "ID required, Court data request, further identification, police data").decorate
-      # rejected_case = build_stubbed :offender_sar_case, :rejected
       assign(:case, rejected_case)
       render partial: "cases/offender_sar/case_details", locals: {
         case_details: rejected_case,
@@ -73,7 +72,10 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
         allow_editing: true,
       }
 
-      partial = offender_sar_case_details_section(rendered).sar_basic_details
+      partial = offender_sar_case_details_section(rendered)
+
+      # expect(partial.has_selector?("rejected")).to eq true
+      expect(partial.has_selector?(".rejected_reasons")).to eq(true)
       expect(partial.rejected_reasons.data.text).to eq "ID required, Court data request, further identification, police data"
     end
 

@@ -476,7 +476,7 @@ private
     end
   end
 
-  def set_number
+  def set_rejected_prefix
     self.number = if current_state == "rejected"
                     "R#{next_number}"
                   else

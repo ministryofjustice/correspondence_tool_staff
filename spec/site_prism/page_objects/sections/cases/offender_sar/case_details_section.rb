@@ -41,7 +41,7 @@ module PageObjects
               element :data, "td"
             end
 
-            section :rejected_reasons, "tr.rejected_reasons" do
+            section :rejected_reason, "tr.rejected_reason" do
               element :data, "td"
             end
 
