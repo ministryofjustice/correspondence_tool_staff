@@ -72,7 +72,7 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe "#set_rejected_prefix" do
+  describe "#set_number" do
     let(:case_rejected) { create(:offender_sar_case, :rejected) }
     let(:kase) { create(:offender_sar_case) }
 
