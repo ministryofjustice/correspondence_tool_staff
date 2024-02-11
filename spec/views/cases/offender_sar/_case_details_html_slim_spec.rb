@@ -73,7 +73,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       }
 
       partial = offender_sar_case_details_section(rendered)
-      expect(partial.rejected_reason.data.text).to eq "[further identification]"
+      expect(partial.rejected_reason.data.text).to eq "Further identification"
     end
 
     it "does not display Business unit responsible for late response when case closed" do
