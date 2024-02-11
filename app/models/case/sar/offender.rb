@@ -451,7 +451,7 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
-private
+  private
 
   def set_subject
     self.subject = subject_full_name

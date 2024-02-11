@@ -17,8 +17,12 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
     request_methods_sorted - %w[unknown]
   end
 
-  def rejected_reasons_description(reason_key)
-    REJECTED_REASONS.map { |reason| reason[reason_key] }.compact.first
-  end
-end
 
+
+  def rejected_reasons_descriptions
+    rejected_reasons.map do |rejected_reasons|
+      Case::SAR::Offender::REJECTED_REASONS[rejected_reasons]
+    end.compact.join("<pre>\n</pre>")
+  end
+
+end
