@@ -150,6 +150,8 @@ RSpec.describe Api::RpiController, type: :controller do
     }.to_json
   end
 
+  let(:encrypted_json) { JWE.encrypt(unencrypted_json, Settings.rpi_jwe_key, alg: "dir") }
+
   let(:invalid_json_body) do
     {
       invalid: "json",
@@ -173,10 +175,16 @@ RSpec.describe Api::RpiController, type: :controller do
 
     context "with encrypted json payload" do
       it "decrypts the body" do
-        encrypted_json = JWE.encrypt(unencrypted_json, Settings.rpi_jwe_key, alg: "dir")
         post(:create, body: encrypted_json)
-        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json)
+        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json, symbolize_names: true)
       end
+    end
+  end
+
+  describe "#create" do
+    it "attempts to send an email" do
+      expect(ActionNotificationsMailer).to receive(:rpi_email).with(RequestPersonalInformation).and_call_original
+      post(:create, body: encrypted_json)
     end
   end
 end
