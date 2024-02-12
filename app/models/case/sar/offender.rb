@@ -146,7 +146,6 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :information_received, presence: true, if: -> { rejected? }
   validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
@@ -156,8 +155,6 @@ class Case::SAR::Offender < Case::Base
   validates :recipient, presence: true
 
   validate :validate_date_of_birth
-  # validate :validate_information_received, if: -> { rejected? }
-  validates :information_received, presence: true
   validate :validate_received_date
   validate :validate_third_party_names
   validate :validate_recipient
