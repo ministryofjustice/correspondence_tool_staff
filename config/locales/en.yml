@@ -1530,6 +1530,10 @@ en:
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
       sent_to_sscl_heading: "Data sent to SSCL"
+      information_received:
+        case/sar/offender:
+          offender_sar:
+            rejected: Edit rejected Offender SAR case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

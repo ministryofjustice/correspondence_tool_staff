@@ -5,7 +5,7 @@
   = t('cases.offender_sar.information_received_heading')
 
 - content_for :sub_heading
-  = t('cases.edit.offender_sar.rejected_sub_heading')
+  = get_heading(@case, @correspondence_type)
 
 = render partial: 'layouts/header'
 
