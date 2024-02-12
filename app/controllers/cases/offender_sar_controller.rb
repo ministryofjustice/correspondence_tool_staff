@@ -212,10 +212,6 @@ module Cases
       redirect_to case_path(@case) and return
     end
 
-    def information_received
-      render :information_received
-    end
-
     def confirm_information_received
       # NoMethodError is raised if calling :information_received
       # as its default value is nil
@@ -228,9 +224,10 @@ module Cases
         when "no"
           redirect_to edit_step_case_sar_offender_path(@case, "reason_rejected")
         end
-
+      else
+      #   @case.validate_information_received
+        flash[:alert] = "error"
       end
-
     end
 
   private

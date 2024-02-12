@@ -146,6 +146,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :information_received, presence: true, if: -> { rejected? }
   validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
@@ -155,6 +156,7 @@ class Case::SAR::Offender < Case::Base
   validates :recipient, presence: true
 
   validate :validate_date_of_birth
+  # validate :validate_information_received, if: -> { rejected? }
   validates :information_received, presence: true
   validate :validate_received_date
   validate :validate_third_party_names
@@ -178,6 +180,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
+  validate :validate_rejected_reason, if: -> { rejected? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -185,6 +188,16 @@ class Case::SAR::Offender < Case::Base
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
   before_save :set_case_originally_rejected, if: -> { rejected? }
+
+  # def validate_information_received
+  #   debugger
+  #   if information_received.nil?
+  #     errors.add(
+  #       :information_received,
+  #       I18n.t("activerecord.errors.models.case/sar/offender.attributes.information_received.blank"),
+  #       )
+  #   end
+  # end
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
