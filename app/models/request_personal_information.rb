@@ -87,14 +87,8 @@ class RequestPersonalInformation
   end
 
   def content
-    <<~HERE
-      # This is a test
-      # # sub heading
-
-      Are you requesting your own information or on behalf of someone else?     #{requesting_own_data}
-
-      What is your name?    #{subject_full_name}
-
-    HERE
+    raw_template = File.read("app/views/request_personal_information/email.txt.erb")
+    erb_template = ERB.new(raw_template)
+    erb_template.result(binding)
   end
 end
