@@ -213,6 +213,8 @@ module Cases
     end
 
     def confirm_information_received
+      return unless params[:offender_sar].fetch(:information_received, nil)
+
       # NoMethodError is raised if calling :information_received
       # as its default value is nil
       information_received = params[:offender_sar].try(:[], :information_received)
@@ -224,9 +226,6 @@ module Cases
         when "no"
           redirect_to edit_step_case_sar_offender_path(@case, "reason_rejected")
         end
-      else
-      #   @case.validate_information_received
-        flash[:alert] = "error"
       end
     end
 
