@@ -76,12 +76,6 @@ module OffenderSARCasesParams
     )
   end
 
-  # def information_received_params
-  #   params.require(:offender_sar).permit(
-  #     :information_received,
-  #   )
-  # end
-
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
       :date_responded_dd,
