@@ -15,6 +15,4 @@
 = form_for @case, url: confirm_information_received_case_sar_offender_path(@case), as: :offender_sar do |f|
   = f.radio_button_fieldset :information_received, choices: [:yes, :no]
 
-  input name="current_step" type="hidden" value=@case.current_step
-
   = f.submit 'Continue', {class: 'button'}
