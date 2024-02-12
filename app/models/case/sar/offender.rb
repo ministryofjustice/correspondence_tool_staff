@@ -186,16 +186,6 @@ class Case::SAR::Offender < Case::Base
               if: -> { name.blank? }
   before_save :set_case_originally_rejected, if: -> { rejected? }
 
-  # def validate_information_received
-  #   debugger
-  #   if information_received.nil?
-  #     errors.add(
-  #       :information_received,
-  #       I18n.t("activerecord.errors.models.case/sar/offender.attributes.information_received.blank"),
-  #       )
-  #   end
-  # end
-
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
       errors.add(
