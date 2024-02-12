@@ -57,6 +57,12 @@ describe Case::SAR::OffenderDecorator do
         ).decorate
       end
 
+      context "#rejected_reasons_descriptions" do
+        it "displays rejected reasons descriptions for selected" do
+          expect(offender_sar_case.rejected_reasons).to eq "Further information"
+        end
+      end
+
       it "returns each subsequent step as a partial filename" do
         expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
         offender_sar_case.next_step
