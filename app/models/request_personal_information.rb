@@ -87,7 +87,7 @@ class RequestPersonalInformation
   end
 
   def content
-    raw_template = File.read("app/views/request_personal_information/email.txt.erb")
+    raw_template = File.read("app/views/request_personal_information/submission.html.erb")
     erb_template = ERB.new(raw_template)
     erb_template.result(binding)
   end
