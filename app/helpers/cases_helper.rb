@@ -236,6 +236,11 @@ module CasesHelper
               case_cover_page_path(@case),
               id: "action--preview-cover-page",
               class: "button-secondary"
+    when :information_received
+      link_to "Information received",
+              "",
+              id: "action--information-received",
+              class: "button"
     end
   end
 
