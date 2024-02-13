@@ -7,6 +7,7 @@ class RequestPersonalInformationService
   end
 
   def build
+    rpi.submission_id = @data[:submissionId]
     build_who
     build_where
     rpi

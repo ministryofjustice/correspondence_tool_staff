@@ -5,7 +5,8 @@ class RequestPersonalInformation
   LEGAL_REPRESENTATIVE = "legal representative".freeze
   YES = "yes".freeze
 
-  attr_accessor :requesting_own_data,
+  attr_accessor :submission_id,
+                :requesting_own_data,
                 :subject_full_name,
                 :subject_other_name,
                 :subject_dob,
@@ -86,9 +87,29 @@ class RequestPersonalInformation
     needed_for_court.downcase == YES
   end
 
-  def content
-    raw_template = File.read("app/views/request_personal_information/submission.html.erb")
+  def attachment_url
+    @attachment_url ||= begin
+      generate_pdf
+      upload
+      CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: 1.week
+    end
+  end
+
+private
+
+  def generate_pdf
+    raw_template = File.read("app/views/request_personal_information/submission.md.erb")
     erb_template = ERB.new(raw_template)
-    erb_template.result(binding)
+    output = erb_template.result(binding)
+    Prawn::Document.generate("#{submission_id}.pdf") { markdown(output) }
+  end
+
+  def upload
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    File.open("#{submission_id}.pdf") { |f| uploads_object.upload_file(f) }
+  end
+
+  def key
+    "rpi/#{submission_id}"
   end
 end
