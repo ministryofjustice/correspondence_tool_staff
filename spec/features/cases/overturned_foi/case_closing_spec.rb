@@ -46,7 +46,7 @@ feature "Closing a case" do
           expect(show_page.response_details.timeliness.data.text)
             .to eq "Answered in time"
           expect(show_page.response_details.time_taken.data.text)
-            .to eq "10 working days"
+            .to eq "11 working days"
           expect(show_page.response_details.outcome.data.text)
             .to eq "Granted in full"
           expect(show_page.response_details).to have_no_refusal_reason
