@@ -1242,7 +1242,6 @@ en:
 
     feedback:
       index:
-        heading: Feedback
         feedback_per_year: Feedback per year
         year: Year
         number: Count
