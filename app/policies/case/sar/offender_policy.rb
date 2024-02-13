@@ -55,12 +55,12 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
-  def can_start_complaint?
+  def handle_information_received?
     clear_failed_checks
-    check_user_can_manage_offender_complaint
+    check_user_can_manage_offender
   end
 
-  def handle_information_received?
+  def can_start_complaint?
     clear_failed_checks
     check_user_can_manage_offender_complaint
   end
