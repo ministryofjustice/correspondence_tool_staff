@@ -91,7 +91,8 @@ class RequestPersonalInformation
     @attachment_url ||= begin
       generate_pdf
       upload
-      CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: 1.week
+
+      CASE_UPLOADS_S3_BUCKET.object(key).presigned_url(:get, expires_in: 1.week)
     end
   end
 
@@ -106,7 +107,10 @@ private
 
   def upload
     uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
-    File.open("#{submission_id}.pdf") { |f| uploads_object.upload_file(f) }
+    File.open("#{submission_id}.pdf") do |f|
+      uploads_object.upload_file(f)
+      File.delete(f)
+    end
   end
 
   def key

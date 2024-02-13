@@ -51,6 +51,14 @@ class TestAWSS3
     def delete
       @bucket.delete(@key)
     end
+
+    def upload_file(file)
+      @bucket.object(file)
+    end
+
+    def presigned_url(*)
+      nil
+    end
   end
 
   class S3DirectPost
