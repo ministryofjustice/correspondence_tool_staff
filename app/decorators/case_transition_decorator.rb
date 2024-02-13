@@ -17,6 +17,10 @@ class CaseTransitionDecorator < Draper::Decorator
     "<strong>#{event_desc}</strong><br>#{details}".html_safe
   end
 
+  def rejected_event_and_detail
+    "<strong>Rejected #{event_desc.downcase}</strong><br>#{details}".html_safe
+  end
+
   def event_desc
     description_for_event || event_name
   end
@@ -31,12 +35,22 @@ private
 
   def event_name
     specific_key = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}"
+    # debugger
+    # if object.event == "create" && object.case.case_originally_rejected == true
+    #   specific_key = "event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}"
+    # end
     default_key = "event.#{object.event}"
     I18n.t(specific_key, default: I18n.t(default_key))
   end
 
+  # def persist_event
+    # the case history will change from "rejected case created" to "case created"
+    # when a Case state is changed from "rejected" to whatever else
+  # end
+
   def event
     state_machine = object.case.state_machine
+    # debugger
     state_machine.event_name(object.event)
   end
 

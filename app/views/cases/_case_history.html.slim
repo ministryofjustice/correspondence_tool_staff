@@ -13,4 +13,15 @@ table#case-history.report
         td = ct.action_date
         td = ct.user_name
         td = ct.user_team
-        td = simple_format(ct.event_and_detail)
+        / / = debug.new_record? ct
+        / = @case.previously_new_record?
+        / = @case.id_previously_changed?
+        / = @case.saved_change_to_attribute?(:id)
+        / = @case.created_at == @case.updated_at
+        / td = simple_format(ct.event_and_detail)
+        / = p @case_transitions.first.name
+
+        - if @case.case_originally_rejected == true && @case.transitions.first.event == "create"# && @cas.current_state == "rejected"
+          td = simple_format(ct.rejected_event_and_detail)
+        - else
+          td = simple_format(ct.event_and_detail)
