@@ -16,4 +16,6 @@ class Feedback < ApplicationRecord
                  email: :text,
                  user_agent: :text,
                  referer: :text
+
+  scope :by_year, ->(year) { where("extract(year from created_at) = ?", year) }
 end

@@ -1,0 +1,28 @@
+- content_for :page_title do
+  - t('page_title.admin_feedback_list')
+
+- content_for :heading
+  | Feedback for #{params[:year]}
+
+= render partial: 'layouts/header'
+
+- @feedbacks.each do |f|
+  table
+    tr
+      th Id: Date
+      th = "##{f.id}: #{f.created_at.strftime('%a %d %b %Y %H:%M')}"
+    tr
+      td User
+      td = f.email
+    tr
+      td Comment
+      td = f.comment
+    tr
+      td Page
+      td = f.referer
+    tr
+      td Browser details
+      td = f.user_agent
+
+  br
+  br
