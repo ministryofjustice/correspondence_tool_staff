@@ -2,7 +2,11 @@ class Admin::DashboardController < AdminController
   attr_reader :queries
 
   def feedback
-    @feedbacks = Feedback.order(id: :desc).limit(20)
+    @feedback_years = Feedback.group("to_char(created_at, 'yyyy')").count.sort.reverse
+  end
+
+  def feedback_year
+    @feedbacks = Feedback.by_year(params[:year]).order(id: :desc)
   end
 
   def exception
