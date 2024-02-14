@@ -1,22 +1,25 @@
-h1 Feedback
+- content_for :page_title do
+  - t('page_title.admin_feedback_list')
 
-- @feedbacks.each do |f|
-  table
-    tr
-      th Id: Date
-      th = "##{f.id}: #{f.created_at.strftime('%a %d %b %Y %H:%M')}"
-    tr
-      td User
-      td = f.email
-    tr
-      td Comment
-      td = f.comment
-    tr
-      td Page
-      td = f.referer
-    tr
-      td Browser details
-      td = f.user_agent
+- content_for :heading
+  | Feedback
 
-  br
-  br
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.button-holder
+    h2.heading-medium
+      = t('admin.feedback.index.feedback_per_year')
+
+    table
+      thead
+        tr
+          th
+            = t('admin.feedback.index.year')
+          th
+            = t('admin.feedback.index.number')
+      tbody
+      - @feedback_years.each do |group|
+        tr
+          td = link_to(group.first, admin_dashboard_feedback_year_path(group.first))
+          td = group.last

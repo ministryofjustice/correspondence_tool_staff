@@ -298,6 +298,7 @@ Rails.application.routes.draw do
       get "users" => "users#index"
       get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
+      get "/dashboard/feedback/:year" => "dashboard#feedback_year", as: :dashboard_feedback_year
       get "/dashboard/exception" => "dashboard#exception"
       get "/dashboard/search_queries" => "dashboard#search_queries"
       get "/dashboard/list_queries" => "dashboard#list_queries"
