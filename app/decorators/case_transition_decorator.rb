@@ -36,7 +36,7 @@ private
   end
 
   def rejected_case_creation_event
-    # the case history will change from "rejected case created" to "case created"
+    # The case history will change from "rejected case created" to "case created"
     # when a Case state is changed from "rejected" to another state
     if object.event == "create" && object.case.case_originally_rejected == true
       I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")

@@ -18,9 +18,8 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def rejected_reasons_descriptions
-    rejected_reasons.map do |rejected_reasons|
+    rejected_reasons.map { |rejected_reasons|
       Case::SAR::Offender::REJECTED_REASONS[rejected_reasons]
-    end.compact.join("<br>")
+    }.compact.join("<br>")
   end
-
 end
