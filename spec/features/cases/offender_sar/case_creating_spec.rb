@@ -20,6 +20,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_expect_case_state_to_be_rejected
+    then_expect_case_history_to_be_correct
     then_expect_open_cases_page_to_be_correct
   end
 
@@ -224,6 +225,13 @@ feature "Offender SAR Case creation by a manager", js: true do
   def then_expect_case_state_to_be_rejected
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Case created successfully"
+    expect(cases_show_page.case_status).to have_content "Rejected"
+  end
+
+  def then_expect_case_history_to_be_correct
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Case created successfully"
+    expect(cases_show_page.case_history).to have_content "Rejected case created"
     expect(cases_show_page.case_status).to have_content "Rejected"
   end
 
