@@ -7,9 +7,11 @@ class RequestPersonalInformationService
   end
 
   def build
-    rpi.submission_id = @data[:submissionId]
+    rpi.submission_id = submission_id
     build_who
     build_where
+    generate_files
+
     rpi
   end
 
@@ -121,9 +123,59 @@ private
     rpi.other_where = other_where
   end
 
+  def generate_files
+    zip_attachments
+    zip_pdf
+    upload
+  end
+
+  def zip_attachments
+    Zip::File.open(zipname, create: true) do |zip|
+      @data[:attachments].each do |attachment|
+        zip.get_output_stream(attachment[:filename]) do |output_entry_stream|
+          decrypted_file_data = decrpyt_file(attachment[:encryption_key], attachment[:encryption_iv], attachment[:url])
+          output_entry_stream.write(decrypted_file_data)
+        end
+      end
+    end
+  end
+
+  def zip_pdf
+    md = rpi.markdown
+    Prawn::Document.generate("#{submission_id}.pdf") { markdown(md) }
+    Zip::File.open(zipname) do |zip|
+      zip.add("#{submission_id}.pdf")
+    end
+  end
+
+  def upload
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object("rpi/#{submission_id}")
+    File.open(zipname) do |f|
+      uploads_object.upload_file(f)
+      File.delete(f)
+      File.delete("#{submission_id}.pdf")
+    end
+  end
+
+  def decrpyt_file(encryption_key, encryption_iv, url)
+    Cryptography.new(
+      encryption_key: Base64.strict_decode64(encryption_key),
+      encryption_iv: Base64.strict_decode64(encryption_iv),
+    ).decrypt(file: File.open(url))
+  end
+
+  def submission_id
+    @data[:submissionId]
+  end
+
   def answers
     @data[:submissionAnswers]
   end
+
+  def zipname
+    "#{submission_id}.zip"
+  end
+
 
   def requesting_own_data
     answers[:"requesting-own-data_radios_1"]

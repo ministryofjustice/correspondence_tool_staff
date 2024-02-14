@@ -1,6 +1,6 @@
 module Api
   class RpiController < ApiController
-    before_action :authenticate_request, except: :index
+    before_action :authenticate_request, only: :create
 
     class << self
       attr_accessor :json
