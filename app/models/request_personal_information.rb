@@ -99,7 +99,7 @@ class RequestPersonalInformation
 private
 
   def generate_pdf
-    raw_template = File.read("app/views/request_personal_information/submission.md.erb")
+    raw_template = File.read("app/views/request_personal_information/submission.txt.erb")
     erb_template = ERB.new(raw_template)
     output = erb_template.result(binding)
     Prawn::Document.generate("#{submission_id}.pdf") { markdown(output) }
