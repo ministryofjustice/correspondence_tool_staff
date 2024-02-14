@@ -52,8 +52,8 @@ class TestAWSS3
       @bucket.delete(@key)
     end
 
-    def upload_file(file)
-      @bucket.object(file)
+    def upload_file(_)
+      nil
     end
 
     def presigned_url(*)
