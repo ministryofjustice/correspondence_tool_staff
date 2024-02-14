@@ -57,12 +57,6 @@ describe Case::SAR::OffenderDecorator do
         ).decorate
       end
 
-      context "#rejected_reasons_descriptions" do
-        it "displays rejected reasons descriptions for selected" do
-          expect(offender_sar_case.rejected_reasons).to eq "Further information"
-        end
-      end
-
       it "returns each subsequent step as a partial filename" do
         expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
         offender_sar_case.next_step
@@ -78,6 +72,18 @@ describe Case::SAR::OffenderDecorator do
         offender_sar_case.next_step
         expect(offender_sar_case.get_step_partial).to eq "date_received_step"
       end
+    end
+  end
+
+  describe "#rejected_reasons_descriptions" do
+    let(:offender_sar_case) do
+      build_stubbed(
+        :offender_sar_case, :rejected
+      ).decorate
+    end
+
+    it "returns the REJECTED_REASONS hash value" do
+      expect(offender_sar_case.rejected_reasons_descriptions).to eq "Further identification"
     end
   end
 
