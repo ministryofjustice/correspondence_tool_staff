@@ -92,7 +92,7 @@ class RequestPersonalInformation
       generate_pdf
       upload
 
-      CASE_UPLOADS_S3_BUCKET.object(key).presigned_url(:get, expires_in: 1.week)
+      CASE_UPLOADS_S3_BUCKET.object(key).presigned_url(:get, expires_in: 1.week.to_i)
     end
   end
 
