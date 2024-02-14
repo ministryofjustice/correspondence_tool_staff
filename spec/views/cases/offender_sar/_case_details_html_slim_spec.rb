@@ -64,7 +64,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
     end
 
     it "displays rejected details if present" do
-      rejected_case = (create :offender_sar_case, :rejected)
+      rejected_case = (create :offender_sar_case, :rejected).decorate
       assign(:case, rejected_case)
       render partial: "cases/offender_sar/case_details", locals: {
         case_details: rejected_case,
@@ -72,7 +72,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
         allow_editing: true,
       }
 
-      partial = offender_sar_case_details_section(rendered)
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
       expect(partial.rejected_reason.data.text).to eq "Further identification"
     end
 
