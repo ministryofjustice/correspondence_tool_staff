@@ -6,6 +6,28 @@ describe Admin::DashboardController do
   let!(:search_query) { create :search_query }
   let!(:list_query)   { create :list_query }
 
+  describe "#feedback" do
+    before do
+      sign_in admin
+      get :feedback
+    end
+
+    it "renders the index view" do
+      expect(request.path).to eq("/admin/dashboard/feedback")
+    end
+  end
+
+  describe "#feedback_year" do
+    before do
+      sign_in admin
+      get :feedback_year, params: { year: 2023 }
+    end
+
+    it "renders the show view" do
+      expect(request.path).to eq("/admin/dashboard/feedback/2023")
+    end
+  end
+
   describe "#list_queries" do
     before do
       sign_in admin
