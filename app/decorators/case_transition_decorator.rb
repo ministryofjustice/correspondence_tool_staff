@@ -36,7 +36,7 @@ private
   end
 
   def rejected_case_creation_event
-    # The case history will change from "rejected case created" to "case created"
+    # This method prevents the case history changing from "rejected case created" to "case created"
     # when a Case state is changed from "rejected" to another state
     if object.event == "create" && object.case.has_attribute?(:case_originally_rejected) == true
       I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")
