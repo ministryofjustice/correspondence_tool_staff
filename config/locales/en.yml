@@ -1259,6 +1259,11 @@ en:
         heading: Choose correspondence type
         sub_heading: Admin
 
+    feedback:
+      index:
+        feedback_per_year: Feedback per year
+        year: Year
+        number: Count
     users:
       index:
         cases: Cases
