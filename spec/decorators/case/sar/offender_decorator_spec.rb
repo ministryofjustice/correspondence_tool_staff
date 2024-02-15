@@ -83,7 +83,7 @@ describe Case::SAR::OffenderDecorator do
     end
 
     it "returns the REJECTED_REASONS hash value" do
-      expect(offender_sar_case.rejected_reasons_descriptions).to eq "Further identification"
+      expect(offender_sar_case.rejected_reasons_descriptions).to eq "Further identification<br>Court data request"
     end
   end
 
