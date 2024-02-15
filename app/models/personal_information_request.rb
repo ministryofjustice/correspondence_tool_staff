@@ -101,7 +101,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def attachment_url
-    rpi_file_download_path(submission_id)
+    rpi_file_download_url(submission_id)
   end
 
   def to_markdown
