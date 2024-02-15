@@ -317,7 +317,7 @@ Rails.application.routes.draw do
     get "rpi" => "rpi#index"
   end
 
-  get "rpi/:id" => "rpi#download", as: :rpi_file
+  get "rpi/:id" => "rpi#download", as: :rpi_file_download
 
   get "ping", to: "heartbeat#ping", format: :json
   get "healthcheck", to: "heartbeat#healthcheck", as: "healthcheck", format: :json

@@ -12,7 +12,7 @@ module Api
 
     def create
       self.class.json = @decrypted_body
-      request = PersonalInformationRequest.new(@decrypted_body).request
+      request = PersonalInformationRequest.build(@decrypted_body)
       request.save!
       ActionNotificationsMailer.rpi_email(request).deliver_now
       head :ok

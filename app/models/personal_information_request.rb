@@ -1,4 +1,6 @@
 class PersonalInformationRequest < ApplicationRecord
+  include Rails.application.routes.url_helpers
+
   OWN_DATA = "your own".freeze
   LEGAL_REPRESENTATIVE = "legal representative".freeze
   YES = "yes".freeze
@@ -99,7 +101,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def attachment_url
-    rpi_file_path(submission_id)
+    rpi_file_download_path(submission_id)
   end
 
   def to_markdown
