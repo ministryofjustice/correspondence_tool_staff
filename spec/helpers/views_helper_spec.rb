@@ -14,7 +14,7 @@ describe ViewsHelper, type: :helper do
     it "returns text for rejected case type heading" do
       test_case = build(:offender_sar_case, :rejected)
       page_title = get_heading(test_case, test_correspondence_type, key_path)
-      expect(page_title).to eq("Create Rejected Offender SAR case")
+      expect(page_title).to eq("Create rejected Offender SAR case")
     end
 
     it "returns text for sub_heading" do
