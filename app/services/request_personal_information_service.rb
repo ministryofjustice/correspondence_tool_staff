@@ -176,7 +176,6 @@ private
     "#{submission_id}.zip"
   end
 
-
   def requesting_own_data
     answers[:"requesting-own-data_radios_1"]
     # Someone else's
