@@ -14,13 +14,13 @@ RSpec.describe RpiController, type: :controller do
                                      .and_return(object)
   end
 
-  describe "GET #show" do
+  describe "GET #download" do
     before do
       sign_in user
     end
 
     it "redirects to the zipfile's url" do
-      get :show, params: { id: submission_id }
+      get :download, params: { id: submission_id }
       expect(response).to redirect_to presigned_url
     end
   end
