@@ -1,4 +1,7 @@
 tr.rejected-reasons
   th = t('common.case.rejected_reason')
-  td = raw case_details.rejected_reasons_descriptions
+  - if case_details.other_rejected_reason.empty?
+    td = raw case_details.rejected_reasons_descriptions
+  - else
+    td = raw case_details.rejected_reasons_descriptions + ": " + case_details.other_rejected_reason
   td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "reason_rejected")
