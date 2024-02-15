@@ -11,7 +11,9 @@ Rails.configuration.action_mailer.default_url_options = {
   host: Settings.cts_email_url,
 }
 
-Rails.application.routes.default_url_options[:host] = config.action_mailer.default_url_options[:host]
+Rails.application.routes.default_url_options = {
+  host: Settings.cts_email_url,
+}
 
 Rails.configuration.time_zone = "London"
 
