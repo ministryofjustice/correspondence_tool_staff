@@ -1,6 +1,6 @@
 tr.rejected-reasons
   th = t('common.case.rejected_reason')
-  - if case_details.other_rejected_reason.empty?
+  - if case_details.other_rejected_reason.blank?
     td = raw case_details.rejected_reasons_descriptions
   - else
     td = raw case_details.rejected_reasons_descriptions + ": " + case_details.other_rejected_reason
