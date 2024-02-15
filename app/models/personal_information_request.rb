@@ -1,12 +1,9 @@
-class RequestPersonalInformation
-  include ActiveModel::API
-
+class PersonalInformationRequest < ApplicationRecord
   OWN_DATA = "your own".freeze
   LEGAL_REPRESENTATIVE = "legal representative".freeze
   YES = "yes".freeze
 
-  attr_accessor :submission_id,
-                :requesting_own_data,
+  attr_accessor :requesting_own_data,
                 :subject_full_name,
                 :subject_other_name,
                 :subject_dob,
@@ -51,12 +48,18 @@ class RequestPersonalInformation
                 :needed_for_court,
                 :needed_for_court_information
 
+  default_scope { where(deleted: false) }
+
   def self.build(payload)
     data = RequestPersonalInformation::Data.new(payload)
-    rpi = RequestPersonalInformation.new
+    rpi = PersonalInformationRequest.new
     RequestPersonalInformation::RequestBuilder.new(rpi).build(data)
     RequestPersonalInformation::FileBuilder.new(rpi).build(data)
     rpi
+  end
+
+  def temporary_url
+    CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
   end
 
   def requesting_own_data?
@@ -103,5 +106,9 @@ class RequestPersonalInformation
     raw_template = File.read("app/views/request_personal_information/submission.txt.erb")
     erb_template = ERB.new(raw_template)
     erb_template.result(binding)
+  end
+
+  def key
+    "rpi/#{submission_id}"
   end
 end

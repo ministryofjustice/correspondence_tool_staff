@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe RequestPersonalInformation do
+describe PersonalInformationRequest do
   let(:valid_data) do
     {
       "serviceSlug": "request-personal-information-migrate",
@@ -45,6 +45,15 @@ describe RequestPersonalInformation do
       },
       "attachments": [],
     }
+  end
+
+  describe "default scope" do
+    it "does not return requests whose files have been deleted" do
+      request = create(:personal_information_request)
+      create(:personal_information_request, deleted: true)
+
+      expect(described_class.all).to eq [request]
+    end
   end
 
   describe ".build" do

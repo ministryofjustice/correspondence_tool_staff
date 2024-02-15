@@ -513,8 +513,31 @@
         470
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "fd19f9ca2d1f1128432f5972fa7b87485d9ec00614fad14d425a435154a3a4dc",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/rpi_controller.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(PersonalInformationRequest.find_by!(:submission_id => params[:id]).temporary_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "RpiController",
+        "method": "download"
+      },
+      "user_input": "PersonalInformationRequest.find_by!(:submission_id => params[:id]).temporary_url",
+      "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
     }
   ],
-  "updated": "2023-08-25 09:53:48 +0100",
+  "updated": "2024-02-15 12:23:00 +0000",
   "brakeman_version": "5.4.1"
 }
