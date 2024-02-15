@@ -28,7 +28,7 @@ private
     md = rpi.to_markdown
     Prawn::Document.generate(pdf_filename) { markdown(md) }
     Zip::File.open(zip_filename) do |zip|
-      zip.add(pdf_filename, "/")
+      zip.add(pdf_filename, pdf_filename)
     end
     File.delete(pdf_filename)
   end
