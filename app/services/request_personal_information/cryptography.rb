@@ -1,4 +1,4 @@
-class Cryptography
+class RequestPersonalInformation::Cryptography
   def initialize(encryption_key:, encryption_iv:)
     @encryption_key = encryption_key
     @encryption_iv = encryption_iv

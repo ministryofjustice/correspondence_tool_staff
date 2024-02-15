@@ -51,6 +51,14 @@ class RequestPersonalInformation
                 :needed_for_court,
                 :needed_for_court_information
 
+  def self.build(payload)
+    data = RequestPersonalInformation::Data.new(payload)
+    rpi = RequestPersonalInformation.new
+    RequestPersonalInformation::RequestBuilder.new(rpi).build(data)
+    RequestPersonalInformation::FileBuilder.new(rpi).build(data)
+    rpi
+  end
+
   def requesting_own_data?
     requesting_own_data.downcase == OWN_DATA
   end
@@ -91,7 +99,7 @@ class RequestPersonalInformation
     rpi_file_path(submission_id)
   end
 
-  def markdown
+  def to_markdown
     raw_template = File.read("app/views/request_personal_information/submission.txt.erb")
     erb_template = ERB.new(raw_template)
     erb_template.result(binding)

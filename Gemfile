@@ -30,6 +30,7 @@ gem "govuk_frontend_toolkit", ">= 9.0.0"
 gem "govuk_notify_rails"
 gem "govuk_template", "~> 0.26.0"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem "httparty"
 gem "humanize_boolean"
 gem "jbuilder", "~> 2.11"
 gem "jquery-rails", "~> 4.5"

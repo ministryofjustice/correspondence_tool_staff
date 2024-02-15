@@ -256,6 +256,9 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     humanize_boolean (0.0.2)
       i18n
     i18n (1.14.1)
@@ -658,6 +661,7 @@ DEPENDENCIES
   govuk_frontend_toolkit (>= 9.0.0)
   govuk_notify_rails
   govuk_template (~> 0.26.0)
+  httparty
   humanize_boolean
   i18n-tasks (~> 1.0.12)
   jbuilder (~> 2.11)

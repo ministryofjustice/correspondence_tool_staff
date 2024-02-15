@@ -158,6 +158,13 @@ RSpec.describe Api::RpiController, type: :controller do
     }.to_json
   end
 
+  let(:service) { instance_double(RequestPersonalInformationService, rpi:) }
+  let(:rpi) { instance_double(RequestPersonalInformation, attachment_url: nil) }
+
+  before do
+    allow(RequestPersonalInformationService).to receive(:new).and_return(service)
+  end
+
   describe "authenticates the request" do
     context "with no body" do
       it "responds with 401" do
@@ -183,7 +190,7 @@ RSpec.describe Api::RpiController, type: :controller do
 
   describe "#create" do
     it "attempts to send an email" do
-      expect(ActionNotificationsMailer).to receive(:rpi_email).with(RequestPersonalInformation).and_call_original
+      expect(ActionNotificationsMailer).to receive(:rpi_email).with(rpi).and_call_original
       post(:create, body: encrypted_json)
     end
   end
