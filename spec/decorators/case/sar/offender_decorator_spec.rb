@@ -85,6 +85,18 @@ describe Case::SAR::OffenderDecorator do
     it "returns the REJECTED_REASONS hash value" do
       expect(offender_sar_case.rejected_reasons_descriptions).to eq "Further identification<br>Court data request"
     end
+
+    context "when other_rejected_reason has a value" do
+      let(:offender_sar_case) do
+        build_stubbed(
+          :offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "Other reason"
+        ).decorate
+      end
+
+      it "returns the REJECTED_REASONS hash value" do
+        expect(offender_sar_case.rejected_reasons_descriptions).to eq "Other<br>Other reason"
+      end
+    end
   end
 
   describe "#time_taken" do
