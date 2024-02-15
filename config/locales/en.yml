@@ -48,6 +48,7 @@ en:
       report:
         correspondence_type: Case type
       case/sar/offender:
+        information_received: ""
         number_final_pages: Number of pages
         third_party : "Information requested on someone else's behalf"
         third_party_address: Address
@@ -81,6 +82,8 @@ en:
               too_far_past_received: 'cannot be more than a year past the date received'
               before_received: "cannot be before date received"
               before_internal: "cannot be before draft deadline"
+            information_received:
+              blank: Select if you have received the requested information
             internal_deadline:
               after_external: "cannot be after final deadline"
               before_received: "cannot be before date received"
@@ -292,8 +295,6 @@ en:
               invalid: enter an email address in the correct format, like name@example.com
             is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
-            information_received:
-              blank: Select if you have received the requested information
             subject_full_name:
               blank: cannot be blank
             subject_address:
