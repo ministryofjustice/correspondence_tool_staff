@@ -113,8 +113,6 @@ Rails.application.configure do
 
   config.action_mailer.asset_host = config.action_mailer.default_url_options[:host]
 
-  routes.default_url_options[:host] = "localhost:3000"
-
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
