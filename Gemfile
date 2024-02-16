@@ -10,6 +10,7 @@ gem "aasm", "~> 5.2"
 gem "caxlsx"
 gem "caxlsx_rails"
 gem "rubyzip", ">= 1.2.4"
+
 gem "awesome_print"
 gem "aws-sdk-s3"
 # AXLSX styler - easy styling of cells based on cell references
