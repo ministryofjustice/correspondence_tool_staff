@@ -10,9 +10,9 @@ gem "aasm", "~> 5.2"
 gem "caxlsx"
 gem "caxlsx_rails"
 gem "rubyzip", ">= 1.2.4"
-# AXLSX styler - easy styling of cells based on cell references
 gem "awesome_print"
 gem "aws-sdk-s3"
+# AXLSX styler - easy styling of cells based on cell references
 gem "axlsx_styler"
 gem "bank_holiday", git: "https://github.com/ministryofjustice/bank_holiday.git", branch: "bundler-fix"
 gem "business_time"
@@ -29,9 +29,9 @@ gem "govuk_elements_rails",   ">= 3.1.2"
 gem "govuk_frontend_toolkit", ">= 9.0.0"
 gem "govuk_notify_rails"
 gem "govuk_template", "~> 0.26.0"
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "httparty"
 gem "humanize_boolean"
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.11"
 gem "jquery-rails", "~> 4.5"
 gem "jquery-ui-rails"
