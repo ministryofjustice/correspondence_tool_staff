@@ -445,6 +445,22 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
+  describe "#information_received" do
+    let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
+    let(:params) { { id: offender_sar_case.id } }
+
+    before do
+      sign_in responder
+    end
+
+    context "with valid params" do
+      it "redirects to reason-rejected edit step" do
+        get(:information_received, params:)
+        expect(response).to render_template(:information_received)
+      end
+    end
+  end
+
   # Utility methods
 
   def third_party_validations_found(errors)
