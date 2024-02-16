@@ -1360,7 +1360,6 @@ en:
         number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
         sub_heading: Edit Offender SAR case
-        rejected_sub_heading: Edit rejected Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
       sar_internal_review:
