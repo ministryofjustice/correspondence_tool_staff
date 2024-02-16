@@ -105,3 +105,6 @@
                 unmark_as_further_actions_required:
                 annotate_retention_changes:
                 annotate_system_retention_changes:
+              rejected:
+                edit_case:
+                information_received:

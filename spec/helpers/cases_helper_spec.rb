@@ -230,6 +230,13 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           )
       end
     end
+
+    context "when event == :information_received" do
+      it "generates HTML that links to the information received page" do
+        @case = create(:offender_sar_case, :rejected)
+        expect(action_button_for(:information_received)).to eq("<a id=\"action--information-received\" class=\"button\" href=\"\">Information received</a>")
+      end
+    end
   end
 
   describe "#case_uploaded_request_files_class" do
