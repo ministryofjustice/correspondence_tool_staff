@@ -34,7 +34,7 @@ private
   end
 
   def upload
-    uploads_object = CASE_UPLOADS_S3_BUCKET.object("rpi/#{@data.submission_id}")
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object("rpi/#{zip_filename}")
     File.open(zip_filename) do |f|
       uploads_object.upload_file(f)
       File.delete(f)
