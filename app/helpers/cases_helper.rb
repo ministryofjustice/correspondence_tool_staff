@@ -238,7 +238,7 @@ module CasesHelper
               class: "button-secondary"
     when :information_received
       link_to "Information received",
-              "",
+              information_received_case_sar_offender_path(@case),
               id: "action--information-received",
               class: "button"
     end
