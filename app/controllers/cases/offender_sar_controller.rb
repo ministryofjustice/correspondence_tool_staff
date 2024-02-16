@@ -214,14 +214,12 @@ module Cases
 
     def confirm_information_received
       information_received = params[:offender_sar].try(:[], :information_received)
-      return unless information_received.nil?
+      return if information_received.present?
 
-      if information_received.nil?
-        @case.errors.add(
-          :information_received,
-          I18n.t("activerecord.errors.models.case.attributes.information_received.blank"),
-        )
-      end
+      @case.errors.add(
+        :information_received,
+        I18n.t("activerecord.errors.models.case.attributes.information_received.blank"),
+      )
       render :information_received and return
     end
 
