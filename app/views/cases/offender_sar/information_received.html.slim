@@ -1,6 +1,8 @@
 - content_for :page_title do
   = t('page_title.information_received', case_number: @case.number)
 
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
 - content_for :heading, flush: true
   = t('cases.offender_sar.information_received_heading')
 
