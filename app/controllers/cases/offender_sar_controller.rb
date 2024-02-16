@@ -213,9 +213,8 @@ module Cases
     end
 
     def confirm_information_received
-      # NoMethodError is raised if calling :information_received
-      # as its default value is nil
       information_received = params[:offender_sar].try(:[], :information_received)
+      return unless information_received.nil?
 
       if information_received.nil?
         @case.errors.add(
