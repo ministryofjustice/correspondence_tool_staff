@@ -475,5 +475,12 @@ private
       self.recipient = "requester_recipient"
     end
   end
+
+  def set_number
+    self.number = if current_state == "rejected"
+                    "R#{next_number}"
+                  else
+                    next_number
+                  end
+  end
 end
-# rubocop:enable Metrics/ClassLength
