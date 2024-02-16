@@ -464,7 +464,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe "#confirm_information_received" do
     context "with invalid params" do
       let(:manager) { find_or_create :branston_user }
-      let(:offender_sar_case) { create :offender_sar_case, :rejected}
+      let(:offender_sar_case) { create :offender_sar_case, :rejected }
       let(:params) do
         {
           id: offender_sar_case.id,
