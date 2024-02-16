@@ -18,8 +18,8 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def rejected_reasons_descriptions
-    rejected_reasons.map do |reason| # rubocop:disable Style/BlockDelimiters
+    rejected_reasons.map { |reason|
       Case::SAR::Offender::REJECTED_REASONS[reason]
-    end.append(other_rejected_reason).compact.join("<br>") # rubocop:disable Style/MethodCalledOnDoEndBlock
+    }.append(other_rejected_reason).compact.join("<br>")
   end
 end
