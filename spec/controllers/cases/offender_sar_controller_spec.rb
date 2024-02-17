@@ -445,6 +445,47 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
+  describe "#information_received" do
+    let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
+    let(:params) { { id: offender_sar_case.id } }
+
+    before do
+      sign_in responder
+    end
+
+    context "with valid params" do
+      it "redirects to reason-rejected edit step" do
+        get(:information_received, params:)
+        expect(response).to render_template(:information_received)
+      end
+    end
+  end
+
+  describe "#confirm_information_received" do
+    context "with invalid params" do
+      let(:manager) { find_or_create :branston_user }
+      let(:offender_sar_case) { create :offender_sar_case, :rejected }
+      let(:params) do
+        {
+          id: offender_sar_case.id,
+          offender_sar: {
+            information_received: nil,
+          },
+        }
+      end
+      let(:errors) { assigns(:case).errors }
+
+      before do
+        sign_in manager
+      end
+
+      it "fails to be valid" do
+        patch(:confirm_information_received, params:)
+        expect(errors[:information_received]).to eq ["Select if you have received the requested information"]
+      end
+    end
+  end
+
   # Utility methods
 
   def third_party_validations_found(errors)

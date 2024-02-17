@@ -48,6 +48,7 @@ en:
       report:
         correspondence_type: Case type
       case/sar/offender:
+        information_received: ""
         number_final_pages: Number of pages
         third_party : "Information requested on someone else's behalf"
         third_party_address: Address
@@ -81,6 +82,8 @@ en:
               too_far_past_received: 'cannot be more than a year past the date received'
               before_received: "cannot be before date received"
               before_internal: "cannot be before draft deadline"
+            information_received:
+              blank: Select if you have received the requested information
             internal_deadline:
               after_external: "cannot be after final deadline"
               before_received: "cannot be before date received"
@@ -553,6 +556,7 @@ en:
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?
+        information_received: Have you received the requested information?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
@@ -1525,12 +1529,17 @@ en:
       reason_rejected_heading: Reason offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
+      information_received_heading: Can the Subject Access Request be accepted?
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
       partial_case_letter_sent_dated_heading: Date letter sent from SSCL
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
       sent_to_sscl_heading: "Data sent to SSCL"
+      information_received:
+        case/sar/offender:
+          offender_sar:
+            rejected: Edit rejected Offender SAR case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

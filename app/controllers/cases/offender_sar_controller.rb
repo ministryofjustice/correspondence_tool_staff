@@ -16,6 +16,8 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
+      information_received
+      confirm_information_received
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -208,6 +210,17 @@ module Cases
         flash[:alert] = "No changes were made"
       end
       redirect_to case_path(@case) and return
+    end
+
+    def confirm_information_received
+      information_received = params[:offender_sar].try(:[], :information_received)
+      return if information_received.present?
+
+      @case.errors.add(
+        :information_received,
+        I18n.t("activerecord.errors.models.case.attributes.information_received.blank"),
+      )
+      render :information_received and return
     end
 
   private
