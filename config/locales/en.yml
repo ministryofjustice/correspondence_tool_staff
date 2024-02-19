@@ -387,12 +387,6 @@ en:
     attributes:
       probation_commissioning_document_email:
         email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
-      request_personal_information:
-        requesting_own_data: Are you requesting your own information or on behalf of someone else?
-        subject_full_name: Full name
-        subject_other_name: Any other names subject may be stored under?
-        subject_dob: Date of birth
-        subject_relationship: What is your relationship to them?
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
