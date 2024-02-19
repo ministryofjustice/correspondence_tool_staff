@@ -479,6 +479,22 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         sign_in manager
       end
 
+      context "when user selects no" do
+        let(:params) do
+          {
+            id: offender_sar_case.id,
+            offender_sar: {
+              information_received: "no",
+            },
+          }
+        end
+
+        it "renders the reason-rejected edit step" do
+          patch(:confirm_information_received, params:)
+          expect(response).to redirect_to edit_step_case_sar_offender_path(offender_sar_case, "reason_rejected")
+        end
+      end
+
       it "fails to be valid" do
         patch(:confirm_information_received, params:)
         expect(errors[:information_received]).to eq ["Select if you have received the requested information"]
