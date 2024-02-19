@@ -444,4 +444,8 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
   end
+
+  describe "rpi_email" do
+    let(:rpi) { create :personal_information_request }
+  end
 end

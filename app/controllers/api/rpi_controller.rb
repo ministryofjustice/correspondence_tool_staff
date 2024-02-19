@@ -2,19 +2,10 @@ module Api
   class RpiController < ApiController
     before_action :authenticate_request, only: :create
 
-    class << self
-      attr_accessor :json
-     end
-
-    def index
-      render json: self.class.try(:json) || "no data"
-    end
-
     def create
-      self.class.json = @decrypted_body
       request = PersonalInformationRequest.build(@decrypted_body)
       request.save!
-      ActionNotificationsMailer.rpi_email(request).deliver_now
+      ActionNotificationsMailer.rpi_email(request).deliver_later
       head :ok
     end
 

@@ -63,16 +63,26 @@ describe PersonalInformationRequest do
     end
   end
 
-  describe "#temporary_url" do
-    it "retuns s3 url" do
-      rpi = build(:personal_information_request)
-      s3_url = "url/to/file"
-      s3_object = instance_double(Aws::S3::Object)
-      allow(s3_object).to receive(:presigned_url).and_return(s3_url)
-      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
-                                        .with("rpi/#{rpi.submission_id}")
-                                        .and_return(s3_object)
-      expect(rpi.temporary_url).to eq s3_url
+  describe "#targets" do
+    context "when only branston data" do
+      it "returns only branston" do
+        rpi = build(:personal_information_request, prison_service_data: "Yes")
+        expect(rpi.targets).to eq [:branston]
+      end
+    end
+
+    context "when only london disclosure data" do
+      it "returns only branston" do
+        rpi = build(:personal_information_request, laa_data: "Yes")
+        expect(rpi.targets).to eq [:disclosure]
+      end
+    end
+
+    context "when both branston and london disclosure data" do
+      it "returns branston and disclosure" do
+        rpi = build(:personal_information_request, prison_service_data: "Yes", laa_data: "Yes")
+        expect(rpi.targets).to eq %i[branston disclosure]
+      end
     end
   end
 
@@ -235,42 +245,78 @@ describe PersonalInformationRequest do
   end
 
   describe "#attachment_url" do
-    it "returns URL of PDF" do
+    context "with branston target" do
+      it "returns URL of PDF" do
+        rpi = build(:personal_information_request)
+        expect(rpi.attachment_url(:branston)).to eq "http://localhost/rpi/branston/#{rpi.submission_id}"
+      end
+    end
+
+    context "with disclosure target" do
+      it "returns URL of PDF" do
+        rpi = build(:personal_information_request)
+        expect(rpi.attachment_url(:dislosure)).to eq "http://localhost/rpi/dislosure/#{rpi.submission_id}"
+      end
+    end
+  end
+
+  describe "#temporary_url" do
+    it "retuns s3 url" do
       rpi = build(:personal_information_request)
-      expect(rpi.attachment_url).to eq "http://localhost/rpi/#{rpi.submission_id}"
+      target = :branston
+      s3_url = "url/to/file"
+      s3_object = instance_double(Aws::S3::Object)
+      allow(s3_object).to receive(:presigned_url).and_return(s3_url)
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                       .with(rpi.key(target))
+                                       .and_return(s3_object)
+      expect(rpi.temporary_url(target)).to eq s3_url
     end
   end
 
   describe "#to_markdown" do
+    context "with invalid target" do
+      it "raises error" do
+        rpi = build(:personal_information_request)
+        expect { rpi.to_markdown("invalid") }.to raise_exception(ArgumentError)
+      end
+    end
+
     context "with subject information" do
       it "returns who is requesting information" do
         rpi = build(:personal_information_request, requesting_own_data: "Your own")
-        expect(rpi.to_markdown).to include("Your own")
+        expect(rpi.to_markdown(:branston)).to include("Your own")
+        expect(rpi.to_markdown(:disclosure)).to include("Your own")
       end
 
       it "returns subject's name" do
         rpi = build(:personal_information_request, subject_full_name: "name of subject")
-        expect(rpi.to_markdown).to include("name of subject")
+        expect(rpi.to_markdown(:branston)).to include("name of subject")
+        expect(rpi.to_markdown(:disclosure)).to include("name of subject")
       end
 
       it "returns subject's other names" do
         rpi = build(:personal_information_request, subject_other_name: "other name of subject")
-        expect(rpi.to_markdown).to include("other name of subject")
+        expect(rpi.to_markdown(:branston)).to include("other name of subject")
+        expect(rpi.to_markdown(:disclosure)).to include("other name of subject")
       end
 
       it "returns subject's date of birth" do
         rpi = build(:personal_information_request, subject_dob: "1990-01-01")
-        expect(rpi.to_markdown).to include("1990-01-01")
+        expect(rpi.to_markdown(:branston)).to include("1990-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("1990-01-01")
       end
 
       it "returns subject's photo ID filename" do
         rpi = build(:personal_information_request, subject_photo_id_file_name: "idfile.png")
-        expect(rpi.to_markdown).to include("idfile.png")
+        expect(rpi.to_markdown(:branston)).to include("idfile.png")
+        expect(rpi.to_markdown(:disclosure)).to include("idfile.png")
       end
 
       it "returns subject's proof of address filename" do
         rpi = build(:personal_information_request, subject_proof_of_address_file_name: "address.png")
-        expect(rpi.to_markdown).to include("address.png")
+        expect(rpi.to_markdown(:branston)).to include("address.png")
+        expect(rpi.to_markdown(:disclosure)).to include("address.png")
       end
     end
 
@@ -278,218 +324,248 @@ describe PersonalInformationRequest do
       context "with legal representative" do
         it "returns relationship of requestor to subject" do
           rpi = build(:personal_information_request, :request_as_legal_representative)
-          expect(rpi.to_markdown).to include("Legal representative")
+          expect(rpi.to_markdown(:branston)).to include("Legal representative")
+          expect(rpi.to_markdown(:disclosure)).to include("Legal representative")
         end
 
         it "returns requestor organization name" do
           rpi = build(:personal_information_request, :request_as_legal_representative, requester_organisation_name: "name of org")
-          expect(rpi.to_markdown).to include("name of org")
+          expect(rpi.to_markdown(:branston)).to include("name of org")
+          expect(rpi.to_markdown(:disclosure)).to include("name of org")
         end
 
         it "returns legal consent filename" do
           rpi = build(:personal_information_request, :request_as_legal_representative, letter_of_consent_file_name: "consent.png")
-          expect(rpi.to_markdown).to include("consent.png")
+          expect(rpi.to_markdown(:branston)).to include("consent.png")
+          expect(rpi.to_markdown(:disclosure)).to include("consent.png")
         end
       end
 
       context "with friend or relative" do
         it "returns requestor photo ID filename" do
           rpi = build(:personal_information_request, :request_as_friend, requestor_photo_id_file_name: "requestor_photo.png")
-          expect(rpi.to_markdown).to include("requestor_photo.png")
+          expect(rpi.to_markdown(:branston)).to include("requestor_photo.png")
+          expect(rpi.to_markdown(:disclosure)).to include("requestor_photo.png")
         end
 
         it "returns requestor proof of adddress filename" do
           rpi = build(:personal_information_request, :request_as_friend, requestor_proof_of_address_file_name: "requestor_address.png")
-          expect(rpi.to_markdown).to include("requestor_address.png")
+          expect(rpi.to_markdown(:branston)).to include("requestor_address.png")
+          expect(rpi.to_markdown(:disclosure)).to include("requestor_address.png")
         end
       end
     end
 
     context "with prison service data" do
+      it "doesn't return prison service data for disclosure target" do
+        rpi = build(:personal_information_request, :with_prison_service_data)
+        expect(rpi.to_markdown(:disclosure)).not_to include("**Do you want personal information held by the Prison Service?**")
+      end
+
       it "returns whether prison service data is required" do
         rpi = build(:personal_information_request, :with_prison_service_data)
-        expect(rpi.to_markdown).to include("**Do you want personal information held by the Prison Service?**\nYes")
+        expect(rpi.to_markdown(:branston)).to include("**Do you want personal information held by the Prison Service?**\nYes")
       end
 
       context "when requesting own data" do
         it "returns prison number" do
           rpi = build(:personal_information_request, :with_prison_service_data, subject_prison_number: "12345")
-          expect(rpi.to_markdown).to include("**What was your prison number?**\n12345")
+          expect(rpi.to_markdown(:branston)).to include("**What was your prison number?**\n12345")
         end
 
         it "returns recent prison" do
           rpi = build(:personal_information_request, :with_prison_service_data, previous_prison: "name of prison")
-          expect(rpi.to_markdown).to include("**Which prison were you most recently in?**\nname of prison")
+          expect(rpi.to_markdown(:branston)).to include("**Which prison were you most recently in?**\nname of prison")
         end
       end
 
       context "when requesting other's data" do
         it "returns whether subject is currently in prison" do
           rpi = build(:personal_information_request, :request_as_friend, :with_prison_service_data, currently_in_prison: "Yes")
-          expect(rpi.to_markdown).to include("**Is the subject currently in prison?**\nYes")
+          expect(rpi.to_markdown(:branston)).to include("**Is the subject currently in prison?**\nYes")
         end
 
         context "when currently in prison" do
           it "returns current prison" do
             rpi = build(:personal_information_request, :request_as_friend, :with_prison_service_data, currently_in_prison: "Yes", current_prison: "their current prison")
-            expect(rpi.to_markdown).to include("their current prison")
+            expect(rpi.to_markdown(:branston)).to include("their current prison")
           end
 
           it "returns prison number" do
             rpi = build(:personal_information_request, :request_as_friend, :with_prison_service_data, currently_in_prison: "Yes", subject_prison_number: "12345")
-            expect(rpi.to_markdown).to include("**What is their prison number?**\n12345")
+            expect(rpi.to_markdown(:branston)).to include("**What is their prison number?**\n12345")
           end
         end
 
         context "when not currently in prison" do
           it "returns previous prison" do
             rpi = build(:personal_information_request, :request_as_friend, :with_prison_service_data, currently_in_prison: "No", previous_prison: "their previous prison")
-            expect(rpi.to_markdown).to include("their previous prison")
+            expect(rpi.to_markdown(:branston)).to include("their previous prison")
           end
 
           it "returns prison number" do
             rpi = build(:personal_information_request, :request_as_friend, :with_prison_service_data, currently_in_prison: "No", subject_prison_number: "12345")
-            expect(rpi.to_markdown).to include("**What was their prison number?**\n12345")
+            expect(rpi.to_markdown(:branston)).to include("**What was their prison number?**\n12345")
           end
         end
       end
 
       it "returns which information is required" do
         rpi = build(:personal_information_request, :with_prison_service_data, prison_information: "details of prison info required")
-        expect(rpi.to_markdown).to include("details of prison info required")
+        expect(rpi.to_markdown(:branston)).to include("details of prison info required")
       end
 
       it "returns which other information is required" do
         rpi = build(:personal_information_request, :with_prison_service_data, prison_information_other: "details of other prison info required")
-        expect(rpi.to_markdown).to include("details of other prison info required")
+        expect(rpi.to_markdown(:branston)).to include("details of other prison info required")
       end
 
       it "returns date from information is required" do
         rpi = build(:personal_information_request, :with_prison_service_data, prison_data_from: "2000-01-01")
-        expect(rpi.to_markdown).to include("2000-01-01")
+        expect(rpi.to_markdown(:branston)).to include("2000-01-01")
       end
 
       it "returns date to information is required" do
         rpi = build(:personal_information_request, :with_prison_service_data, prison_data_to: "2003-01-01")
-        expect(rpi.to_markdown).to include("2003-01-01")
+        expect(rpi.to_markdown(:branston)).to include("2003-01-01")
       end
     end
 
     context "with probation service data" do
+      it "doesn't return prison service data for disclosure target" do
+        rpi = build(:personal_information_request, :with_probation_service_data)
+        expect(rpi.to_markdown(:disclosure)).not_to include("**Do you want personal information held by the Probation Service?**")
+      end
+
       it "returns whether probation service data is required" do
         rpi = build(:personal_information_request, :with_probation_service_data)
-        expect(rpi.to_markdown).to include("**Do you want personal information held by the Probation Service?**\nYes")
+        expect(rpi.to_markdown(:branston)).to include("**Do you want personal information held by the Probation Service?**\nYes")
       end
 
       it "returns which information is required" do
         rpi = build(:personal_information_request, :with_probation_service_data, probation_information: "details of probation info required")
-        expect(rpi.to_markdown).to include("details of probation info required")
+        expect(rpi.to_markdown(:branston)).to include("details of probation info required")
       end
 
       it "returns which other information is required" do
         rpi = build(:personal_information_request, :with_probation_service_data, probation_information_other: "details of other probation info required")
-        expect(rpi.to_markdown).to include("details of other probation info required")
+        expect(rpi.to_markdown(:branston)).to include("details of other probation info required")
       end
 
       it "returns date from information is required" do
         rpi = build(:personal_information_request, :with_probation_service_data, probation_data_from: "2012-01-01")
-        expect(rpi.to_markdown).to include("2012-01-01")
+        expect(rpi.to_markdown(:branston)).to include("2012-01-01")
       end
 
       it "returns date to information is required" do
         rpi = build(:personal_information_request, :with_probation_service_data, probation_data_to: "2013-01-01")
-        expect(rpi.to_markdown).to include("2013-01-01")
+        expect(rpi.to_markdown(:branston)).to include("2013-01-01")
       end
     end
 
     context "with LAA data" do
+      it "doesn't return prison service data for branston target" do
+        rpi = build(:personal_information_request, :with_laa_data)
+        expect(rpi.to_markdown(:branston)).not_to include("**Do you want personal information held by the Legal Aid Agency (LAA)?**")
+      end
+
       it "returns whether LAA data is required" do
         rpi = build(:personal_information_request, :with_laa_data)
-        expect(rpi.to_markdown).to include("**Do you want personal information held by the Legal Aid Agency (LAA)?**\nYes")
+        expect(rpi.to_markdown(:disclosure)).to include("**Do you want personal information held by the Legal Aid Agency (LAA)?**\nYes")
       end
 
       it "returns which information is required" do
         rpi = build(:personal_information_request, :with_laa_data, laa_information: "details of laa info required")
-        expect(rpi.to_markdown).to include("details of laa info required")
+        expect(rpi.to_markdown(:disclosure)).to include("details of laa info required")
       end
 
       it "returns date from information is required" do
         rpi = build(:personal_information_request, :with_laa_data, laa_data_from: "2015-01-01")
-        expect(rpi.to_markdown).to include("2015-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2015-01-01")
       end
 
       it "returns date to information is required" do
         rpi = build(:personal_information_request, :with_laa_data, laa_data_to: "2016-01-01")
-        expect(rpi.to_markdown).to include("2016-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2016-01-01")
       end
     end
 
     context "with OPG data" do
+      it "doesn't return prison service data for branston target" do
+        rpi = build(:personal_information_request, :with_opg_data)
+        expect(rpi.to_markdown(:branston)).not_to include("**Do you want personal information held by the Office of the Public Guardian (OPG)?**")
+      end
+
       it "returns whether OPG data is required" do
         rpi = build(:personal_information_request, :with_opg_data)
-        expect(rpi.to_markdown).to include("**Do you want personal information held by the Office of the Public Guardian (OPG)?**\nYes")
+        expect(rpi.to_markdown(:disclosure)).to include("**Do you want personal information held by the Office of the Public Guardian (OPG)?**\nYes")
       end
 
       it "returns which information is required" do
         rpi = build(:personal_information_request, :with_opg_data, opg_information: "details of opg info required")
-        expect(rpi.to_markdown).to include("details of opg info required")
+        expect(rpi.to_markdown(:disclosure)).to include("details of opg info required")
       end
 
       it "returns date from information is required" do
         rpi = build(:personal_information_request, :with_opg_data, opg_data_from: "2017-01-01")
-        expect(rpi.to_markdown).to include("2017-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2017-01-01")
       end
 
       it "returns date to information is required" do
         rpi = build(:personal_information_request, :with_opg_data, opg_data_to: "2018-01-01")
-        expect(rpi.to_markdown).to include("2018-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2018-01-01")
       end
     end
 
     context "with data from elsewhere in MOJ" do
+      it "doesn't return prison service data for branston target" do
+        rpi = build(:personal_information_request, :with_other_data)
+        expect(rpi.to_markdown(:branston)).not_to include("**Do you want personal information held by another part of the Ministry of Justice?**")
+      end
+
       it "returns whether other data is required" do
         rpi = build(:personal_information_request, :with_other_data)
-        expect(rpi.to_markdown).to include("**Do you want personal information held by another part of the Ministry of Justice?**\nYes")
+        expect(rpi.to_markdown(:disclosure)).to include("**Do you want personal information held by another part of the Ministry of Justice?**\nYes")
       end
 
       it "returns which information is required" do
         rpi = build(:personal_information_request, :with_other_data, other_information: "details of other info required")
-        expect(rpi.to_markdown).to include("details of other info required")
+        expect(rpi.to_markdown(:disclosure)).to include("details of other info required")
       end
 
       it "returns date from information is required" do
         rpi = build(:personal_information_request, :with_other_data, other_data_from: "2020-01-01")
-        expect(rpi.to_markdown).to include("2020-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2020-01-01")
       end
 
       it "returns date to information is required" do
         rpi = build(:personal_information_request, :with_other_data, other_data_to: "2021-01-01")
-        expect(rpi.to_markdown).to include("2021-01-01")
+        expect(rpi.to_markdown(:disclosure)).to include("2021-01-01")
       end
     end
 
     context "with contact information" do
       it "returns contact address" do
         rpi = build(:personal_information_request, contact_address: "Contact address\n somewhere in the country")
-        expect(rpi.to_markdown).to include("Contact address\n somewhere in the country")
+        expect(rpi.to_markdown(:branston)).to include("Contact address\n somewhere in the country")
       end
 
       it "returns contact email" do
         rpi = build(:personal_information_request, contact_email: "email@domain.com")
-        expect(rpi.to_markdown).to include("email@domain.com")
+        expect(rpi.to_markdown(:branston)).to include("email@domain.com")
       end
     end
 
     context "with court information" do
       it "returns if information is needed for court" do
         rpi = build(:personal_information_request)
-        expect(rpi.to_markdown).to include("**Do you need this information for an upcoming court case or hearing?**\nNo")
+        expect(rpi.to_markdown(:branston)).to include("**Do you need this information for an upcoming court case or hearing?**\nNo")
       end
 
       context "when information is needed for court" do
         it "returns contact address" do
           rpi = build(:personal_information_request, :needed_for_court, needed_for_court_information: "info about why needed for court")
-          expect(rpi.to_markdown).to include("info about why needed for court")
+          expect(rpi.to_markdown(:branston)).to include("info about why needed for court")
         end
       end
     end

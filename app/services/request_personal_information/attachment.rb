@@ -7,7 +7,7 @@ class RequestPersonalInformation::Attachment
     RequestPersonalInformation::Cryptography.new(
       encryption_key: Base64.strict_decode64(encryption_key),
       encryption_iv: Base64.strict_decode64(encryption_iv),
-    ).decrypt(file: HTTParty.get(url).body)
+    ).decrypt(file:)
   end
 
   def filename
@@ -15,6 +15,10 @@ class RequestPersonalInformation::Attachment
   end
 
 private
+
+  def file
+    HTTParty.get(url).body
+  end
 
   def url
     @data[:url]

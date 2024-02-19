@@ -143,9 +143,6 @@ RSpec.describe Api::RpiController, type: :controller do
     }.to_json
   end
 
-  # let(:service) { instance_double(RequestPersonalInformationService, rpi:) }
-  # let(:rpi) { instance_double(RequestPersonalInformation, attachment_url: nil) }
-
   describe "authenticates the request" do
     context "with no body" do
       it "responds with 401" do

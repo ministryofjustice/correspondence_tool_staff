@@ -55,13 +55,28 @@ class PersonalInformationRequest < ApplicationRecord
   def self.build(payload)
     data = RequestPersonalInformation::Data.new(payload)
     rpi = PersonalInformationRequest.new
-    RequestPersonalInformation::RequestBuilder.new(rpi).build(data)
-    RequestPersonalInformation::FileBuilder.new(rpi).build(data)
+
+    rpi.build_with(data)
+
     rpi
   end
 
-  def temporary_url
-    CASE_UPLOADS_S3_BUCKET.object(key).presigned_url(:get, expires_in: Settings.attachments_presigned_url_expiry)
+  def targets
+    result = []
+    if prison_service_data? || probation_service_data?
+      result << :branston
+    end
+
+    if laa_data? || opg_data? || other_data?
+      result << :disclosure
+    end
+
+    result
+  end
+
+  def build_with(data)
+    request_builder.build(data) # This needs to be build first
+    file_builder.build(data)
   end
 
   def requesting_own_data?
@@ -100,18 +115,34 @@ class PersonalInformationRequest < ApplicationRecord
     needed_for_court.downcase == YES
   end
 
-  def attachment_url
-    rpi_file_download_url(submission_id)
+  def attachment_url(target)
+    rpi_file_download_url(target, submission_id)
   end
 
-  def to_markdown
-    raw_template = File.read("app/views/request_personal_information/submission.text.erb")
+  def temporary_url(target)
+    CASE_UPLOADS_S3_BUCKET.object(key(target)).presigned_url(:get, expires_in: Settings.attachments_presigned_url_expiry)
+  end
+
+  def to_markdown(target)
+    raise ArgumentError, "Unknown target: ${target}" unless %i[branston disclosure].include?(target)
+
+    raw_template = File.read("app/views/request_personal_information/#{target}.text.erb")
     stripped_whitespace_template = raw_template.lines.map(&:strip).join("\n")
     erb_template = ERB.new(stripped_whitespace_template)
     erb_template.result(binding)
   end
 
-  def key
-    "rpi/#{submission_id}"
+  def key(target)
+    "rpi/#{target}/#{submission_id}"
+  end
+
+private
+
+  def request_builder
+    @request_builder ||= RequestPersonalInformation::RequestBuilder.new(self)
+  end
+
+  def file_builder
+    @file_builder ||= RequestPersonalInformation::FileBuilder.new(self, targets)
   end
 end
