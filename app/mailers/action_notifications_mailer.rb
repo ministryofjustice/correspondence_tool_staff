@@ -133,11 +133,11 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient, dreid: data_request_email.id)
   end
 
-  def rpi_email(rpi)
+  def rpi_email(rpi, target)
     SentryContextProvider.set_context
 
     find_template("RPI")
-    set_personalisation(content: rpi.attachment_url)
+    set_personalisation(content: rpi.attachment_url(target))
 
     mail(to: "andrew.pepler@digital.justice.gov.uk")
   end

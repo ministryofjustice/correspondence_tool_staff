@@ -5,7 +5,9 @@ module Api
     def create
       request = PersonalInformationRequest.build(@decrypted_body)
       request.save!
-      ActionNotificationsMailer.rpi_email(request).deliver_later
+      request.targets.each do |target|
+        ActionNotificationsMailer.rpi_email(request, target).deliver_later
+      end
       head :ok
     end
 
