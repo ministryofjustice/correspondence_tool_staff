@@ -168,7 +168,7 @@ RSpec.describe Api::RpiController, type: :controller do
 
   describe "#create" do
     it "attempts to send an email or emails" do
-      expect(ActionNotificationsMailer).to receive(:rpi_email).with(PersonalInformationRequest, anything).at_least(1).times.and_call_original
+      expect(ActionNotificationsMailer).to receive(:rpi_email).with(PersonalInformationRequest, anything).at_least(:once).and_call_original
       post(:create, body: encrypted_json)
     end
   end
