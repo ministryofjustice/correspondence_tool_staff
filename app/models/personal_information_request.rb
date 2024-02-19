@@ -111,8 +111,6 @@ class PersonalInformationRequest < ApplicationRecord
     erb_template.result(binding)
   end
 
-private
-
   def key
     "rpi/#{submission_id}"
   end
