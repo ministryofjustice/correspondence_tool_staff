@@ -61,7 +61,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def temporary_url
-    CASE_UPLOADS_S3_BUCKET.object(key).presigned_url :get, expires_in: Settings.attachments_presigned_url_expiry
+    CASE_UPLOADS_S3_BUCKET.object(key).presigned_url(:get, expires_in: Settings.attachments_presigned_url_expiry)
   end
 
   def requesting_own_data?
@@ -69,7 +69,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def request_by_legal_representative?
-    !requesting_own_data? && subject_relationship.downcase == LEGAL_REPRESENTATIVE
+    !requesting_own_data? && requestor_relationship.downcase == LEGAL_REPRESENTATIVE
   end
 
   def prison_service_data?
@@ -105,10 +105,13 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def to_markdown
-    raw_template = File.read("app/views/request_personal_information/submission.txt.erb")
-    erb_template = ERB.new(raw_template)
+    raw_template = File.read("app/views/request_personal_information/submission.text.erb")
+    stripped_whitespace_template = raw_template.lines.map(&:strip).join("\n")
+    erb_template = ERB.new(stripped_whitespace_template)
     erb_template.result(binding)
   end
+
+private
 
   def key
     "rpi/#{submission_id}"

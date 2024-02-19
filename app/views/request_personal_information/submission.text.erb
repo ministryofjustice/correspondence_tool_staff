@@ -53,19 +53,22 @@
     **Which prison were you most recently in?**
     <%= previous_prison %>
   <% else %>
-    **Is the subject currently in prison**
+    **Is the subject currently in prison?**
     <%= currently_in_prison %>
 
     <% if currently_in_prison? %>
       **Which prison are they in?
       <%= current_prison %>
+
+      **What is their prison number?**
+      <%= subject_prison_number %>
     <% else %>
       **Which prison were they most recently in?**
       <%= previous_prison %>
-    <% end %>
 
-    **What is their prison number?*
-    <%= subject_prison_number %>
+      **What was their prison number?**
+      <%= subject_prison_number %>
+    <% end %>
   <% end %>
 
   **What prison service information do you want?**
@@ -125,7 +128,7 @@
 <%= opg_data %>
 
 <% if opg_data? %>
-  **What information do you want from the Legal Aid Agency (LAA)?**
+  **What information do you want from the Office of the Public Guardian (OPG)?**
   <%= opg_information %>
 
   **Date this information should start from**
