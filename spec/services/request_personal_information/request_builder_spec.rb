@@ -73,7 +73,7 @@ describe RequestPersonalInformation::RequestBuilder do
         let(:specific_data) do
           {
             prison_service_data: "Yes",
-            subject_prison_number: "12345",
+            prison_number: "12345",
             previous_prison: "prison name",
             prison_information: "prison info",
             prison_information_other: "other info",
@@ -138,7 +138,7 @@ describe RequestPersonalInformation::RequestBuilder do
           {
             prison_service_data: "Yes",
             currently_in_prison: "Yes",
-            prison_number: "ABCD123",
+            subject_prison_number: "ABCD123",
             subject_current_prison: "name of current prison",
             prison_information: "prison info",
             prison_information_other: "other info",
@@ -164,7 +164,7 @@ describe RequestPersonalInformation::RequestBuilder do
           {
             prison_service_data: "Yes",
             currently_in_prison: "No",
-            prison_number: "ABCD123",
+            subject_prison_number: "ABCD123",
             subject_previous_prison: "name of previous prison",
             prison_information: "prison info",
             prison_information_other: "other info",

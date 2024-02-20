@@ -76,11 +76,11 @@ end
 
 def build_prison_data
   if rpi.requesting_own_data?
-    rpi.subject_prison_number = data.subject_prison_number
+    rpi.subject_prison_number = data.prison_number
     rpi.previous_prison = data.previous_prison
   else
     rpi.currently_in_prison = data.currently_in_prison
-    rpi.subject_prison_number = data.prison_number
+    rpi.subject_prison_number = data.subject_prison_number
     if rpi.currently_in_prison?
       rpi.current_prison = data.subject_current_prison
     else
