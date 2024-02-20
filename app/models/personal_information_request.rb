@@ -139,7 +139,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def key(target)
-    "rpi/#{target}/#{submission_id}"
+    "rpi/#{target}/#{submission_id}.zip"
   end
 
 private
