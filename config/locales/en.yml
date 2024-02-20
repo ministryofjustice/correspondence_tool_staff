@@ -1529,7 +1529,7 @@ en:
       reason_rejected_heading: Reason offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
-      information_received_heading: Can the Subject Access Request be accepted?
+      information_received_heading: Can the subject access request be accepted?
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
       partial_case_letter_sent_dated_heading: Date letter sent from SSCL
       further_actions_required_heading: SSCL managing case
