@@ -1,7 +1,9 @@
 require "rails_helper"
 
-RSpec.describe Api::RpiController, type: :controller do
-  let(:unencrypted_json) do
+describe RequestPersonalInformationJob, type: :job do
+  include ActiveJob::TestHelper
+
+  let(:payload) do
     {
       "serviceSlug": "request-personal-information-migrate",
       "submissionId": "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3",
@@ -44,44 +46,39 @@ RSpec.describe Api::RpiController, type: :controller do
         "needed-for-court_textarea_1": "answer to Tell us more about your upcoming court case or hearing",
       },
       "attachments": [],
-    }.to_json
+    }
   end
 
-  let(:encrypted_json) { JWE.encrypt(unencrypted_json, Settings.rpi_jwe_key, alg: "dir") }
-
-  let(:invalid_json_body) do
-    {
-      invalid: "json",
-    }.to_json
+  before do
+    ActiveJob::Base.queue_adapter = :test
+    # attachment = instance_double CaseAttachment
+    allow(SentryContextProvider).to receive(:set_context)
+    # allow(CaseAttachment).to receive(:find).with(123).and_return(attachment)
+    # allow(attachment).to receive(:make_preview)
   end
 
-  describe "authenticates the request" do
-    context "with no body" do
-      it "responds with 401" do
-        post(:create)
-        expect(response.status).to eq 401
-      end
-    end
-
-    context "with invalid data" do
-      it "responds with 401" do
-        post(:create, body: invalid_json_body)
-        expect(response.status).to eq 401
-      end
-    end
-
-    context "with encrypted json payload" do
-      it "decrypts the body" do
-        post(:create, body: encrypted_json)
-        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json, symbolize_names: true)
-      end
-    end
+  after do
+    clear_enqueued_jobs
+    clear_performed_jobs
   end
 
-  describe "#create" do
-    it "Creates a job to process the payload" do
-      expect(RequestPersonalInformationJob).to receive(:perform_later)
-      post(:create, body: encrypted_json)
+  describe ".perform" do
+    it "sets the Sentry environment" do
+      described_class.perform_now(payload)
+      expect(SentryContextProvider).to have_received(:set_context)
+    end
+
+    it "queues the job" do
+      expect { described_class.perform_later(payload) }.to have_enqueued_job(described_class)
+    end
+
+    it "is in expected queue" do
+      expect(described_class.new.queue_name).to eq("correspondence_tool_staff_rpi")
+    end
+
+    it "executes perform" do
+      expect(ActionNotificationsMailer).to receive(:rpi_email).with(PersonalInformationRequest, anything).at_least(:once).and_call_original
+      perform_enqueued_jobs { described_class.perform_later(payload) }
     end
   end
 end

@@ -3,11 +3,7 @@ module Api
     before_action :authenticate_request, only: :create
 
     def create
-      request = PersonalInformationRequest.build(@decrypted_body)
-      request.save!
-      request.targets.each do |target|
-        ActionNotificationsMailer.rpi_email(request, target).deliver_later
-      end
+      RequestPersonalInformationJob.perform_later(@decrypted_body)
       head :ok
     end
 
