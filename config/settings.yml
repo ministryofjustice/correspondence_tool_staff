@@ -45,6 +45,10 @@ commissioning_notify_template: '94b66c61-feff-42f5-950d-d0af0a8205ef'
 commissioning_notify_reply_to: '879d54cc-a5f3-4acc-aa37-ca04e8f6c22d'
 rpi_template: '5e63f6c1-e7d6-47da-845c-fa47343ab882'
 
+emails:
+  branston: andrew.pepler@digital.justice.gov.uk # data.access1@justice.gov.uk
+  disclosure: andrew.pepler@digital.justice.gov.uk # data.access@justice.gov.uk
+
 foi_cases:
   default_managing_team: DISCLOSURE-BMT
   default_clearance_team: DISCLOSURE

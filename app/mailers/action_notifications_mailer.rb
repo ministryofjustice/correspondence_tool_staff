@@ -139,7 +139,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     find_template("RPI")
     set_personalisation(content: rpi.attachment_url(target))
 
-    mail(to: "andrew.pepler@digital.justice.gov.uk")
+    mail(to: PersonalInformationRequest.email_for_target(target))
   end
 
 private

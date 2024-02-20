@@ -447,7 +447,8 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
   describe "rpi_email" do
     let(:rpi) { create :personal_information_request }
-    let(:mail) { described_class.rpi_email(rpi, :branston) }
+    let(:target) { :branston }
+    let(:mail) { described_class.rpi_email(rpi, target) }
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -455,7 +456,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
 
     it "personalises the email" do
-      expect(mail.govuk_notify_personalisation[:content]).to eq rpi.attachment_url(:branston)
+      expect(mail.govuk_notify_personalisation[:content]).to eq rpi.attachment_url(target)
+    end
+
+    it "sets the To address of the email based on the target" do
+      expect(mail.to).to include PersonalInformationRequest.email_for_target(target)
     end
   end
 end

@@ -67,6 +67,15 @@ class PersonalInformationRequest < ApplicationRecord
     [BRANSTON, DISCLOSURE].include?(target.to_sym)
   end
 
+  def self.email_for_target(target)
+    case target
+    when BRANSTON
+      Settings.emails.branston
+    when DISCLOSURE
+      Settings.emails.disclosure
+    end
+  end
+
   def targets
     result = []
     if prison_service_data? || probation_service_data?

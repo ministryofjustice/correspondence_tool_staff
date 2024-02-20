@@ -82,6 +82,16 @@ describe PersonalInformationRequest do
     end
   end
 
+  describe ".email_for_target" do
+    it "returns branston email address" do
+      expect(described_class.email_for_target(described_class::BRANSTON)).to eq Settings.emails.branston
+    end
+
+    it "returns disclosure email address" do
+      expect(described_class.email_for_target(described_class::DISCLOSURE)).to eq Settings.emails.disclosure
+    end
+  end
+
   describe "#targets" do
     context "when only branston data" do
       it "returns only branston" do
