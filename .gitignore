@@ -61,6 +61,7 @@ coverage
 !public/robots.txt
 !lib/assets/kilo_map.csv
 !spec/fixtures/*.xlsx
+!spec/fixtures/*.txt
 !tmp/parallel_runtime_rspec.log
 
 # Generated documentation.
