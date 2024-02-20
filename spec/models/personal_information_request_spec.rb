@@ -63,6 +63,25 @@ describe PersonalInformationRequest do
     end
   end
 
+  describe ".valid_target?" do
+    it "returns true for branston" do
+      expect(described_class.valid_target?("branston")).to eq true
+      expect(described_class.valid_target?(:branston)).to eq true
+      expect(described_class.valid_target?(described_class::BRANSTON)).to eq true
+    end
+
+    it "returns true for disclosure" do
+      expect(described_class.valid_target?("disclosure")).to eq true
+      expect(described_class.valid_target?(:disclosure)).to eq true
+      expect(described_class.valid_target?(described_class::DISCLOSURE)).to eq true
+    end
+
+    it "returns false for other values" do
+      expect(described_class.valid_target?("target")).to eq false
+      expect(described_class.valid_target?(:target)).to eq false
+    end
+  end
+
   describe "#targets" do
     context "when only branston data" do
       it "returns only branston" do

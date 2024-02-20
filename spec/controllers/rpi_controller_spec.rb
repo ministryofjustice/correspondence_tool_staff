@@ -9,7 +9,7 @@ RSpec.describe RpiController, type: :controller do
   let(:object) { instance_double(Aws::S3::Object, presigned_url:) }
 
   before do
-    allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key).and_return(object)
+    allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key(PersonalInformationRequest::BRANSTON)).and_return(object)
   end
 
   describe "GET #download" do
@@ -20,7 +20,7 @@ RSpec.describe RpiController, type: :controller do
     it "stores current user and time of download" do
       expect(rpi.last_accessed_at).to be_nil
 
-      get :download, params: { id: submission_id }
+      get :download, params: { id: submission_id, target: PersonalInformationRequest::BRANSTON }
       rpi.reload
 
       expect(rpi.last_accessed_at).not_to be_nil
@@ -28,8 +28,14 @@ RSpec.describe RpiController, type: :controller do
     end
 
     it "redirects to the zipfile's url" do
-      get :download, params: { id: submission_id }
+      get :download, params: { id: submission_id, target: PersonalInformationRequest::BRANSTON }
       expect(response).to redirect_to presigned_url
+    end
+
+    it "raises an error when target is invalid" do
+      expect {
+        get :download, params: { id: submission_id, target: "invalid" }
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

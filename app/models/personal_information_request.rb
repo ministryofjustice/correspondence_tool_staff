@@ -4,6 +4,8 @@ class PersonalInformationRequest < ApplicationRecord
   OWN_DATA = "your own".freeze
   LEGAL_REPRESENTATIVE = "legal representative".freeze
   YES = "yes".freeze
+  BRANSTON = :branston
+  DISCLOSURE = :disclosure
 
   attr_accessor :requesting_own_data,
                 :subject_full_name,
@@ -61,14 +63,18 @@ class PersonalInformationRequest < ApplicationRecord
     rpi
   end
 
+  def self.valid_target?(target)
+    [BRANSTON, DISCLOSURE].include?(target.to_sym)
+  end
+
   def targets
     result = []
     if prison_service_data? || probation_service_data?
-      result << :branston
+      result << BRANSTON
     end
 
     if laa_data? || opg_data? || other_data?
-      result << :disclosure
+      result << DISCLOSURE
     end
 
     result
@@ -124,7 +130,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def to_markdown(target)
-    raise ArgumentError, "Unknown target: ${target}" unless %i[branston disclosure].include?(target)
+    raise ArgumentError, "Unknown target: ${target}" unless self.class.valid_target?(target)
 
     raw_template = File.read("app/views/request_personal_information/#{target}.text.erb")
     stripped_whitespace_template = raw_template.lines.map(&:strip).join("\n")
