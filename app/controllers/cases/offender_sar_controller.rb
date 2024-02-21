@@ -391,7 +391,9 @@ module Cases
     end
 
     def back_link_url
-      if @case.get_previous_step
+      if @case.get_previous_step && @case.current_state = 'rejected'
+        "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}/rejected=true"
+      elsif @case.get_previous_step
         "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
       else
         new_case_path

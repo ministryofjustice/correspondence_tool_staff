@@ -970,6 +970,7 @@ en:
         value: "Add area"
       correspondence_types:
         offender_sar: Offender SAR
+        sub_heading: Rejected Offender SAR
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
