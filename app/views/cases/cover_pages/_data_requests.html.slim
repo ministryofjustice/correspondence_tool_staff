@@ -1,7 +1,7 @@
 .grid-row
   .column-full.data-requests
 
-    - if current_state = 'rejected' ?
+    - if current_state == "rejected"
          /do not display as not relevant
     - elsif case_details.data_requests.empty?
       p.data-requests__none
