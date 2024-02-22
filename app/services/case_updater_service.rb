@@ -8,6 +8,8 @@ class CaseUpdaterService
     @params = params
     @result = :incomplete
     @error_message = nil
+    # debugger
+    @old_rejected_reasons = kase.rejected_reasons
   end
 
   def call(message = nil)
@@ -24,7 +26,7 @@ class CaseUpdaterService
       # no need for tracking properties as the whole.
       if (@kase.changed_attributes.keys - %w[properties]).present? || linked_cases_changed
         @kase.save # rubocop:disable Rails/SaveBang
-        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message:)
+        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message: log_message)
         @result = :ok
       else
         @result = :no_changes
@@ -35,7 +37,30 @@ class CaseUpdaterService
     @result = :error
   end
 
+  # def send!
+  #   log_message
+  # end
+
 private
+
+  # def log_message
+  #   debugger
+  #   @kase.state_machine.edit_case!(
+  #     acting_user: current_user,
+  #     acting_team: BusinessUnit.dacu_branston,
+  #     message: "#{commissioning_document.request_document} requested from #{data_request.location}",
+  #     )
+  # end
+
+  def log_message
+    if @kase.rejected_reasons.present?
+      @kase.rejected_reasons.map { |reason|
+        Case::SAR::Offender::REJECTED_REASONS[reason]
+      }.append(@kase.other_rejected_reason).compact.join("<br>")
+    else
+      ""
+    end
+  end
 
   def have_linked_cases_changed?
     have_original_case_changed? || have_related_cases_changed?

@@ -23,6 +23,7 @@ en:
     extend_for_pit: Extended for Public Interest Test (PIT)
     extend_sar_deadline: Extended SAR deadline
     flag_for_clearance: Clearance level added
+    information_received: "Information outstanding:"
     link_a_case: Case linked
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
@@ -52,6 +53,7 @@ en:
     case/offender_sar:
       rejected:
         create: Rejected case created
+        information_outstanding: "Information outstanding:"
 
 
     mark_as_waiting_for_data: Mark as waiting for data
