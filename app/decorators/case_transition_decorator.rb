@@ -14,14 +14,10 @@ class CaseTransitionDecorator < Draper::Decorator
   end
 
   def event_and_detail
-    # debugger
     "<strong>#{event_desc}</strong><br>#{details}".html_safe
   end
 
   def event_desc
-    # debugger
-    # rejected_case_creation_event || rejected_case_rejected_reasons_event || description_for_event || event_name
-    # rejected_case_creation_event || description_for_event || event_name
     rejected_case_creation_event || description_for_event || event_name
   end
 
@@ -40,36 +36,10 @@ private
   end
 
   def rejected_case_creation_event
-    # debugger
-    # This method prevents the case history changing from "rejected case created" to "case created"
-    # when a Case state is changed from "rejected" to another state
     if object.case.has_attribute?(:case_originally_rejected) && object.event == "create" && object.case.case_originally_rejected
       I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")
-    # elsif object.case.has_attribute?(:case_originally_rejected) && object.event == "edit_case" && object.case.case_originally_rejected
-    #   I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")
     end
   end
-
-  # def rejected_case_rejected_reasons_event
-
-    # hist = object.case.versions.map(&:object).compact
-    # debugger
-    # # puts hist
-    # hist.each do |hi|
-    #   PaperTrail.serializer.load(hi)
-    #   # debugger
-    # end
-
-    # if object.case.has_attribute?(:case_originally_rejected) && (object.event == "edit_case" || object.event == "create") && object.case.case_originally_rejected
-    #   # debugger
-    #   # reasons = object.case.rejected_reasons.map(&:capitalize).map(&:humanize).join("<br>")
-    #   # I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.information_outstanding") #+ "<span>#{reasons}</span>"
-    #
-    #   I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.information_outstanding") + "<br>" + object.case.rejected_reasons.map { |reason|
-    #     Case::SAR::Offender::REJECTED_REASONS[reason]
-    #   }.append(object.case.other_rejected_reason).compact.join("<br>")
-    # end
-  # end
 
   def event
     state_machine = object.case.state_machine
@@ -77,7 +47,6 @@ private
   end
 
   def details
-    # debugger
     case object.event
     when "assign_responder", "assign_to_new_team"
       "Assigned to #{object.target_team.name}"
@@ -100,13 +69,6 @@ private
       construct_message_for_assign_to_team_member
     when "reassign_user"
       construct_message_for_reassign_user
-    # when "create"
-    #   if object.case.has_attribute?(:case_originally_rejected) && object.case.case_originally_rejected
-    #     I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.information_outstanding") + "<br>" + object.case.rejected_reasons.map { |reason|
-    #       Case::SAR::Offender::REJECTED_REASONS[reason]
-    #     }.append(object.case.other_rejected_reason).compact.join("<br>")
-    #     # I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")
-    #   end
     else
       object&.message
     end
