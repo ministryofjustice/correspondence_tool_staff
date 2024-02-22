@@ -11,7 +11,7 @@ class CaseUpdaterService
     @old_rejected_reasons = kase.rejected_reasons
   end
 
-  def call(message = nil)
+  def call(message = nil) # rubocop:disable Lint/UnusedMethodArgument
     ActiveRecord::Base.transaction do
       # There is extra checking for linked cases as those changes won't appear in the
       # case's changed_attributes, has to be checked separately
