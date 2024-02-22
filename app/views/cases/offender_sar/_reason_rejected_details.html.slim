@@ -1,4 +1,4 @@
-tr.rejected-reasons class="rejected section section-rejected-details"
+tr.rejected-reasons.section
   th = t('common.case.rejected_reason')
   td = raw case_details.rejected_reasons_descriptions
   td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "reason_rejected")
