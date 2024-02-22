@@ -8,7 +8,6 @@ class CaseUpdaterService
     @params = params
     @result = :incomplete
     @error_message = nil
-    # debugger
     @old_rejected_reasons = kase.rejected_reasons
   end
 
