@@ -8,17 +8,17 @@
         = t('cases.data_requests.index.none')
 
     - else
-    table#data-request-table.report
-      thead
-        tr
-          th Location
-          th Data
-          th Date requested
-          th Pages received
-          th Date completed
-          th Status
-          th
-          th
+      table#data-request-table.report
+        thead
+          tr
+            th Location
+            th Data
+            th Date requested
+            th Pages received
+            th Date completed
+            th Status
+            th
+            th
         tbody
           - case_details.data_requests.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request|
             tr
