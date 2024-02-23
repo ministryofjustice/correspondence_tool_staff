@@ -57,7 +57,7 @@ en:
         third_party_relationship: "Relationship to the subject"
         rejected_reasons: ""
         other_rejected_reason: ""
-        third_party_email: Email address
+        third_party_email: ""
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -292,7 +292,7 @@ en:
             third_party_address:
               blank: cannot be blank
             third_party_email:
-              invalid: enter an email address in the correct format, like name@example.com
+              invalid: Enter an email address in the correct format, like name@example.com
             is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
@@ -970,6 +970,7 @@ en:
         value: "Add area"
       correspondence_types:
         offender_sar: Offender SAR
+        rejected_offender_sar: Rejected Offender SAR
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
