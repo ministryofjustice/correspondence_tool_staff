@@ -86,17 +86,18 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
     end
 
-    context "when there is a previous step while completing a rejected offender sar" do
+    context "a rejected offender SAR progressed to next step" do
       before do
-        allow(:case).to receive(:get_previous_step).and_return("previous_step")
-        allow(:case).to receive(:case_route_path).and_return("/cases/offender_sars/new")
-        allow(helper).to receive(:build_url_params_from_flags).and_return("?rejected=true")
+        (case).to receive(:get_previous_step).and_return("previous_step")
+        (case).to receive(:case_route_path).and_return("/cases/offender_sars/new")
       end
 
       it "returns the correct URL with parameters" do
-        expect(helper.back_link_url).to eq("/cases/previous_step?rejected=true")
+        get :new
+        expect(response).to redirect_to("/cases/previous_step?rejected=true")
       end
     end
+
   end
 
   describe "#create" do
