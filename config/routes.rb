@@ -91,7 +91,8 @@ Rails.application.routes.draw do
       patch "/move_case_back", on: :member, to: "offender_sar#confirm_move_case_back", as: "confirm_move_case_back"
       get "/record_reason_for_lateness", on: :member, to: "offender_sar#record_reason_for_lateness", as: "record_reason_for_lateness"
       patch "/record_reason_for_lateness", on: :member, to: "offender_sar#confirm_record_reason_for_lateness", as: "confirm_record_reason_for_lateness"
-      patch "/information_received", on: :member, to: "offender_sar#confirm_information_received", as: "confirm_information_received"
+      get "/outstanding_information_received_date", on: :member, to: "offender_sar#outstanding_information_received_date", as: "outstanding_information_received_date"
+      patch "/outstanding_information_received_date", on: :member, to: "offender_sar#confirm_outstanding_information_received_date", as: "confirm_outstanding_information_received_date"
       patch "/confirm_update_partial_flags", on: :member, to: "offender_sar#confirm_update_partial_flags", as: "confirm_update_partial_flags"
       patch "/confirm_sent_to_sscl", on: :member, to: "offender_sar#confirm_sent_to_sscl", as: "confirm_sent_to_sscl"
       member do
