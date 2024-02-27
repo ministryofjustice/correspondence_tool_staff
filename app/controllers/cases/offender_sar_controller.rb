@@ -212,23 +212,6 @@ module Cases
       redirect_to case_path(@case) and return
     end
 
-    def confirm_information_received
-      information_received = params[:offender_sar].try(:[], :information_received)
-
-      if information_received
-        case information_received
-        when "no"
-          redirect_to edit_step_case_sar_offender_path(@case, "reason_rejected") and return
-        end
-      end
-
-      @case.errors.add(
-        :information_received,
-        I18n.t("activerecord.errors.models.case.attributes.information_received.blank"),
-      )
-      render :information_received and return
-    end
-
   private
 
     def flags_process(flag_params)
