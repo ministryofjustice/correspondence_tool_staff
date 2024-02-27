@@ -47,7 +47,7 @@ rpi_template: '5e63f6c1-e7d6-47da-845c-fa47343ab882'
 
 emails:
   branston: andrew.altwasser@digital.justice.gov.uk # data.access1@justice.gov.uk
-  disclosure: andrew.altwasser@digital.justice.gov.uk # data.access@justice.gov.uk
+  disclosure: andrew.altwasser@justice.gov.uk # data.access@justice.gov.uk
 
 foi_cases:
   default_managing_team: DISCLOSURE-BMT
