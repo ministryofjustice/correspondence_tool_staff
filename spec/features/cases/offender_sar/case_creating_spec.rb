@@ -24,6 +24,22 @@ feature "Offender SAR Case creation by a manager", js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
+  scenario "0 Rejected offender SAR created after using back link" do
+    # TODO: update this throughout rejections work
+
+    when_i_navigate_to_rejected_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_back_previous_step_to_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+
+    then_expect_case_state_to_be_rejected
+    expect(cases_show_page).to have_content "Rejected Offender SAR"
+  end
+
   scenario "1 Data subject requesting own record" do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
@@ -249,7 +265,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_show_page).to have_content "Address\n22 High Street"
   end
 
-  def and_back_previous_step_to_change_to_non_third_party
+  def and_back_previous_step_to_subject_page
     click_on "Back"
     and_fill_in_requester_details_page
   end
