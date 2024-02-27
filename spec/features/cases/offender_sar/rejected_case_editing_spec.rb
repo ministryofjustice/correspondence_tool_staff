@@ -16,7 +16,7 @@ feature "Offender SAR Case editing by a manager", :js do
     # TODO: update this throughout rejections work
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 
-    click_on "Information received"
+    click_on "Create valid case"
     expect(cases_edit_offender_sar_information_received_page).to be_displayed
     click_on "Continue"
   end
@@ -25,7 +25,7 @@ feature "Offender SAR Case editing by a manager", :js do
     # TODO: update this throughout rejections work
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 
-    click_on "Information received"
+    click_on "Create valid case"
     expect(cases_edit_offender_sar_information_received_page).to be_displayed
   end
 end
