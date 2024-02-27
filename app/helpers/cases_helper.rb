@@ -236,9 +236,9 @@ module CasesHelper
               case_cover_page_path(@case),
               id: "action--preview-cover-page",
               class: "button-secondary"
-    when :information_received
-      link_to "Information received",
-              information_received_case_sar_offender_path(@case),
+    when :outstanding_information_received
+      link_to "Create valid case",
+              confirm_outstanding_information_received_date_case_sar_offender_path(@case),
               id: "action--information-received",
               class: "button"
     end
