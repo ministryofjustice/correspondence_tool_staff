@@ -33,13 +33,16 @@ feature "Offender SAR Case creation by a manager", js: true do
     and_back_only_previous_step_to_requester_details_page
     and_back_previous_step_to_subject_details_page
     and_fill_in_subject_details_page
-    and_fill_in_requester_details_page
     and_fill_in_requester_details_page_for_rejected_case(:third_party)
     and_fill_in_recipient_details_page(recipient: "subject_recipient")
     and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
 
     then_expect_case_state_to_be_rejected
-    expect(cases_show_page).to have_content "Rejected Offender SAR"
+    then_expect_case_history_to_be_correct
+    then_expect_open_cases_page_to_be_correct
+
   end
 
   scenario "1 Data subject requesting own record" do
@@ -274,7 +277,7 @@ feature "Offender SAR Case creation by a manager", js: true do
 
   def and_back_only_previous_step_to_requester_details_page
     click_on "Back"
-    expect(requester_details_page).to be_displayed
+    expect(cases_new_offender_sar_requester_details_page).to be_displayed
   end
 
   def and_back_previous_step_to_subject_details_page
