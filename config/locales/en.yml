@@ -48,7 +48,6 @@ en:
       report:
         correspondence_type: Case type
       case/sar/offender:
-        information_received: ""
         number_final_pages: Number of pages
         third_party : "Information requested on someone else's behalf"
         third_party_address: Address
@@ -82,7 +81,7 @@ en:
               too_far_past_received: 'cannot be more than a year past the date received'
               before_received: "cannot be before date received"
               before_internal: "cannot be before draft deadline"
-            information_received:
+            outstanding_information_received_date:
               blank: Select if you have received the requested information
             internal_deadline:
               after_external: "cannot be after final deadline"
@@ -280,6 +279,8 @@ en:
               blank: Reason for rejecting the case cannot be blank
             other_rejected_reason:
               blank: Other reason for rejecting the case cannot be blank
+            outstanding_information_received_date:
+              blank: cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -556,7 +557,6 @@ en:
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?
-        information_received: Have you received the requested information?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
@@ -1415,6 +1415,7 @@ en:
       received_date_short: Received date
       received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
       only_select_one: Please only select one.
+      outstanding_information_received_date_legend: When was the outstanding information received?
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if
@@ -1529,14 +1530,14 @@ en:
       reason_rejected_heading: Reason offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
-      information_received_heading: Can the Subject Access Request be accepted?
+      outstanding_information_received_date_heading: When was the rejected case accepted?
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
       partial_case_letter_sent_dated_heading: Date letter sent from SSCL
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
       sent_to_sscl_heading: "Data sent to SSCL"
-      information_received:
+      outstanding_information_received_date:
         case/sar/offender:
           offender_sar:
             rejected: Edit rejected Offender SAR case
