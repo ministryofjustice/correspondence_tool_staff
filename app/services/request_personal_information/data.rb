@@ -162,11 +162,11 @@ class RequestPersonalInformation::Data
   end
 
   def probation_information
-    answers[:probation_checkboxes_1]
+    answers[:"probation-service-data_checkboxes_1"]
   end
 
   def probation_information_other
-    answers[:probation_textarea_1]
+    answers[:"probation-data-something-else_textarea_1"]
   end
 
   def probation_data_from
