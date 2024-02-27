@@ -42,7 +42,6 @@ feature "Offender SAR Case creation by a manager", js: true do
     then_expect_case_state_to_be_rejected
     then_expect_case_history_to_be_correct
     then_expect_open_cases_page_to_be_correct
-
   end
 
   scenario "1 Data subject requesting own record" do
