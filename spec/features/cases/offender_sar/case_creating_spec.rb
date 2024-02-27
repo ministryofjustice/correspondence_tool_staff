@@ -10,7 +10,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     cases_page.load
   end
 
-  scenario "0 Rejected Data subject requesting own record" do
+  scenario "0.1 Rejected Data subject requesting own record" do
     when_i_navigate_to_rejected_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page_for_rejected_case(:third_party)
@@ -24,14 +24,16 @@ feature "Offender SAR Case creation by a manager", js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
-  scenario "0 Rejected offender SAR created after using back link" do
+  scenario "0.2 Rejected offender SAR created after using back link" do
     # TODO: update this throughout rejections work
 
     when_i_navigate_to_rejected_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page_for_rejected_case(:third_party)
-    and_back_previous_step_to_subject_page
+    and_back_only_previous_step_to_requester_details_page
+    and_back_previous_step_to_subject_details_page
     and_fill_in_subject_details_page
+    and_fill_in_requester_details_page
     and_fill_in_requester_details_page_for_rejected_case(:third_party)
     and_fill_in_recipient_details_page(recipient: "subject_recipient")
     and_fill_in_requested_info_page
@@ -92,7 +94,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page(subject_full_name: "6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1")
     and_fill_in_requester_details_page(:third_party)
-    and_back_previous_step_to_change_to_non_third_party
+    and_back_previous_step_to_requester_details_page
     and_fill_in_recipient_details_page(recipient: "subject_recipient")
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
@@ -265,9 +267,19 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_show_page).to have_content "Address\n22 High Street"
   end
 
-  def and_back_previous_step_to_subject_page
+  def and_back_previous_step_to_requester_details_page
     click_on "Back"
     and_fill_in_requester_details_page
+  end
+
+  def and_back_only_previous_step_to_requester_details_page
+    click_on "Back"
+    expect(requester_details_page).to be_displayed
+  end
+
+  def and_back_previous_step_to_subject_details_page
+    click_on "Back"
+    and_fill_in_subject_details_page
   end
 
   def then_expect_no_third_party_info_stored(uniq_subject_full_name)
