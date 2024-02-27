@@ -16,8 +16,8 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
-      information_received
-      confirm_information_received
+      outstanding_information_received_date
+      outstanding_confirm_information_received_date
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -209,6 +209,28 @@ module Cases
       when :no_changes
         flash[:alert] = "No changes were made"
       end
+      redirect_to case_path(@case) and return
+    end
+
+    def confirm_outstanding_information_received_date
+      # debugger
+      @case = Case::Base.find_by(id: params[:id])
+      received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
+
+      received_day = params[:offender_sar][:received_date_dd]
+      received_month = params[:offender_sar][:received_date_mm]
+      received_year = params[:offender_sar][:received_date_yyyy]
+
+      debugger
+      if received_day.blank? || received_month.blank? || received_year.blank?
+        @case.errors.add(
+          :received_date,
+          I18n.t("activerecord.errors.models.case.attributes.outstanding_information_received_date.blank"),
+        )
+      else
+        @case.update!(received_date_dd: received_day, received_date_mm: received_month, received_date_yyyy: received_year)
+      end
+
       redirect_to case_path(@case) and return
     end
 
