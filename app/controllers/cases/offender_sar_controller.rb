@@ -213,22 +213,24 @@ module Cases
     end
 
     def confirm_outstanding_information_received_date
-      # debugger
       @case = Case::Base.find_by(id: params[:id])
+      authorize @case, :can_edit_case?
+
       received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
+      service = case_updater_service.new(current_user, @case, received_date)
+      service.call
 
-      received_day = params[:offender_sar][:received_date_dd]
-      received_month = params[:offender_sar][:received_date_mm]
-      received_year = params[:offender_sar][:received_date_yyyy]
-
-      debugger
-      if received_day.blank? || received_month.blank? || received_year.blank?
-        @case.errors.add(
-          :received_date,
-          I18n.t("activerecord.errors.models.case.attributes.outstanding_information_received_date.blank"),
-        )
-      else
-        @case.update!(received_date_dd: received_day, received_date_mm: received_month, received_date_yyyy: received_year)
+      if service.result == :error
+        if service.error_message.present?
+          flash[:alert] = service.error_message
+        end
+        render :outstanding_information_received_date
+      end
+      case service.result
+      when :ok
+        flash[:notice] = t("cases.update.case_updated")
+      when :no_changes
+        flash[:alert] = "No changes were made"
       end
 
       redirect_to case_path(@case) and return
