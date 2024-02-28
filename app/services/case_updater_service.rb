@@ -8,7 +8,6 @@ class CaseUpdaterService
     @params = params
     @result = :incomplete
     @error_message = nil
-    @old_rejected_reasons = kase.rejected_reasons
   end
 
   def call(message = nil) # rubocop:disable Lint/UnusedMethodArgument
@@ -25,7 +24,7 @@ class CaseUpdaterService
       # no need for tracking properties as the whole.
       if (@kase.changed_attributes.keys - %w[properties]).present? || linked_cases_changed
         @kase.save # rubocop:disable Rails/SaveBang
-        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message: log_message_for_rejected_reasons)
+        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message: )
         @result = :ok
       else
         @result = :no_changes
@@ -37,16 +36,6 @@ class CaseUpdaterService
   end
 
 private
-
-  def log_message_for_rejected_reasons
-    if @old_rejected_reasons != @kase.rejected_reasons
-      "<br><strong>Information outstanding:</strong><br>#{@kase.rejected_reasons.map { |reason|
-        Case::SAR::Offender::REJECTED_REASONS[reason]
-      }.append(@kase.other_rejected_reason).compact.join('<br>')}"
-    else
-      ""
-    end
-  end
 
   def have_linked_cases_changed?
     have_original_case_changed? || have_related_cases_changed?
