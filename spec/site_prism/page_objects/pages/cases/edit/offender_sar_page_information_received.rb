@@ -2,8 +2,8 @@ module PageObjects
   module Pages
     module Cases
       module Edit
-        class OffenderSARInformationReceived < PageObjects::Pages::Base
-          set_url "/cases/offender_sars/{id}/information_received"
+        class OffenderSAROutstandingInformationReceivedDate < PageObjects::Pages::Base
+          set_url "/cases/offender_sars/{id}/outstanding_information_received_date"
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
@@ -11,12 +11,14 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-          element :information_received, "#information_received"
+          element :date_received, "#date_received"
 
           element :continue_button, ".button"
 
-          def choose_information_received_button(choice)
-            make_radio_button_choice("offender_sar_information_received_#{choice}")
+          def set_received_date(received_date)
+            date_received_day.set(received_date.day)
+            date_received_month.set(received_date.month)
+            date_received_year.set(received_date.year)
           end
         end
       end
