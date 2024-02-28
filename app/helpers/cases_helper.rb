@@ -239,7 +239,7 @@ module CasesHelper
     when :outstanding_information_received
       link_to "Create valid case",
               confirm_outstanding_information_received_date_case_sar_offender_path(@case),
-              id: "action--information-received",
+              id: "action--outstanding_information-received_date",
               class: "button"
     end
   end
