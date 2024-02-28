@@ -445,7 +445,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  describe "#information_received" do
+  describe "#outstanding_information_received_date" do
     let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
     let(:params) { { id: offender_sar_case.id } }
 
@@ -454,50 +454,53 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
 
     context "with valid params" do
-      it "redirects to reason-rejected edit step" do
-        get(:information_received, params:)
-        expect(response).to render_template(:information_received)
+      it "redirects to outstanding information received date page" do
+        get(:outstanding_information_received_date, params:)
+        expect(response).to render_template(:outstanding_information_received_date)
       end
     end
   end
 
-  describe "#confirm_information_received" do
-    context "with invalid params" do
+  describe "#confirm_outstanding_information_received_date" do
+    context "when date missing" do
       let(:manager) { find_or_create :branston_user }
       let(:offender_sar_case) { create :offender_sar_case, :rejected }
       let(:params) do
         {
           id: offender_sar_case.id,
           offender_sar: {
-            information_received: nil,
+            outstanding_information_received_date: nil,
           },
         }
       end
+
       let(:errors) { assigns(:case).errors }
 
       before do
         sign_in manager
       end
 
-      context "when user selects no" do
-        let(:params) do
-          {
-            id: offender_sar_case.id,
-            offender_sar: {
-              information_received: "no",
-            },
-          }
-        end
-
-        it "renders the reason-rejected edit step" do
-          patch(:confirm_information_received, params:)
-          expect(response).to redirect_to edit_step_case_sar_offender_path(offender_sar_case, "reason_rejected")
-        end
+      it "requires received date to be set" do
+        expect(errors[:received_date]).to eq ["cannot be blank"]
       end
+    end
+
+    context "when date received in future" do
+      let(:future_date) { 1.day.from_now }
+      let(:params) do
+        {
+          offender_sar: {
+            received_date_dd: future_date.day,
+            received_date_mm: future_date.month,
+            received_date_yyyy: future_date.year,
+          },
+        }
+      end
+      let(:errors) { assigns(:case).errors }
+
 
       it "fails to be valid" do
-        patch(:confirm_information_received, params:)
-        expect(errors[:information_received]).to eq ["Select if you have received the requested information"]
+        expect(errors[:received_date]).to eq ["cannot be in the future."]
       end
     end
   end

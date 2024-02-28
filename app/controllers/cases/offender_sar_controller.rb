@@ -224,7 +224,7 @@ module Cases
         if service.error_message.present?
           flash[:alert] = service.error_message
         end
-        render :outstanding_information_received_date
+        render :outstanding_information_received_date and return
       end
       case service.result
       when :ok
