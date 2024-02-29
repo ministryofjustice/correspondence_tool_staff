@@ -10,3 +10,4 @@
 //= link govuk-template-print.css
 //= link fonts.css
 //= link jquery-ui.css
+//= link govuk-frontend.min.css
