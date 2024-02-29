@@ -1,0 +1,9 @@
+<div class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+  <h2 id="error-summary-heading" class="heading-medium error-summary-heading"><%= "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}" %></h2>
+  <p></p>
+  <ul class="error-summary-list">
+    <li>
+      <a href="#error_offender_sar_received_date">When was the outstanding information received? <%= "#{@case.errors.first.message}" %></a>
+    </li>
+  </ul>
+</div>

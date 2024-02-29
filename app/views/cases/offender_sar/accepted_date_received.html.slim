@@ -11,8 +11,8 @@
 
 = render partial: 'layouts/header'
 
-= GovukElementsErrorsHelper.error_summary @case,
-  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+- if @case.errors.any?
+  = render partial: 'cases/offender_sar/accepted_date_received_error'
 
 = form_for @case, url: confirm_accepted_date_received_case_sar_offender_path(@case), as: :offender_sar do |f|
   .form-group
