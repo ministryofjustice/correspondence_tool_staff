@@ -13,13 +13,13 @@
     <%= stylesheet_link_tag "govuk-template-print.css", media: "print", integrity: true, crossorigin: "anonymous" %>
 
     <%= stylesheet_link_tag "fonts.css", media: "all", integrity: true, crossorigin: "anonymous" %>
-    <%= stylesheet_link_tag "govuk-frontend.min.css", media: "all" %>
+    <%= stylesheet_link_tag "/assets/govuk-frontend.min.css" %>
     <!--[if lt IE 9]><%= javascript_include_tag "ie.js", integrity: true, crossorigin: "anonymous" %><![endif]-->
 
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" sizes="48x48">
-    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" sizes="any">
-    <link rel="mark-icon" type="image/x-icon" href="assets/images/govuk-icon-mask.svg" color="#0b0c0c">
-    <link rel="apple-touch-icon" type="images/png" href="assets/images/govuk-icon-180.png" sizes="180x180">
+    <%= favicon_link_tag asset_path('images/favicon.ico'), sizes: '48x48' %>
+    <%= favicon_link_tag asset_path('images/favicon.svg'), type: 'image/svg+xml', sizes: 'any' %>
+    <%= favicon_link_tag asset_path('images/govuk-icon-mask.svg'), rel: 'mask-icon', color: '#0b0c0c' %>
+    <%= favicon_link_tag asset_path('images/govuk-icon-180.png'), rel: 'apple-touch-icon', type: 'image/png', size: '180x180' %>
 
     <%# the colour used for theme-color is the standard palette $black from
         https://github.com/alphagov/govuk_frontend_toolkit/blob/master/stylesheets/colours/_palette.scss %>
