@@ -33,7 +33,6 @@ feature "Offender SAR Case creation by a manager", js: true do
     and_back_only_previous_step_to_requester_details_page
     and_back_previous_step_to_subject_details_page
     expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create rejected Offender SAR case")
-
   end
 
   scenario "1 Data subject requesting own record" do
