@@ -445,7 +445,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  describe "#outstanding_information_received_date" do
+  describe "#accepted_date_received" do
     let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
     let(:params) { { id: offender_sar_case.id } }
 
@@ -454,14 +454,14 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
 
     context "with valid params" do
-      it "redirects to outstanding information received date page" do
-        get(:outstanding_information_received_date, params:)
-        expect(response).to render_template(:outstanding_information_received_date)
+      it "redirects to Accepted date received page" do
+        get(:accepted_date_received, params:)
+        expect(response).to render_template(:accepted_date_received)
       end
     end
   end
 
-  describe "#confirm_outstanding_information_received_date" do
+  describe "#confirm_accepted_date_received" do
     context "when date missing" do
       let(:manager) { find_or_create :branston_user }
       let(:offender_sar_case) { create :offender_sar_case, :rejected }
@@ -469,7 +469,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         {
           id: offender_sar_case.id,
           offender_sar: {
-            outstanding_information_received_date: nil,
+            dummy_field: true,
           },
         }
       end
