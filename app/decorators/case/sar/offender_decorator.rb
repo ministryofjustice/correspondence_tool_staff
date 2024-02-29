@@ -2,7 +2,11 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   include OffenderSARCaseForm
 
   def pretty_type
-    I18n.t("helpers.label.correspondence_types.offender_sar")
+    if object.current_state == "rejected"
+      I18n.t("helpers.label.correspondence_types.rejected_offender_sar")
+    else
+      I18n.t("helpers.label.correspondence_types.offender_sar")
+    end
   end
 
   def case_route_path

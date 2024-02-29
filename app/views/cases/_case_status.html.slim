@@ -16,7 +16,7 @@
         .case-status__data
           = case_details.who_its_with
 
-    - if case_details.type_of_offender_sar?
+    - if case_details.type_of_offender_sar? && case_details.current_state != 'rejected'
       .case-status__group.page-counts
         .gridrow
           .column-one-third
