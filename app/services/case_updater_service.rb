@@ -10,7 +10,7 @@ class CaseUpdaterService
     @error_message = nil
   end
 
-  def call(message = nil) # rubocop:disable Lint/UnusedMethodArgument
+  def call(message = nil)
     ActiveRecord::Base.transaction do
       # There is extra checking for linked cases as those changes won't appear in the
       # case's changed_attributes, has to be checked separately
@@ -24,7 +24,7 @@ class CaseUpdaterService
       # no need for tracking properties as the whole.
       if (@kase.changed_attributes.keys - %w[properties]).present? || linked_cases_changed
         @kase.save # rubocop:disable Rails/SaveBang
-        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message: )
+        @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message:)
         @result = :ok
       else
         @result = :no_changes

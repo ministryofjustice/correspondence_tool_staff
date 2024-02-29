@@ -214,9 +214,9 @@ module Cases
 
     def accepted_date_received
       @case = Case::Base.find_by(id: params[:id])
-      @case.received_date_dd=""
-      @case.received_date_mm=""
-      @case.received_date_yyyy=""
+      @case.received_date_dd = ""
+      @case.received_date_mm = ""
+      @case.received_date_yyyy = ""
     end
 
     def confirm_accepted_date_received
@@ -239,6 +239,8 @@ module Cases
       when :no_changes
         flash[:alert] = "No changes were made"
       end
+
+      # TODO: transition the case state to data_to_be_requested
 
       redirect_to case_path(@case) and return
     end
