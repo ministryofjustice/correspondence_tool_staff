@@ -20,6 +20,7 @@ module OffenderSARCasesParams
       :prison_number,
       :previous_case_numbers,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :accepted_date_received_dd, :accepted_date_received_mm, :accepted_date_received_yyyy,
       :recipient,
       :requester_type,
       :subject,

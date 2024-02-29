@@ -102,7 +102,7 @@ class Case::SAR::Offender < Case::Base
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
-  attr_accessor :remove_sent_to_sscl_reason
+  attr_accessor :remove_sent_to_sscl_reason, :accepted_date_received_dd, :accepted_date_received_mm, :accepted_date_received_yyyy
 
   enum subject_type: {
     offender: "offender",

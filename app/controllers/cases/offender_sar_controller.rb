@@ -16,7 +16,7 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
-      outstanding_information_received_date
+      accepted_date_received
       outstanding_confirm_information_received_date
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
@@ -212,7 +212,14 @@ module Cases
       redirect_to case_path(@case) and return
     end
 
-    def confirm_outstanding_information_received_date
+    def accepted_date_received
+      @case = Case::Base.find_by(id: params[:id])
+      @case.received_date_dd=""
+      @case.received_date_mm=""
+      @case.received_date_yyyy=""
+    end
+
+    def confirm_accepted_date_received
       @case = Case::Base.find_by(id: params[:id])
       authorize @case, :can_edit_case?
 
@@ -224,7 +231,7 @@ module Cases
         if service.error_message.present?
           flash[:alert] = service.error_message
         end
-        render :outstanding_information_received_date and return
+        render :accepted_date_received and return
       end
       case service.result
       when :ok
