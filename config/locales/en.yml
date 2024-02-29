@@ -277,8 +277,6 @@ en:
               blank: Reason for rejecting the case cannot be blank
             other_rejected_reason:
               blank: Other reason for rejecting the case cannot be blank
-            accepted_date_received:
-              blank: cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
