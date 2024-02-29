@@ -56,7 +56,7 @@ en:
     edit_user_page: Edit team member - %{team_name} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
-    outstanding_information_received_date: Outstanding information received date - %{case_number} - Track-a-query
+    accepted_date_received: Accepted date received - %{case_number} - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query
     login: Login - Track-a-query

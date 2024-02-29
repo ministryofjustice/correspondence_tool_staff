@@ -2,8 +2,8 @@ module PageObjects
   module Pages
     module Cases
       module Edit
-        class OffenderSAROutstandingInformationReceivedDate < PageObjects::Pages::Base
-          set_url "/cases/offender_sars/{id}/outstanding_information_received_date"
+        class OffenderSARAcceptedDateReceived < PageObjects::Pages::Base
+          set_url "/cases/offender_sars/{id}/accepted_date_received"
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, ".global-nav"

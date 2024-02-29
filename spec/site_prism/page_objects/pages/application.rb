@@ -56,7 +56,7 @@ module PageObjects
         cases_edit_offender_sar_move_back: "Cases::Edit::OffenderSARPageMoveCaseBack",
         cases_edit_offender_sar_reason_for_lateness: "Cases::Edit::OffenderSARPageRecordReasonForLateness",
         cases_edit_offender_sar_sent_to_sscl: "Cases::Edit::OffenderSARPageSentToSscl",
-        cases_edit_offender_sar_outstanding_information_received_date_page: "Cases::Edit::OffenderSAROutstandingInformationReceivedDate",
+        cases_edit_offender_sar_accepted_date_received_page: "Cases::Edit::OffenderSARAcceptedDateReceived",
 
         cases_new_offender_sar_complaint_confirm_case: "Cases::New::OffenderSARComplaintPageConfirmCase",
         cases_new_offender_sar_complaint_link_offender_sar: "Cases::New::OffenderSARComplaintPageLinkSarCase",

@@ -236,10 +236,10 @@ module CasesHelper
               case_cover_page_path(@case),
               id: "action--preview-cover-page",
               class: "button-secondary"
-    when :outstanding_information_received
+    when :accepted_date_received
       link_to "Create valid case",
-              confirm_outstanding_information_received_date_case_sar_offender_path(@case),
-              id: "action--outstanding_information-received_date",
+              confirm_accepted_date_received_case_sar_offender_path(@case),
+              id: "action--accepted-date-received",
               class: "button"
     end
   end
