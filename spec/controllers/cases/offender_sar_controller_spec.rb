@@ -498,7 +498,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
       let(:errors) { assigns(:case).errors }
 
-
       it "fails to be valid" do
         expect(errors[:received_date]).to eq ["cannot be in the future."]
       end
