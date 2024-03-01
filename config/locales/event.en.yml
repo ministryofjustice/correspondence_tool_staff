@@ -52,6 +52,7 @@ en:
     case/offender_sar:
       rejected:
         create: Rejected case created
+        validated_case: Rejected case accepted
 
 
     mark_as_waiting_for_data: Mark as waiting for data
@@ -87,6 +88,7 @@ en:
     require_further_action_to_responder_team_desc: Further information requested by the ICO
     annotate_retention_changes: Retention details edited
     annotate_system_retention_changes: Retention details edited - System update
+    validate_rejected_case: Valid case created
 
   retention_schedule_case_notes:
     update:

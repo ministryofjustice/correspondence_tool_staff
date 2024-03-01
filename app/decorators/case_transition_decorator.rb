@@ -65,7 +65,8 @@ private
          "request_amends",
          "upload_response_and_return_for_redraft",
          "upload_response_and_approve",
-         "upload_response_approve_and_bypass"
+         "upload_response_approve_and_bypass",
+         "validate_rejected_case"
       object.message
     when "assign_to_team_member"
       construct_message_for_assign_to_team_member

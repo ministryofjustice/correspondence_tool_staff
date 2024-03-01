@@ -17,7 +17,7 @@ module Cases
       confirm_update_partial_flags
       confirm_sent_to_sscl
       accepted_date_received
-      outstanding_confirm_information_received_date
+      confirm_accepted_date_received
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -226,6 +226,8 @@ module Cases
       received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
       service = case_updater_service.new(current_user, @case, received_date)
       service.call
+
+      @case.state_machine.validate_rejected_case!({ acting_user: current_user, acting_team: BusinessUnit.dacu_branston })
 
       if service.result == :error
         if service.error_message.present?
