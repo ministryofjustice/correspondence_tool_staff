@@ -513,6 +513,10 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         expect(assigns(:case).received_date_mm).to eq "2"
         expect(assigns(:case).received_date_yyyy).to eq "2023"
       end
+
+      it "removes the 'R' from the case number" do
+        expect(assigns(:case).number).to eq "240301001"
+      end
     end
   end
 

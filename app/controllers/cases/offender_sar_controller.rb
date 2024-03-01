@@ -224,6 +224,7 @@ module Cases
       authorize @case, :can_edit_case?
 
       received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
+      @case.number.tr!("R", "")
       service = case_updater_service.new(current_user, @case, received_date)
       service.call
 
@@ -241,8 +242,6 @@ module Cases
       when :no_changes
         flash[:alert] = "No changes were made"
       end
-
-      # TODO: transition the case state to data_to_be_requested
 
       redirect_to case_path(@case) and return
     end

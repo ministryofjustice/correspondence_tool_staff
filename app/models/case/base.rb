@@ -508,7 +508,7 @@ class Case::Base < ApplicationRecord
   end
 
   def prevent_number_change
-    raise StandardError, "number is immutable" if number_changed?
+    raise StandardError, "number is immutable" if number_changed? && current_state != "rejected"
   end
 
   def triggerable?
