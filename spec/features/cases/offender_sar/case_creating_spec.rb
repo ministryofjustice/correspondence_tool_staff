@@ -173,7 +173,7 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create rejected Offender SAR case")
   end
 
-  def and_fill_in_subject_details_page(params = nilt )
+  def and_fill_in_subject_details_page(params = nil)
     cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
     scroll_to cases_new_offender_sar_subject_details_page.submit_button
     click_on "Continue"
