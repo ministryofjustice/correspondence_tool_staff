@@ -13,7 +13,6 @@ feature "Offender SAR Case editing by a manager", :js do
   end
 
   scenario "user creates a valid case from a rejected case" do
-    # TODO: update this throughout rejections work
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 
     click_on "Create valid case"
