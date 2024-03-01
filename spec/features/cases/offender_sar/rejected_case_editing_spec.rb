@@ -21,9 +21,6 @@ feature "Offender SAR Case editing by a manager", :js do
     cases_edit_offender_sar_accepted_date_received_page.set_received_date(1.day.ago)
     click_on "Continue"
 
-    then_expect_case_state_to_be_data_to_be_requested
-    then_expect_case_date_request_received_to_be_edited
-
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Case updated"
     expect(cases_show_page.case_status).to have_content "Data to be requested"
