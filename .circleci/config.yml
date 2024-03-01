@@ -92,6 +92,7 @@ references:
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
           bundle config deployment true
           bundle check || bundle install && bundle clean
+          yarn install --frozen-lockfile --ignore-scripts
         fi
 
   save_cache: &save_cache

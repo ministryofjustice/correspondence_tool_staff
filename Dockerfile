@@ -9,7 +9,7 @@ RUN addgroup --gid 1000 --system appgroup && \
 RUN apk add libreoffice clamav clamav-daemon freshclam ttf-freefont
 
 # Note: .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base - these help with bundle install issues
-RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base git nodejs zip postgresql-client
+RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base git nodejs zip postgresql-client yarn
 
 RUN apk --update add less && apk -U upgrade && apk --no-cache upgrade musl
 
@@ -24,6 +24,8 @@ RUN bundle config deployment true && \
     bundle install --jobs 4 --retry 3
 
 COPY . .
+
+RUN yarn install --pure-lockfile
 
 RUN mkdir -p log tmp
 RUN chown -R appuser:appgroup /usr/src/app/
