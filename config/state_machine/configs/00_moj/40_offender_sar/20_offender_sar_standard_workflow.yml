@@ -107,7 +107,6 @@
                 annotate_system_retention_changes:
               rejected:
                 edit_case:
-                accepted_date_received:
                 add_note_to_case:
                 validate_rejected_case:
                   transition_to: data_to_be_requested
