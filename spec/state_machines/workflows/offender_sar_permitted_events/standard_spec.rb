@@ -86,7 +86,6 @@ TRANSITIONS = [
   },
 ].freeze
 
-
 REJECTED_EVENTS = [
   {
     state: :rejected,
@@ -172,5 +171,4 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
       end
     end
   end
-
 end
