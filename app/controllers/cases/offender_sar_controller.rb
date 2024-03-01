@@ -224,10 +224,9 @@ module Cases
       authorize @case, :can_edit_case?
 
       received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
-      @case.number.tr!("R", "")
       service = case_updater_service.new(current_user, @case, received_date)
       service.call
-
+      @case.number.tr!("R", "")
       @case.state_machine.validate_rejected_case!({ acting_user: current_user, acting_team: BusinessUnit.dacu_branston })
 
       if service.result == :error
