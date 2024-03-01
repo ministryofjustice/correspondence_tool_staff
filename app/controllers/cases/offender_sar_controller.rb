@@ -31,7 +31,9 @@ module Cases
 
     def new
       permitted_correspondence_types
-      @rejected = params["rejected"]
+      if @case && (@rejected || @case.current_state == "rejected")
+        params["rejected"] = true
+      end
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
@@ -379,21 +381,12 @@ module Cases
     end
 
     def build_url_params_from_flags
-      # if @case.get_previous_step == "subject-details"
-      #   url_rejected = "?rejected=true"
-      # end
-      #
-      # if has_optional_flags?
-      #   url_flags = "?#{@creation_optional_flags.to_param}"
-      # else
-      #   ""
-      # end
-      # url_flags + url_rejected
+      debugger
+      url_flags = ""
+      url_rejected = ""
       url_flags = has_optional_flags? ? "?#{@creation_optional_flags.to_param}" : ""
-      url_rejected = @case.get_previous_step && @case.get_previous_step == "subject-details" ? "&rejected=true" : ""
-
+      url_rejected = @case.get_previous_step == "subject-details" && @rejected ? "&rejected=true" : ""
       url_flags += url_rejected if url_rejected.present?
-
       url_flags
     end
 
@@ -403,6 +396,7 @@ module Cases
 
     def back_link_url
       if @case.get_previous_step
+        sleep 15
         "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
       else
         new_case_path
