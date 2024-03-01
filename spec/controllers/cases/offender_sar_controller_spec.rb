@@ -446,60 +446,70 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   end
 
   describe "#accepted_date_received" do
-    let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
-    let(:params) { { id: offender_sar_case.id } }
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
+    let(:params) { { id: rejected_offender_sar_case.id } }
 
     before do
       sign_in responder
     end
 
-    context "with valid params" do
-      it "redirects to Accepted date received page" do
-        get(:accepted_date_received, params:)
-        expect(response).to render_template(:accepted_date_received)
-      end
+    it "redirects to accepted date received page" do
+      get(:accepted_date_received, params:)
+      expect(response).to render_template(:accepted_date_received)
+    end
+
+    it "sets received_date to nil" do
+      get(:accepted_date_received, params:)
+      expect(assigns(offender_sar_case[:received_date])).to eq nil
     end
   end
 
   describe "#confirm_accepted_date_received" do
-    context "when date missing" do
-      let(:manager) { find_or_create :branston_user }
-      let(:offender_sar_case) { create :offender_sar_case, :rejected }
-      let(:params) do
-        {
-          id: offender_sar_case.id,
-          offender_sar: {
-            dummy_field: true,
-          },
-        }
-      end
-
-      let(:errors) { assigns(:case).errors }
-
-      before do
-        sign_in manager
-      end
-
-      it "requires received date to be set" do
-        expect(errors[:received_date]).to eq ["cannot be blank"]
-      end
+    let(:manager) { find_or_create :branston_user }
+    let(:rejected_offender_sar_case) { create :offender_sar_case, :rejected }
+    let(:params) do
+      {
+        id: rejected_offender_sar_case.id,
+        offender_sar: {
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+        },
+      }
     end
 
-    context "when date received in future" do
-      let(:future_date) { 1.day.from_now }
-      let(:params) do
+    before do
+      sign_in manager
+    end
+
+    context "with valid params" do
+      let(:new_date_params) do
         {
+          id: rejected_offender_sar_case.id,
           offender_sar: {
-            received_date_dd: future_date.day,
-            received_date_mm: future_date.month,
-            received_date_yyyy: future_date.year,
+            received_date_dd: "01",
+            received_date_mm: "02",
+            received_date_yyyy: "2023",
           },
         }
       end
-      let(:errors) { assigns(:case).errors }
 
-      it "fails to be valid" do
-        expect(errors[:received_date]).to eq ["cannot be in the future."]
+      before do
+        patch(:confirm_accepted_date_received, params: new_date_params )
+      end
+
+      it "sets the flash" do
+        expect(flash[:notice]).to eq "Case updated"
+      end
+
+      it "redirects to the new case assignment page" do
+        expect(response).to redirect_to(case_path(rejected_offender_sar_case))
+      end
+
+      it "updates the received_date value" do
+        expect(assigns(:case).received_date_dd).to eq "1"
+        expect(assigns(:case).received_date_mm).to eq "2"
+        expect(assigns(:case).received_date_yyyy).to eq "2023"
       end
     end
   end
