@@ -382,6 +382,9 @@ module Cases
     end
 
     def build_url_params_from_flags
+      debugger
+      url_flags = ""
+      url_rejected = ""
       url_flags = has_optional_flags? ? "?#{@creation_optional_flags.to_param}" : ""
       url_flags += if url_rejected.present? && @case.get_previous_step == "subject-details"
                      "&rejected=true"
