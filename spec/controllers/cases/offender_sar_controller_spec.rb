@@ -495,7 +495,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
 
       before do
-        patch(:confirm_accepted_date_received, params: new_date_params )
+        patch(:confirm_accepted_date_received, params: new_date_params)
       end
 
       it "sets the flash" do
