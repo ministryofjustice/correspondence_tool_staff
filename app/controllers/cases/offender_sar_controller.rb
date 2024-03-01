@@ -353,6 +353,7 @@ module Cases
 
     def rejected_set_current_state(values)
       case params["rejected"]
+      debugger
       when "true"
         values["current_state"] = "rejected"
       when "false"
@@ -382,8 +383,10 @@ module Cases
 
     def build_url_params_from_flags
       url_flags = has_optional_flags? ? "?#{@creation_optional_flags.to_param}" : ""
-      url_rejected = @case.get_previous_step == "subject-details" && @rejected ? "&rejected=true" : ""
-      url_flags += url_rejected if url_rejected.present?
+      url_flags += if url_rejected.present? && @case.get_previous_step == "subject-details"
+                     "&rejected=true"
+                   end
+      debugger
       url_flags
     end
 
@@ -393,7 +396,6 @@ module Cases
 
     def back_link_url
       if @case.get_previous_step
-        sleep 15
         "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
       else
         new_case_path
