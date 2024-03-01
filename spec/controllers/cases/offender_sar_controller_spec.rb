@@ -460,7 +460,9 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
     it "sets received_date to nil" do
       get(:accepted_date_received, params:)
-      expect(assigns(offender_sar_case[:received_date])).to eq nil
+      expect(assigns(:case).received_date_dd).to eq ""
+      expect(assigns(:case).received_date_mm).to eq ""
+      expect(assigns(:case).received_date_yyyy).to eq ""
     end
   end
 
