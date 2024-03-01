@@ -34,7 +34,6 @@ module Cases
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @rejected = params["rejected"] == "true" || @case.current_state == "rejected"
-      debugger
       @case.current_step = params[:step]
       load_optional_flags_from_params
       @back_link = back_link_url
