@@ -65,12 +65,6 @@ TRANSITIONS = [
       send_day_1_email
     ],
   },
-  # {
-  #   state: :rejected,
-  #   specific_events: %i[
-  #     validate_rejected_case
-  #   ],
-  # },
   {
     state: :closed,
     full_events: %i[
@@ -99,6 +93,7 @@ REJECTED_EVENTS = [
     specific_events: %i[
       add_note_to_case
       validate_rejected_case
+      accepted_date_received
       edit_case
     ],
   },
