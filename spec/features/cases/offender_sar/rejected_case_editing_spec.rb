@@ -4,7 +4,7 @@ require Rails.root.join("db/seeders/case_category_reference_seeder")
 feature "Offender SAR Case editing by a manager", :js do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
-  given(:offender_sar_case) { create :offender_sar_case, :rejected, :third_party, received_date: Date.today.to_date, rejected_reasons: %w[cctv_bwcv change_of_name_certificate court_data_request] }
+  given(:offender_sar_case) { create :offender_sar_case, :rejected, :third_party, received_date: Time.zone.today.to_date, rejected_reasons: %w[cctv_bwcv change_of_name_certificate court_data_request] }
 
   background do
     find_or_create :team_branston
@@ -18,7 +18,7 @@ feature "Offender SAR Case editing by a manager", :js do
 
     click_on "Create valid case"
     expect(cases_edit_offender_sar_accepted_date_received_page).to be_displayed
-    cases_edit_offender_sar_accepted_date_received_page.set_received_date(1.days.ago)
+    cases_edit_offender_sar_accepted_date_received_page.set_received_date(1.day.ago)
     click_on "Continue"
 
     then_expect_case_state_to_be_data_to_be_requested
