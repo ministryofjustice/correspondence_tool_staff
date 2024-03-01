@@ -164,17 +164,15 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
       let(:responder) { find_or_create :branston_user }
 
       REJECTED_EVENTS.each do |transition|
-        context "with Offender SAR in state #{transition[:state]}" do
-          let(:kase) { offender_sar_case with_state: transition[:state] }
+        let(:kase) { offender_sar_case with_state: transition[:state] }
 
-          it "only allows permitted events" do
-            expect(kase.current_state.to_sym).to eq transition[:state]
+        it "only allows permitted events" do
+          expect(kase.current_state.to_sym).to eq transition[:state]
 
-            permitted_events = transition[:specific_events]
+          permitted_events = transition[:specific_events]
 
-            expect(kase.state_machine.permitted_events(responder))
-              .to match_array permitted_events
-          end
+          expect(kase.state_machine.permitted_events(responder))
+            .to match_array permitted_events
         end
       end
     end
