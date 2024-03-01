@@ -11,7 +11,9 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-          element :date_received, "#date_received"
+          element :date_received_day, "#offender_sar_received_date_dd"
+          element :date_received_month, "#offender_sar_received_date_mm"
+          element :date_received_year, "#offender_sar_received_date_yyyy"
 
           element :continue_button, ".button"
 
