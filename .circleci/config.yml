@@ -235,6 +235,8 @@ jobs:
       # - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
+    machine:
+      image: default
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
 
     <<: *defaults
