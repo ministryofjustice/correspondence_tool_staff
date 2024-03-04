@@ -521,7 +521,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       it "changes the current_state to 'data to be requested'" do
         expect(assigns(:case).current_state).to eq "data_to_be_requested"
       end
-
     end
   end
 
