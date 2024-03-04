@@ -166,8 +166,7 @@ references:
         echo $BUILD_TAG > workspace/build_tag
 
   build_and_push_image: &build_and_push_image
-    aws-ecr/build-image:
-      push-image: true
+    aws-ecr/build_and_push_image:
       tag: $BUILD_TAG
       region: $ECR_REGION
       repo: $ECR_REPOSITORY
