@@ -14,16 +14,16 @@ ul#create-correspondences
   label.form-label
     = t('helpers.label.correspondence_types.status.valid')
   li
-      = p link_to t('.valid_offender_sar'), new_case_sar_offender_path(params: {rejected: false})
+    = link_to t('.valid_offender_sar'), new_case_sar_offender_path(params: {rejected: false})
   <br/>
 
   label.form-label
     = t('helpers.label.correspondence_types.status.rejected')
   li
-      = p link_to t('.rejected_offender_sar'), new_case_sar_offender_path(params: {rejected: true})
+    = link_to t('.rejected_offender_sar'), new_case_sar_offender_path(params: {rejected: true})
   <br/>
 
   label.form-label
     = t('helpers.label.correspondence_types.status.complaint')
   li
-      = p link_to t('.complaint_offender_sar'), new_case_sar_offender_complaint_path
+    = link_to t('.complaint_offender_sar'), new_case_sar_offender_complaint_path
