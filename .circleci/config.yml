@@ -167,11 +167,11 @@ references:
 
   build_and_push_image: &build_and_push_image
     aws-ecr/build_image:
-      push-image: true
+      push_image: true
       tag: $BUILD_TAG
       region: $ECR_REGION
       repo: $ECR_REPOSITORY
-      extra-build-args: |
+      extra_build_args: |
         --build-arg BUILD_DATE=$(date +%Y-%m-%dT%H:%M:%S%z) \
         --build-arg COMMIT_ID=$CIRCLE_SHA1 \
         --build-arg BUILD_TAG=$BUILD_TAG \
