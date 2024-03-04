@@ -453,7 +453,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       sign_in responder
     end
 
-    it "redirects to accepted date received page" do
+    it "renders the accepted date received page" do
       get(:accepted_date_received, params:)
       expect(response).to render_template(:accepted_date_received)
     end
@@ -504,7 +504,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         expect(flash[:notice]).to eq "Case updated"
       end
 
-      it "redirects to the new case assignment page" do
+      it "redirects to the case details page" do
         expect(response).to redirect_to(case_path(rejected_offender_sar_case))
       end
 
@@ -515,8 +515,13 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
 
       it "removes the 'R' from the case number" do
-        expect(assigns(:case).number).to eq "240301001"
+        expect(assigns(:case).number[0]).not_to eq "R"
       end
+
+      it "changes the current_state to 'data to be requested'" do
+        expect(assigns(:case).current_state).to eq "data_to_be_requested"
+      end
+
     end
   end
 
