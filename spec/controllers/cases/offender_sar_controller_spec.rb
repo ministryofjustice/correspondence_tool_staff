@@ -479,11 +479,8 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       }
     end
 
-    let(:service) { instance_double(CaseUpdateSentToSsclService, call: nil, result: :ok, message: nil) }
-
     before do
       sign_in responder
-      allow(CaseUpdateSentToSsclService).to receive(:new).and_return(service)
     end
 
     context "with valid params" do
