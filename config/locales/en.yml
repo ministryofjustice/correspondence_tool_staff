@@ -1536,6 +1536,7 @@ en:
       sent_to_sscl_heading: "Data sent to SSCL"
       accepted_date_received:
         case/sar/offender:
+          sub_heading: Create valid offender SAR case
           offender_sar:
             rejected: Create valid offender SAR case
     offender_sar_complaint:
