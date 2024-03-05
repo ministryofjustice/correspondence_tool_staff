@@ -52,7 +52,6 @@ en:
     case/offender_sar:
       rejected:
         create: Rejected case created
-        validated_case: Rejected case accepted
 
 
     mark_as_waiting_for_data: Mark as waiting for data
