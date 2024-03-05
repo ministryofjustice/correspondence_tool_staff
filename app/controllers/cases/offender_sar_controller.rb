@@ -213,14 +213,10 @@ module Cases
     end
 
     def accepted_date_received
-      @case = Case::Base.find_by(id: params[:id])
-      @case.received_date_dd = ""
-      @case.received_date_mm = ""
-      @case.received_date_yyyy = ""
+      @case.received_date = nil
     end
 
     def confirm_accepted_date_received
-      @case = Case::Base.find_by(id: params[:id])
       authorize @case, :can_edit_case?
 
       received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
