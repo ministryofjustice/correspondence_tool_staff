@@ -28,5 +28,4 @@ class CaseValidateRejectedOffenderSARService
     @error_message = e.message
     @result = :error
   end
-
 end
