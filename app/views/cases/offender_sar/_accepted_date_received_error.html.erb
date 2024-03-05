@@ -3,7 +3,7 @@
   <p></p>
   <ul class="error-summary-list">
     <li>
-      <a href="#error_offender_sar_received_date">When was the outstanding information received? <%= "#{@case.errors.first.message}" %></a>
+      <a href="#error_offender_sar_received_date"><%= I18n.t('activerecord.errors.models.case/sar/offender.attributes.accepted_date_received')  %> <%= "#{@case.errors.first.message}" %></a>
     </li>
   </ul>
 </div>

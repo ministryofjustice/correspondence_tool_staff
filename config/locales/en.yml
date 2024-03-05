@@ -302,6 +302,7 @@ en:
               blank: cannot be blank
             date_of_birth:
               blank: cannot be blank
+            accepted_date_received: When was the outstanding information received?
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
