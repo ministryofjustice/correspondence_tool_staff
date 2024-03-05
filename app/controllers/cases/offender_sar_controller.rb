@@ -219,7 +219,6 @@ module Cases
     def confirm_accepted_date_received
       authorize @case, :can_edit_case?
 
-      received_date = params[:offender_sar].permit(:received_date_dd, :received_date_mm, :received_date_yyyy)
       service = case_updater_service.new(current_user, @case, received_date)
       service.call
       @case.number.tr!("R", "")
