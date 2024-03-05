@@ -219,10 +219,13 @@ module Cases
     def confirm_accepted_date_received
       authorize @case, :can_edit_case?
 
-      service = case_updater_service.new(current_user, @case, received_date)
+      service = CaseValidateRejectedOffenderSARService.new(
+        user: current_user,
+        kase: @case,
+        params: edit_params,
+      )
+
       service.call
-      @case.number.tr!("R", "")
-      @case.state_machine.validate_rejected_case!({ acting_user: current_user, acting_team: BusinessUnit.dacu_branston })
 
       if service.result == :error
         if service.error_message.present?

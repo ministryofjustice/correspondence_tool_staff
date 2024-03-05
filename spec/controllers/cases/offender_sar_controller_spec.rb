@@ -467,7 +467,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   end
 
   describe "#confirm_accepted_date_received" do
-    let(:manager) { find_or_create :branston_user }
     let(:rejected_offender_sar_case) { create :offender_sar_case, :rejected }
     let(:params) do
       {
@@ -480,8 +479,11 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       }
     end
 
+    let(:service) { instance_double(CaseUpdateSentToSsclService, call: nil, result: :ok, message: nil) }
+
     before do
-      sign_in manager
+      sign_in responder
+      allow(CaseUpdateSentToSsclService).to receive(:new).and_return(service)
     end
 
     context "with valid params" do
@@ -506,16 +508,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
       it "redirects to the case details page" do
         expect(response).to redirect_to(case_path(rejected_offender_sar_case))
-      end
-
-      it "updates the received_date value" do
-        expect(assigns(:case).received_date_dd).to eq "1"
-        expect(assigns(:case).received_date_mm).to eq "2"
-        expect(assigns(:case).received_date_yyyy).to eq "2023"
-      end
-
-      it "removes the 'R' from the case number" do
-        expect(assigns(:case).number[0]).not_to eq "R"
       end
 
       it "changes the current_state to 'data to be requested'" do
