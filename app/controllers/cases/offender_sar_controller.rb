@@ -214,7 +214,7 @@ module Cases
 
     def accepted_date_received
       authorize @case, :can_edit_case?
-      authorize @case, :can_validate_rejected_case
+      authorize @case, :can_validate_rejected_case?
       @case.received_date = nil
     end
 
