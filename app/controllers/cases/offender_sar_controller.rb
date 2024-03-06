@@ -213,13 +213,11 @@ module Cases
     end
 
     def accepted_date_received
-      authorize @case, :can_edit_case?
       authorize @case, :can_validate_rejected_case?
       @case.received_date = nil
     end
 
     def confirm_accepted_date_received
-      authorize @case, :can_edit_case?
       authorize @case, :can_validate_rejected_case?
 
       service = CaseValidateRejectedOffenderSARService.new(

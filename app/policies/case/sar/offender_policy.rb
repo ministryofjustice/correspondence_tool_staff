@@ -57,6 +57,7 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
 
   def can_validate_rejected_case?
     clear_failed_checks
+    edit_case?
     check_can_trigger_event(:validate_rejected_case)
   end
 
