@@ -64,5 +64,8 @@ module CorrespondencePlatform
 
     # Register Email observers.
     config.action_mailer.observers = %w[MailDeliveryObserver]
+
+    # Use MailDeliveryJob
+    config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
   end
 end
