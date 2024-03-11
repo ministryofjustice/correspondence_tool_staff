@@ -47,7 +47,6 @@ describe CaseValidateRejectedOffenderSARService do
       let(:params) { { received_date: "" } }
 
       it "raises an error when it saves" do
-        allow(kase).to receive(:save).and_raise(RuntimeError)
         service.call
         expect(service.result).to eq :error
       end
