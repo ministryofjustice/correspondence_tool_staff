@@ -85,6 +85,26 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#prevent_number_change" do
+    context "when a rejected offender SAR" do
+      let(:case_rejected) { create(:offender_sar_case, :rejected) }
+
+      it "does not raise StandardError" do
+        case_rejected.number = "987654321"
+        expect { case_rejected.save! }.not_to raise_error
+      end
+    end
+
+    context "when a valid offender SAR" do
+      let(:kase) { create(:offender_sar_case) }
+
+      it "raises StandardError" do
+        kase.number = "987654321"
+        expect { kase.save! }.to raise_error(StandardError, "number is immutable")
+      end
+    end
+  end
+
   describe "#request_method" do
     context "with valid values" do
       it "does not error" do
