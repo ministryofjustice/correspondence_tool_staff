@@ -61,24 +61,24 @@ module Stats
                                             subject_full_name: "testing analyse_case"
         result = report.analyse_case(rejected_offender_sar_case)
         expect(result).to include(
-                            rejected_offender_sar_case.number,
-                            rejected_offender_sar_case.decorate.pretty_type,
-                            "",
-                            "",
-                            rejected_offender_sar_case.received_date,
-                            rejected_offender_sar_case.external_deadline,
-                            "",
-                            "Data subject",
-                            nil,
-                            "testing analyse_case",
-                            "Ex-probation service user",
-                            0,
-                            "in time",
-                            "Rejected",
-                            rejected_offender_sar_case.num_days_taken,
-                            "No",
-                            "Yes",
-                          )
+          rejected_offender_sar_case.number,
+          rejected_offender_sar_case.decorate.pretty_type,
+          "",
+          "",
+          rejected_offender_sar_case.received_date,
+          rejected_offender_sar_case.external_deadline,
+          "",
+          "Data subject",
+          nil,
+          "testing analyse_case",
+          "Ex-probation service user",
+          0,
+          "in time",
+          "Rejected",
+          rejected_offender_sar_case.num_days_taken,
+          "No",
+          "Yes",
+        )
       end
 
       it "returns correct columns for offender sar complaint" do
