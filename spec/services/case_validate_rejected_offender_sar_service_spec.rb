@@ -5,7 +5,6 @@ describe CaseValidateRejectedOffenderSARService do
     let(:team)          { find_or_create :team_branston }
     let(:user)          { find_or_create :branston_user }
     let(:kase)          { create :offender_sar_case, :rejected, received_date: 1.day.ago.to_date }
-    let(:state_machine) { double ConfigurableStateMachine::Machine,  validate_rejected_case!: true } # rubocop:disable RSpec/VerifiedDoubles
     let(:service)       do
       described_class.new(user:,
                           kase:,
