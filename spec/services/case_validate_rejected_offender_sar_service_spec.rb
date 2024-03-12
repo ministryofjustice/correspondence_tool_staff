@@ -12,10 +12,6 @@ describe CaseValidateRejectedOffenderSARService do
                           params:)
     end
 
-    before do
-      allow(kase).to receive(:state_machine).and_return(state_machine)
-    end
-
     context "when setting a valid date" do
       let(:params)        { { received_date: Time.zone.today } }
 
@@ -25,9 +21,10 @@ describe CaseValidateRejectedOffenderSARService do
       end
 
       it "transitions the cases state" do
-        expect(state_machine).to receive(:validate_rejected_case!).with({ acting_user: user,
-                                                                          acting_team: team,
-                                                                          message: nil })
+        expect(kase.state_machine).to receive(:validate_rejected_case!).with({ acting_user: user,
+                                                                               acting_team: team,
+                                                                               message: nil })
+
         service.call
         expect(service.result).to eq :ok
       end
