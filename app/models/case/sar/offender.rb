@@ -454,9 +454,7 @@ class Case::SAR::Offender < Case::Base
   # Overwrites base method to allow case number to remove "R" when
   # transitioning from 'rejected' to 'valid' offender SAR
   def prevent_number_change
-    return unless current_state != "rejected" && number_changed?
-
-    raise StandardError, "number is immutable"
+    raise StandardError, "number is immutable" if !case_originally_rejected && number_changed?
   end
 
 private

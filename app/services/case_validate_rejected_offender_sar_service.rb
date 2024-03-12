@@ -12,7 +12,6 @@ class CaseValidateRejectedOffenderSARService
   def call(message = nil)
     ActiveRecord::Base.transaction do
       @case.assign_attributes(@params)
-      @case.save!
       update_case_number
       @case.state_machine.validate_rejected_case!(
         {
