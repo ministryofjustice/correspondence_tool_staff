@@ -13,6 +13,7 @@ class CaseValidateRejectedOffenderSARService
     ActiveRecord::Base.transaction do
       @case.assign_attributes(@params)
       update_case_number
+      @case.save!
       @case.state_machine.validate_rejected_case!(
         {
           acting_user: @user,
