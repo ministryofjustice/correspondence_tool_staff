@@ -102,7 +102,7 @@ class Case::SAR::Offender < Case::Base
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
-  attr_accessor :remove_sent_to_sscl_reason, :information_received
+  attr_accessor :remove_sent_to_sscl_reason
 
   enum subject_type: {
     offender: "offender",
@@ -449,6 +449,12 @@ class Case::SAR::Offender < Case::Base
       end
     end
     user_for_vetting
+  end
+
+  # Overwrites base method to allow case number to remove "R" when
+  # transitioning from 'rejected' to 'valid' offender SAR
+  def prevent_number_change
+    raise StandardError, "number is immutable" if current_state != "rejected" && number_changed?
   end
 
 private

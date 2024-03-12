@@ -86,6 +86,18 @@ TRANSITIONS = [
   },
 ].freeze
 
+REJECTED_EVENTS = [
+  {
+    state: :rejected,
+    specific_events: %i[
+      add_note_to_case
+      validate_rejected_case
+      accepted_date_received
+      edit_case
+    ],
+  },
+].freeze
+
 UNIVERSAL_EVENTS = %i[
   add_note_to_case
   add_data_received
@@ -133,6 +145,29 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           .to include :capture_reason_for_lateness
         expect(late_kase.state_machine.permitted_events(responder))
           .not_to include :mark_as_ready_to_dispatch
+      end
+    end
+  end
+
+  describe "with standard workflow for a rejected Offender SAR case" do
+    def offender_sar_case(with_state:)
+      create :offender_sar_case, :rejected, with_state
+    end
+
+    context "when responder" do
+      let(:responder) { find_or_create :branston_user }
+
+      REJECTED_EVENTS.each do |transition|
+        let(:kase) { offender_sar_case with_state: transition[:state] }
+
+        it "only allows permitted events" do
+          expect(kase.current_state.to_sym).to eq transition[:state]
+
+          permitted_events = transition[:specific_events]
+
+          expect(kase.state_machine.permitted_events(responder))
+            .to match_array permitted_events
+        end
       end
     end
   end

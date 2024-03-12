@@ -445,43 +445,70 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  describe "#information_received" do
-    let(:offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
-    let(:params) { { id: offender_sar_case.id } }
+  describe "#accepted_date_received" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
+    let(:params) { { id: rejected_offender_sar_case.id } }
+
+    before do
+      sign_in responder
+    end
+
+    it "renders the accepted date received page" do
+      get(:accepted_date_received, params:)
+      expect(response).to render_template(:accepted_date_received)
+    end
+
+    it "sets received_date to nil" do
+      get(:accepted_date_received, params:)
+      expect(assigns(:case).received_date_dd).to eq ""
+      expect(assigns(:case).received_date_mm).to eq ""
+      expect(assigns(:case).received_date_yyyy).to eq ""
+    end
+  end
+
+  describe "#confirm_accepted_date_received" do
+    let(:rejected_offender_sar_case) { create :offender_sar_case, :rejected }
+    let(:params) do
+      {
+        id: rejected_offender_sar_case.id,
+        offender_sar: {
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+        },
+      }
+    end
 
     before do
       sign_in responder
     end
 
     context "with valid params" do
-      it "redirects to reason-rejected edit step" do
-        get(:information_received, params:)
-        expect(response).to render_template(:information_received)
-      end
-    end
-  end
-
-  describe "#confirm_information_received" do
-    context "with invalid params" do
-      let(:manager) { find_or_create :branston_user }
-      let(:offender_sar_case) { create :offender_sar_case, :rejected }
-      let(:params) do
+      let(:new_date_params) do
         {
-          id: offender_sar_case.id,
+          id: rejected_offender_sar_case.id,
           offender_sar: {
-            information_received: nil,
+            received_date_dd: "01",
+            received_date_mm: "02",
+            received_date_yyyy: "2023",
           },
         }
       end
-      let(:errors) { assigns(:case).errors }
 
       before do
-        sign_in manager
+        patch(:confirm_accepted_date_received, params: new_date_params)
       end
 
-      it "fails to be valid" do
-        patch(:confirm_information_received, params:)
-        expect(errors[:information_received]).to eq ["Select if you have received the requested information"]
+      it "sets the flash" do
+        expect(flash[:notice]).to eq "Case updated"
+      end
+
+      it "redirects to the case details page" do
+        expect(response).to redirect_to(case_path(rejected_offender_sar_case))
+      end
+
+      it "changes the current_state to 'data to be requested'" do
+        expect(assigns(:case).current_state).to eq "data_to_be_requested"
       end
     end
   end

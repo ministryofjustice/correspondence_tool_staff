@@ -16,8 +16,8 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
-      information_received
-      confirm_information_received
+      accepted_date_received
+      confirm_accepted_date_received
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -212,15 +212,36 @@ module Cases
       redirect_to case_path(@case) and return
     end
 
-    def confirm_information_received
-      information_received = params[:offender_sar].try(:[], :information_received)
-      return if information_received.present?
+    def accepted_date_received
+      authorize @case, :can_validate_rejected_case?
+      @case.received_date = nil
+    end
 
-      @case.errors.add(
-        :information_received,
-        I18n.t("activerecord.errors.models.case.attributes.information_received.blank"),
+    def confirm_accepted_date_received
+      authorize @case, :can_validate_rejected_case?
+
+      service = CaseValidateRejectedOffenderSARService.new(
+        user: current_user,
+        kase: @case,
+        params: edit_params,
       )
-      render :information_received and return
+
+      service.call
+
+      if service.result == :error
+        if service.error_message.present?
+          flash[:alert] = service.error_message
+        end
+        render :accepted_date_received and return
+      end
+      case service.result
+      when :ok
+        flash[:notice] = t("cases.update.case_updated")
+      when :no_changes
+        flash[:alert] = "No changes were made"
+      end
+
+      redirect_to case_path(@case) and return
     end
 
   private

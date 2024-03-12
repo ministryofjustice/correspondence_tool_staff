@@ -55,9 +55,9 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
-  def handle_information_received?
+  def can_validate_rejected_case?
     clear_failed_checks
-    check_user_can_manage_offender
+    edit_case? && check_can_trigger_event(:validate_rejected_case)
   end
 
   def can_start_complaint?
