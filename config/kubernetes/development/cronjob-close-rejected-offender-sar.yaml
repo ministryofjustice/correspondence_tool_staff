@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: cronjob-close-rejected-offender-sar
+  name: close-rejected-offender-sars
 spec:
   schedule: "0 12 * * *"
   concurrencyPolicy: Forbid
@@ -19,7 +19,7 @@ spec:
               command:
                 - sh
                 - "-c"
-                - "bundle exec rake 'close_rejected_offender_sars_task:update_statuses'"
+                - "bundle exec rake 'close_rejected_offender_sars:update_statuses'"
               env:
                 - name: DATABASE_URL
                   valueFrom:
