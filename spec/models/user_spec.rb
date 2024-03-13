@@ -38,6 +38,7 @@ RSpec.describe User, type: :model do
   let(:approver)            { create :approver }
   let(:responder)           { create :responder }
   let(:manager)             { create :manager }
+  let(:system_admin)        { described_class.system_admin }
 
   it { is_expected.to have_many(:assignments) }
   it { is_expected.to have_many(:cases)       }
@@ -50,6 +51,52 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:managing_teams).through(:managing_team_roles) }
   it { is_expected.to have_many(:responding_teams).through(:responding_team_roles) }
   it { is_expected.to have_one(:approving_team).through(:approving_team_roles) }
+
+  describe ".system_admin" do
+    context "when system admin does not exist" do
+      it "creates a new user" do
+        expect {
+          described_class.system_admin
+        }.to change(described_class, :count).by 1
+      end
+    end
+
+    context "when system admin already exists" do
+      it "does not create a new user" do
+        described_class.system_admin
+
+        expect {
+          described_class.system_admin
+        }.not_to change(described_class, :count)
+      end
+    end
+
+    it "the returns a user with the expected name" do
+      expect(described_class.system_admin.full_name).to eq "System update"
+    end
+
+    it "the returns a user with the expected roles" do
+      expect(described_class.system_admin.roles).to eq %w[admin responder]
+    end
+  end
+
+  describe "#system_admin?" do
+    it "returns true for a system admin" do
+      expect(system_admin.system_admin?).to be true
+    end
+
+    it "returns false for a manager" do
+      expect(manager.system_admin?).to be false
+    end
+
+    it "returns false for a responder" do
+      expect(responder.system_admin?).to be false
+    end
+
+    it "returns false for an approver" do
+      expect(approver.system_admin?).to be false
+    end
+  end
 
   describe "#manager?" do
     it "returns true for a manager" do

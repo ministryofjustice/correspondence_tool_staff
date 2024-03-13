@@ -91,6 +91,22 @@ class User < ApplicationRecord
     "responder" => 300,
   }.freeze
 
+  class << self
+    def system_admin
+      user = User.find_or_initialize_by(full_name: "System update")
+      if user.new_record?
+        user.team_roles << TeamsUsersRole.new(role: "admin")
+        user.team_roles << TeamsUsersRole.new(role: "responder")
+        user.save!(validate: false)
+      end
+      user
+    end
+  end
+
+  def system_admin?
+    self == User.system_admin
+  end
+
   def admin?
     team_roles.admin.any?
   end
