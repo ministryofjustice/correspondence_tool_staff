@@ -106,5 +106,7 @@
                 annotate_retention_changes:
                 annotate_system_retention_changes:
               rejected:
+                close:
+                  transition_to: closed
                 edit_case:
                 information_received:
