@@ -45,9 +45,7 @@ namespace :sar do
   namespace :offender do
     desc "Close rejected offender SARs that were received over the deadline"
     task close_expired_rejected: :environment do
-      Case::SAR::Offender.rejected.late.each do |kase|
-        CaseClosureService.new(kase, nil, {}).call
-      end
+      Case::SAR::Offender.close_expired_rejected
     end
   end
 end

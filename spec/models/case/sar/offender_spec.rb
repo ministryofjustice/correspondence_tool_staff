@@ -72,6 +72,23 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe ".close_expired_rejected" do
+    let(:rejected_expired) { create(:offender_sar_case, :rejected) }
+    let(:system_user) { User.system_admin }
+
+    before do
+      rejected_expired.update!(external_deadline: Date.yesterday)
+
+      create(:offender_sar_case) # not rejected
+      create(:offender_sar_case, :rejected) # rejected
+    end
+
+    it "calls CaseClosureService for each expired rejected case" do
+      expect(CaseClosureService).to receive(:new).with(rejected_expired, system_user, {}).and_call_original
+      described_class.close_expired_rejected
+    end
+  end
+
   describe "#set_number" do
     let(:case_rejected) { create(:offender_sar_case, :rejected) }
     let(:kase) { create(:offender_sar_case) }

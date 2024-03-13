@@ -25,6 +25,12 @@ class Case::SAR::Offender < Case::Base
         third_party_name: "B",
       }
     end
+
+    def close_expired_rejected
+      Case::SAR::Offender.rejected.late.each do |kase|
+        CaseClosureService.new(kase, User.system_admin, {}).call
+      end
+    end
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
