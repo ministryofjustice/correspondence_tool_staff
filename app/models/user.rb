@@ -156,7 +156,9 @@ class User < ApplicationRecord
     # try to execute the action with our lower authority (which might fail)
     # When designing the state flow,  the permission for each state and actions should follow the
     # hierarchy of roles which is manager - approver - responder
-    case_teams = if teams_for_case(kase).any?
+    case_teams = if system_admin?
+                   kase.teams
+                 elsif teams_for_case(kase).any?
                    teams_for_case(kase)
                  else
                    teams

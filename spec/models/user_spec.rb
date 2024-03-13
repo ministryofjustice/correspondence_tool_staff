@@ -208,10 +208,11 @@ RSpec.describe User, type: :model do
   end
 
   describe "#case_team" do
+    let(:kase) { create(:pending_dacu_clearance_case) }
+    let(:new_team) { create(:business_unit, correspondence_type_ids: [foi.id]) }
+
     context "when user is in one of the teams associated with the case" do
       it "returns the team link to user and case both" do
-        kase = create :pending_dacu_clearance_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = kase.responder
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: "approver")
         check_user.reload
@@ -221,12 +222,17 @@ RSpec.describe User, type: :model do
 
     context "when user is not in the teams associated with the case" do
       it "returns the team only link to the user " do
-        kase = create :pending_dacu_clearance_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = create(:user)
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: "approver")
         check_user.reload
         expect(check_user.case_team(kase)).to eq new_team
+      end
+    end
+
+    context "when user is the system admin" do
+      it "returns a team from the case" do
+        check_user = system_admin
+        expect(check_user.case_team(kase)).to be_in kase.teams
       end
     end
   end
