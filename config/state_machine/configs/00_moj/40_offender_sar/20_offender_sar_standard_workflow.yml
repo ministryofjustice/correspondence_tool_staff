@@ -106,6 +106,8 @@
                 annotate_retention_changes:
                 annotate_system_retention_changes:
               rejected:
+                close:
+                  transition_to: closed
                 edit_case:
                 accepted_date_received:
                 add_note_to_case:
