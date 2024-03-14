@@ -23,6 +23,8 @@ module Stats
     end
 
     describe "#case_scope" do
+      let(:user) { find_or_create :branston_user }
+
       before do
         create_report_type(abbr: :r205)
       end
@@ -63,6 +65,12 @@ module Stats
 
       it "does not return 'rejected' Offender SAR cases within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
+        expect(report.case_scope).not_to include [@rejected_offender_sar_1]
+      end
+
+      it "does not return offender sar cases that transitioned from 'rejected' directly to 'closed' within the selected period" do
+        report = described_class.new(period_start: @period_start, period_end: @period_end)
+        @rejected_offender_sar_1.close(user)
         expect(report.case_scope).not_to include [@rejected_offender_sar_1]
       end
 
