@@ -314,6 +314,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    post "rpi" => "rpi#create"
+  end
+
+  get "rpi/:target/:id" => "rpi#download", as: :rpi_file_download
+
   get "ping", to: "heartbeat#ping", format: :json
   get "healthcheck", to: "heartbeat#healthcheck", as: "healthcheck", format: :json
   post "/feedback" => "feedback#create"

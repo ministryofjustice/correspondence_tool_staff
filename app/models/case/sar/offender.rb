@@ -25,6 +25,12 @@ class Case::SAR::Offender < Case::Base
         third_party_name: "B",
       }
     end
+
+    def close_expired_rejected
+      Case::SAR::Offender.rejected.late.each do |kase|
+        CaseClosureService.new(kase, User.system_admin, {}).call
+      end
+    end
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
@@ -143,6 +149,8 @@ class Case::SAR::Offender < Case::Base
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
 
   accepts_nested_attributes_for :data_requests
+
+  scope :rejected, -> { where(current_state: "rejected") }
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }

@@ -94,6 +94,7 @@ REJECTED_EVENTS = [
       validate_rejected_case
       accepted_date_received
       edit_case
+      close
     ],
   },
 ].freeze

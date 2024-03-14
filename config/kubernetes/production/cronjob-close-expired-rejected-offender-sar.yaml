@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: email-status
+  name: close-expired-rejected-offender-sars
 spec:
-  schedule: "0 12 * * *"
+  schedule: "0 1 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -19,7 +19,7 @@ spec:
             command:
               - sh
               - "-c"
-              - "bundle exec rake 'email:update_statuses'"
+              - "bundle exec rake 'sar:offender:close_expired_rejected'"
             env:
               - name: DATABASE_URL
                 valueFrom:

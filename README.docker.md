@@ -264,12 +264,12 @@ a "Team and whitelist" API key generated from the GOVUK Notify service website.
 See the instructions in the `.env.example` file for how to setup the correct
 environment variable to override the `govuk_notify_api_key` setting.
 
-The urls generated in the mail use the `cts_email_host` and `cts_mail_port`
+The urls generated in the mail use the `cts_email_url` and `cts_email_port`
 configuration variables from the `settings.yml`. These can be overridden by
 setting the appropriate environment variables, e.g.
 
 ```
-$ export SETTINGS__CTS_EMAIL_HOST=localhost
+$ export SETTINGS__CTS_EMAIL_URL=localhost
 $ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
 
