@@ -18,6 +18,7 @@ module Stats
         "Pages for dispatch",
         "Exempt pages",
         "Final page count",
+        "Rejected case",
       ].freeze
 
       FIELD_COLUMNS = [
@@ -33,6 +34,7 @@ module Stats
         "number_of_final_pages::integer - number_of_exempt_pages::integer",
         "number_of_exempt_pages",
         "number_of_final_pages",
+        " case when LEFT(number, 0) = 'R' then 'Yes' else 'No' end ",
       ].freeze
 
       def result_name
