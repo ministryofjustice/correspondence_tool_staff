@@ -133,6 +133,15 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient, dreid: data_request_email.id)
   end
 
+  def rpi_email(rpi, target)
+    SentryContextProvider.set_context
+
+    find_template("RPI")
+    set_personalisation(content: rpi.attachment_url(target))
+
+    mail(to: PersonalInformationRequest.email_for_target(target))
+  end
+
 private
 
   def format_subject(kase)
@@ -158,6 +167,8 @@ private
       set_template(Settings.message_received_notify_template)
     when "Commissioning"
       set_template(Settings.commissioning_notify_template)
+    when "RPI"
+      set_template(Settings.rpi_template)
     end
   end
 

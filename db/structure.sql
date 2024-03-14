@@ -829,6 +829,40 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 
 --
+-- Name: personal_information_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.personal_information_requests (
+    id bigint NOT NULL,
+    submission_id character varying,
+    last_accessed_by integer,
+    last_accessed_at timestamp without time zone,
+    deleted boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: personal_information_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.personal_information_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: personal_information_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.personal_information_requests_id_seq OWNED BY public.personal_information_requests.id;
+
+
+--
 -- Name: report_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1443,6 +1477,13 @@ ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: personal_information_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.personal_information_requests ALTER COLUMN id SET DEFAULT nextval('public.personal_information_requests_id_seq'::regclass);
+
+
+--
 -- Name: report_types id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1677,6 +1718,14 @@ ALTER TABLE ONLY public.letter_templates
 
 ALTER TABLE ONLY public.linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: personal_information_requests personal_information_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.personal_information_requests
+    ADD CONSTRAINT personal_information_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -2386,4 +2435,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230601125430'),
 ('20230706130822'),
 ('20230710161647'),
-('20230727110142');
+('20230727110142'),
+('20240215113816');
+
+

@@ -9,3 +9,4 @@ staging:
   - correspondence_tool_staff_mailers
   - correspondence_tool_staff_search_index_updater
   - correspondence_tool_staff_email_status
+  - correspondence_tool_staff_rpi
