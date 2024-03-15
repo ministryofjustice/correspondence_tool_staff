@@ -151,7 +151,6 @@ class Case::SAR::Offender < Case::Base
   accepts_nested_attributes_for :data_requests
 
   scope :rejected, -> { where(current_state: "rejected") }
-  scope :not_rejected, -> { where.not("LEFT(cases.number, 1) = 'R'") }
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
