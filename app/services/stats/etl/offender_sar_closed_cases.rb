@@ -34,7 +34,7 @@ module Stats
         "number_of_final_pages::integer - number_of_exempt_pages::integer",
         "number_of_exempt_pages",
         "number_of_final_pages",
-        " case when LEFT(number, 0) = 'R' then 'Yes' else 'No' end ",
+        "rejected",
       ].freeze
 
       def result_name

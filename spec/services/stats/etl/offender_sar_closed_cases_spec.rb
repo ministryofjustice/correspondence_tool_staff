@@ -42,8 +42,6 @@ module Stats
             when "number_of_final_pages::integer - number_of_exempt_pages::integer"
               expect(case_report).to respond_to "number_of_final_pages"
               expect(case_report).to respond_to "number_of_exempt_pages"
-            when " case when LEFT(number, 0) = 'R' then 'Yes' else 'No' end "
-              expect(case_report).to respond_to "number"
             else
               expect(case_report).to respond_to field
             end
