@@ -73,7 +73,24 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       }
 
       partial = offender_sar_case_details_section(rendered).sar_basic_details
+
       expect(partial.rejected_reason.data.text).to eq "Further identification"
+    end
+
+    it "removes the rejected reason details 'change' link after creating a valid rejected case" do
+      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: %w[further_identification]).decorate
+      rejected_case.close(branston_user)
+      assign(:case, rejected_case)
+
+      render partial: "cases/offender_sar/case_details", locals: {
+        case_details: rejected_case,
+        link_type: nil,
+        allow_editing: true,
+      }
+
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
+
+      expect(partial.rejected_reason.has_link?).to be false
     end
 
     it "does not display Business unit responsible for late response when case closed" do
