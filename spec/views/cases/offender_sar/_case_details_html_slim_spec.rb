@@ -77,7 +77,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.rejected_reason.data.text).to eq "Further identification"
     end
 
-    it "removes the rejected reason details 'change' link after creating a valid rejected case" do
+    it "removes the rejected reason details 'change' link when the case is no longer rejected" do
       rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: %w[further_identification]).decorate
       rejected_case.close(branston_user)
       assign(:case, rejected_case)
