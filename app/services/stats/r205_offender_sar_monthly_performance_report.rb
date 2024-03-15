@@ -23,8 +23,7 @@ module Stats
     end
 
     def case_scope
-      number = Case::Base.arel_table[:number]
-      Case::Base.offender_sar.where(received_date: @period_start..@period_end).where.not(number.matches("R%")).where.not(current_state: %i[rejected])
+      Case::SAR::Offender.offender_sar.not_rejected.where(received_date: @period_start..@period_end)
     end
 
     def report_type
