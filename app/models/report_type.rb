@@ -31,7 +31,6 @@ class ReportType < ApplicationRecord
   scope :offender_sar, -> { where(offender_sar: true) }
   scope :offender_sar_complaint, -> { where(offender_sar_complaint: true) }
   scope :closed_cases_report, -> { where(abbr: "R007") }
-  scope :
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
