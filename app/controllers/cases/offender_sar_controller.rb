@@ -64,7 +64,7 @@ module Cases
       @rejected =
         @case.current_state == "rejected" ||
         params["rejected"] == "true" ||
-        params["offender_sar"]["current_state"]
+        edit_params["current_state"]
     end
 
     def edit_params
