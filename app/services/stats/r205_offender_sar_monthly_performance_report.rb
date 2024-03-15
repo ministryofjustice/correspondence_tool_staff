@@ -23,7 +23,7 @@ module Stats
     end
 
     def case_scope
-      Case::Base.offender_sar.where(received_date: @period_start..@period_end)
+      Case::Base.offender_sar.where(received_date: @period_start..@period_end).where.not("LEFT(cases.number, 1) = 'R'")
     end
 
     def report_type
