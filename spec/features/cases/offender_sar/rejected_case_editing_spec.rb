@@ -33,4 +33,27 @@ feature "Offender SAR Case editing by a manager", :js do
 
     expect(cases_show_page).to have_content(I18n.l(offender_sar_case.received_date - 1, format: :default))
   end
+
+  scenario "user can click the 'change' link and edit the rejected reasons" do
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+    cases_show_page.offender_sar_reason_rejected.change_link.click
+
+    expect(cases_edit_offender_sar_reason_rejected_page).to be_displayed
+    cases_edit_offender_sar_reason_rejected_page.choose_rejected_reason("telephone_transcripts")
+    click_on "Continue"
+
+    expect(cases_show_page).to have_content "Case updated"
+    expect(cases_show_page).to have_content "Telephone transcripts"
+  end
+
+  scenario "user cannot see the 'change' link after validating a rejected case" do
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+
+    click_on "Create valid case"
+    expect(cases_edit_offender_sar_accepted_date_received_page).to be_displayed
+    cases_edit_offender_sar_accepted_date_received_page.set_received_date(1.day.ago)
+    click_on "Continue"
+
+    expect(cases_show_page.offender_sar_reason_rejected).not_to have_link "Change"
+  end
 end
