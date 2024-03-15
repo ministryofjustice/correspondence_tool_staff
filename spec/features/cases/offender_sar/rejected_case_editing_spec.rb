@@ -56,5 +56,4 @@ feature "Offender SAR Case editing by a manager", :js do
 
     expect(cases_show_page.offender_sar_reason_rejected).not_to have_content "Change"
   end
-
 end
