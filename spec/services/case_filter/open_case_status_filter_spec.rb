@@ -222,15 +222,15 @@ describe CaseFilter::OpenCaseStatusFilter do
       end
 
       it "has the rejected key" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("rejected")
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).to have_key("invalid_submission")
       end
 
       it "returns the filter list with rejected as 'Rejected'" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status]["rejected"]).to eq "Rejected"
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]["invalid_submission"]).to eq "Rejected"
       end
 
       it "returns the filter list with rejected at the end" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status].keys.last).to eq "rejected"
+        expect(open_case_status_filter.available_choices[:filter_open_case_status].keys.last).to eq "invalid_submission"
       end
     end
 
@@ -242,7 +242,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       end
 
       it "does not have the rejected key" do
-        expect(open_case_status_filter.available_choices[:filter_open_case_status]).not_to have_key("rejected")
+        expect(open_case_status_filter.available_choices[:filter_open_case_status]).not_to have_key("invalid_submission")
       end
     end
   end
@@ -259,7 +259,7 @@ describe CaseFilter::OpenCaseStatusFilter do
         "pending_private_office_clearance",
         "awaiting_dispatch",
         "responded",
-        "rejected",
+        "invalid_submission",
       ] }
       described_class.process_params!(params)
       expect(params).to eq filter_open_case_status: %w[

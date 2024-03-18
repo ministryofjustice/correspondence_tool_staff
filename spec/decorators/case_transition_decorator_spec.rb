@@ -208,7 +208,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
     describe "#event_desc" do
       context "when creating a rejected offender SAR" do
         it "returns expected text" do
-          ct = create(:case_rejected_offender_creation,
+          ct = create(:case_invalid_submission_offender_creation,
                       acting_team: branston).decorate
           event = "Rejected case created"
           expect(ct.event_desc).to match(event)

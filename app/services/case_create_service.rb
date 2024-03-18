@@ -14,7 +14,7 @@ class CaseCreateService
   def call
     @case = return_new_or_prebuilt_case
 
-    if @case.invalid? || @result == :error
+    if @case.invalid_submission? || @result == :error
       @result = :error
     elsif flagged_for_disclosure_specialists_mismatch?
       set_flagged_for_disclosure_errors

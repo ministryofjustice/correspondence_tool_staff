@@ -54,8 +54,8 @@ FactoryBot.define do
     third_party_email { "foogle@solicitors.com" }
   end
 
-  trait :rejected do
-    current_state { "rejected" }
+  trait :invalid_submission do
+    current_state { "invalid_submission" }
     rejected_reasons { %w[further_identification court_data_request] }
   end
 

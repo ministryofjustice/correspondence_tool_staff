@@ -39,7 +39,7 @@ module CaseFilter
     # value of the given key. It is then immediately assigned back.
     def offender_sar_move_rejected_filter_option_to_end(filters)
       if @user.permitted_correspondence_types.any? { |h| h[:abbreviation] == "OFFENDER_SAR" }
-        filters["rejected"] = filters.delete("rejected")
+        filters["invalid_submission"] = filters.delete("invalid_submission")
       end
     end
 

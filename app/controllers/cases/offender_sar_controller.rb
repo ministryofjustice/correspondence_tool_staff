@@ -62,7 +62,7 @@ module Cases
 
     def get_rejected
       @rejected =
-        @case.current_state == "rejected" ||
+        @case.invalid_submission? ||
         params["rejected"] == "true" ||
         (action_name == "create" && create_params["current_state"])
     end
@@ -381,7 +381,7 @@ module Cases
     def rejected_set_current_state(values)
       case params["rejected"]
       when "true"
-        values["current_state"] = "rejected"
+        values["current_state"] = "invalid_submission"
       when "false"
         values.delete("current_state")
       end
