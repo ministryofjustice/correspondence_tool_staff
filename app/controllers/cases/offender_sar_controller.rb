@@ -33,7 +33,7 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
-      @rejected = params["rejected"] == "true" || @case.current_state == "rejected"
+      get_rejected
       @case.current_step = params[:step]
       load_optional_flags_from_params
       @back_link = back_link_url
@@ -44,6 +44,7 @@ module Cases
       @case = build_case_from_session(case_type)
       @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
+      get_rejected
       load_optional_flags_from_params
 
       if steps_are_completed?
@@ -57,6 +58,13 @@ module Cases
       else
         render :new
       end
+    end
+
+    def get_rejected
+      @rejected =
+        @case.current_state == "rejected" ||
+        params["rejected"] == "true" ||
+        (action_name == "create" && create_params["current_state"])
     end
 
     def edit_params
