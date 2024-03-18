@@ -18,7 +18,7 @@ module OffenderSARCaseForm
 private
 
   def skip_reason_rejected_step(steps)
-    if !invalid_submission?
+    unless invalid_submission?
       steps = steps.reject { |x| x == "reason-rejected" }
     end
     steps
