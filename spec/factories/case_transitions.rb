@@ -453,9 +453,9 @@ FactoryBot.define do
     acting_user { acting_team.responders.first }
   end
 
-  factory :case_invalid_submission_offender_creation, parent: :case_transition do
+  factory :case_rejected_offender_creation, parent: :case_transition do
     to_state { "invalid_submission" }
-    event    { "case/offender_sar.invalid.create" }
+    event    { "case/offender_sar.rejected.create" }
 
     acting_team { self.case.responding_team }
     acting_user { acting_team.responders.first }
