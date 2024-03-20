@@ -119,7 +119,7 @@ describe "FOI cases factory" do
         expect(kase.external_deadline).to eq Date.new(2018, 8, 6)
         expect(kase.internal_deadline).to eq Date.new(2018, 7, 23)
         expect(kase.managing_team).to eq team_disclosure_bmt
-        expect(kase.created_at).to eq 4.business_days.before(frozen_time)
+        expect(kase.created_at).to eq 6.business_days.before(frozen_time)
 
         expect(kase.assignments.size).to eq 1
         expect(managing_assignment.state).to eq "accepted"
