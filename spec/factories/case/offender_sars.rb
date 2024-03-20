@@ -59,6 +59,10 @@ FactoryBot.define do
     rejected_reasons { %w[further_identification court_data_request] }
   end
 
+  trait :invalid_submission do
+    rejected
+  end
+
   trait :data_to_be_requested do
     # Default state for a new offender_sar_case
   end

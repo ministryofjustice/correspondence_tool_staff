@@ -166,7 +166,7 @@ describe CaseFilter::OpenCaseStatusFilter do
     describe "filtering for rejected cases" do
       let(:search_query) do
         create :search_query,
-               filter_open_case_status: %w[rejected]
+               filter_open_case_status: %w[invalid_submission]
       end
 
       it "returns the correct list of cases" do
@@ -266,10 +266,10 @@ describe CaseFilter::OpenCaseStatusFilter do
         awaiting_dispatch
         awaiting_responder
         drafting
+        invalid_submission
         pending_dacu_clearance
         pending_press_office_clearance
         pending_private_office_clearance
-        rejected
         responded
         unassigned
       ]

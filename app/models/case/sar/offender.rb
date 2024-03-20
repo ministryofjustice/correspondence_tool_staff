@@ -26,8 +26,8 @@ class Case::SAR::Offender < Case::Base
       }
     end
 
-    def close_expired_invalid
-      Case::SAR::Offender.invalid.late.each do |kase|
+    def close_expired_rejected
+      Case::SAR::Offender.where(current_state: "invalid_submission").late.each do |kase|
         CaseClosureService.new(kase, User.system_admin, {}).call
       end
     end
