@@ -22,7 +22,7 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def rejected_reasons_descriptions
-    other_string = if other_rejected_reason.present?
+    other_reason_text = if other_rejected_reason.present?
                      ": #{other_rejected_reason}"
                    else
                      ""
@@ -30,6 +30,6 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
 
     rejected_reasons.map { |reason|
       Case::SAR::Offender::REJECTED_REASONS[reason]
-    }.compact.join("<br>") + other_string
+    }.compact.join("<br>") + other_reason_text
   end
 end
