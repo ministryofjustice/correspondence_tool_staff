@@ -74,7 +74,7 @@ module Stats
           "Ex-probation service user",
           0,
           "in time",
-          "Rejected",
+          "Invalid submission",
           rejected_offender_sar_case.num_days_taken,
           "No",
           "Yes",

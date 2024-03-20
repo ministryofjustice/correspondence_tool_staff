@@ -88,7 +88,7 @@ TRANSITIONS = [
 
 REJECTED_EVENTS = [
   {
-    state: :rejected,
+    state: :invalid_submission,
     specific_events: %i[
       add_note_to_case
       validate_rejected_case

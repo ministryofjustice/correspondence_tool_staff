@@ -74,7 +74,7 @@ describe "ClosedCaseValidator" do
       end
 
       it "does not error with blank date_responded when case is rejected" do
-        kase.current_state = "rejected"
+        kase.current_state = "invalid_submission"
         kase.date_responded = nil
         expect(kase).to be_valid
       end
