@@ -91,7 +91,7 @@ describe Case::SAR::Offender do
 
   describe "#rejected_reasons" do
     context "when the rejected reason other checkbox is selected and a reason is given" do
-      let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
+      let(:case_rejected) { create(:offender_sar_case, :invalid_submission, rejected_reasons: %w[other], other_rejected_reason: "More information") }
 
       it "sets the rejected reason" do
         expect(case_rejected.rejected_reasons).to eq(%w[other])
@@ -100,7 +100,7 @@ describe Case::SAR::Offender do
     end
 
     context "when the rejected reason other checkbox is de-selected and a reason is present" do
-      let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
+      let(:case_rejected) { create(:offender_sar_case, :invalid_submission, rejected_reasons: %w[other], other_rejected_reason: "More information") }
 
       it "sets the other rejected reason to blank" do
         case_rejected.update!(rejected_reasons: %w[cctv_bwcv])
