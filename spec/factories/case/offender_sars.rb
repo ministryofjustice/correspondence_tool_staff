@@ -55,8 +55,12 @@ FactoryBot.define do
   end
 
   trait :rejected do
-    current_state { "rejected" }
+    current_state { "invalid_submission" }
     rejected_reasons { %w[further_identification court_data_request] }
+  end
+
+  trait :invalid_submission do
+    rejected
   end
 
   trait :data_to_be_requested do

@@ -27,7 +27,7 @@ class Case::SAR::Offender < Case::Base
     end
 
     def close_expired_rejected
-      Case::SAR::Offender.rejected.late.each do |kase|
+      Case::SAR::Offender.where(current_state: "invalid_submission").late.each do |kase|
         CaseClosureService.new(kase, User.system_admin, {}).call
       end
     end
@@ -150,8 +150,6 @@ class Case::SAR::Offender < Case::Base
 
   accepts_nested_attributes_for :data_requests
 
-  scope :rejected, -> { where(current_state: "rejected") }
-
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
   validates :date_of_birth, presence: true
@@ -185,15 +183,15 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
-  validate :validate_rejected_reason, if: -> { rejected? }
+  validate :validate_rejected_reason, if: -> { invalid_submission? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
-  before_save :set_case_originally_rejected, if: -> { rejected? }
-  before_save :verify_other_rejected_reason, if: -> { rejected? }
+  before_save :set_case_originally_rejected, if: -> { invalid_submission? }
+  before_save :verify_other_rejected_reason, if: -> { invalid_submission? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
@@ -461,9 +459,9 @@ class Case::SAR::Offender < Case::Base
   end
 
   # Overwrites base method to allow case number to remove "R" when
-  # transitioning from 'rejected' to 'valid' offender SAR
+  # transitioning from 'invalid' to 'valid' offender SAR
   def prevent_number_change
-    raise StandardError, "number is immutable" if current_state != "rejected" && number_changed?
+    raise StandardError, "number is immutable" if current_state != "invalid_submission" && number_changed?
   end
 
 private
@@ -496,7 +494,7 @@ private
   end
 
   def set_number
-    self.number = if current_state == "rejected"
+    self.number = if invalid_submission?
                     "R#{next_number}"
                   else
                     next_number

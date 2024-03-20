@@ -80,9 +80,9 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         expect(response).to render_template(:new)
       end
 
-      it "sets the current_state to 'rejected'" do
+      it "sets the current_state to 'invalid_submission'" do
         get(:new, params:)
-        expect(assigns(:case).current_state).to eq("rejected")
+        expect(assigns(:case).current_state).to eq("invalid_submission")
       end
     end
   end

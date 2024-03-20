@@ -29,7 +29,7 @@ module ConfigurableStateMachine
          data_review_required
          response_required
          waiting
-         rejected
+         invalid_submission
          closed]
     end
 
