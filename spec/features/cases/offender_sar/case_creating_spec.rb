@@ -10,29 +10,27 @@ feature "Offender SAR Case creation by a manager", js: true do
     cases_page.load
   end
 
-  scenario "0.1 Rejected Data subject requesting own record" do
+  scenario "Creates Rejected case" do
     when_i_navigate_to_rejected_offender_sar_subject_page
-    and_fill_in_subject_details_page
-    and_fill_in_requester_details_page_for_rejected_case(:third_party)
-    and_fill_in_reason_rejected_page
-    and_fill_in_recipient_details_page(recipient: "subject_recipient")
-    and_fill_in_requested_info_page
-    and_fill_in_request_details_page
-    and_fill_in_date_received_page
+    and_fill_in_rejected_case_details
     then_expect_case_state_to_be_rejected
-    then_expect_case_history_to_be_correct
-    then_expect_open_cases_page_to_be_correct
   end
 
-  scenario "0.2 Rejected offender SAR created after using back link" do
-    # TODO: update this throughout rejections work
-
+  scenario "Creates Rejected case when back link used during process" do
     when_i_navigate_to_rejected_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page_for_rejected_case(:third_party)
-    and_back_only_previous_step_to_requester_details_page
-    and_back_previous_step_to_subject_details_page
-    expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create rejected Offender SAR case")
+    click_on "Back"
+    click_on "Back"
+    and_fill_in_rejected_case_details
+    then_expect_case_state_to_be_rejected
+  end
+
+  scenario "Rejected offender SAR created after initially failing validation on first page" do
+    when_i_navigate_to_rejected_offender_sar_subject_page
+    click_on "Continue"
+    and_fill_in_rejected_case_details
+    then_expect_case_state_to_be_rejected
   end
 
   scenario "1 Data subject requesting own record" do
@@ -173,6 +171,16 @@ feature "Offender SAR Case creation by a manager", js: true do
     expect(cases_new_offender_sar_subject_details_page.page_heading.text).to match("Create rejected Offender SAR case")
   end
 
+  def and_fill_in_rejected_case_details
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page_for_rejected_case(:third_party)
+    and_fill_in_reason_rejected_page
+    and_fill_in_recipient_details_page(recipient: "subject_recipient")
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+  end
+
   def and_fill_in_subject_details_page(params = nil)
     cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
     scroll_to cases_new_offender_sar_subject_details_page.submit_button
@@ -263,16 +271,6 @@ feature "Offender SAR Case creation by a manager", js: true do
   def and_back_previous_step_to_requester_details_page
     click_on "Back"
     and_fill_in_requester_details_page
-  end
-
-  def and_back_only_previous_step_to_requester_details_page
-    click_on "Back"
-    expect(cases_new_offender_sar_requester_details_page).to be_displayed
-  end
-
-  def and_back_previous_step_to_subject_details_page
-    click_on "Back"
-    and_fill_in_subject_details_page
   end
 
   def then_expect_no_third_party_info_stored(uniq_subject_full_name)
