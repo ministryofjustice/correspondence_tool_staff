@@ -457,6 +457,10 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def rejected?
+    number[0] == "R"
+  end
+
   # Overwrites base method to allow case number to remove "R" when
   # transitioning from 'invalid' to 'valid' offender SAR
   def prevent_number_change
