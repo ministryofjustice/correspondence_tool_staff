@@ -92,10 +92,14 @@
               closed:
                 add_note_to_case:
                 send_dispatch_letter:
+                  if: Workflows::Predicates#case_not_rejected?
                 preview_cover_page:
+                  if: Workflows::Predicates#case_not_rejected?
                 edit_case:
                 record_sent_to_sscl:
+                  if: Workflows::Predicates#case_not_rejected?
                 date_sent_to_sscl_removed:
+                  if: Workflows::Predicates#case_not_rejected?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
                 mark_as_partial_case:
