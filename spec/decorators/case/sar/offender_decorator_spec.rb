@@ -94,7 +94,7 @@ describe Case::SAR::OffenderDecorator do
       end
 
       it "returns the REJECTED_REASONS hash value" do
-        expect(offender_sar_case.rejected_reasons_descriptions).to eq "Other<br>Other reason"
+        expect(offender_sar_case.rejected_reasons_descriptions).to eq "Other: Other reason"
       end
     end
   end

@@ -191,6 +191,7 @@ class Case::SAR::Offender < Case::Base
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
   before_save :set_case_originally_rejected, if: -> { invalid_submission? }
+  before_save :verify_other_rejected_reason, if: -> { invalid_submission? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
@@ -479,6 +480,10 @@ private
 
   def set_case_originally_rejected
     self.case_originally_rejected = true
+  end
+
+  def verify_other_rejected_reason
+    self.other_rejected_reason = "" unless rejected_reasons.include?("other")
   end
 
   def ensure_third_party_states_consistent
