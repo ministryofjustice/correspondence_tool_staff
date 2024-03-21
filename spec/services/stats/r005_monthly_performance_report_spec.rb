@@ -33,7 +33,7 @@ module Stats
         Timecop.freeze(2017, 5, 2, 13, 14, 15) do
           2.times { create_case(:trigger_responded_in_time, 3) }
           create_case(:trigger_responded_late, 3)
-          3.times { create_case(:trigger_responded_in_time, 4) }
+          4.times { create_case(:trigger_responded_in_time, 4) }
           2.times { create_case(:non_trigger_open_in_time, 4) }
           create_case(:non_trigger_open_late, 4)
           2.times { create_case(:non_trigger_open_late, 3, case_type: :case) } # unassigned
