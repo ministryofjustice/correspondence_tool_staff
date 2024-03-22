@@ -19,7 +19,6 @@ module PageObjects
         element :postcode, "#contact_postcode"
         element :data_request_name, "#contact_data_request_name"
         element :data_request_emails, "#contact_data_request_emails"
-        element :contact_type, "#countact_contact_type"
 
         element :submit, ".button"
 
@@ -30,22 +29,6 @@ module PageObjects
           town.set details[:town] if details[:town]
           county.set details[:county] if details[:county]
           postcode.set details[:postcode] if details[:postcode]
-          set_contact_type(details[:contact_type])
-        end
-
-      private
-
-        def set_contact_type(contact_type)
-          return unless contact_type
-
-          case contact_type
-          when "prison"
-            choose "Prison", visible: false
-          when "probation"
-            choose "Probation", visible: false
-          when "solicitor"
-            choose "Solicitor", visible: false
-          end
         end
       end
     end

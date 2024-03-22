@@ -100,6 +100,7 @@ module PageObjects
         contacts_edit: "Contacts::EditPage",
         contacts_index: "Contacts::IndexPage",
         contacts_new: "Contacts::NewPage",
+        contact_type: "Contacts::ContactTypePage",
         closed_cases: "Cases::ClosedCasesPage",
         confirm_destroy: "Cases::ConfirmDestroyPage",
         cases_extend_for_pit: "Cases::ExtendForPITPage",
