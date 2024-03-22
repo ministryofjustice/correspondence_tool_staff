@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: personal_information_requests
+#
+#  id               :bigint           not null, primary key
+#  submission_id    :string
+#  last_accessed_by :integer
+#  last_accessed_at :datetime
+#  deleted          :boolean          default(FALSE)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 FactoryBot.define do
   factory :personal_information_request do
     submission_id { "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3" }
