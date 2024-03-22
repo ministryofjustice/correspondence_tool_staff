@@ -1160,6 +1160,7 @@ en:
       address_page_heading: Organisation address book
       address_page_subheading: Private addresses should not be entered
       add_new_address: Add new address
+      contact_type: What is the contact type of the address?
       delete_address_confirmation: Are you sure you want to delete this address?
       delete_error: Cannot delete an address that is in use
       find_address: Find an address
