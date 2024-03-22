@@ -589,7 +589,7 @@ CREATE TABLE public.contacts (
     contact_type_id bigint,
     data_request_name character varying,
     escalation_name character varying,
-    escalation_email character varying
+    escalation_emails character varying
 );
 
 
