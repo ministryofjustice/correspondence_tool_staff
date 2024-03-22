@@ -1,5 +1,4 @@
 = form_for @contact do |f|
-
     = f.text_field :name, label_options: { value: 'Organisation Name' }
     = f.text_field :address_line_1
     = f.text_field :address_line_2
@@ -8,10 +7,9 @@
     = f.text_field :postcode
     = f.text_area :data_request_name
     = f.text_area :data_request_emails
-    = f.radio_button_fieldset :contact_type_id,
-      choices: @contact_types,
-      value_method: :id,
-      text_method: :value
+    = f.text_field :escalation_name
+    = f.text_area :escalation_emails
+    = f.hidden_field :contact_type_id, value: @contact.contact_type_id
 
     .button-holder
       = f.submit 'Submit', class: 'button'

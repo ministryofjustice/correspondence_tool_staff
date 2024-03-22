@@ -87,6 +87,8 @@ private
       :postcode,
       :data_request_name,
       :data_request_emails,
+      :escalation_name,
+      :escalation_emails,
     )
   end
 

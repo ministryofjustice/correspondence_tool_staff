@@ -41,6 +41,9 @@ RSpec.describe Contact, type: :model do
                   contact_type: "university")
   end
 
+  let(:prison_type) { build(:category_reference, code: "prison") }
+  let(:probation_type) { build(:category_reference, code: "probation") }
+
   describe "validations" do
     it "is valid if it is has a name, address_line_1 and postcode, and contact_type" do
       expect(described_class.new).to validate_presence_of(:name)
@@ -53,6 +56,22 @@ RSpec.describe Contact, type: :model do
     it "must have a valid contact_type" do
       expect(contact_2).to be_valid
       expect { contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
+    end
+
+    describe "prison" do
+      it "is valid with an escalation name and valid escalation email address" do
+        prison = build_stubbed(:contact, contact_type: prison_type)
+        expect(prison).to validate_presence_of(:escalation_name)
+        expect(prison).to validate_presence_of(:escalation_emails)
+
+        prison.escalation_emails = "invalid"
+        prison.valid?
+        expect(prison.errors[:escalation_emails]).not_to be_empty
+
+        prison.escalation_emails = "valid@domain.com"
+        prison.valid?
+        expect(prison.errors[:escalation_emails]).to be_empty
+      end
     end
 
     describe "data_request_emails" do
@@ -130,6 +149,19 @@ RSpec.describe Contact, type: :model do
     it "returns expected sql from #filtered_search_by_contact_name" do
       expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.filtered_search_by_contact_name("probation,solicitor", "LLP").to_sql).to match(expected_sql)
+    end
+  end
+
+  describe "#prison?" do
+    let(:probation_contact) { build_stubbed(:contact, contact_type: probation_type) }
+    let(:prison_contact) { build_stubbed(:contact, contact_type: prison_type) }
+
+    it "is true when the contact is a prison" do
+      expect(prison_contact).to be_prison
+    end
+
+    it "is false when the contact is not a prison" do
+      expect(probation_contact).not_to be_prison
     end
   end
 end
