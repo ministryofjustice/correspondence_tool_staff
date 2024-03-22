@@ -1,15 +1,18 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
-  before_action :set_contact_type_options, only: %i[create edit new update]
-  before_action :set_new_contact_from_params, only: :create
-  before_action :set_contact_type, only: %i[update create]
+  before_action :set_contact_type_options, only: %i[contact_type create edit update]
+  before_action :set_new_contact_from_params, only: :confirm_contact_type
+  before_action :set_contact_type, only: :confirm_contact_type
 
   def index
     @contacts = Contact.includes([:contact_type]).order(:name).decorate
   end
 
-  def new
+  def contact_type
     @contact = Contact.new
+  end
+
+  def confirm_contact_type
   end
 
   def edit; end
@@ -61,7 +64,7 @@ private
   end
 
   def set_new_contact_from_params
-    @contact = Contact.new(contact_params)
+    @contact = Contact.new(contact_type_params)
   end
 
   def set_contact_type_options
