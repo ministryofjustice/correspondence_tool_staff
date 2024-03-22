@@ -1,0 +1,24 @@
+- content_for :page_title do
+  = t('page_title.add_an_address')
+
+= link_to("Back", contacts_url, class: 'govuk-back-link')
+- content_for :heading
+  = t('common.contacts.contact_type')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @contact,
+  "#{pluralize(@contact.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @contact do |f|
+
+  = f.radio_button_fieldset :contact_type_id,
+    choices: @contact_types,
+    value_method: :id,
+    text_method: :value
+
+  .button-holder
+    = f.submit 'Submit', class: 'button'
+
+  .button-holder
+    = link_to('Cancel', contacts_url)
