@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :contacts, except: :show
 
   get "/contacts_search", to: "contacts#contacts_search"
+  get "new/contact_type", to: "contacts#contact_type"
 
   devise_for :users, controllers: {
     passwords: "passwords",
