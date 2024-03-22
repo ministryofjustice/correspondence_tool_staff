@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: contacts
+#
+#  id                  :bigint           not null, primary key
+#  name                :string
+#  address_line_1      :string
+#  address_line_2      :string
+#  town                :string
+#  county              :string
+#  postcode            :string
+#  data_request_emails :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  contact_type_id     :bigint
+#  data_request_name   :string
+#  escalation_name     :string
+#  escalation_email    :string
+#
 require "rails_helper"
 
 RSpec.describe Contact, type: :model do

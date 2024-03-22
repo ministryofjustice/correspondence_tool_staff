@@ -587,7 +587,9 @@ CREATE TABLE public.contacts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contact_type_id bigint,
-    data_request_name character varying
+    data_request_name character varying,
+    escalation_name character varying,
+    escalation_email character varying
 );
 
 
@@ -1346,7 +1348,8 @@ CREATE TABLE public.warehouse_case_reports (
     original_internal_deadline date,
     num_days_late_against_original_deadline integer,
     request_method character varying,
-    sent_to_sscl date
+    sent_to_sscl date,
+    rejected character varying DEFAULT 'No'::character varying
 );
 
 
@@ -2436,6 +2439,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230706130822'),
 ('20230710161647'),
 ('20230727110142'),
-('20240215113816');
-
-
+('20240215113816'),
+('20240322151613');
