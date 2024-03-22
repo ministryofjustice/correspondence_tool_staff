@@ -23,4 +23,15 @@ RSpec.describe ContactsController, type: :controller do
       expect(contacts).to eq [brinsford, stafford, winsongreen]
     end
   end
+
+  describe "#contact_type" do
+    before do
+      sign_in user
+    end
+
+    it "renders the contact_type page" do
+      get(:contact_type)
+      expect(response).to render_template(:contact_type)
+    end
+  end
 end
