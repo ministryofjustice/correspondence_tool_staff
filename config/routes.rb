@@ -3,7 +3,7 @@ require "sidekiq/web"
 Rails.application.routes.draw do
   resources :contacts, except: :show do
     get "/new/contact_type", on: :collection, to: "contacts#contact_type"
-    patch "/new/contact_type", on: :collection, to: "contacts#confirm_contact_type"
+    post "/new/contact_type", on: :collection, to: "contacts#confirm_contact_type"
   end
 
   get "/contacts_search", to: "contacts#contacts_search"
