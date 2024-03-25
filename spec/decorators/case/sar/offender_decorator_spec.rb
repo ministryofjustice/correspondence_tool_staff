@@ -2,12 +2,14 @@ require "rails_helper"
 
 describe Case::SAR::OffenderDecorator do
   let(:offender_sar_case) do
-    build_stubbed(
+    create(
       :offender_sar_case,
       date_responded: Date.new(2020, 1, 10),
       received_date: Date.new(2020, 1, 1),
     ).decorate
   end
+
+  let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
 
   it "instantiates the correct decorator" do
     expect(Case::SAR::Offender.new.decorate).to be_instance_of described_class
@@ -108,6 +110,12 @@ describe Case::SAR::OffenderDecorator do
   describe "#type_printer" do
     it "pretty prints Case" do
       expect(offender_sar_case.pretty_type).to eq "Offender SAR"
+    end
+
+    context "when rejected" do
+      it "pretty prints Case" do
+        expect(rejected_offender_sar_case.pretty_type).to eq "Rejected Offender SAR"
+      end
     end
   end
 
