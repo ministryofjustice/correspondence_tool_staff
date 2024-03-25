@@ -22,7 +22,7 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def rejected_reasons_descriptions
-    rejected_reasons.map { |reason|
+    rejected_reasons.compact_blank.map { |reason|
       suffix = ": #{other_rejected_reason}" if reason == "other"
       "#{Case::SAR::Offender::REJECTED_REASONS[reason]}#{suffix}"
     }.compact.join("<br>")
