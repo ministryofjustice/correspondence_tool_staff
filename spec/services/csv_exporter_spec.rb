@@ -118,7 +118,7 @@ describe CSVExporter do
           "Deletion Reason" => nil,
           "Casework officer" => nil,
           "Created by" => late_foi_case.creator.full_name,
-          "Date created" => "2018-09-25",
+          "Date created" => "2018-09-21",
           "Business group" => "Responder Business Group",
           "Directorate name" => "Responder Directorate",
           "Draft in time" => nil,
