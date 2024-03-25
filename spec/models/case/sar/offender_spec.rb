@@ -924,6 +924,22 @@ describe Case::SAR::Offender do
   end
 
   describe "#rejected?" do
+    context "when case is unsaved" do
+      context "when case is rejected" do
+        it "returns true" do
+          kase = build(:offender_sar_case, :rejected)
+          expect(kase).to be_rejected
+        end
+      end
+
+      context "when case is not rejected" do
+        it "returns false" do
+          kase = build(:offender_sar_case)
+          expect(kase).not_to be_rejected
+        end
+      end
+    end
+
     context "when case is rejected" do
       it "returns true" do
         kase = create(:offender_sar_case, :rejected)

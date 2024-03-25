@@ -2,7 +2,7 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   include OffenderSARCaseForm
 
   def pretty_type
-    if object.invalid_submission?
+    if object.rejected?
       I18n.t("helpers.label.correspondence_types.rejected_offender_sar")
     else
       I18n.t("helpers.label.correspondence_types.offender_sar")

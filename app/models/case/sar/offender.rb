@@ -459,7 +459,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def rejected?
-    number[0] == "R"
+    if persisted?
+      number[0] == "R"
+    else
+      current_state == "invalid_submission"
+    end
   end
 
   # Overwrites base method to allow case number to remove "R" when
