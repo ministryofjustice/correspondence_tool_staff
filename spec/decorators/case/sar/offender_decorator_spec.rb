@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe Case::SAR::OffenderDecorator do
   let(:offender_sar_case) do
-    create(
+    build(
       :offender_sar_case,
       date_responded: Date.new(2020, 1, 10),
       received_date: Date.new(2020, 1, 1),
