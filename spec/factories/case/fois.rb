@@ -25,7 +25,7 @@
 FactoryBot.define do
   factory :foi_case, aliases: [:case], class: "Case::FOI::Standard" do
     transient do
-      creation_time          { 4.business_days.ago }
+      creation_time          { 6.business_days.ago }
       identifier             { "new case" }
       managing_team          { find_or_create :team_disclosure_bmt }
       manager                { managing_team.managers.first }

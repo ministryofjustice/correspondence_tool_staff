@@ -1,5 +1,6 @@
 .govuk-tabs {
-  margin-top: 5px;
+  margin-bottom: 0;
+  font-size: inherit;
 
   &__title {
     padding-top: $gutter;
@@ -65,7 +66,6 @@
       text-decoration: none;
 
       &.active {
-        margin-top: -5px;
         margin-bottom: -1px;
         padding: 14px 19px 16px 19px;
         border: 1px solid $border-colour;
@@ -85,4 +85,3 @@
     }
   }
 }
-
