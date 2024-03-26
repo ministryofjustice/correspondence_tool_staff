@@ -15,7 +15,8 @@
   = f.radio_button_fieldset :contact_type_id,
     choices: @contact_types,
     value_method: :id,
-    text_method: :value
+    text_method: :value,
+    legend_options: { class: 'visually-hidden' }
 
   .button-holder
     = f.submit 'Continue', class: 'button'
