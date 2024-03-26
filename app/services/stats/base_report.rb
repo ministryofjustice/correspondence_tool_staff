@@ -1,9 +1,8 @@
 module Stats
   class BaseReport
-    # These are the current RAG (red-amber-green) thresholds for each report type
+    # These are the current RAG (red-amber-green) thresholds
     # obviously anything above the 'amber' threshold is 'green'
-    RAG_THRESHOLDS_FOI = { red: 85, amber: 90 }.freeze
-    RAG_THRESHOLDS_SAR = { red: 80, amber: 85 }.freeze
+    RAG_THRESHOLDS = { red: 85, amber: 90 }.freeze
 
     # Status names for ETL generated reports
     COMPLETE = "complete".freeze
@@ -44,14 +43,10 @@ module Stats
       @filename = report_type.filename(self.class.report_format)
     end
 
-    def rag_thresholds
-      report_type.foi ? RAG_THRESHOLDS_FOI : RAG_THRESHOLDS_SAR
-    end
-
     def rag_rating(value)
-      if value < rag_thresholds[:red]
+      if value < RAG_THRESHOLDS[:red]
         :red
-      elsif value < rag_thresholds[:amber]
+      elsif value < RAG_THRESHOLDS[:amber]
         :amber
       else
         :green
