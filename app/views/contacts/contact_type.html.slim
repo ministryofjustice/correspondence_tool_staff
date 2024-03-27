@@ -18,4 +18,4 @@
   = hidden_field_tag "contact_type_value", @contact.contact_type_id
 
   .button-holder
-    = link_to "Continue", new_contact_path, class: 'button'
+    = f.submit 'Continue', class: 'button'
