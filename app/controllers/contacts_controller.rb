@@ -1,10 +1,12 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
   before_action :set_contact_type_options, only: %i[contact_type create edit update]
-  before_action :set_new_contact_from_params, only: :create
+  # before_action :set_new_contact_from_params, only: :create
   before_action :set_contact_type, only: :create
 
-  def new; end
+  def new
+    @contact = Contact.new
+  end
 
   def index
     @contacts = Contact.includes([:contact_type]).order(:name).decorate
@@ -14,11 +16,16 @@ class ContactsController < ApplicationController
     @contact = Contact.new
   end
 
-  def confirm_contact_type; end
+  def confirm_contact_type
+    @contact = Contact.create(contact_type_params)
+    @contact.save(validate: false)
+    redirect_to new_contact_path
+  end
 
   def edit; end
 
   def create
+    @contact.update(contact_params)
     respond_to do |format|
       if @contact.save
         format.html { redirect_to contacts_url, notice: "Contact was successfully created." }
@@ -65,7 +72,7 @@ private
   end
 
   def set_new_contact_from_params
-    @contact = Contact.new(contact_type_params)
+    @contact = Contact.last.update!(contact_params)
   end
 
   def set_contact_type_options
@@ -73,8 +80,10 @@ private
   end
 
   def set_contact_type
+    @contact = Contact.last
+    contact_type_value = @contact.contact_type_id
     if contact_type_params[:contact_type_id]
-      @contact_type = CategoryReference.find(contact_type_params[:contact_type_id])
+      @contact_type = CategoryReference.find(contact_type_value)
       @contact.contact_type = @contact_type
     else
       @contact.contact_type = nil

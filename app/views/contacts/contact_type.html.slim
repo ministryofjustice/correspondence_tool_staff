@@ -15,7 +15,7 @@
     text_method: :value,
     legend_options: { class: 'visually-hidden' }
 
-  = hidden_field_tag "contact_type_value", @contact.contact_type_id
+  = hidden_field_tag @contact.contact_type_id
 
   .button-holder
     = f.submit 'Continue', class: 'button'

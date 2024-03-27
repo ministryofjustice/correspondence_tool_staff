@@ -9,6 +9,8 @@
     = f.text_area :data_request_name
     = f.text_area :data_request_emails
 
+    = f.hidden_field :contact_type_id, value: @contact_type
+
     .button-holder
       = f.submit 'Submit', class: 'button'
 

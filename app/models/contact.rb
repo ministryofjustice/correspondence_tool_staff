@@ -1,8 +1,8 @@
 class Contact < ApplicationRecord
-  validates :name, presence: true, on: :create
-  validates :address_line_1, presence: true, on: :create
-  validates :postcode, presence: true, on: :create
-  validates :contact_type_id, presence: true, on: :confirm_contact_type
+  validates :name, presence: true
+  validates :address_line_1, presence: true
+  validates :postcode, presence: true
+  validates :contact_type_id, presence: true
   validate :validate_emails
 
   belongs_to :contact_type, class_name: "CategoryReference", inverse_of: :contacts
