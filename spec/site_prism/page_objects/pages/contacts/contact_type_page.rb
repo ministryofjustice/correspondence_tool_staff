@@ -19,7 +19,7 @@ module PageObjects
           set_contact_type(details[:contact_type])
         end
 
-        private
+      private
 
         def set_contact_type(contact_type)
           return unless contact_type
