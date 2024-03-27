@@ -13,6 +13,8 @@
 #  standard_report          :boolean          default(FALSE), not null
 #  default_reporting_period :string           default("year_to_date")
 #  etl                      :boolean          default(FALSE)
+#  offender_sar             :boolean          default(FALSE)
+#  offender_sar_complaint   :boolean          default(FALSE)
 #
 
 FactoryBot.define do

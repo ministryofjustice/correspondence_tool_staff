@@ -6,6 +6,8 @@
 #  case_id            :integer
 #  user_id            :integer
 #  case_transition_id :integer
+#  created_at         :datetime
+#  updated_at         :datetime
 #
 
 require "rails_helper"

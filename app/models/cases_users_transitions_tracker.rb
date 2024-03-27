@@ -6,6 +6,8 @@
 #  case_id            :integer
 #  user_id            :integer
 #  case_transition_id :integer
+#  created_at         :datetime
+#  updated_at         :datetime
 #
 # This model is meant to track which messages have been
 # viewed by users, so that we can show a message bubble telling

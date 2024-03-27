@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: reports
+#
+#  id             :integer          not null, primary key
+#  report_type_id :integer          not null
+#  period_start   :date
+#  period_end     :date
+#  report_data    :binary
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  guid           :string
+#  properties     :jsonb
+#
 require "rails_helper"
 
 RSpec.describe Report, type: :model do

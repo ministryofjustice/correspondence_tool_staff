@@ -630,6 +630,8 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       contact:
         data_request_emails: Add multiple email addresses on separate lines
+        escalation_name: Enter the name of the prison governor
+        escalation_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
       feedback:
@@ -688,6 +690,9 @@ en:
         add_to_conversation: Add to conversation
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
+      contact:
+        escalation_name: Prison governor
+        escalation_emails: Prison governor email
       data_request:
         location: Location
         request_type:

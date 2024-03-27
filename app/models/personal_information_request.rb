@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: personal_information_requests
+#
+#  id               :bigint           not null, primary key
+#  submission_id    :string
+#  last_accessed_by :integer
+#  last_accessed_at :datetime
+#  deleted          :boolean          default(FALSE)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 class PersonalInformationRequest < ApplicationRecord
   include Rails.application.routes.url_helpers
 

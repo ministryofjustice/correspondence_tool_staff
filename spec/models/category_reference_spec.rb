@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: category_references
+#
+#  id            :bigint           not null, primary key
+#  category      :string
+#  code          :string
+#  value         :string
+#  display_order :integer
+#  deactivated   :boolean
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
 require "rails_helper"
 
 RSpec.describe CategoryReference, type: :model do
