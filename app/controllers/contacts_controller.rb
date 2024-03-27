@@ -4,6 +4,8 @@ class ContactsController < ApplicationController
   before_action :set_new_contact_from_params, only: :confirm_contact_type
   before_action :set_contact_type, only: :confirm_contact_type
 
+  def new; end
+
   def index
     @contacts = Contact.includes([:contact_type]).order(:name).decorate
   end
@@ -12,8 +14,7 @@ class ContactsController < ApplicationController
     @contact = Contact.new
   end
 
-  def confirm_contact_type
-  end
+  def confirm_contact_type; end
 
   def edit; end
 
