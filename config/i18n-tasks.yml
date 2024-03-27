@@ -134,6 +134,8 @@ ignore_unused:
   - common.show_search_result_order_by_oldest_first
   - common.show_search_result_order_by_newest_destruction_date
   - common.show_search_result_order_by_oldest_destruction_date
+  - cases.new.offender_sar.rejected
+  - common.case.third_party_email
 
 
 ## Consider these keys used:

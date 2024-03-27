@@ -29,12 +29,14 @@ private
     clear_param_if_condition(params, "third_party_name", "third_party", "true")
     clear_param_if_condition(params, "third_party_company_name", "third_party", "true")
     clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
+    clear_param_if_condition(params, "third_party_email", "third_party", "true")
 
     object.assign_attributes(params)
 
     object.validate_third_party_names
     object.validate_third_party_relationship
     object.validate_third_party_address
+    object.validate_third_party_email_format
   end
 
   def validate_recipient_details(params)
@@ -55,6 +57,11 @@ private
     set_empty_value_if_unset(params, "request_method") unless object.offender_sar_complaint?
     object.assign_attributes(params)
     object.validate_received_date
+  end
+
+  def validate_reason_rejected(params)
+    object.assign_attributes(params)
+    object.validate_rejected_reason
   end
 
   def set_empty_value_if_unset(params, field)

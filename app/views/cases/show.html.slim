@@ -61,11 +61,11 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
 
-  - if @case.offender_sar? && @case.closed?
+  - if @case.offender_sar? && @case.closed? && !@case.rejected?
     section.case-info
       = render partial: 'cases/offender_sar/partial_case_flags', locals: { case_details: @case, allow_editing: allow_editing }
 
-  - if @case.type_of_offender_sar?
+  - if @case.type_of_offender_sar? && !@case.rejected?
     section.case-info
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: allow_editing }
 

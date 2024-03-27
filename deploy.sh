@@ -184,6 +184,9 @@ function _deploy() {
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 
+  kubectl set image -f config/kubernetes/${environment}/cronjob-close-expired-rejected-offender-sar.yaml \
+          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
 }
 
 _deploy $@

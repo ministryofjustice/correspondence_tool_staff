@@ -191,7 +191,7 @@ class Workflows::Predicates
   end
 
   def can_start_complaint?
-    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == "closed")
+    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == "closed") && case_not_rejected?
   end
 
   def already_late?
@@ -200,6 +200,10 @@ class Workflows::Predicates
 
   def is_ready_to_dispatch?
     @kase.type == "Case::SAR::Offender" && (still_in_time? || has_caught_reason_for_lateness?)
+  end
+
+  def case_not_rejected?
+    !(@kase.type == "Case::SAR::Offender" && @kase.rejected?)
   end
 
 private

@@ -15,6 +15,7 @@ en:
       ready_to_dispatch: Ready to dispatch
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
+      invalid_submission: Rejected
     case/sar/offender_complaint:
       closed: Closed
       data_to_be_requested: Data to be requested

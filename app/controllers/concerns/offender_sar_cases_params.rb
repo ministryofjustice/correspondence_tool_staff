@@ -14,6 +14,7 @@ module OffenderSARCasesParams
       :name,
       :number_final_pages,
       :number_exempt_pages,
+      :other_rejected_reason,
       :other_subject_ids,
       :postal_address,
       :prison_number,
@@ -30,12 +31,15 @@ module OffenderSARCasesParams
       :third_party_name,
       :third_party_relationship,
       :third_party_company_name,
+      :third_party_email,
       :date_responded_dd, :date_responded_mm, :date_responded_yyyy,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :request_method,
       :requester_reference,
-      uploaded_request_files: []
+      :current_state,
+      uploaded_request_files: [],
+      rejected_reasons: []
     )
   end
 

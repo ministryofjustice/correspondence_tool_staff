@@ -60,8 +60,8 @@ describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
           get :new
         end
 
-        it "renders the select_type template" do
-          expect(response).to render_template(:select_type)
+        it "renders the offender_sar_select_type template" do
+          expect(response).to render_template(:offender_sar_select_type)
         end
 
         it "assigns @permitted_correspondence_types" do

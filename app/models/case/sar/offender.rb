@@ -25,6 +25,12 @@ class Case::SAR::Offender < Case::Base
         third_party_name: "B",
       }
     end
+
+    def close_expired_rejected
+      Case::SAR::Offender.where(current_state: "invalid_submission").late.each do |kase|
+        CaseClosureService.new(kase, User.system_admin, {}).call
+      end
+    end
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
@@ -41,6 +47,27 @@ class Case::SAR::Offender < Case::Base
     received_date
     sent_to_sscl_at
   ].freeze
+
+  REJECTED_REASONS = {
+    "cctv_bwcv" => "CCTV / BWCV request",
+    "change_of_name_certificate" => "Change of name certificate",
+    "court_data_request" => "Court data request",
+    "data_previously_requested" => "Data previously provided",
+    "further_identification" => "Further identification",
+    "identification_for_ex_inmate_probation" => "Identification for ex-inmate / probation",
+    "illegible_handwriting_unreadable_content" => "Illegible handwriting / unreadable content",
+    "id_required" => "ID required",
+    "invalid_authority" => "Invalid authority",
+    "medical_data" => "Medical data",
+    "observation_book_entries" => "Observation book entries",
+    "police_data" => "Police data ",
+    "social_services_data" => "Social services data",
+    "telephone_recordings_logs" => "Telephone recordings / logs",
+    "telephone_transcripts" => "Telephone transcripts",
+    "third_party_identification" => "Third party identification",
+    "what_data_no_data_requested" => "What data / no data requested",
+    "other" => "Other",
+  }.freeze
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
@@ -66,13 +93,17 @@ class Case::SAR::Offender < Case::Base
                  third_party_relationship: :string,
                  third_party: :boolean,
                  third_party_company_name: :string,
+                 third_party_email: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
                  number_final_pages: :integer,
                  number_exempt_pages: :integer,
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
-                 further_actions_required: :string
+                 further_actions_required: :string,
+                 case_originally_rejected: :boolean,
+                 other_rejected_reason: :string,
+                 rejected_reasons: [:string, { array: true, default: [] }]
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -116,6 +147,7 @@ class Case::SAR::Offender < Case::Base
   ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
+
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
@@ -134,6 +166,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
+  validate :validate_third_party_email_format
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
 
@@ -150,12 +183,15 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
+  validate :validate_rejected_reason, if: -> { invalid_submission? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
+  before_save :set_case_originally_rejected, if: -> { invalid_submission? }
+  before_save :verify_other_rejected_reason, if: -> { invalid_submission? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
@@ -239,6 +275,15 @@ class Case::SAR::Offender < Case::Base
     errors[:third_party_relationship].any?
   end
 
+  def validate_third_party_email_format
+    if third_party && (third_party_email.present? && third_party_email !~ /\A.+@.+\z/)
+      errors.add(
+        :third_party_email,
+        :invalid,
+      )
+    end
+  end
+
   def validate_partial_flags
     if !is_partial_case && further_actions_required == "yes"
       errors.add(
@@ -272,6 +317,22 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
+      )
+    end
+  end
+
+  def validate_rejected_reason
+    if rejected_reasons.all?(&:blank?)
+      errors.add(
+        :rejected_reasons,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.rejected_reasons.blank"),
+      )
+    end
+
+    if rejected_reasons.include?("other") && other_rejected_reason.empty?
+      errors.add(
+        :other_rejected_reason,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.other_rejected_reason.blank"),
       )
     end
   end
@@ -397,6 +458,20 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def rejected?
+    if persisted?
+      number[0] == "R"
+    else
+      current_state == "invalid_submission"
+    end
+  end
+
+  # Overwrites base method to allow case number to remove "R" when
+  # transitioning from 'invalid' to 'valid' offender SAR
+  def prevent_number_change
+    raise StandardError, "number is immutable" if current_state != "invalid_submission" && number_changed?
+  end
+
 private
 
   def set_subject
@@ -405,6 +480,14 @@ private
 
   def use_subject_as_requester
     self.name = subject_full_name
+  end
+
+  def set_case_originally_rejected
+    self.case_originally_rejected = true
+  end
+
+  def verify_other_rejected_reason
+    self.other_rejected_reason = "" unless rejected_reasons.include?("other")
   end
 
   def ensure_third_party_states_consistent
@@ -417,5 +500,12 @@ private
       self.recipient = "requester_recipient"
     end
   end
+
+  def set_number
+    self.number = if invalid_submission?
+                    "R#{next_number}"
+                  else
+                    next_number
+                  end
+  end
 end
-# rubocop:enable Metrics/ClassLength

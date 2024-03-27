@@ -49,6 +49,10 @@ en:
       require_further_action_message: Case details updated. Assigned back to %{team}
       require_further_action_unassigned_message: Case details updated. Need to reassign the case to a team
       require_further_action_to_responder_team_message: Case details updated. Assigned to %{team}
+    case/offender_sar:
+      rejected:
+        create: Rejected case created
+
 
     mark_as_waiting_for_data: Mark as waiting for data
     mark_as_waiting_for_data_desc: Case is waiting for data
@@ -83,6 +87,7 @@ en:
     require_further_action_to_responder_team_desc: Further information requested by the ICO
     annotate_retention_changes: Retention details edited
     annotate_system_retention_changes: Retention details edited - System update
+    validate_rejected_case: Valid case created
 
   retention_schedule_case_notes:
     update:

@@ -1,0 +1,20 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.reason_rejected_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case, url: url, as: :offender_sar do |f|
+
+  = f.label :rejected_reason, :class => "form-label-bold"
+  = f.collection_check_boxes :rejected_reasons, Case::SAR::Offender::REJECTED_REASONS, :first, :last
+
+  div[id="other-text-area-container" class="#{@case.rejected_reasons.include?("other") ? "" : "display-none"}"]
+    = f.text_area :other_rejected_reason
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  .button-holder
+    = f.submit t('button.continue'), { class: 'button', role: 'button' }

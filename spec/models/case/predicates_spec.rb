@@ -14,6 +14,7 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_foi?).to be false
       expect(kase.overturned_ico_sar?).to be false
       expect(kase.all_holidays?).to be true
+      expect(kase.rejected?).to be false
     end
   end
 
@@ -30,6 +31,7 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_foi?).to be false
       expect(kase.overturned_ico_sar?).to be false
       expect(kase.all_holidays?).to be true
+      expect(kase.rejected?).to be false
     end
   end
 
@@ -46,6 +48,7 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_foi?).to be false
       expect(kase.overturned_ico_sar?).to be false
       expect(kase.all_holidays?).to be true
+      expect(kase.rejected?).to be false
     end
   end
 
@@ -62,6 +65,7 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_foi?).to be false
       expect(kase.overturned_ico_sar?).to be false
       expect(kase.all_holidays?).to be true
+      expect(kase.rejected?).to be false
     end
   end
 
@@ -78,6 +82,7 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_foi?).to be false
       expect(kase.overturned_ico_sar?).to be false
       expect(kase.all_holidays?).to be false
+      expect(kase.rejected?).to be false
     end
   end
 end

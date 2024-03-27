@@ -71,3 +71,5 @@ doc
 
 # ignore secret files
 *secret*.*
+
+.idea/

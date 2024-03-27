@@ -297,7 +297,7 @@ feature "Contacts address book", js: true do
   def when_i_navigate_to_offender_sar_subject_page
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-    click_link "Offender SAR - Offender Subject Access Request"
+    click_link "Offender SAR - Offender subject access request"
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
   end
 

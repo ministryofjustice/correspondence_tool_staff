@@ -47,7 +47,11 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     authorize Case::Base, :can_add_case?
 
-    render "cases/select_type"
+    if permitted_correspondence_types.any? { |h| h[:abbreviation] == "OFFENDER_SAR" }
+      render "cases/offender_sar_select_type"
+    else
+      render "cases/select_type"
+    end
   end
 
   def create
