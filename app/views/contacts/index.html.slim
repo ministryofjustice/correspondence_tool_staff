@@ -12,7 +12,7 @@
 
 .grid-row
   .column-full.button-holder
-    = link_to t('common.contacts.add_new_address'), new_contact_type_contacts_path, class: 'button'
+    = link_to t('common.contacts.add_new_address'), new_contact_path, class: 'button'
 
 table.report
   thead
@@ -34,4 +34,3 @@ table.report
         td = link_to t('button.edit'), edit_contact_path(contact)
         td = link_to t('button.delete'), contact, data: { confirm: t('common.contacts.delete_address_confirmation') }, method: :delete
 br
-
