@@ -1,8 +1,8 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
   before_action :set_contact_type_options, only: %i[contact_type create edit update]
-  before_action :set_new_contact_from_params, only: :confirm_contact_type
-  before_action :set_contact_type, only: :confirm_contact_type
+  before_action :set_new_contact_from_params, only: :create
+  before_action :set_contact_type, only: :create
 
   def new; end
 
