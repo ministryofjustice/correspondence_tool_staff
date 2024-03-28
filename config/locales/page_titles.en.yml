@@ -92,6 +92,7 @@ en:
     record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
+    add_contact_type: Add a contact type - Track-a-query
     edit_an_address: Edit an address - Track-a-query
     partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
     ico_foi:

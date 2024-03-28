@@ -60,7 +60,7 @@ private
       errors.add(
         :data_request_emails,
         :invalid,
-      )
+        )
     end
   end
 end

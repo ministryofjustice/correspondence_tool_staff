@@ -1,15 +1,18 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
-  before_action :set_contact_type_options, only: %i[create edit new update]
   before_action :set_new_contact_from_params, only: :create
-  before_action :set_contact_type, only: %i[update create]
+  before_action :set_contact_type, only: :create
+
+  def new
+    @contact_types = CategoryReference.list_by_category(:contact_type)
+  end
+
+  def new_details
+    @contact = Contact.new(contact_type_id: contact_type_params[:contact_type_id])
+  end
 
   def index
     @contacts = Contact.includes([:contact_type]).order(:name).decorate
-  end
-
-  def new
-    @contact = Contact.new
   end
 
   def edit; end
@@ -19,7 +22,7 @@ class ContactsController < ApplicationController
       if @contact.save
         format.html { redirect_to contacts_url, notice: "Contact was successfully created." }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :new_details, status: :unprocessable_entity }
       end
     end
   end
@@ -64,10 +67,6 @@ private
     @contact = Contact.new(contact_params)
   end
 
-  def set_contact_type_options
-    @contact_types = CategoryReference.list_by_category(:contact_type)
-  end
-
   def set_contact_type
     if contact_type_params[:contact_type_id]
       @contact_type = CategoryReference.find(contact_type_params[:contact_type_id])
@@ -87,13 +86,13 @@ private
       :postcode,
       :data_request_name,
       :data_request_emails,
-    )
+      )
   end
 
   def contact_type_params
     params.require(:contact).permit(
       :contact_type_id,
-    )
+      )
   end
 
   def contacts_search_param
