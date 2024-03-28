@@ -56,4 +56,17 @@ feature "Offender SAR Case editing by a manager", :js do
 
     expect(cases_show_page.offender_sar_reason_rejected).not_to have_link "Change"
   end
+
+  scenario "case remains rejected after editing subject details page" do
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+
+    cases_show_page.offender_sar_subject_details.change_link.click
+    cases_edit_offender_sar_subject_details_page.edit_name "Bob Hope"
+    click_on "Continue"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Case updated"
+    expect(cases_show_page.case_status).to have_content "Rejected"
+  end
+
 end
