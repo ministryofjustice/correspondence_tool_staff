@@ -1353,10 +1353,14 @@ en:
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
+      case/sar/offender:
+        sub_heading: Edit Offender SAR case
+        rejected: Edit rejected Offender SAR case
       offender_sar:
         number_final_pages: 'Update final page count'
         number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
+        rejected: Edit rejected Offender SAR case
         sub_heading: Edit Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
@@ -1428,9 +1432,9 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
-      offender_sar:
-        rejected: Create rejected Offender SAR case
+      case/sar/offender:
         sub_heading: Create Offender SAR case
+        rejected: Create rejected Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,

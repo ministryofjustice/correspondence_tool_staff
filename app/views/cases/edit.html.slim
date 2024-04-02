@@ -5,7 +5,7 @@
   = t('.heading')
 
 - content_for :sub_heading
-  = "#{@case.number} - #{@case.pretty_type}"
+  = get_sub_heading(@case)
 
 = render partial: 'layouts/header' unless @case.type_of_offender_sar?
 

@@ -1,7 +1,3 @@
-- content_for :sub_heading, flush: true
-  = t("cases.edit.offender_sar.sub_heading")
-
 = link_to "Back", case_path(@case.id), class: 'govuk-back-link'
 
 = render "cases/offender_sar/#{@case.get_step_partial}", url: case_sar_offender_path(@case)
-
