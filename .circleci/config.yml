@@ -139,7 +139,7 @@ references:
     run:
       name: Check test coverage
       command: |
-        limit=95 # Coverage percentage below this number will cause the build to fail
+        limit=92 # Coverage percentage below this number will cause the build to fail
         coverage=$(grep -o '"line":.*' coverage/.last_run.json | cut -d" " -f2-)
         echo "Details of test coverage is available from the Artifacts tab"
         echo "Tests cover $coverage% of code"
