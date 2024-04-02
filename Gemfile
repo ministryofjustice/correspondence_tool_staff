@@ -83,7 +83,7 @@ group :test do
   gem "i18n-tasks", "~> 1.0.12"
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
-  gem "simplecov", "~> 0.22.0"
+  gem "simplecov"
   gem "site_prism", "< 5.0"
 end
 
