@@ -208,6 +208,10 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_date_of_birth
+    if date_of_birth.nil?
+      errors.add(:date_of_birth, :blank)
+    end
+
     if date_of_birth.present? && date_of_birth > Time.zone.today
       errors.add(
         :date_of_birth,
