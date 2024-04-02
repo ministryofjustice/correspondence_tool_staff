@@ -705,7 +705,7 @@ DEPENDENCIES
   shell-spinner
   shoulda-matchers (~> 5.1)
   sidekiq (~> 6.4.0)
-  simplecov (~> 0.22.0)
+  simplecov
   site_prism (< 5.0)
   slim-rails (~> 3.6)
   spring
