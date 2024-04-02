@@ -224,7 +224,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.request_dated.not_in_future"),
       )
     end
-    errors[:request_dated].any?
   end
 
   def validate_third_party_names
@@ -238,7 +237,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_recipient
@@ -252,7 +250,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_third_party_relationship
@@ -262,7 +259,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank"),
       )
     end
-    errors[:third_party_relationship].any?
   end
 
   def validate_third_party_address
@@ -272,7 +268,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank"),
       )
     end
-    errors[:third_party_relationship].any?
   end
 
   def validate_third_party_email_format
@@ -300,7 +295,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
       )
     end
-    errors[:partial_case_letter_sent_dated].any?
   end
 
   def validate_sent_to_sscl_at
