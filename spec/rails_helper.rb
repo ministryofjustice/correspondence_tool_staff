@@ -9,6 +9,8 @@ unless ENV["COVERAGE"].nil?
     add_filter "/app/channels/"
     # all emails (including devise ones) get sent via gov.uk notify service
     add_filter "/app/mailers/application_mailer.rb"
+    add_filter "/lib/cts/"
+    add_filter "/lib/db/"
   end
 end
 
