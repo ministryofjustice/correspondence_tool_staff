@@ -62,13 +62,13 @@ module Cases
 
     def get_rejected
       @rejected =
-        @case.invalid_submission? ||
+        @case.rejected? ||
         params["rejected"] == "true" ||
         (action_name == "create" && create_params["current_state"])
     end
 
     def edit_params
-      create_offender_sar_params
+      create_offender_sar_params.except(:current_state)
     end
 
     def case_type
@@ -141,7 +141,6 @@ module Cases
     def edit
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
       @case.current_step = params[:step]
       apply_date_workaround
     end
