@@ -141,7 +141,6 @@ module Cases
     def edit
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-      get_rejected
       @case.current_step = params[:step]
       apply_date_workaround
     end
