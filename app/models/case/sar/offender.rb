@@ -152,10 +152,8 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
-
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :recipient, presence: true
@@ -208,6 +206,10 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_date_of_birth
+    if date_of_birth.nil?
+      errors.add(:date_of_birth, :blank)
+    end
+
     if date_of_birth.present? && date_of_birth > Time.zone.today
       errors.add(
         :date_of_birth,
@@ -224,7 +226,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.request_dated.not_in_future"),
       )
     end
-    errors[:request_dated].any?
   end
 
   def validate_third_party_names
@@ -238,7 +239,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_recipient
@@ -252,7 +252,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_third_party_relationship
@@ -262,7 +261,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank"),
       )
     end
-    errors[:third_party_relationship].any?
   end
 
   def validate_third_party_address
@@ -272,7 +270,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank"),
       )
     end
-    errors[:third_party_relationship].any?
   end
 
   def validate_third_party_email_format
@@ -300,7 +297,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
       )
     end
-    errors[:partial_case_letter_sent_dated].any?
   end
 
   def validate_sent_to_sscl_at

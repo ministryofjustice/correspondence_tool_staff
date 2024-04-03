@@ -248,20 +248,27 @@ describe Case::SAR::Offender do
   end
 
   describe "#date_of_birth" do
+    let(:kase) { build_stubbed :offender_sar_case }
+
     context "with valid values" do
       it "validates date of birth" do
-        kase = build_stubbed :offender_sar_case
-
         expect(kase).to validate_presence_of(:date_of_birth)
         expect(kase).to allow_values("01-01-1967").for(:date_of_birth)
+        expect { kase.validate_date_of_birth }.not_to change(kase.errors, :count)
       end
     end
 
     context "with invalid value" do
-      it "errors" do
-        expect {
-          build_stubbed(:offender_sar_case, date_of_birth: "wibble")
-        }.to raise_error ArgumentError
+      it "is not valid" do
+        kase[:date_of_birth] = "wibble"
+        expect { kase.validate_date_of_birth }.to change(kase.errors, :count)
+      end
+    end
+
+    context "with all zeroes value" do
+      it "is not valid" do
+        kase[:date_of_birth] = "0000-00-00"
+        expect { kase.validate_date_of_birth }.to change(kase.errors, :count)
       end
     end
 
