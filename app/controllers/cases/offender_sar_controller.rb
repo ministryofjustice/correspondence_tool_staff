@@ -68,7 +68,7 @@ module Cases
     end
 
     def edit_params
-      create_offender_sar_params
+      create_offender_sar_params.except(:current_state)
     end
 
     def case_type
