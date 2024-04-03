@@ -85,5 +85,4 @@ feature "Offender SAR Case editing by a manager", :js do
     expect(cases_show_page).to have_content "Case updated"
     expect(cases_show_page.case_status).to have_content "Closed"
   end
-
 end
