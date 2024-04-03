@@ -98,6 +98,10 @@ class CasesController < ApplicationController
     @case = @case.decorate
     preserve_step_state
 
+    if @case.closed? && @case.rejected?
+      rejected_to_closed = true
+    end
+
     service = case_updater_service.new(current_user, @case, edit_params)
     service.call
 
@@ -119,6 +123,7 @@ class CasesController < ApplicationController
 
     set_permitted_events
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+    CaseClosureService.new(@case, current_user, {}).call if rejected_to_closed
     redirect_to case_path(@case)
   end
 

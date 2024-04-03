@@ -62,7 +62,7 @@ module Cases
 
     def get_rejected
       @rejected =
-        @case.invalid_submission? ||
+        @case.rejected? ||
         params["rejected"] == "true" ||
         (action_name == "create" && create_params["current_state"])
     end
