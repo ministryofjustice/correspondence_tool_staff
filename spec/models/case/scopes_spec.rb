@@ -245,8 +245,8 @@ RSpec.describe Case::Base, type: :model do # rubocop:disable RSpec/FilePath
   end
 
   describe "most_recent_first scope" do
-    let!(:case_oldest) { create :case, received_date: 11.business_days.ago }
-    let!(:case_recent) { create :case, received_date: 10.business_days.ago }
+    let!(:case_oldest) { freeze_time { create :case, received_date: 11.business_days.ago } }
+    let!(:case_recent) { freeze_time { create :case, received_date: 10.business_days.ago } }
 
     it "orders cases by their external deadline" do
       expect(described_class.most_recent_first).to eq [case_recent, case_oldest]
