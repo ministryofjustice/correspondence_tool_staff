@@ -1,5 +1,5 @@
 module Stats
-  class R105SarMonthlyPerformanceReport < BaseMonthlyPerformanceReport
+  class R105SARMonthlyPerformanceReport < BaseMonthlyPerformanceReport
     def self.title
       "Monthly report"
     end

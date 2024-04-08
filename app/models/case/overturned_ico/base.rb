@@ -28,7 +28,7 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-class Case::OverturnedIco::Base < Case::Base
+class Case::OverturnedICO::Base < Case::Base
   include LinkableOriginalCase
 
   before_save do

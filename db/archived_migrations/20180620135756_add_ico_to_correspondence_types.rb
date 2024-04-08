@@ -1,4 +1,4 @@
-class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
+class AddICOToCorrespondenceTypes < ActiveRecord::Migration[5.0]
   class CorrespondenceType < ApplicationRecord
     jsonb_accessor :properties,
                    internal_time_limit: :integer,

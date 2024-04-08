@@ -1,8 +1,8 @@
 module Cases
-  class IcoController < CasesController
-    include IcoCasesParams
+  class ICOController < CasesController
+    include ICOCasesParams
     include NewCase
-    include ReopenIcoCase
+    include ReopenICOCase
 
     before_action -> { set_case(params[:id]) }, only: [:record_late_team]
 

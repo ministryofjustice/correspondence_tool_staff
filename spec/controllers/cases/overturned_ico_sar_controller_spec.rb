@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
+RSpec.describe Cases::OverturnedICOSARController, type: :controller do
   let(:manager) { find_or_create :disclosure_specialist_bmt }
   let(:approver) { create :approver }
   let(:sar) { create :sar_case }
@@ -34,7 +34,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     context "with valid params" do
       before do
         service = instance_double(
-          NewOverturnedIcoCaseService,
+          NewOverturnedICOCaseService,
           call: nil,
           error?: false,
           success?: true,
@@ -43,7 +43,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           overturned_ico_case:,
         )
         params = ActionController::Parameters.new({ id: ico_sar.id })
-        allow(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
+        allow(NewOverturnedICOCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
 
         get :new, params: params.to_unsafe_hash
       end
@@ -63,14 +63,14 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     context "with invalid params" do
       before do
-        service = instance_double(NewOverturnedIcoCaseService,
+        service = instance_double(NewOverturnedICOCaseService,
                                   call: nil,
                                   error?: true,
                                   success?: false,
                                   original_ico_appeal: ico_sar,
                                   overturned_ico_case:)
         params = ActionController::Parameters.new({ id: ico_sar.id })
-        allow(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
+        allow(NewOverturnedICOCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
         get :new, params: params.to_unsafe_hash
       end
 

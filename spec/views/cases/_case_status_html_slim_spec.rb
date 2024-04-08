@@ -158,7 +158,7 @@ describe "cases/case_status.html.slim", type: :view do
       expect(partial.details.ico_ref_number.text).to eq ico_case.ico_reference_number
     end
 
-    it "displays the page counts for Offender Sar cases" do
+    it "displays the page counts for Offender SAR cases" do
       params = {
         status: "Needs reassigning",
         external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),

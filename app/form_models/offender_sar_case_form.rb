@@ -1,4 +1,4 @@
-module OffenderSarCaseForm
+module OffenderSARCaseForm
   extend ActiveSupport::Concern
 
   include OffenderFormValidators

@@ -29,7 +29,7 @@ describe SearchQueryDecorator, type: :model do
     let(:decorated_query) { described_class.decorate(query) }
 
     it "displays the query details" do
-      expect(decorated_query.filtered_list_query_details).to eq "Filter case type: Foi-ir-compliance"
+      expect(decorated_query.filtered_list_query_details).to eq "Filter case type: FOI-ir-compliance"
     end
   end
 end

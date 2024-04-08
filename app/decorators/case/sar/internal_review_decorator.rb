@@ -1,7 +1,7 @@
-class Case::Sar::InternalReviewDecorator < Case::Sar::StandardDecorator
+class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
   include Steppable
 
-  include SarInternalReviewCaseForm
+  include SARInternalReviewCaseForm
 
   def get_step_partial
     step_name = current_step.split("/").first.tr("-", "_")

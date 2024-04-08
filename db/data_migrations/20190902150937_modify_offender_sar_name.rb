@@ -1,4 +1,4 @@
-class ModifyOffenderSarName < ActiveRecord::DataMigration
+class ModifyOffenderSARName < ActiveRecord::DataMigration
   def up
     CorrespondenceType.where(abbreviation: "OFFENDER_SAR").update(name: "Offender subject access request")
   end

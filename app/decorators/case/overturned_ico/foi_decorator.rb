@@ -1,4 +1,4 @@
-class Case::OverturnedIco::FoiDecorator < Case::OverturnedIco::BaseDecorator
+class Case::OverturnedICO::FOIDecorator < Case::OverturnedICO::BaseDecorator
   def pretty_type
     "ICO overturned (FOI)"
   end

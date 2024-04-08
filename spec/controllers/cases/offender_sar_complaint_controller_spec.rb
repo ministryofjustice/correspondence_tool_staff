@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
+RSpec.describe Cases::OffenderSARComplaintController, type: :controller do
   let(:responder) { find_or_create :branston_user }
 
   describe "authentication" do
@@ -27,8 +27,8 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     include_examples "can_add_case policy spec", Case::SAR::OffenderComplaint
   end
 
-  # Not using shared_examples/new_spec due to the way Offender Sar Controller
-  # sets `@case` to be a OffenderSarCaseForm rather than a decorator at present
+  # Not using shared_examples/new_spec due to the way Offender SAR Controller
+  # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::OffenderComplaint] }
     let(:params) { { correspondence_type: "offender_sar_complaint" } }

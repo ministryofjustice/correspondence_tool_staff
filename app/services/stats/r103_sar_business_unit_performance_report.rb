@@ -1,5 +1,5 @@
 module Stats
-  class R103SarBusinessUnitPerformanceReport < BaseBusinessUnitPerformanceReport
+  class R103SARBusinessUnitPerformanceReport < BaseBusinessUnitPerformanceReport
     def self.title
       "Business unit report (SARs)"
     end

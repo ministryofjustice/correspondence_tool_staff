@@ -1,7 +1,7 @@
 module Cases
-  class SarController < CasesController
+  class SARController < CasesController
     include NewCase
-    include SarCasesParams
+    include SARCasesParams
 
     def initialize
       @correspondence_type = CorrespondenceType.sar

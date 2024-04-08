@@ -28,7 +28,7 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-class Case::OverturnedIco::FOI < Case::OverturnedIco::Base
+class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
   include DraftTimeliness::ResponseAdded
 
   attr_accessor :flag_for_disclosure_specialists

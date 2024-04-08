@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::OffenderSarController, type: :controller do
+RSpec.describe Cases::OffenderSARController, type: :controller do
   let(:responder) { find_or_create :branston_user }
 
   let(:params) do
@@ -27,8 +27,8 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     include_examples "can_add_case policy spec", Case::SAR::Offender
   end
 
-  # Not using shared_examples/new_spec due to the way Offender Sar Controller
-  # sets `@case` to be a OffenderSarCaseForm rather than a decorator at present
+  # Not using shared_examples/new_spec due to the way Offender SAR Controller
+  # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::Offender] }
     let(:params) { { correspondence_type: "offender_sar" } }
@@ -63,7 +63,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     it "renders the new template with a form object" do
       get(:new, params:)
       expect(response).to render_template(:new)
-      expect(assigns(:case)).to be_a OffenderSarCaseForm
+      expect(assigns(:case)).to be_a OffenderSARCaseForm
       expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender]
     end
   end

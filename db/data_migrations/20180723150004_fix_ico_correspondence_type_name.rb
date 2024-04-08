@@ -1,4 +1,4 @@
-class FixIcoCorrespondenceTypeName < ActiveRecord::DataMigration
+class FixICOCorrespondenceTypeName < ActiveRecord::DataMigration
   class CorrespondenceType < ApplicationRecord
   end
 

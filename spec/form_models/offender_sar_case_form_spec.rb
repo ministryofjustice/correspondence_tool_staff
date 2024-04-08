@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe OffenderSarCaseForm do
+RSpec.describe OffenderSARCaseForm do
   let(:case_form) { create(:offender_sar_case).decorate }
 
   it "can be created" do

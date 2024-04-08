@@ -1,4 +1,4 @@
-class AddOverturnedFoiCorrespondenceType < ActiveRecord::DataMigration
+class AddOverturnedFOICorrespondenceType < ActiveRecord::DataMigration
   def up
     rec = CorrespondenceType.find_by(abbreviation: "OVERTURNED_FOI")
     if rec.nil?

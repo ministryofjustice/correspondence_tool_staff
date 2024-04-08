@@ -1,7 +1,7 @@
 module Cases
-  class FoiController < CasesController
+  class FOIController < CasesController
     include NewCase
-    include FoiCasesParams
+    include FOICasesParams
 
     before_action -> { set_case(params[:id]) }, only: %i[send_back confirm_send_back]
 

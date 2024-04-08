@@ -29,7 +29,7 @@ module CorrespondencePlatform
     # work.
     config.active_record.schema_format = :sql
 
-    config.autoload_paths += %W[#{config.root}/lib #{config.root}/app/validators #{config.root}/app/form_models]
+    config.autoload_paths += %W[#{config.root}/lib]
     config.active_job.queue_adapter = :sidekiq
 
     Dir[config.root.join("lib", "extensions", "**", "*.rb")].each do |file|
@@ -65,5 +65,19 @@ module CorrespondencePlatform
 
     # Use MailDeliveryJob
     config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
+
+    config.after_initialize do
+      # instantiate a ConfigurableStateMachine::Machine on start up. This will
+      # force the validation of all state machine configuration file.
+
+      StateMachineConfigConcatenator.new.run
+      begin
+        ConfigurableStateMachine::Manager.instance
+      rescue ConfigurationError => e
+        Rails.logger.debug e.class
+        Rails.logger.debug e.message
+        exit # rubocop:disable Rails/Exit
+      end
+    end
   end
 end

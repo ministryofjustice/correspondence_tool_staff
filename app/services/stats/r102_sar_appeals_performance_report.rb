@@ -1,5 +1,5 @@
 module Stats
-  class R102SarAppealsPerformanceReport < BaseAppealsPerformanceReport
+  class R102SARAppealsPerformanceReport < BaseAppealsPerformanceReport
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
