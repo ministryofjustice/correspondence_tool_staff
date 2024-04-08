@@ -1,5 +1,5 @@
 class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
-  include OffenderSARCaseForm
+  include OffenderSarCaseForm
 
   def pretty_type
     I18n.t("helpers.label.correspondence_types.offender_sar")

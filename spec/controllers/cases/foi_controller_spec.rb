@@ -504,7 +504,7 @@ RSpec.describe Cases::FoiController, type: :controller do
     end
   end
 
-  describe "FOICasesParams" do
+  describe "FoiCasesParams" do
     let(:new_date_responded) { 1.business_day.before(Time.zone.today) }
 
     let(:params) do

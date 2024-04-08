@@ -1,4 +1,4 @@
-module SARCasesParams
+module SarCasesParams
   extend ActiveSupport::Concern
 
   def create_sar_params

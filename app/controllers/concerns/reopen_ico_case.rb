@@ -1,4 +1,4 @@
-module ReopenICOCase
+module ReopenIcoCase
   extend ActiveSupport::Concern
 
   included do

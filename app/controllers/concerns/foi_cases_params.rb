@@ -1,4 +1,4 @@
-module FOICasesParams
+module FoiCasesParams
   extend ActiveSupport::Concern
 
   def create_foi_params

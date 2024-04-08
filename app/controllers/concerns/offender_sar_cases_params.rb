@@ -1,4 +1,4 @@
-module OffenderSARCasesParams
+module OffenderSarCasesParams
   extend ActiveSupport::Concern
 
   class InputValidationError < RuntimeError; end

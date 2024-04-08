@@ -1,4 +1,4 @@
-class Case::OverturnedICO::SARDecorator < Case::OverturnedICO::BaseDecorator
+class Case::OverturnedICO::SarDecorator < Case::OverturnedIco::BaseDecorator
   def pretty_type
     "ICO overturned (SAR)"
   end

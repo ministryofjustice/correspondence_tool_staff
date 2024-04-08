@@ -28,7 +28,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   end
 
   # Not using shared_examples/new_spec due to the way Offender Sar Controller
-  # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
+  # sets `@case` to be a OffenderSarCaseForm rather than a decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::Offender] }
     let(:params) { { correspondence_type: "offender_sar" } }
@@ -63,7 +63,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     it "renders the new template with a form object" do
       get(:new, params:)
       expect(response).to render_template(:new)
-      expect(assigns(:case)).to be_a OffenderSARCaseForm
+      expect(assigns(:case)).to be_a OffenderSarCaseForm
       expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender]
     end
   end

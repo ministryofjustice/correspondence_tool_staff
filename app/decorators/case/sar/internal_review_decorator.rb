@@ -1,4 +1,4 @@
-class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
+class Case::Sar::InternalReviewDecorator < Case::Sar::StandardDecorator
   include Steppable
 
   include SarInternalReviewCaseForm

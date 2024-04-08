@@ -28,7 +28,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   # Not using shared_examples/new_spec due to the way Offender Sar Controller
-  # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
+  # sets `@case` to be a OffenderSarCaseForm rather than a decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::OffenderComplaint] }
     let(:params) { { correspondence_type: "offender_sar_complaint" } }

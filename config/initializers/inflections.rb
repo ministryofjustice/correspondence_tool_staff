@@ -12,4 +12,7 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.uncountable "feedback"
+  inflect.acronym "CTS"
+  inflect.acronym "PIT"
+  inflect.acronym "CSV"
 end

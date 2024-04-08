@@ -1,6 +1,6 @@
 module Cases
   class OverturnedIcoSarController < CasesController
-    include SARCasesParams
+    include SarCasesParams
     include OverturnedICOParams
     include OverturnedCase
 

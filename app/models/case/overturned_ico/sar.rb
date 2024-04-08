@@ -28,7 +28,7 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
+class Case::OverturnedIco::SAR < Case::OverturnedIco::Base
   include DraftTimeliness::ProgressedForClearance
 
   delegate :message, to: :original_case

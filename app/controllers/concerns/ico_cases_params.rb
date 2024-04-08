@@ -1,4 +1,4 @@
-module ICOCasesParams
+module IcoCasesParams
   extend ActiveSupport::Concern
 
 private

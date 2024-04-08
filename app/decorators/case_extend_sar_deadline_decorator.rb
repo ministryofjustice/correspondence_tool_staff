@@ -1,4 +1,4 @@
-class CaseExtendSARDeadlineDecorator < Draper::Decorator
+class CaseExtendSarDeadlineDecorator < Draper::Decorator
   decorates Case::SAR::Standard
   delegate_all
 

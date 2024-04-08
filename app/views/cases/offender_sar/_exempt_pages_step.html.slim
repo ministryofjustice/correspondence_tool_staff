@@ -10,7 +10,7 @@
 div class="case-#{@correspondence_type_key}"
   / NOTE: this uses the step mechanism to change the  number_exempt_pages
   / this does not appear in the list of steps for new cast creation as found in
-  / OffenderSARCaseForm -> def steps method
+  / OffenderSarCaseForm -> def steps method
   = form_for @case, url: case_sar_offender_path(@case), as: :offender_sar do |f|
     = f.number_field :number_exempt_pages, {class: 'pages_number'}
 

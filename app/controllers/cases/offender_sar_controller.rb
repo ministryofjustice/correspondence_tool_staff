@@ -1,7 +1,7 @@
 module Cases
   class OffenderSarController < CasesController
     include NewCase
-    include OffenderSARCasesParams
+    include OffenderSarCasesParams
 
     before_action :set_case_types, only: %i[new create]
 
