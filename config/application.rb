@@ -21,6 +21,9 @@ module CorrespondencePlatform
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
+    # By default associations can be empty
+    config.active_record.belongs_to_required_by_default = false
+
     config.ga_tracking_id = (ENV["GA_TRACKING_ID"] || "")
 
     ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
