@@ -96,7 +96,7 @@ group :development, :test do
   gem "bullet", "~> 7.0.1"
   gem "colorize"
   gem "debug", ">= 1.0.0"
-  gem "parallel_tests", "~> 3.7"
+  gem "parallel_tests"
   gem "rspec-collection_matchers"
   gem "rspec-rails", "~> 6.0"
   gem "rubocop-govuk", require: false
