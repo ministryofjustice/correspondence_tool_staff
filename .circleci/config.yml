@@ -229,7 +229,6 @@ jobs:
       - *install_dependencies
       - *save_cache
       - *wait_for_db
-      - *set_up_the_database
       - *rubocop
       - *brakeman
       - *update_chrome
