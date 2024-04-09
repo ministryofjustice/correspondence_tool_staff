@@ -229,6 +229,8 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
+      - *rubocop
+      - *brakeman
       - *restore_cache
       - *install_bundler
       - *check_bundler_version
@@ -236,8 +238,7 @@ jobs:
       - *install_dependencies
       - *save_cache
       - *wait_for_db
-      - *rubocop
-      - *brakeman
+      - *set_up_the_database
       - *update_chrome
       - *run_unit_and_feature_tests
       - *store_coverage
