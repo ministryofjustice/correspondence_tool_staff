@@ -10,6 +10,7 @@
 
 = form_for :contact, url: new_details_contacts_path do |f|
 
+  / = f.hidden_field :contact_type_default_id
   = f.radio_button_fieldset :contact_type_id,
     choices: @contact_types,
     value_method: :id,

@@ -86,13 +86,13 @@ private
       :postcode,
       :data_request_name,
       :data_request_emails,
-      )
+    )
   end
 
   def contact_type_params
     params.require(:contact).permit(
       :contact_type_id,
-      )
+    )
   end
 
   def contacts_search_param
