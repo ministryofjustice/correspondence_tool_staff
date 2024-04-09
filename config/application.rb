@@ -28,8 +28,7 @@ module CorrespondencePlatform
 
     ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
 
-    # Ensure we dump the DB structure as SQL, required to get Postgres enums to
-    # work.
+    # Ensure we dump the DB structure as SQL, required to get Postgres enums to work.
     config.active_record.schema_format = :sql
 
     config.autoload_paths += %W[#{config.root}/lib]
