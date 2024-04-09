@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CaseFilter::CaseUpdateSentToSsclService do
+describe CaseUpdateSentToSsclService do
   let(:kase) { create :offender_sar_case, :closed }
   let(:user) { kase.responding_team.users.first }
   let(:team) { kase.responding_team }
