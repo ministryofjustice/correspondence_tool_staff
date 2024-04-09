@@ -14,7 +14,7 @@
 div class="case-#{@correspondence_type_key}"
   / NOTE: this uses the step mechanism to change the date_responded after a case has closed.
   / this does not appear in the list of steps for new cast creation as found in
-  / OffenderSarCaseForm -> def steps method
+  / OffenderSARCaseForm -> def steps method
   = form_for @case, url: case_sar_offender_path(@case), as: :offender_sar do |f|
     .form-group
         = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
