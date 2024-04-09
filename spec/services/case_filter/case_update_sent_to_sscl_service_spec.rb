@@ -12,7 +12,7 @@ describe CaseUpdateSentToSsclService do
            date_sent_to_sscl_removed!: true
   end
   let(:params) { { sent_to_sscl_at: Date.current - 1.day } }
-  let(:service) { CaseUpdateSentToSsclService.new(user:, kase:, params:) }
+  let(:service) { described_class.new(user:, kase:, params:) }
 
   before do
     allow(kase).to receive(:state_machine).and_return(state_machine)
