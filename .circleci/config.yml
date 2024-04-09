@@ -24,15 +24,12 @@ references:
           RAILS_ENV: test
           RACK_ENV: test
           PGHOST: 127.0.0.1
-          PG_PASSWORD: ""
           PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
 
       - image: cimg/postgres:12.15
         environment:
-          PG_PASSWORD: ""
-          POSTGRES_HOST_AUTH_METHOD: trust
-          PG_USER: postgres
+          POSTGRES_USER: postgres
           POSTGRES_DB: correspondence_platform_test
 
   deploy_container_config: &deploy_container_config
