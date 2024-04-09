@@ -105,12 +105,6 @@ references:
       name: Wait for DB
       command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-  set_up_the_database: &set_up_the_database
-    run:
-      name: Set up the database
-      command: |
-        bundle exec rake db:setup
-
   rubocop: &rubocop
     run:
       name: Run rubocop
@@ -236,7 +230,6 @@ jobs:
       - *install_dependencies
       - *save_cache
       - *wait_for_db
-      - *set_up_the_database
       - *rubocop
       - *brakeman
       - *update_chrome
