@@ -69,12 +69,6 @@ references:
       command: |
         gem install bundler -v 2.4.19
 
-  check_bundler_version: &check_bundler_version
-    run:
-      name: Check the installed version of bundler
-      command: |
-        bundle -v
-
   restore_cache: &restore_cache
     restore_cache:
       keys:
@@ -229,14 +223,13 @@ jobs:
     resource_class: xlarge
     steps:
       - checkout
-      - *rubocop
-      - *brakeman
       - *restore_cache
       - *install_bundler
-      - *check_bundler_version
       - *install_psql
       - *install_dependencies
       - *save_cache
+      - *rubocop
+      - *brakeman
       - *wait_for_db
       - *set_up_the_database
       - *update_chrome
