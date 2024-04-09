@@ -4,17 +4,17 @@ require "cts/policies"
 require "cts/teams/cli"
 require "cts/users"
 
-class CTS::CLI < Thor
+class CTS::Cli < Thor
   include Thor::Rails unless SKIP_RAILS
 
   desc "cases", "Case commands"
-  subcommand "cases", CTS::Cases::CLI
+  subcommand "cases", CTS::Cases::Cli
 
   desc "policies", "Policy related commands"
   subcommand "policies", CTS::Policies
 
   desc "teams", "Team commands"
-  subcommand "teams", CTS::Teams::CLI
+  subcommand "teams", CTS::Teams::Cli
 
   desc "users", "User commands"
   subcommand "users", CTS::Users

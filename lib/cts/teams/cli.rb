@@ -1,7 +1,7 @@
 require "cts"
 
 module CTS::Teams
-  class CLI < Thor
+  class Cli < Thor
     include Thor::Rails unless SKIP_RAILS
 
     desc "list", "List teams in the system."
