@@ -26,5 +26,5 @@ class Thor
 end
 
 if File.expand_path($PROGRAM_NAME) == __FILE__
-  CTS:Cli.start(ARGV)
+  CTS::Cli.start(ARGV)
 end
