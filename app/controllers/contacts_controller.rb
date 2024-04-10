@@ -14,7 +14,7 @@ class ContactsController < ApplicationController
     @contact_type = ContactType.new(contact_type_params)
 
     if @contact_type.valid?
-      redirect_to new_new_details_contacts_path
+      redirect_to new_details_contacts_path
     end
   end
 
