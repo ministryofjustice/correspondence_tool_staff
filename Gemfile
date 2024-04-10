@@ -55,7 +55,7 @@ gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 6.4"
 gem "pundit", "~>2.1"
-gem "rails", "~> 7.0.0"
+gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
@@ -93,7 +93,7 @@ group :development, :test do
   gem "binding_of_caller"
   gem "brakeman"
   # Used to try and track down N+1 query problems
-  gem "bullet", "~> 7.0.1"
+  gem "bullet"
   gem "colorize"
   gem "debug", ">= 1.0.0"
   gem "parallel_tests"
