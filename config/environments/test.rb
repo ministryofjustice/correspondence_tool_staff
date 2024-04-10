@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = false
     # Just looking for N+1 queries at the moment - so turn off counter cache and unused eager loads
     Bullet.counter_cache_enable        = false
     Bullet.unused_eager_loading_enable = false
