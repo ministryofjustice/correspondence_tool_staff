@@ -55,7 +55,7 @@ gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 6.4"
 gem "pundit", "~>2.1"
-gem "rails", "~> 6.1", ">= 6.1.7.3"
+gem "rails", "~> 7.0.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
@@ -101,10 +101,4 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
-end
-
-group :development do
-  gem "browser_sync_rails"
-  gem "listen", "~> 3.7.1"
-  gem "yard"
 end
