@@ -62,9 +62,6 @@ module CorrespondencePlatform
     # Make `form_with` generate id attributes for any generated HTML tags.
     config.action_view.form_with_generates_ids = true
 
-    # Register Email observers.
-    config.action_mailer.observers = %w[MailDeliveryObserver]
-
     # Use MailDeliveryJob
     config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
 
