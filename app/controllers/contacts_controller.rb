@@ -5,9 +5,25 @@ class ContactsController < ApplicationController
 
   def new
     @contact_types = CategoryReference.list_by_category(:contact_type)
+
+    if request.get?
+      @contact_type = ContactType.new
+      return false
+    end
+
+    @contact_type = ContactType.new(contact_type_params)
+
+    if @contact_type.valid?
+      redirect_to new_new_details_contacts_path
+    end
   end
 
   def new_details
+    if request.get?
+      @contact = Contact.new
+      return false
+    end
+
     @contact = Contact.new(contact_type_id: contact_type_params[:contact_type_id])
   end
 
@@ -90,7 +106,7 @@ private
   end
 
   def contact_type_params
-    params.require(:contact).permit(
+    params.require(:contact_type).permit(
       :contact_type_id,
     )
   end

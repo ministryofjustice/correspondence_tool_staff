@@ -2,8 +2,8 @@ require "sidekiq/web"
 
 Rails.application.routes.draw do
   resources :contacts, except: :show do
-    get "/new_details", on: :collection, to: "contacts#new_details"
-    post "/new_details", on: :collection, to: "contacts#new_details"
+    get "/new/new_details", on: :collection, to: "contacts#new_details"
+    post "/new/new_details", on: :collection, to: "contacts#new_details"
     get "/new/contact_type", on: :collection, to: "contacts#new"
     post "/new/contact_type", on: :collection, to: "contacts#new"
   end

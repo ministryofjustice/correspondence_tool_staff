@@ -8,7 +8,10 @@
 
 = render partial: 'layouts/header'
 
-= form_for :contact_type, method: :post, url: new_contact_type_contacts_path do |f|
+= GovukElementsErrorsHelper.error_summary @contact_type,
+  "#{pluralize(@contact_type.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @contact_type, method: :post, url: new_contact_type_contacts_path do |f|
 
   = f.hidden_field :contact_type_default_id
   = f.radio_button_fieldset :contact_type_id,
