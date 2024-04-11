@@ -18,7 +18,7 @@ gem "axlsx_styler"
 gem "bank_holiday", git: "https://github.com/ministryofjustice/bank_holiday.git", branch: "bundler-fix"
 gem "business_time"
 gem "config", "~> 4.0"
-gem "devise", "~> 4.8.1"
+gem "devise"
 gem "draper", "4.0.2"
 gem "dropzonejs-rails"
 gem "factory_bot_rails", "~> 6.2.0"
@@ -49,13 +49,13 @@ gem "mechanize", ">= 2.7.7"
 gem "notifications-ruby-client", ">= 5.4"
 gem "omniauth-azure-activedirectory-v2", "~> 1.0.0"
 gem "omniauth-rails_csrf_protection"
-gem "paper_trail", "~> 12.3"
+gem "paper_trail"
 gem "pg", "~> 1.3"
 gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 6.4"
 gem "pundit", "~>2.1"
-gem "rails", "~> 6.1", ">= 6.1.7.3"
+gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
@@ -70,17 +70,17 @@ gem "slim-rails", "~> 3.6"
 gem "sprockets", "~> 4.0.2"
 
 gem "table_print"
+gem "terser"
 gem "timecop"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5"
-gem "uglifier", ">= 1.3.0"
 # Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
 gem "ruby-progressbar"
 gem "tzinfo-data"
 
 group :test do
   gem "capybara", "~> 3.37"
-  gem "i18n-tasks", "~> 1.0.12"
+  gem "i18n-tasks"
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
   gem "simplecov"
@@ -93,7 +93,7 @@ group :development, :test do
   gem "binding_of_caller"
   gem "brakeman"
   # Used to try and track down N+1 query problems
-  gem "bullet", "~> 7.0.1"
+  gem "bullet"
   gem "colorize"
   gem "debug", ">= 1.0.0"
   gem "parallel_tests"
@@ -101,10 +101,4 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
-end
-
-group :development do
-  gem "browser_sync_rails"
-  gem "listen", "~> 3.7.1"
-  gem "yard"
 end

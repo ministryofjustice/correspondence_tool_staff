@@ -7,7 +7,7 @@ module Query
       @columns = columns
       @offset = offset
       @limit = limit
-      @connection = ActiveRecord::Base.connection.instance_variable_get(:@connection)
+      @connection = ActiveRecord::Base.connection.raw_connection
     end
 
     def execute(&block)

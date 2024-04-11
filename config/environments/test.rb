@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = false
     # Just looking for N+1 queries at the moment - so turn off counter cache and unused eager loads
     Bullet.counter_cache_enable        = false
     Bullet.unused_eager_loading_enable = false
@@ -100,7 +100,7 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
 
   # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
+  # config.active_storage.service = :test
 
   config.active_job.queue_adapter = :test
 
