@@ -70,10 +70,10 @@ gem "slim-rails", "~> 3.6"
 gem "sprockets", "~> 4.0.2"
 
 gem "table_print"
+gem "terser"
 gem "timecop"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5"
-gem "uglifier", ">= 1.3.0"
 # Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
 gem "ruby-progressbar"
 gem "tzinfo-data"
