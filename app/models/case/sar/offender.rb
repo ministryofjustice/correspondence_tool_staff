@@ -468,6 +468,10 @@ class Case::SAR::Offender < Case::Base
     raise StandardError, "number is immutable" if current_state != "invalid_submission" && number_changed?
   end
 
+  def set_valid_case_number
+    self.number = next_number
+  end
+
 private
 
   def set_subject
