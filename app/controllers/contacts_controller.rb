@@ -15,8 +15,6 @@ class ContactsController < ApplicationController
   end
 
   def new_details
-    # debugger
-
     @contact_type = ContactType.new(contact_type_params)
     if @contact_type.valid?
       @contact = Contact.new(contact_type_id: @contact_type.contact_type_id)

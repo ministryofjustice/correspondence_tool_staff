@@ -24,14 +24,31 @@ RSpec.describe ContactsController, type: :controller do
     end
   end
 
-  describe "#contact_type" do
+  describe "GET #new" do
     before do
       sign_in user
     end
 
-    it "renders the contact_type page" do
-      get(:contact_type)
-      expect(response).to render_template(:contact_type)
+    it "renders the new page" do
+      get :new
+      expect(response).to render_template(:new)
+    end
+  end
+
+  describe "GET #new_details" do
+    before do
+      sign_in user
+    end
+
+    let(:params) do
+      {
+        contact_type: 1,
+      }
+    end
+
+    it "renders the new_details page" do
+      get :new_details
+      expect(response).to render_template(:new_details)
     end
   end
 end
