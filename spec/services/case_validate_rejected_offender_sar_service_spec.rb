@@ -33,9 +33,10 @@ describe CaseValidateRejectedOffenderSARService do
         expect(kase.number[0]).not_to eq "R"
       end
 
-      it "set the number to the date received" do
+      it "set the case number using date_received and iteration" do
         service.call
-        expect(kase.number).not_to eq nil
+        kase_number = "#{kase.received_date.strftime('%Y%m%d')[2..-1]}001"
+        expect(kase.number).to eq kase_number
       end
 
       it "sets results to :ok" do
