@@ -13,8 +13,8 @@ RSpec.describe LetterTemplate, type: :model do
 
   context "when validate uniqueness of abbreviation" do
     it "errors if not unique" do
-      create :letter_template, abbreviation: "abc"
-      t2 = build_stubbed :letter_template, abbreviation: "abc"
+      create(:letter_template, abbreviation: "abc")
+      t2 = build(:letter_template, abbreviation: "abc")
       expect(t2).not_to be_valid
       expect(t2.errors[:abbreviation]).to eq ["has already been taken"]
     end
