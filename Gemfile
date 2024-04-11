@@ -80,7 +80,7 @@ gem "tzinfo-data"
 
 group :test do
   gem "capybara", "~> 3.37"
-  gem "i18n-tasks", "~> 1.0.12"
+  gem "i18n-tasks"
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
   gem "simplecov"
