@@ -12,19 +12,18 @@ class ContactsController < ApplicationController
     end
 
     @contact_type = ContactType.new(contact_type_params)
-
-    if @contact_type.valid?
-      redirect_to new_details_contacts_path
-    end
   end
 
   def new_details
-    if request.get?
-      @contact = Contact.new
-      return false
-    end
+    # debugger
 
-    @contact = Contact.new(contact_type_id: contact_type_params[:contact_type_id])
+    @contact_type = ContactType.new(contact_type_params)
+    if @contact_type.valid?
+      @contact = Contact.new(contact_type_id: @contact_type.contact_type_id)
+    else
+      @contact_types = CategoryReference.list_by_category(:contact_type)
+      render :new
+    end
   end
 
   def index
@@ -84,8 +83,8 @@ private
   end
 
   def set_contact_type
-    if contact_type_params[:contact_type_id]
-      @contact_type = CategoryReference.find(contact_type_params[:contact_type_id])
+    if contact_params[:contact_type_id]
+      @contact_type = CategoryReference.find(contact_params[:contact_type_id])
       @contact.contact_type = @contact_type
     else
       @contact.contact_type = nil
@@ -102,13 +101,14 @@ private
       :postcode,
       :data_request_name,
       :data_request_emails,
-    )
+      :contact_type_id,
+      )
   end
 
   def contact_type_params
     params.require(:contact_type).permit(
       :contact_type_id,
-    )
+      )
   end
 
   def contacts_search_param
