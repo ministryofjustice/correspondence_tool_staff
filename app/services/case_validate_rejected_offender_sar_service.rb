@@ -32,6 +32,6 @@ class CaseValidateRejectedOffenderSARService
 private
 
   def update_case_number
-    @case.number.tr!("R", "")
+    @case.number.tr!(@case.number, @case.set_valid_case_number)
   end
 end
