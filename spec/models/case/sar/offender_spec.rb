@@ -133,9 +133,7 @@ describe Case::SAR::Offender do
     end
 
     it "creates a unique new number for the valid case" do
-      Timecop.freeze Date.new(2024, 4, 11) do
-        expect(case_rejected.set_valid_case_number).to eq "240411002"
-      end
+      expect(case_rejected.set_valid_case_number).to eq "240411002"
     end
   end
 
