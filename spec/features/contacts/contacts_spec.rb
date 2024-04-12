@@ -395,6 +395,5 @@ feature "Contacts address book", js: true do
   def then_expect_new_contact_type_to_be_present
     expect(page).to have_content("Solicitor")
   end
-
 end
 # rubocop:enable RSpec/BeforeAfterAll
