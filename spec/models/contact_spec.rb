@@ -64,6 +64,20 @@ RSpec.describe Contact, type: :model do
     end
   end
 
+  describe "contact_type_id" do
+    it "prevents contact_type_id being updated" do
+      contact = described_class.new(name: "HMP halifax",
+                                    address_line_1: "123 test road",
+                                    address_line_2: "little heath",
+                                    town: "bakersville",
+                                    county: "Mercia",
+                                    postcode: "FE2 9JK",
+                                    data_request_emails: "test@test.com\ntest1@test.com",
+                                    contact_type_id: 1)
+      expect { contact.update_attribute(:contact_type_id, 2) }.to raise_error(ActiveRecord::ActiveRecordError, "contact_type_id is marked as readonly") # rubocop:disable Rails/SkipsModelValidations
+    end
+  end
+
   describe "public methods" do
     it "can output a full concatenated address in a single line" do
       expect(contact_2.inline_address).to match("123 test road, little heath, bakersville, Mercia, FE2 9JK")
