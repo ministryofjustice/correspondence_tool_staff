@@ -5,6 +5,8 @@ class Contact < ApplicationRecord
   validates :contact_type, presence: true
   validate :validate_emails
 
+  attr_readonly :contact_type_id
+
   belongs_to :contact_type, class_name: "CategoryReference", inverse_of: :contacts
 
   def address
