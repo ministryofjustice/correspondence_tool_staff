@@ -59,14 +59,16 @@ feature "Contacts address book", js: true do
   scenario "branston user can view addresses and create a new address" do
     click_on "Addresses"
     then_expect_heading_to_read_address_book
-    and_expect_contact_type_details_to_be_present
-    and_expect_contact_details_to_be_present
 
     click_on "Add new address"
+    and_expect_contact_type_details_to_be_present
     and_fill_in_and_submit_new_contact_type_details
-    # and_fill_in_and_submit_new_contact_address_details
-    # and_expect_to_see_success_message
-    # then_expect_new_details_to_be_present
+
+    and_fill_in_and_submit_new_contact_address_details
+    and_expect_to_see_success_message
+
+    then_expect_new_details_to_be_present
+    then_expect_new_contact_type_to_be_present
   end
 
   scenario "user can edit an existing address" do
@@ -356,7 +358,7 @@ feature "Contacts address book", js: true do
 
   def and_expect_contact_type_details_to_be_present
     expect(page).to have_content("Prison")
-    expect(page).to have_content("Probation centre")
+    expect(page).to have_content("Probation")
   end
 
   def and_fill_in_and_submit_new_contact_address_details
@@ -368,7 +370,7 @@ feature "Contacts address book", js: true do
       data_request_emails: "john.smith@gmail.com",
     }
 
-    contacts_new_page.new_contact(details)
+    contacts_new_details_page.new_contact(details)
     click_on "Submit"
   end
 
@@ -389,5 +391,10 @@ feature "Contacts address book", js: true do
     expect(page).to have_content("345 some road")
     expect(page).to have_content("FG9 5IK")
   end
+
+  def then_expect_new_contact_type_to_be_present
+    expect(page).to have_content("Solicitor")
+  end
+
 end
 # rubocop:enable RSpec/BeforeAfterAll
