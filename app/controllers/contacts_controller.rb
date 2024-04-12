@@ -6,12 +6,7 @@ class ContactsController < ApplicationController
   def new
     @contact_types = CategoryReference.list_by_category(:contact_type)
 
-    if request.get?
-      @contact_type = ContactType.new
-      return false
-    end
-
-    @contact_type = ContactType.new(contact_type_params)
+    @contact_type = ContactType.new
   end
 
   def new_details
