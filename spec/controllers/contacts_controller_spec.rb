@@ -70,25 +70,4 @@ RSpec.describe ContactsController, type: :controller do
       end
     end
   end
-
-  describe "#update" do
-    before do
-      sign_in user
-    end
-
-    let(:params) do
-      {
-        contact_type: {
-          contact_type_id: 1,
-        },
-      }
-    end
-
-    it "cannot update the contact_type" do
-      debugger
-      patch(:new_details, params:)
-      contacts = assigns(:contacts)
-      debugger
-    end
-  end
 end
