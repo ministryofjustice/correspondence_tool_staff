@@ -66,7 +66,8 @@ RSpec.describe ContactsController, type: :controller do
       it "raises an error" do
         post(:new_details, params:)
         contact_type = assigns(:contact_type)
-        expect(contact_type.errors[:contact_type_id]).to eq ["can't be blank"]
+        expect(contact_type.errors.attribute_names).to include :contact_type_id
+        expect(contact_type.errors.full_messages).to eq ["Select the contact type of the new address "]
       end
     end
   end
