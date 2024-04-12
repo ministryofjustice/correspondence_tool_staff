@@ -35,20 +35,60 @@ RSpec.describe ContactsController, type: :controller do
     end
   end
 
-  describe "GET #new_details" do
+  describe "#new_details" do
     before do
       sign_in user
     end
 
     let(:params) do
       {
-        contact_type: 1,
+        contact_type: {
+          contact_type_id: 1,
+        },
       }
     end
 
     it "renders the new_details page" do
-      get :new_details
+      get(:new_details, params:)
       expect(response).to render_template(:new_details)
+    end
+
+    context "with invalid contact_type_id" do
+      let(:errors) { assigns(:case).errors.messages }
+      let(:params) do
+        {
+          contact_type: {
+            contact_type_id: nil,
+          },
+        }
+      end
+
+      it "raises an error" do
+        post(:new_details, params:)
+        contact_type = assigns(:contact_type)
+        expect(contact_type.errors[:contact_type_id]).to eq ["can't be blank"]
+      end
+    end
+  end
+
+  describe "#update" do
+    before do
+      sign_in user
+    end
+
+    let(:params) do
+      {
+        contact_type: {
+          contact_type_id: 1,
+        },
+      }
+    end
+
+    it "cannot update the contact_type" do
+      debugger
+      patch(:new_details, params:)
+      contacts = assigns(:contacts)
+      debugger
     end
   end
 end
