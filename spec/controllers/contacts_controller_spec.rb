@@ -54,7 +54,6 @@ RSpec.describe ContactsController, type: :controller do
     end
 
     context "with invalid contact_type_id" do
-      let(:errors) { assigns(:case).errors.messages }
       let(:params) do
         {
           contact_type: {
