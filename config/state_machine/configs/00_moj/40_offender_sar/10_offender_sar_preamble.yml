@@ -21,4 +21,5 @@
       - vetting_in_progress
       - ready_to_copy
       - ready_to_dispatch
+      - invalid_submission
       - closed

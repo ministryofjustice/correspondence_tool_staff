@@ -2,12 +2,14 @@ require "rails_helper"
 
 describe Case::SAR::OffenderDecorator do
   let(:offender_sar_case) do
-    build_stubbed(
+    build(
       :offender_sar_case,
       date_responded: Date.new(2020, 1, 10),
       received_date: Date.new(2020, 1, 1),
     ).decorate
   end
+
+  let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
 
   it "instantiates the correct decorator" do
     expect(Case::SAR::Offender.new.decorate).to be_instance_of described_class
@@ -32,18 +34,70 @@ describe Case::SAR::OffenderDecorator do
       expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
     end
 
-    it "returns each subsequent step as a partial filename" do
-      expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
-      offender_sar_case.next_step
-      expect(offender_sar_case.get_step_partial).to eq "requester_details_step"
-      offender_sar_case.next_step
-      expect(offender_sar_case.get_step_partial).to eq "recipient_details_step"
-      offender_sar_case.next_step
-      expect(offender_sar_case.get_step_partial).to eq "requested_info_step"
-      offender_sar_case.next_step
-      expect(offender_sar_case.get_step_partial).to eq "request_details_step"
-      offender_sar_case.next_step
-      expect(offender_sar_case.get_step_partial).to eq "date_received_step"
+    context "when a valid offender sar" do
+      it "returns each subsequent step as a partial filename" do
+        expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requester_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "recipient_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requested_info_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "request_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "date_received_step"
+      end
+    end
+
+    context "when a rejected offender sar" do
+      let(:offender_sar_case) do
+        build_stubbed(
+          :offender_sar_case, :rejected,
+          date_responded: Date.new(2020, 1, 10),
+          received_date: Date.new(2020, 1, 1)
+        ).decorate
+      end
+
+      it "returns each subsequent step as a partial filename" do
+        expect(offender_sar_case.get_step_partial).to eq "subject_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requester_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "reason_rejected_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "recipient_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "requested_info_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "request_details_step"
+        offender_sar_case.next_step
+        expect(offender_sar_case.get_step_partial).to eq "date_received_step"
+      end
+    end
+  end
+
+  describe "#rejected_reasons_descriptions" do
+    let(:offender_sar_case) do
+      build_stubbed(
+        :offender_sar_case, :rejected
+      ).decorate
+    end
+
+    it "returns the REJECTED_REASONS hash value" do
+      expect(offender_sar_case.rejected_reasons_descriptions).to eq "Further identification<br>Court data request"
+    end
+
+    context "when other_rejected_reason has a value" do
+      let(:offender_sar_case) do
+        build_stubbed(
+          :offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "Other reason"
+        ).decorate
+      end
+
+      it "returns the REJECTED_REASONS hash value" do
+        expect(offender_sar_case.rejected_reasons_descriptions).to eq "Other: Other reason"
+      end
     end
   end
 
@@ -56,6 +110,12 @@ describe Case::SAR::OffenderDecorator do
   describe "#type_printer" do
     it "pretty prints Case" do
       expect(offender_sar_case.pretty_type).to eq "Offender SAR"
+    end
+
+    context "when rejected" do
+      it "pretty prints Case" do
+        expect(rejected_offender_sar_case.pretty_type).to eq "Rejected Offender SAR"
+      end
     end
   end
 

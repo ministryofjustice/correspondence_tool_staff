@@ -910,6 +910,7 @@ class Case::Base < ApplicationRecord
   def offender_sar_complaint? = false
   def sar_internal_review? = false
   def all_holidays? = false
+  def rejected? = false
 
   def default_managing_team
     BusinessUnit.dacu_bmt
