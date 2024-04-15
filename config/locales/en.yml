@@ -388,7 +388,7 @@ en:
       probation_commissioning_document_email:
         email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
       contact_type:
-        contact_type_id: "Select the contact type of the new address"
+        contact_type_id: Select the contact type of the new address
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
