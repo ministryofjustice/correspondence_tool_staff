@@ -170,6 +170,7 @@ describe "cases/case_status.html.slim", type: :view do
         type_of_offender_sar?: false,
         offender_sar_complaint?: false,
         offender_sar?: false,
+        rejected?: false,
         page_count: "500",
         number_exempt_pages: "200",
         number_final_pages: "250",
@@ -191,6 +192,33 @@ describe "cases/case_status.html.slim", type: :view do
         expect(partial.details.page_counts.dispatched_label.text).to eq "Final page count"
         expect(partial.details.page_counts.dispatched_number.text).to eq "250"
       end
+    end
+
+    it "does not display the page counts for rejected Offender Sar cases" do
+      params = {
+        status: "Needs reassigning",
+        external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
+        ico?: false,
+        internal_deadline: nil,
+        current_state: "drafting",
+        type_abbreviation: "ICO",
+        who_its_with: "Branston Registry",
+        type_of_offender_sar?: false,
+        offender_sar_complaint?: false,
+        offender_sar?: false,
+        rejected?: true,
+        page_count: "500",
+        number_exempt_pages: "200",
+        number_final_pages: "250",
+      }
+      kase = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
+                    params.merge({ type_of_offender_sar?: true })
+
+      render partial: "cases/case_status",
+             locals: { case_details: kase }
+      partial = case_status_section(rendered)
+
+      expect(partial.details).to have_no_page_counts
     end
 
     it "does not display Page counts for non-offender SAR case" do

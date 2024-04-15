@@ -54,6 +54,9 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        rejected_reasons: ""
+        other_rejected_reason: ""
+        third_party_email: ""
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -270,6 +273,10 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            rejected_reasons:
+              blank: Reason for rejecting the case cannot be blank
+            other_rejected_reason:
+              blank: Other reason for rejecting the case cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -281,6 +288,8 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
+            third_party_email:
+              invalid: Enter an email address in the correct format, like name@example.com
             is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
@@ -293,6 +302,7 @@ en:
               blank: cannot be blank
             date_of_birth:
               blank: cannot be blank
+            accepted_date_received: When was the outstanding information received?
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -547,6 +557,7 @@ en:
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
+        rejected_reasons: Select all that apply.
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -827,11 +838,13 @@ en:
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
+        other_rejected_reason: Give reason for rejecting this case
         other_subject_ids: "Police national computer number (PNC)"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        rejected_reason: Why are you rejecting this case?
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
@@ -863,6 +876,7 @@ en:
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
+        third_party_email: Email address (optional)
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
         is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
@@ -953,6 +967,7 @@ en:
         value: "Add area"
       correspondence_types:
         offender_sar: Offender SAR
+        rejected_offender_sar: Rejected Offender SAR
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
@@ -961,6 +976,10 @@ en:
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
+        status:
+          valid: Valid
+          rejected: Rejected
+          complaint: Complaint
       retention_schedule_form:
         state:
           <<: *retention_schedule_states
@@ -1111,6 +1130,8 @@ en:
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship
+      third_party_email: Email address
+      rejected_reason: Rejected reason
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -1332,11 +1353,13 @@ en:
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
+      case/sar/offender:
+        sub_heading: Edit Offender SAR case
+        rejected: Edit rejected Offender SAR case
       offender_sar:
         number_final_pages: 'Update final page count'
         number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
-        sub_heading: Edit Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
       sar_internal_review:
@@ -1392,6 +1415,7 @@ en:
       received_date_short: Received date
       received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
       only_select_one: Please only select one.
+      accepted_date_received_legend: When was the outstanding information received?
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if
@@ -1406,8 +1430,9 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
-      offender_sar:
+      case/sar/offender:
         sub_heading: Create Offender SAR case
+        rejected: Create rejected Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
@@ -1419,6 +1444,12 @@ en:
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+    offender_sar_select_type:
+      heading: Choose correspondence type
+      sub_heading: Create case
+      valid_offender_sar: Offender SAR - Offender subject access request
+      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
+      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
     shared:
       date_responded_form:
         close_date:  Date response sent
@@ -1496,14 +1527,20 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      reason_rejected_heading: Reason Offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
+      accepted_date_received_heading: When was the rejected case accepted?
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
       partial_case_letter_sent_dated_heading: Date letter sent from SSCL
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
       sent_to_sscl_heading: "Data sent to SSCL"
+      accepted_date_received:
+        case/sar/offender:
+          sub_heading: Create valid Offender SAR case
+          rejected: Create valid Offender SAR case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

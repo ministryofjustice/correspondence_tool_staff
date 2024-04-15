@@ -16,6 +16,8 @@ module Cases
       confirm_record_reason_for_lateness
       confirm_update_partial_flags
       confirm_sent_to_sscl
+      accepted_date_received
+      confirm_accepted_date_received
     ]
     # rubocop:enable Rails/LexicallyScopedActionFilter
 
@@ -31,6 +33,7 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
+      get_rejected
       @case.current_step = params[:step]
       load_optional_flags_from_params
       @back_link = back_link_url
@@ -41,7 +44,9 @@ module Cases
       @case = build_case_from_session(case_type)
       @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
+      get_rejected
       load_optional_flags_from_params
+
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -55,8 +60,15 @@ module Cases
       end
     end
 
+    def get_rejected
+      @rejected =
+        @case.rejected? ||
+        params["rejected"] == "true" ||
+        (action_name == "create" && create_params["current_state"])
+    end
+
     def edit_params
-      create_offender_sar_params
+      create_offender_sar_params.except(:current_state)
     end
 
     def case_type
@@ -129,7 +141,6 @@ module Cases
     def edit
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
       @case.current_step = params[:step]
       apply_date_workaround
     end
@@ -205,6 +216,38 @@ module Cases
       when :no_changes
         flash[:alert] = "No changes were made"
       end
+      redirect_to case_path(@case) and return
+    end
+
+    def accepted_date_received
+      authorize @case, :can_validate_rejected_case?
+      @case.received_date = nil
+    end
+
+    def confirm_accepted_date_received
+      authorize @case, :can_validate_rejected_case?
+
+      service = CaseValidateRejectedOffenderSARService.new(
+        user: current_user,
+        kase: @case,
+        params: edit_params,
+      )
+
+      service.call
+
+      if service.result == :error
+        if service.error_message.present?
+          flash[:alert] = service.error_message
+        end
+        render :accepted_date_received and return
+      end
+      case service.result
+      when :ok
+        flash[:notice] = t("cases.update.case_updated")
+      when :no_changes
+        flash[:alert] = "No changes were made"
+      end
+
       redirect_to case_path(@case) and return
     end
 
@@ -328,7 +371,19 @@ module Cases
       # similar workaround needed for request dated
       request_dated_exists = values.fetch("request_dated", false)
       values["request_dated"] = nil unless request_dated_exists
+
+      rejected_set_current_state(values)
+
       correspondence_type.new(values).decorate
+    end
+
+    def rejected_set_current_state(values)
+      case params["rejected"]
+      when "true"
+        values["current_state"] = "invalid_submission"
+      when "false"
+        values.delete("current_state")
+      end
     end
 
     def session_persist_state(params)
