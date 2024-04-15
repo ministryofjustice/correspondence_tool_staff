@@ -1,11 +1,10 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
+  before_action :set_contact_type_options, only: %i[new new_details]
   before_action :set_new_contact_from_params, only: :create
   before_action :set_contact_type, only: :create
 
   def new
-    @contact_types = CategoryReference.list_by_category(:contact_type)
-
     @contact_type = ContactType.new
   end
 
@@ -14,7 +13,6 @@ class ContactsController < ApplicationController
     if @contact_type.valid?
       @contact = Contact.new(contact_type_id: @contact_type.contact_type_id)
     else
-      @contact_types = CategoryReference.list_by_category(:contact_type)
       render :new
     end
   end
@@ -73,6 +71,10 @@ private
 
   def set_new_contact_from_params
     @contact = Contact.new(contact_params)
+  end
+
+  def set_contact_type_options
+    @contact_types = CategoryReference.list_by_category(:contact_type)
   end
 
   def set_contact_type
