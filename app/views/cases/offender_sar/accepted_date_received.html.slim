@@ -1,0 +1,25 @@
+- content_for :page_title do
+  = t('page_title.accepted_date_received', case_number: @case.number)
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+- content_for :heading, flush: true
+  = t('cases.offender_sar.accepted_date_received_heading')
+
+- content_for :sub_heading
+  = get_sub_heading(@case)
+
+= render partial: 'layouts/header'
+
+- if @case.errors.any?
+  = render partial: 'cases/offender_sar/accepted_date_received_error'
+
+= form_for @case, url: confirm_accepted_date_received_case_sar_offender_path(@case), as: :offender_sar do |f|
+  .form-group
+    = f.gov_uk_date_field :received_date, { \
+          legend_text: t('cases.new.accepted_date_received_legend'),
+          form_hint_text: t('helpers.hint.shared.date_example'),
+          today_button: { class: '' } \
+        }
+
+  = f.submit 'Continue', {class: 'button'}

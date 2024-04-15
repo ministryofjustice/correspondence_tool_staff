@@ -155,6 +155,8 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate_date_responded(rec)
+    return if [rec.current_state, rec.current_state_was].include?("invalid_submission")
+
     if rec.date_responded.blank?
       rec.errors.add(:date_responded, "cannot be blank")
     elsif rec.date_responded < rec.received_date
