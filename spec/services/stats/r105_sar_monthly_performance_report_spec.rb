@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R105SarMonthlyPerformanceReport do
+  describe R105SARMonthlyPerformanceReport do
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Monthly report"

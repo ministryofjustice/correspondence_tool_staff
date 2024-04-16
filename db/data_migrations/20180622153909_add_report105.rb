@@ -5,7 +5,7 @@ class AddReport105 < ActiveRecord::DataMigration
     rt.update!(
       abbr: "R105",
       full_name: "Monthly report",
-      class_name: "Stats::R105SarMonthlyPerformanceReport",
+      class_name: "Stats::R105SARMonthlyPerformanceReport",
       custom_report: true,
       foi: false,
       sar: true,

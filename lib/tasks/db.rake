@@ -51,7 +51,7 @@ namespace :db do
     else
       safeguard_question
       Rake::Task["db:clear"].invoke
-      Rake::Task["db:structure_load"].invoke
+      Rake::Task["db:schema:load"].invoke
       Rake::Task["data:migrate"].invoke
       Rake::Task["db:seed:dev:teams"].invoke
       Rake::Task["db:seed:dev:users"].invoke

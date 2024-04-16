@@ -22,12 +22,12 @@ describe Warehouse::CaseSyncJob, type: :job do
     end
 
     it "requires ActiveModel class type string" do
-      model_id = -rand(1..998)
+      model_id = user.id
 
       expect { job.perform(Object.new, model_id) }.to raise_error NoMethodError
       expect { job.perform(User, model_id) }.to raise_error NoMethodError
       expect { job.perform(User.new, model_id) }.to raise_error NoMethodError
-      expect(job.perform("User", model_id)).to be > 0
+      expect(job.perform("User", model_id)).to be_a Stats::Warehouse::CaseReportSync
     end
 
     it "logs to Rails logger if ActiveRecord model retrieval fails" do

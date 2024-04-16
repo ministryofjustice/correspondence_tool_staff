@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R205OffenderSarMonthlyPerformanceReport do
+  describe R205OffenderSARMonthlyPerformanceReport do
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Monthly report"
@@ -11,7 +11,7 @@ module Stats
 
     describe ".case_analyzer" do
       it "returns correct case_analyzer" do
-        expect(described_class.case_analyzer).to eq Stats::OffenderSarAnalyser
+        expect(described_class.case_analyzer).to eq Stats::OffenderSARAnalyser
       end
     end
 

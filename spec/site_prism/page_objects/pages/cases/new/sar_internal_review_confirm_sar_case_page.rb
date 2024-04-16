@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class SarInternalReviewConfirmSarCasePage < PageObjects::Pages::Base
+        class SARInternalReviewConfirmSARCasePage < PageObjects::Pages::Base
           set_url "/cases/sar_internal_review/confirm-sar"
 
           section :primary_navigation,

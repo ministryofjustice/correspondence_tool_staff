@@ -11,7 +11,7 @@ module Stats
 
     describe ".case_analyzer" do
       it "returns correct case_analyzer" do
-        expect(described_class.case_analyzer).to eq Stats::OffenderSarAnalyser
+        expect(described_class.case_analyzer).to eq Stats::OffenderSARAnalyser
       end
     end
 

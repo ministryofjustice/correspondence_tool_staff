@@ -1,11 +1,11 @@
-class AddClosedCasesReportForOffenderSarComplaint < ActiveRecord::DataMigration
+class AddClosedCasesReportForOffenderSARComplaint < ActiveRecord::DataMigration
   def up
     rt = ReportType.find_by(abbr: "R402")
     rt = ReportType.new if rt.nil?
     rt.update!(
       abbr: "R402",
       full_name: "Closed cases report",
-      class_name: "Stats::R402OffenderSarComplaintClosedCasesReport",
+      class_name: "Stats::R402OffenderSARComplaintClosedCasesReport",
       custom_report: true,
       foi: false,
       sar: false,

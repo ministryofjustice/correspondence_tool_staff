@@ -1,5 +1,5 @@
 module Cases
-  class SarInternalReviewController < CasesController
+  class SARInternalReviewController < CasesController
     include SARInternalReviewCasesParams
 
     def initialize

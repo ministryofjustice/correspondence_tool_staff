@@ -4,8 +4,8 @@ class AddOpenCasesReports < ActiveRecord::DataMigration
     rt = ReportType.new if rt.nil?
     rt.update!(
       abbr: "R901",
-      full_name: "Open cases report for Offender Sar",
-      class_name: "Stats::R901OffenderSarCasesReport",
+      full_name: "Open cases report for Offender SAR",
+      class_name: "Stats::R901OffenderSARCasesReport",
       custom_report: false,
       standard_report: false,
       foi: false,

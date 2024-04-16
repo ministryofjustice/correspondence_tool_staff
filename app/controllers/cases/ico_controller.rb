@@ -1,5 +1,5 @@
 module Cases
-  class IcoController < CasesController
+  class ICOController < CasesController
     include ICOCasesParams
     include NewCase
     include ReopenICOCase

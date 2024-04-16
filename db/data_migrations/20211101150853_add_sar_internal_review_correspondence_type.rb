@@ -1,4 +1,4 @@
-class AddSarInternalReviewCorrespondenceType < ActiveRecord::DataMigration
+class AddSARInternalReviewCorrespondenceType < ActiveRecord::DataMigration
   def up
     rec = CorrespondenceType.find_by(abbreviation: "SAR_INTERNAL_REVIEW")
     rec = CorrespondenceType.new if rec.nil?

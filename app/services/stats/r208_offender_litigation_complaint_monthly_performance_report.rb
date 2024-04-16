@@ -1,5 +1,5 @@
 module Stats
-  class R208OffenderLitigationComplaintMonthlyPerformanceReport < R205OffenderSarMonthlyPerformanceReport
+  class R208OffenderLitigationComplaintMonthlyPerformanceReport < R205OffenderSARMonthlyPerformanceReport
     class << self
       def title
         "Monthly report"

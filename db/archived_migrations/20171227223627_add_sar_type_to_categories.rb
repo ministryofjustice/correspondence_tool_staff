@@ -1,7 +1,7 @@
 class Category < ApplicationRecord
 end
 
-class AddSarTypeToCategories < ActiveRecord::Migration[5.0]
+class AddSARTypeToCategories < ActiveRecord::Migration[5.0]
   def up
     Category.find_or_create_by! name: "Subject Access Request",
                                 abbreviation: "SAR",

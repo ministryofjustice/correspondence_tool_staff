@@ -1,4 +1,4 @@
-class AddUnknownRequestMethodToSars < ActiveRecord::DataMigration
+class AddUnknownRequestMethodToSARs < ActiveRecord::DataMigration
   def up
     Case::Base.non_offender_sar.each { |k| k.update_attribute(:request_method, "unknown") } # rubocop:disable Rails/SkipsModelValidations
   end

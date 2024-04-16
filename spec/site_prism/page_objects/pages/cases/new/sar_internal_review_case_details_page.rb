@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class SarInternalReviewCaseDetailsPage < PageObjects::Pages::Base
+        class SARInternalReviewCaseDetailsPage < PageObjects::Pages::Base
           include SitePrism::Support::DropInDropzone
 
           set_url "/cases/sar_internal_review_internal_review/case-details"

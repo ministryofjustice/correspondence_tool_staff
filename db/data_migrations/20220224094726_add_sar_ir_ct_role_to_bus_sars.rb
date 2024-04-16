@@ -1,4 +1,4 @@
-class AddSarIrCtRoleToBusSars < ActiveRecord::DataMigration
+class AddSARIrCtRoleToBusSARs < ActiveRecord::DataMigration
   def up
     sar_ct_id = CorrespondenceType.sar.id
     bu_with_sars = BusinessUnit

@@ -1,4 +1,4 @@
-class ModifySarDeadlineClass < ActiveRecord::DataMigration
+class ModifySARDeadlineClass < ActiveRecord::DataMigration
   def up
     CorrespondenceType.all.each do |ct|
       next unless ct.abbreviation == "SAR" || ct.abbreviation == "OFFENDER_SAR"

@@ -13,10 +13,10 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
         section :foi_detail,
-                PageObjects::Sections::Cases::FoiEditDetailsSection, "body"
+                PageObjects::Sections::Cases::FOIEditDetailsSection, "body"
 
         section :sar_detail,
-                PageObjects::Sections::Cases::SarEditDetailsSection, "body"
+                PageObjects::Sections::Cases::SAREditDetailsSection, "body"
 
         element :submit_button, ".button"
         element :cancel, "a"

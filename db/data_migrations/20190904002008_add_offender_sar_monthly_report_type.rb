@@ -1,4 +1,4 @@
-class AddOffenderSarMonthlyReportType < ActiveRecord::DataMigration
+class AddOffenderSARMonthlyReportType < ActiveRecord::DataMigration
   def up
     ReportType.reset_column_information
 
@@ -8,7 +8,7 @@ class AddOffenderSarMonthlyReportType < ActiveRecord::DataMigration
     report_type.update!(
       abbr: "R205",
       full_name: "Monthly report (Offender SARs)",
-      class_name: "Stats::R205OffenderSarMonthlyPerformanceReport",
+      class_name: "Stats::R205OffenderSARMonthlyPerformanceReport",
       custom_report: false,
       standard_report: true,
       foi: false,
