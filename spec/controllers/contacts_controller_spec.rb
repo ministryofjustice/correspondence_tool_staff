@@ -127,9 +127,13 @@ RSpec.describe ContactsController, type: :controller do
       expect(response).to redirect_to(contacts_path)
     end
 
-    it "should not permit contact_type_id" do
-      expect(subject).not_to permit(:contact_type_id).for(:update, params: )
-    end
+    it "does not update contact_type_id value" do
+      patch(:update, params:)
+      original_contact_type_id = contact_case.contact_type_id
+      contact_case.update!(controller.send(:update_params))
 
+      expect(original_contact_type_id).to eq contact_case.contact_type_id
+      expect(controller.send(:update_params).key?(:contact_type_id)).to be false
+    end
   end
 end
