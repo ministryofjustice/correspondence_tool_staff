@@ -2,7 +2,6 @@ class ContactsController < ApplicationController
   before_action :set_contact, only: %i[edit update destroy]
   before_action :set_contact_type_options, only: %i[new new_details]
   before_action :set_new_contact_from_params, only: :create
-  before_action :set_contact_type, only: :create
 
   def new
     @contact_type = ContactType.new
@@ -78,15 +77,6 @@ private
 
   def set_contact_type_options
     @contact_types = CategoryReference.list_by_category(:contact_type)
-  end
-
-  def set_contact_type
-    if contact_create_params[:contact_type_id]
-      @contact_type = CategoryReference.find(contact_create_params[:contact_type_id])
-      @contact.contact_type = @contact_type
-    else
-      @contact.contact_type = nil
-    end
   end
 
   def contact_create_params
