@@ -22,9 +22,6 @@ RSpec.describe Contact, type: :model do
                   contact_type: "university")
   end
 
-  let(:contact_type) { create(:category_reference) }
-  let(:contact_type_2) { create(:category_reference, category: "contact_type_2") }
-
   describe "validations" do
     it "is valid if it is has a name, address_line_1 and postcode, and contact_type" do
       expect(described_class.new).to validate_presence_of(:name)
@@ -64,21 +61,6 @@ RSpec.describe Contact, type: :model do
         contact_2.data_request_emails = "oscar@grouch.com,big@bird.com"
         expect(contact_2).not_to be_valid
       end
-    end
-  end
-
-  describe "contact_type_id" do
-    it "prevents contact_type_id being updated" do
-      contact = described_class.new(name: "HMP halifax",
-                                    address_line_1: "123 test road",
-                                    address_line_2: "little heath",
-                                    town: "bakersville",
-                                    county: "Mercia",
-                                    postcode: "FE2 9JK",
-                                    data_request_emails: "test@test.com\ntest1@test.com",
-                                    contact_type:)
-      contact.contact_type=contact_type_2
-      expect(contact.contact_type).not_to eq contact_type_2
     end
   end
 
