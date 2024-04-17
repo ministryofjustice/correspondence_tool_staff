@@ -22,6 +22,9 @@ RSpec.describe Contact, type: :model do
                   contact_type: "university")
   end
 
+  let(:contact_type) { create(:category_reference) }
+  let(:contact_type_2) { create(:category_reference, category: "contact_type_2") }
+
   describe "validations" do
     it "is valid if it is has a name, address_line_1 and postcode, and contact_type" do
       expect(described_class.new).to validate_presence_of(:name)
@@ -73,8 +76,10 @@ RSpec.describe Contact, type: :model do
                                     county: "Mercia",
                                     postcode: "FE2 9JK",
                                     data_request_emails: "test@test.com\ntest1@test.com",
-                                    contact_type_id: 1)
-      expect { contact.update_attribute(:contact_type_id, 2) }.to raise_error(ActiveRecord::ActiveRecordError, "contact_type_id is marked as readonly") # rubocop:disable Rails/SkipsModelValidations
+                                    contact_type:)
+      contact.contact_type=contact_type_2
+      contact.update!(contact_type: cr2)
+
     end
   end
 

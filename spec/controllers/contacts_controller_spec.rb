@@ -100,6 +100,7 @@ RSpec.describe ContactsController, type: :controller do
   end
 
   describe "#update" do
+    let(:contact_case) { create(:contact) }
     let(:contact_type_2) { create(:category_reference, category: "contact_type_2") }
     let(:params) do
       {
@@ -125,5 +126,10 @@ RSpec.describe ContactsController, type: :controller do
       patch(:update, params:)
       expect(response).to redirect_to(contacts_path)
     end
+
+    it "should not permit contact_type_id" do
+      expect(subject).not_to permit(:contact_type_id).for(:update, params: )
+    end
+
   end
 end

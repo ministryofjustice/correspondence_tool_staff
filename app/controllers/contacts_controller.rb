@@ -35,7 +35,8 @@ class ContactsController < ApplicationController
 
   def update
     respond_to do |format|
-      if @contact.update(contact_params)
+      if @contact.update(contact_params_for_update)
+        debugger
         format.html { redirect_to contacts_url, notice: "Address was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -70,7 +71,7 @@ private
   end
 
   def set_new_contact_from_params
-    @contact = Contact.new(contact_params)
+    @contact = Contact.new(contact_params_for_create)
   end
 
   def set_contact_type_options
@@ -78,15 +79,16 @@ private
   end
 
   def set_contact_type
-    if contact_params[:contact_type_id]
-      @contact_type = CategoryReference.find(contact_params[:contact_type_id])
+    if contact_params_for_create[:contact_type_id]
+      debugger
+      @contact_type = CategoryReference.find(contact_params_for_create[:contact_type_id])
       @contact.contact_type = @contact_type
     else
       @contact.contact_type = nil
     end
   end
 
-  def contact_params
+  def contact_params_for_create
     params.require(:contact).permit(
       :name,
       :address_line_1,
@@ -98,6 +100,19 @@ private
       :data_request_emails,
       :contact_type_id,
     )
+  end
+
+  def contact_params_for_update
+    params.require(:contact).permit(
+      :name,
+      :address_line_1,
+      :address_line_2,
+      :town,
+      :county,
+      :postcode,
+      :data_request_name,
+      :data_request_emails,
+      )
   end
 
   def contact_type_params
