@@ -78,8 +78,7 @@ RSpec.describe Contact, type: :model do
                                     data_request_emails: "test@test.com\ntest1@test.com",
                                     contact_type:)
       contact.contact_type=contact_type_2
-      contact.update!(contact_type: cr2)
-
+      expect(contact.contact_type).not_to eq contact_type_2
     end
   end
 
