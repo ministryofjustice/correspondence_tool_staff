@@ -70,4 +70,60 @@ RSpec.describe ContactsController, type: :controller do
       end
     end
   end
+
+  describe "#create" do
+    let(:contact_type) { create(:category_reference) }
+    let(:params) do
+      {
+        id: stafford.id,
+        contact: {
+          name: "HMP halifax",
+          address_line_1: "123 test road",
+          address_line_2: nil,
+          town: nil,
+          county: nil,
+          postcode: "FE2 9JK",
+          data_request_emails: nil,
+          contact_type_id: contact_type,
+        },
+      }
+    end
+
+    before do
+      sign_in user
+    end
+
+    it "redirects to the contacts index page" do
+      post(:create, params:)
+      expect(response).to redirect_to(contacts_path)
+    end
+  end
+
+  describe "#update" do
+    let(:contact_case) { create(:contact) }
+    let(:params) do
+      {
+        id: stafford.id,
+        contact: {
+          name: "HMP halifax",
+          address_line_1: "123 test road",
+          address_line_2: nil,
+          town: nil,
+          county: nil,
+          postcode: "FE2 9JK",
+          data_request_emails: nil,
+          contact_type_id: 99,
+        },
+      }
+    end
+
+    before do
+      sign_in user
+    end
+
+    it "redirects to the contacts index page" do
+      patch(:update, params:)
+      expect(response).to redirect_to(contacts_path)
+    end
+  end
 end
