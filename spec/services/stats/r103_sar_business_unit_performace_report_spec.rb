@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R103SarBusinessUnitPerformanceReport do
+  describe R103SARBusinessUnitPerformanceReport do
     before(:all) do
       create_report_type(abbr: :r103)
 

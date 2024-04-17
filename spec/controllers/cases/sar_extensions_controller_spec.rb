@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::SarExtensionsController, type: :controller do
+describe Cases::SARExtensionsController, type: :controller do
   let(:manager)           { find_or_create :disclosure_bmt_user }
   let(:extended_sar_case) { create :approved_sar, :extended_deadline_sar }
   let(:sar_case)          { create :sar_case }

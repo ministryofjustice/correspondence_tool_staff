@@ -1,5 +1,5 @@
 module Cases
-  class SarController < CasesController
+  class SARController < CasesController
     include NewCase
     include SARCasesParams
 

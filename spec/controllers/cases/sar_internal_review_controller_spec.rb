@@ -1,7 +1,7 @@
 require "rails_helper"
 require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
-RSpec.describe Cases::SarInternalReviewController, type: :controller do
+RSpec.describe Cases::SARInternalReviewController, type: :controller do
   describe "authentication" do
     let(:params) do
       {
@@ -26,8 +26,8 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
     include_examples "can_add_case policy spec", Case::SAR::InternalReview
   end
 
-  # Not using shared_examples/new_spec due to the way  Sar IR Controller
-  # sets `@case` to be a SarInternalReviewCaseForm rather than a
+  # Not using shared_examples/new_spec due to the way  SAR IR Controller
+  # sets `@case` to be a SARInternalReviewCaseForm rather than a
   # decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::InternalReview] }

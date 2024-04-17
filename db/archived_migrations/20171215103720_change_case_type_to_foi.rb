@@ -1,4 +1,4 @@
-class ChangeCaseTypeToFoi < ActiveRecord::Migration[5.0]
+class ChangeCaseTypeToFOI < ActiveRecord::Migration[5.0]
   def up
     execute "UPDATE cases SET type = 'Case::FOI' WHERE type = 'Case'"
   end

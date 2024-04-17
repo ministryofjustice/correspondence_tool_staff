@@ -1,4 +1,4 @@
-class AddIcoDecisionAttachmentType < ActiveRecord::Migration[5.0]
+class AddICODecisionAttachmentType < ActiveRecord::Migration[5.0]
   disable_ddl_transaction!
 
   def up

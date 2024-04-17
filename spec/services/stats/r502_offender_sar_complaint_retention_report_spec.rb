@@ -1,7 +1,7 @@
 require "rails_helper"
 
 module Stats
-  describe R502OffenderSarComplaintRetentionReport do
+  describe R502OffenderSARComplaintRetentionReport do
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Retention report"

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::PitExtensionsController, type: :controller do
+describe Cases::PITExtensionsController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
 
   let(:case_being_drafted) do

@@ -30,16 +30,16 @@ module PageObjects
         cases_new: "Cases::NewPage",
         cases_new_foi: "Cases::New::FOIPage",
         cases_new_ico: "Cases::New::ICOPage",
-        cases_new_sar_overturned_ico: "Cases::New::SarOverturnedIcoPage",
-        cases_new_foi_overturned_ico: "Cases::New::FoiOverturnedIcoPage",
+        cases_new_sar_overturned_ico: "Cases::New::SAROverturnedICOPage",
+        cases_new_foi_overturned_ico: "Cases::New::FOIOverturnedICOPage",
         cases_new_sar: "Cases::New::SARPage",
 
         cases_ico_require_further_action: "Cases::ICORequireFurtherActionPage",
         cases_ico_record_further_action: "Cases::ICORecordFurtherActionPage",
 
-        case_new_sar_ir_link_case: "Cases::New::SarInternalReviewLinkCasePage",
-        case_new_sar_ir_confirm_sar: "Cases::New::SarInternalReviewConfirmSarCasePage",
-        case_new_sar_ir_case_details: "Cases::New::SarInternalReviewCaseDetailsPage",
+        case_new_sar_ir_link_case: "Cases::New::SARInternalReviewLinkCasePage",
+        case_new_sar_ir_confirm_sar: "Cases::New::SARInternalReviewConfirmSARCasePage",
+        case_new_sar_ir_case_details: "Cases::New::SARInternalReviewCaseDetailsPage",
 
         cases_new_offender_sar_subject_details: "Cases::New::OffenderSARPageSubjectDetails",
         cases_new_offender_sar_reason_rejected: "Cases::New::OffenderSARPageReasonRejected",
@@ -60,7 +60,7 @@ module PageObjects
         cases_edit_offender_sar_reason_rejected: "Cases::Edit::OffenderSARPageReasonRejected",
 
         cases_new_offender_sar_complaint_confirm_case: "Cases::New::OffenderSARComplaintPageConfirmCase",
-        cases_new_offender_sar_complaint_link_offender_sar: "Cases::New::OffenderSARComplaintPageLinkSarCase",
+        cases_new_offender_sar_complaint_link_offender_sar: "Cases::New::OffenderSARComplaintPageLinkSARCase",
         cases_new_offender_sar_complaint_complaint_type: "Cases::New::OffenderSARComplaintPageComplaintType",
         cases_new_offender_sar_complaint_requester_details: "Cases::New::OffenderSARComplaintPageRequesterDetails",
         cases_new_offender_sar_complaint_recipient_details: "Cases::New::OffenderSARComplaintPageRecipientDetails",

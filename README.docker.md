@@ -370,7 +370,7 @@ changed.  There are a couple of complexities in using this tool which are descri
 
 #### JSONB fields on the database
 The default serializer does not de-serialize the properties column correctly because internally it is
-held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CtsPapertrailSerializer```
+held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CTSPapertrailSerializer```
 takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
 examples of how to reify a previous version, or get a hash of field values for the previous version.
 

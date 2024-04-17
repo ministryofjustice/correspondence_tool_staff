@@ -1,5 +1,5 @@
 module Cases
-  class OffenderSarComplaintController < OffenderSarController
+  class OffenderSARComplaintController < OffenderSARController
     before_action -> { set_decorated_case(params[:id]) }, only: %i[
       reopen confirm_reopen
     ]
