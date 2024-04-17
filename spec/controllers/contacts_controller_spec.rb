@@ -100,7 +100,7 @@ RSpec.describe ContactsController, type: :controller do
   end
 
   describe "#update" do
-    let(:contact_case) { create(:contact) }
+    let(:contact_type_2) { create(:category_reference, category: "contact_type_2") }
     let(:params) do
       {
         id: stafford.id,
@@ -112,7 +112,7 @@ RSpec.describe ContactsController, type: :controller do
           county: nil,
           postcode: "FE2 9JK",
           data_request_emails: nil,
-          contact_type_id: 99,
+          contact_type_id: contact_type_2,
         },
       }
     end
