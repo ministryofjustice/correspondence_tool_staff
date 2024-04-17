@@ -76,7 +76,6 @@ RSpec.describe ContactsController, type: :controller do
         expect(response.body).to redirect_to new_contact_path
       end
     end
-
   end
 
   describe "#create" do
