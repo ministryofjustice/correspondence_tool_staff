@@ -70,7 +70,7 @@ RSpec.describe ContactsController, type: :controller do
       end
     end
 
-    context "user skips new page and navigates straight to new_details page" do
+    context "when user skips new page and navigates straight to new_details page" do
       it "redirects to new page" do
         get :new_details
         expect(response.body).to redirect_to new_contact_path
