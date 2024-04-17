@@ -15,6 +15,9 @@ class ContactsController < ApplicationController
     else
       render :new
     end
+
+  rescue ActionController::ParameterMissing
+    redirect_to new_contact_path
   end
 
   def index
