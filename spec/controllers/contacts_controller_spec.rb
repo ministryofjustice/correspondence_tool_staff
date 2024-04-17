@@ -82,7 +82,6 @@ RSpec.describe ContactsController, type: :controller do
     let(:contact_type) { create(:category_reference) }
     let(:params) do
       {
-        id: stafford.id,
         contact: {
           name: "HMP halifax",
           address_line_1: "123 test road",
