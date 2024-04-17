@@ -1,7 +1,7 @@
 require "csv"
 
 module Stats
-  class R901OffenderSarCasesReport < BaseReport
+  class R901OffenderSARCasesReport < BaseReport
     CSV_COLUMN_HEADINGS = [
       "Case number",
       "Case type",

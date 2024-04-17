@@ -1,7 +1,7 @@
 module PageObjects
   module Sections
     module Cases
-      class FoiEditDetailsSection < SitePrism::Section
+      class FOIEditDetailsSection < SitePrism::Section
         element :form, ".edit_foi"
         element :date_received_day, "#foi_received_date_dd"
         element :date_received_month, "#foi_received_date_mm"

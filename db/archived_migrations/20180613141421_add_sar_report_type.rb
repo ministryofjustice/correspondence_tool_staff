@@ -1,4 +1,4 @@
-class AddSarReportType < ActiveRecord::Migration[5.0]
+class AddSARReportType < ActiveRecord::Migration[5.0]
   class ReportType < ApplicationRecord
   end
 
@@ -6,7 +6,7 @@ class AddSarReportType < ActiveRecord::Migration[5.0]
     ReportType.create!(
       abbr: "R103",
       full_name: "Business unit report (SARs)",
-      class_name: "Stats::R103SarBusinessUnitPerformanceReport",
+      class_name: "Stats::R103SARBusinessUnitPerformanceReport",
       custom_report: true,
       seq_id: 250,
     )

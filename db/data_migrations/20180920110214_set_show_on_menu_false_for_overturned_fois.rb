@@ -1,4 +1,4 @@
-class SetShowOnMenuFalseForOverturnedFois < ActiveRecord::DataMigration
+class SetShowOnMenuFalseForOverturnedFOIs < ActiveRecord::DataMigration
   def up
     CorrespondenceType.all.each do |ct|
       if ct.abbreviation == "OVERTURNED_FOI"

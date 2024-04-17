@@ -6,7 +6,7 @@ require "cts/cases/warehouser"
 
 # rubocop:disable Rails/Exit
 module CTS::Cases
-  class CLI < Thor
+  class Cli < Thor
     # include Thor::Rails unless const_defined?(:SKIP_RAILS) && SKIP_RAILS
 
     default_command :list

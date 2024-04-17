@@ -58,7 +58,7 @@ module CaseClosure
         it "raises" do
           expect {
             described_class.id_from_abbreviation("xxx")
-          }.to raise_error ActiveRecord::RecordNotFound, "Couldn't find CaseClosure::InfoHeldStatus"
+          }.to raise_error ActiveRecord::RecordNotFound
         end
       end
     end

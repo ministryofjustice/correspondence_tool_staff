@@ -1,4 +1,4 @@
-class UpdateExternalTimeLimitOnSarCases < ActiveRecord::Migration[5.0]
+class UpdateExternalTimeLimitOnSARCases < ActiveRecord::Migration[5.0]
   def up
     CorrespondenceType.find_by(abbreviation: "SAR")
                       &.update deadline_calculator_class: "CalendarDays",

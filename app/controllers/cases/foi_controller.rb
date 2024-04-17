@@ -1,5 +1,5 @@
 module Cases
-  class FoiController < CasesController
+  class FOIController < CasesController
     include NewCase
     include FOICasesParams
 

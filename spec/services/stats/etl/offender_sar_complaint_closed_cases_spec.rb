@@ -5,7 +5,7 @@ require "csv"
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
   module ETL
-    describe OffenderSarComplaintClosedCases do
+    describe OffenderSARComplaintClosedCases do
       let(:default_retrieval_scope) do
         Case::SAR::OffenderComplaint.all
       end

@@ -2,7 +2,7 @@
 
 require "yaml"
 
-module CtsPapertrailSerializer
+module CTSPapertrailSerializer
 module_function # makes all instance methods become module methods as well
 
   def load(string)

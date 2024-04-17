@@ -1,4 +1,4 @@
-class UpdateOffenderSarAsCustomReport < ActiveRecord::DataMigration
+class UpdateOffenderSARAsCustomReport < ActiveRecord::DataMigration
   def up
     CorrespondenceType.all.each do |ct|
       next unless ct.abbreviation == "OFFENDER_SAR"

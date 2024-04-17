@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R901OffenderSarCasesReport do
+  describe R901OffenderSARCasesReport do
     before(:all) { DbHousekeeping.clean(seed: true) }
 
     after(:all) do

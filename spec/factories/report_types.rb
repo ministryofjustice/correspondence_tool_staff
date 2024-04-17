@@ -96,7 +96,7 @@ FactoryBot.define do
     trait :r102 do
       abbr              { "R102" }
       full_name         { "Appeals performance report(SARs)" }
-      class_name        { "Stats::R102SarAppealsPerformanceReport" }
+      class_name        { "Stats::R102SARAppealsPerformanceReport" }
       custom_report     { true }
       standard_report   { false }
       seq_id            { 320 }
@@ -107,7 +107,7 @@ FactoryBot.define do
     trait :r103 do
       abbr              { "R103" }
       full_name         { "Business unit report" }
-      class_name        { "Stats::R103SarBusinessUnitPerformanceReport" }
+      class_name        { "Stats::R103SARBusinessUnitPerformanceReport" }
       custom_report     { true }
       standard_report   { false }
       seq_id            { 250 }
@@ -118,7 +118,7 @@ FactoryBot.define do
     trait :r105 do
       abbr              { "R105" }
       full_name         { "Monthly report (SARs)" }
-      class_name        { "Stats::R105SarMonthlyPerformanceReport" }
+      class_name        { "Stats::R105SARMonthlyPerformanceReport" }
       custom_report     { true }
       standard_report   { true }
       seq_id            { 300 }
@@ -129,7 +129,7 @@ FactoryBot.define do
     trait :r205 do
       abbr              { "R205" }
       full_name         { "Monthly report (Offender SARs)" }
-      class_name        { "Stats::R205OffenderSarMonthlyPerformanceReport" }
+      class_name        { "Stats::R205OffenderSARMonthlyPerformanceReport" }
       custom_report     { true }
       standard_report   { true }
       seq_id            { 600 }
@@ -153,7 +153,7 @@ FactoryBot.define do
     trait :r901 do
       abbr              { "R901" }
       full_name         { "Offender SAR cases report" }
-      class_name        { "Stats::R901OffenderSarCasesReport" }
+      class_name        { "Stats::R901OffenderSARCasesReport" }
       custom_report     { false }
       standard_report   { false }
       seq_id            { 1000 }

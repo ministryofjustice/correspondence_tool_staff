@@ -78,7 +78,7 @@ describe "papertrail", versioning: true do
       Timecop.freeze(run_time) do
         kase = create_dummy_case
         update_dummy_case(kase)
-        version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
+        version_hash = CTSPapertrailSerializer.load(kase.versions.last.object)
         expect(version_hash["name"]).to eq "Stephen Richards"
         expect(version_hash["email"]).to eq "sr@moj.com"
         expect(version_hash["message"]).to eq "this is a message"
@@ -98,7 +98,7 @@ describe "papertrail", versioning: true do
       Timecop.freeze(run_time) do
         kase = create_dummy_case
         update_dummy_case(kase)
-        version_hash = CtsPapertrailSerializer.load(kase.versions.last.object)
+        version_hash = CTSPapertrailSerializer.load(kase.versions.last.object)
         expect(version_hash["received_date"]).to eq Date.parse("2018-04-19")
 
         kase.update!(received_date: version_hash["received_date"])

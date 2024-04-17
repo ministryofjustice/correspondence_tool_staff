@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CaseFilter::CaseUpdateSentToSsclService do
+describe CaseUpdateSentToSsclService do
   let(:kase) { create :offender_sar_case, :closed }
   let(:user) { kase.responding_team.users.first }
   let(:team) { kase.responding_team }
@@ -12,7 +12,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
            date_sent_to_sscl_removed!: true
   end
   let(:params) { { sent_to_sscl_at: Date.current - 1.day } }
-  let(:service) { CaseUpdateSentToSsclService.new(user:, kase:, params:) }
+  let(:service) { described_class.new(user:, kase:, params:) }
 
   before do
     allow(kase).to receive(:state_machine).and_return(state_machine)

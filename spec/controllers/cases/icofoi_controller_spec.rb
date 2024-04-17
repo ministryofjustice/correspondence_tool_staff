@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::IcoFoiController, type: :controller do
+RSpec.describe Cases::ICOFOIController, type: :controller do
   describe "#new" do
     let(:case_types) { %w[Case::ICO::FOI Case::ICO::SAR] }
 
