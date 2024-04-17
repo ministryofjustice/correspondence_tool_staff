@@ -107,7 +107,7 @@ RSpec.describe ContactsController, type: :controller do
   end
 
   describe "#update" do
-    let(:contact_case) { create(:contact) }
+    let(:contact) { create(:contact) }
     let(:contact_type_2) { create(:category_reference, category: "contact_type_2") }
     let(:params) do
       {
@@ -136,10 +136,10 @@ RSpec.describe ContactsController, type: :controller do
 
     it "does not update contact_type_id value" do
       patch(:update, params:)
-      original_contact_type_id = contact_case.contact_type_id
-      contact_case.update!(controller.send(:contact_update_params))
+      original_contact_type_id = contact.contact_type_id
+      contact.update!(controller.send(:contact_update_params))
 
-      expect(original_contact_type_id).to eq contact_case.contact_type_id
+      expect(original_contact_type_id).to eq contact.contact_type_id
       expect(controller.send(:contact_update_params).key?(:contact_type_id)).to be false
     end
   end
