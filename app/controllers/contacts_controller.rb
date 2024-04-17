@@ -36,7 +36,6 @@ class ContactsController < ApplicationController
   def update
     respond_to do |format|
       if @contact.update(contact_params_for_update)
-        debugger
         format.html { redirect_to contacts_url, notice: "Address was successfully updated." }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -80,7 +79,6 @@ private
 
   def set_contact_type
     if contact_params_for_create[:contact_type_id]
-      debugger
       @contact_type = CategoryReference.find(contact_params_for_create[:contact_type_id])
       @contact.contact_type = @contact_type
     else
