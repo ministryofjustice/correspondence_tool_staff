@@ -105,8 +105,8 @@ RSpec.describe ContactsController, type: :controller do
       {
         id: stafford.id,
         contact: {
-          name: "HMP halifax",
-          address_line_1: "123 test road",
+          name: "New name",
+          address_line_1: "new address",
           address_line_2: nil,
           town: nil,
           county: nil,
