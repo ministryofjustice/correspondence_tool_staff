@@ -2,7 +2,7 @@ require "csv"
 
 module Stats
   module ETL
-    class OffenderSarComplaintClosedCases < BaseClosedCases
+    class OffenderSARComplaintClosedCases < BaseClosedCases
       RESULT_NAME = "offender-sar-complaint-closed-cases".freeze
 
       CSV_COLUMN_HEADINGS = [
@@ -56,11 +56,11 @@ module Stats
     private
 
       def columns
-        @columns ||= OffenderSarComplaintClosedCases::FIELD_COLUMNS
+        @columns ||= OffenderSARComplaintClosedCases::FIELD_COLUMNS
       end
 
       def heading
-        @heading ||= CSV.generate_line(OffenderSarComplaintClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
+        @heading ||= CSV.generate_line(OffenderSARComplaintClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
       end
     end
   end

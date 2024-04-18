@@ -1,7 +1,7 @@
 module PageObjects
   module Sections
     module Cases
-      class SarEditDetailsSection < SitePrism::Section
+      class SAREditDetailsSection < SitePrism::Section
         element :form, ".edit_sar"
         element :subject_name, "#sar_subject_full_name"
 

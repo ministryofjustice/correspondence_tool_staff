@@ -1,6 +1,6 @@
 require Rails.root.join("lib/db/database_anonymizer_tasks")
 
-class AnonymiserDBJob < ApplicationJob
+class AnonymiserDbJob < ApplicationJob
   queue_as :anonymiser
 
   def perform(task_name, task_arguments)

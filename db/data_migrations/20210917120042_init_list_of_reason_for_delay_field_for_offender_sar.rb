@@ -1,4 +1,4 @@
-class InitListOfReasonForDelayFieldForOffenderSar < ActiveRecord::DataMigration
+class InitListOfReasonForDelayFieldForOffenderSAR < ActiveRecord::DataMigration
   def up
     category_references = [
       {

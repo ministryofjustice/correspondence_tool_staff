@@ -25,7 +25,7 @@ FactoryBot.define do
     town {}
     county {}
     postcode { "FE2 9JK" }
-    contact_type { build(:category_reference) }
+    contact_type { create(:category_reference) }
   end
 
   factory :prison, parent: :contact do

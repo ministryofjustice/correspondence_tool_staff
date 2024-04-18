@@ -1,5 +1,5 @@
 module Stats
-  class OffenderSarAnalyser
+  class OffenderSARAnalyser
     COMMON_COLUMNS = {
       overall_performance: "Performance %",
       overall_total: "Total received",

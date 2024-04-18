@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class SarInternalReviewLinkCasePage < PageObjects::Pages::Base
+        class SARInternalReviewLinkCasePage < PageObjects::Pages::Base
           set_url "/cases/sar_internal_review/new"
 
           section :primary_navigation,

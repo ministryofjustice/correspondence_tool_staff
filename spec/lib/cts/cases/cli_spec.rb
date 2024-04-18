@@ -4,7 +4,7 @@ require "thor"
 require "cts"
 require "cts/cases/cli"
 
-RSpec.describe CTS::Cases::CLI, tag: :cli do
+RSpec.describe CTS::Cases::Cli, tag: :cli do
   let(:cli)              { described_class.new }
   let(:number_to_create) { 1 }
 

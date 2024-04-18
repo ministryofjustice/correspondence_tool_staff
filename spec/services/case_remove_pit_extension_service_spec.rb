@@ -1,16 +1,18 @@
 require "rails_helper"
 
 describe CaseRemovePITExtensionService do
-  let!(:received_date) { 7.business_days.ago.to_date }
+  let!(:received_date) { freeze_time { 7.business_days.ago.to_date } }
   let!(:team_dacu)     { find_or_create :team_disclosure_bmt }
   let!(:manager)       { find_or_create :disclosure_bmt_user }
 
   let(:case_being_drafted) do
-    create(
-      :case_being_drafted,
-      :extended_for_pit,
-      received_date:,
-    )
+    freeze_time do
+      create(
+        :case_being_drafted,
+        :extended_for_pit,
+        received_date:,
+      )
+    end
   end
 
   let(:service) do
@@ -34,9 +36,11 @@ describe CaseRemovePITExtensionService do
     end
 
     it "sets the external deadline on the case" do
-      service.call
-      expect(case_being_drafted.external_deadline)
-        .to eq 20.business_days.after(received_date, holidays: ADDITIONAL_BANK_HOLIDAYS)
+      freeze_time do
+        service.call
+        expect(case_being_drafted.external_deadline)
+          .to eq 20.business_days.after(received_date, holidays: ADDITIONAL_BANK_HOLIDAYS)
+      end
     end
 
     it "sets result to :ok and returns same" do

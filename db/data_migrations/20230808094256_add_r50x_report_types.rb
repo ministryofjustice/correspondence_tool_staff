@@ -7,7 +7,7 @@ class AddR50xReportTypes < ActiveRecord::DataMigration
       ReportType.create!(
         abbr: "R501",
         full_name: "Retention Report",
-        class_name: "Stats::R501OffenderSarRetentionReport",
+        class_name: "Stats::R501OffenderSARRetentionReport",
         custom_report: true,
         seq_id: 1000,
         offender_sar: true,
@@ -18,7 +18,7 @@ class AddR50xReportTypes < ActiveRecord::DataMigration
       ReportType.create!(
         abbr: "R502",
         full_name: "Retention Report",
-        class_name: "Stats::R502OffenderSarComplaintRetentionReport",
+        class_name: "Stats::R502OffenderSARComplaintRetentionReport",
         custom_report: true,
         seq_id: 1050,
         offender_sar_complaint: true,

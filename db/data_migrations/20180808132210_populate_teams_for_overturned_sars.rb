@@ -1,4 +1,4 @@
-class PopulateTeamsForOverturnedSars < ActiveRecord::DataMigration
+class PopulateTeamsForOverturnedSARs < ActiveRecord::DataMigration
   def up
     overturned_sar_ct = CorrespondenceType.overturned_sar
     sar_ct = CorrespondenceType.sar

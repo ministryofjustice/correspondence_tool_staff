@@ -1,4 +1,4 @@
-class DecapitaliseSarName < ActiveRecord::DataMigration
+class DecapitaliseSARName < ActiveRecord::DataMigration
   def up
     sar = CorrespondenceType.sar
     raise "Unable to find correspondence type SAR" if sar.nil?

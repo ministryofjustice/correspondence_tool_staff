@@ -1,5 +1,5 @@
 module Stats
-  module OffenderSarCalculations
+  module OffenderSARCalculations
     module Callbacks
       def self.calculate_total_columns(stats)
         stats.stats.each do |_team_id, row|
@@ -9,7 +9,7 @@ module Stats
 
       def self.calculate_percentages(stats)
         stats.stats.each do |_, row|
-          row[:overall_performance] = OffenderSarCalculations.calculate_overall_performance(row)
+          row[:overall_performance] = OffenderSARCalculations.calculate_overall_performance(row)
         end
       end
     end

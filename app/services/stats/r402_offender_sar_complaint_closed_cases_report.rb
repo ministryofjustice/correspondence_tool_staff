@@ -1,5 +1,5 @@
 module Stats
-  class R402OffenderSarComplaintClosedCasesReport < BaseClosedCasesReport
+  class R402OffenderSARComplaintClosedCasesReport < BaseClosedCasesReport
     class << self
       def title
         "Closed complaint cases report"
@@ -10,7 +10,7 @@ module Stats
       end
 
       def etl_handler
-        Stats::ETL::OffenderSarComplaintClosedCases
+        Stats::ETL::OffenderSARComplaintClosedCases
       end
     end
 

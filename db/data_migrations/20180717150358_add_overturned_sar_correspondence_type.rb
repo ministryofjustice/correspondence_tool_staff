@@ -1,4 +1,4 @@
-class AddOverturnedSarCorrespondenceType < ActiveRecord::DataMigration
+class AddOverturnedSARCorrespondenceType < ActiveRecord::DataMigration
   def up
     CorrespondenceType.create!(
       name: "Overturned ICO appeal (SAR)",

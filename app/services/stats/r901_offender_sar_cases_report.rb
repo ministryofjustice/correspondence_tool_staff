@@ -1,7 +1,7 @@
 require "csv"
 
 module Stats
-  class R901OffenderSarCasesReport < BaseReport
+  class R901OffenderSARCasesReport < BaseReport
     CSV_COLUMN_HEADINGS = [
       "Case number",
       "Case type",
@@ -19,6 +19,7 @@ module Stats
       "Case status",
       "Days open",
       "Data requests completed?",
+      "Case originally rejected",
     ].freeze
 
     def self.title
@@ -58,6 +59,7 @@ module Stats
         kase.current_state.humanize,
         kase.num_days_taken,
         kase.data_requests_completed? ? "Yes" : "No",
+        kase.case_originally_rejected ? "Yes" : "No",
       ]
     end
 

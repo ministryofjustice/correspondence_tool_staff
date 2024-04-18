@@ -1,4 +1,4 @@
-class ModifyIcoDeadlineClassSetting < ActiveRecord::DataMigration
+class ModifyICODeadlineClassSetting < ActiveRecord::DataMigration
   def up
     CorrespondenceType.all.each do |ct|
       next unless ct.abbreviation == "ICO"

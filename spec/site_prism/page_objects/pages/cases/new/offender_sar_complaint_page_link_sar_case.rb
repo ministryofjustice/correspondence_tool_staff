@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class OffenderSARComplaintPageLinkSarCase < PageObjects::Pages::Base
+        class OffenderSARComplaintPageLinkSARCase < PageObjects::Pages::Base
           set_url "/cases/offender_sar_complaints/new"
 
           section :primary_navigation,

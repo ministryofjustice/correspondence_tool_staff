@@ -21,6 +21,7 @@ en:
       offender_sar:
         subject_details_step: Subject details - Creating an Offender SAR case - Track-a-query
         requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
+        reason_rejected_step: Reason rejected - Creating an Offender SAR case - Track-a-query
         recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
         requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
         request_details_step: Request details - Creating an Offender SAR case - Track-a-query
@@ -55,6 +56,7 @@ en:
     edit_user_page: Edit team member - %{team_name} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
+    accepted_date_received: Accepted date received - %{case_number} - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query
     login: Login - Track-a-query
@@ -92,6 +94,7 @@ en:
     record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
+    add_an_address_contact_type: Add an address contact type - Track-a-query
     edit_an_address: Edit an address - Track-a-query
     partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
     ico_foi:
