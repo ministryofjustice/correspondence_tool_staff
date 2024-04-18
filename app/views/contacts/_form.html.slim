@@ -7,6 +7,9 @@
   = f.text_field :postcode
   = f.text_area :data_request_name
   = f.text_area :data_request_emails
+  - if @contact.prison?
+    = f.text_field :escalation_name
+    = f.text_area :escalation_emails
 
   = f.hidden_field :contact_type_id
 
