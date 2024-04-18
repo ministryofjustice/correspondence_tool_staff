@@ -26,11 +26,11 @@ FactoryBot.define do
     county {}
     postcode { "FE2 9JK" }
     contact_type { create(:category_reference) }
-  end
 
-  factory :prison, parent: :contact do
-    contact_type { build(:category_reference, code: "prison") }
-    escalation_name { "Governor" }
-    escalation_emails { "governor@prison.com" }
+    factory :prison do
+      contact_type { create(:category_reference, code: "prison") }
+      escalation_name { "Governor" }
+      escalation_emails { "governor@prison.com" }
+    end
   end
 end
