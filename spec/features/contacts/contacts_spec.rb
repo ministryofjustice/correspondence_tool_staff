@@ -55,7 +55,7 @@ feature "Contacts address book", js: true do
     cases_page.load
   end
 
-  xscenario "branston user can view addresses and create a new address" do
+  scenario "branston user can view addresses and create a new address" do
     click_on "Addresses"
     then_expect_heading_to_read_address_book
 
