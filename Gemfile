@@ -60,6 +60,7 @@ gem "rails", "~> 7.0"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rails-data-migrations", "~> 1.2.0"
 gem "recursive-open-struct"
+gem "redis"
 gem "sablon"
 gem "sass-rails", "~> 6.0"
 gem "sentry-rails"
