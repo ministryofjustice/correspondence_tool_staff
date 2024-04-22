@@ -48,6 +48,7 @@ module Warehouse
         case_report.current_state = kase.decorate.status
         case_report.rejected = kase.rejected? ? "Yes" : "No"
         case_report.case_originally_rejected = kase.respond_to?(:case_originally_rejected) ? humanize_boolean(kase.case_originally_rejected) : nil
+        case_report.rejected_reasons = kase.respond_to?(:rejected_reasons) ? kase.rejected_reasons : nil
         case_report.responding_team = kase.responding_team&.name
         case_report.responder = kase.responder&.full_name
         case_report.date_received = kase.received_date
