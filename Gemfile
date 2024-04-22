@@ -58,7 +58,7 @@ gem "pundit", "~>2.1"
 gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
-gem "rails-data-migrations", "~> 1.2.0"
+gem "rails-data-migrations", git: "https://github.com/hernanvicente/rails-data-migrations.git", branch: "rails-7.1-support"
 gem "recursive-open-struct"
 gem "sablon"
 gem "sass-rails", "~> 6.0"
