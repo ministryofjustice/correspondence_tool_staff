@@ -8,6 +8,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       create(:closed_case, :fully_refused_exempt_s40, :extended_for_pit),
       create(:sar_case, :extended_deadline_sar),
       create(:offender_sar_case, :third_party),
+      create(:offender_sar_case, :rejected),
       create(:ico_foi_case),
       create(:accepted_ico_sar_case),
       create(:awaiting_responder_ot_ico_foi),
@@ -209,6 +210,9 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result["Number of days late"]).to eq case_report.number_of_days_late
       expect(result["Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)"]).to eq case_report.number_of_days_taken
       expect(result["Number of days taken after extension"]).to eq case_report.number_of_days_taken_after_extension
+      expect(result["Case originally rejected"]).to eq case_report.case_originally_rejected
+      expect(result["Rejected reasons"]).to eq case_report.rejected_reasons
+      expect(result["Rejected"]).to eq case_report.rejected
 
       # CSV exporter outputs dates as strings whereas
       # CaseReport stores actual Date objects
