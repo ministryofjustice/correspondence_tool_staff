@@ -27,7 +27,7 @@ COPY . .
 
 RUN yarn install --pure-lockfile
 
-RUN mkdir -p log tmp
+RUN mkdir -p log tmp tmp/pids
 RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
 USER 1000
