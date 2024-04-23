@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: letter_templates
+#
+#  id                     :integer          not null, primary key
+#  name                   :string
+#  abbreviation           :string
+#  body                   :string
+#  template_type          :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  letter_address         :string           default("")
+#  base_template_file_ref :string           default("ims001.docx")
+#
 FactoryBot.define do
   factory :letter_template do
     sequence(:name) { |n| "Letter to requester #{n}" }

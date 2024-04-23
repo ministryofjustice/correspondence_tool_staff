@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: commissioning_documents
+#
+#  id              :bigint           not null, primary key
+#  data_request_id :bigint
+#  template_name   :enum
+#  sent            :boolean          default(FALSE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  attachment_id   :bigint
+#
 class CommissioningDocument < ApplicationRecord
   TEMPLATE_TYPES = {
     cat_a: CommissioningDocumentTemplate::CatA,

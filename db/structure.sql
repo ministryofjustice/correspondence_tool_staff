@@ -587,7 +587,9 @@ CREATE TABLE public.contacts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contact_type_id bigint,
-    data_request_name character varying
+    data_request_name character varying,
+    escalation_name character varying,
+    escalation_emails character varying
 );
 
 
@@ -2438,4 +2440,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230710161647'),
 ('20230727110142'),
 ('20240215113816'),
-('20240315113554');
+('20240315113554'),
+('20240322151613');

@@ -9,6 +9,8 @@
 #  report_data    :binary
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  guid           :string
+#  properties     :jsonb
 #
 
 FactoryBot.define do
