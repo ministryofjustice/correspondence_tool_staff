@@ -30,7 +30,7 @@ RSpec.describe HeartbeatController, type: :controller do
         allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
         allow(Sidekiq).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
         allow(ActiveRecord::Base.connection)
-          .to receive(:active?).and_raise(PG::ConnectionBad)
+          .to receive(:execute).and_raise(PG::ConnectionBad)
 
         get :healthcheck
       end
@@ -56,8 +56,6 @@ RSpec.describe HeartbeatController, type: :controller do
         dead_set = instance_double(Sidekiq::DeadSet, size: 0)
         allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
         allow(Sidekiq).to receive(:redis_info).and_return({})
-        allow(ActiveRecord::Base.connection)
-          .to receive(:active?).and_return(true)
 
         get :healthcheck
       end
