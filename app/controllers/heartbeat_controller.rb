@@ -57,7 +57,8 @@ private
   end
 
   def database_alive?
-    ActiveRecord::Base.connection.active?
+    tuple = ActiveRecord::Base.connection.execute("select 1 as result")
+    tuple.to_a == [{ "result" => 1 }]
   rescue StandardError
     false
   end

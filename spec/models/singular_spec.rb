@@ -1,8 +1,6 @@
 require "rails_helper"
 
-require "extensions/enumerable"
-
-describe Enumerable do
+describe "singular" do
   describe "singular" do
     it "returns the singular item in the enumerable" do
       obj = [:a]

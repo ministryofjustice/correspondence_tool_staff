@@ -149,8 +149,9 @@ spec:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command:
-            - rake
-            - db:abort_if_pending_migrations
+            - /bin/sh
+            - -c
+            - 'bundle exec rake db:abort_if_pending_migrations'
           env:
             - name: DATABASE_URL
               valueFrom:
