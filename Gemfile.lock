@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/hernanvicente/rails-data-migrations.git
+  revision: 1447e4b30cbb96c392477fa7b205a77d25e86ecd
+  branch: rails-7.1-support
+  specs:
+    rails-data-migrations (1.2.1)
+      rails (>= 4.0.0)
+
+GIT
   remote: https://github.com/ministryofjustice/bank_holiday.git
   revision: 16d511a1d1628eece8d61ade9223b10caccbcea3
   branch: bundler-fix
@@ -169,9 +177,8 @@ GEM
     coderay (1.1.3)
     colorize (0.8.1)
     concurrent-ruby (1.2.3)
-    config (4.0.0)
+    config (5.4.0)
       deep_merge (~> 1.2, >= 1.2.1)
-      dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.4.1)
     crass (1.0.6)
     date (3.3.4)
@@ -201,38 +208,6 @@ GEM
     drb (2.2.1)
     dropzonejs-rails (0.8.5)
       rails (> 3.1)
-    dry-configurable (0.15.0)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 0.6)
-    dry-container (0.9.0)
-      concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.13, >= 0.13.0)
-    dry-core (0.7.1)
-      concurrent-ruby (~> 1.0)
-    dry-inflector (0.2.1)
-    dry-initializer (3.1.1)
-    dry-logic (1.2.0)
-      concurrent-ruby (~> 1.0)
-      dry-core (~> 0.5, >= 0.5)
-    dry-schema (1.9.1)
-      concurrent-ruby (~> 1.0)
-      dry-configurable (~> 0.13, >= 0.13.0)
-      dry-core (~> 0.5, >= 0.5)
-      dry-initializer (~> 3.0)
-      dry-logic (~> 1.0)
-      dry-types (~> 1.5)
-    dry-types (1.5.1)
-      concurrent-ruby (~> 1.0)
-      dry-container (~> 0.3)
-      dry-core (~> 0.5, >= 0.5)
-      dry-inflector (~> 0.1, >= 0.1.2)
-      dry-logic (~> 1.0, >= 1.0.2)
-    dry-validation (1.8.0)
-      concurrent-ruby (~> 1.0)
-      dry-container (~> 0.7, >= 0.7.1)
-      dry-core (~> 0.5, >= 0.5)
-      dry-initializer (~> 3.0)
-      dry-schema (~> 1.9, >= 1.9.1)
     erubi (1.12.0)
     execjs (2.9.1)
     factory_bot (6.2.1)
@@ -355,7 +330,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2024.0305)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
+    mini_portile2 (2.8.6)
     minitest (5.22.3)
     msgpack (1.5.1)
     multi_json (1.15.0)
@@ -453,8 +428,6 @@ GEM
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
       activesupport (>= 5.0.1.rc1)
-    rails-data-migrations (1.2.0)
-      rails (>= 4.0.0)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -481,10 +454,9 @@ GEM
     rdoc (6.6.3.1)
       psych (>= 4.0.0)
     recursive-open-struct (1.1.3)
-    redis-client (0.22.1)
-      connection_pool
+    redis (4.8.1)
     regexp_parser (2.8.1)
-    reline (0.5.1)
+    reline (0.5.2)
       io-console (~> 0.5)
     request_store (1.6.0)
       rack (>= 1.4)
@@ -578,11 +550,10 @@ GEM
       colorize
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
-    sidekiq (7.2.2)
-      concurrent-ruby (< 2)
-      connection_pool (>= 2.3.0)
-      rack (>= 2.2.4)
-      redis-client (>= 0.19.0)
+    sidekiq (6.5.12)
+      connection_pool (>= 2.2.5, < 3)
+      rack (~> 2.0)
+      redis (>= 4.5.0, < 5)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -667,7 +638,7 @@ DEPENDENCIES
   caxlsx
   caxlsx_rails
   colorize
-  config (~> 4.0)
+  config
   debug (>= 1.0.0)
   devise
   draper (= 4.0.2)
@@ -709,7 +680,7 @@ DEPENDENCIES
   pundit (~> 2.1)
   rails (~> 7.0)
   rails-controller-testing
-  rails-data-migrations (~> 1.2.0)
+  rails-data-migrations!
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 6.0)
@@ -723,7 +694,7 @@ DEPENDENCIES
   sentry-ruby
   shell-spinner
   shoulda-matchers (~> 5.1)
-  sidekiq
+  sidekiq (< 7)
   simplecov
   site_prism (< 5.0)
   slim-rails (~> 3.6)
