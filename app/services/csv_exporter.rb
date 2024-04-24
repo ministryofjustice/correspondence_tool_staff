@@ -51,6 +51,7 @@ class CSVExporter
     "Number of days late against original deadline",
     "Case originally rejected",
     "Rejected reasons",
+    "Other rejected reason",
   ].freeze
 
   CSV_COLUMN_FIELDS = %w[
@@ -101,6 +102,7 @@ class CSVExporter
     num_days_late_against_original_deadline
     case_originally_rejected
     rejected_reasons
+    other_rejected_reason
   ].freeze
 
   def initialize(kase)
