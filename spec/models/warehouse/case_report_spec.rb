@@ -87,6 +87,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       create(:closed_case, :fully_refused_exempt_s40, :extended_for_pit),
       create(:sar_case, :extended_deadline_sar),
       create(:offender_sar_case, :third_party),
+      create(:offender_sar_case, :rejected),
       create(:ico_foi_case),
       create(:accepted_ico_sar_case),
       create(:awaiting_responder_ot_ico_foi),
