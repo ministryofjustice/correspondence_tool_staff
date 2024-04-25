@@ -35,6 +35,14 @@ describe CommissioningDocumentEmailService do
       service.send!
     end
 
+    it "uses the expected queue" do
+      expect {
+        service.send!
+      }.to(
+        have_enqueued_job.on_queue("correspondence_tool_staff_mailers").at_least(2).times,
+      )
+    end
+
     it "sets commissioning document as sent" do
       service.send!
       expect(commissioning_document.sent).to be_truthy
