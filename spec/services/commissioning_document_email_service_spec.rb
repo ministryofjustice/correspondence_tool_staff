@@ -31,7 +31,7 @@ describe CommissioningDocumentEmailService do
 
     it "sends an email for every contact email address" do
       expect(ActionNotificationsMailer).to receive(:commissioning_email).twice.and_return(mailer)
-      expect(mailer).to receive(:deliver_later).twice
+      expect(mailer).to receive(:deliver_later!).twice
       service.send!
     end
 
@@ -62,7 +62,7 @@ describe CommissioningDocumentEmailService do
 
       it "also sends an email to branston archives" do
         expect(ActionNotificationsMailer).to receive(:commissioning_email).exactly(3).times.and_return(mailer)
-        expect(mailer).to receive(:deliver_later).exactly(3).times
+        expect(mailer).to receive(:deliver_later!).exactly(3).times
         service.send!
       end
     end
