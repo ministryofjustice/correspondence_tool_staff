@@ -36,7 +36,7 @@ private
         commissioning_document,
         data_request.offender_sar_case.number,
         email,
-      ).deliver_later
+      ).deliver_later! # must use deliver_later! method or Notify ID cannot be saved
     end
   end
 
