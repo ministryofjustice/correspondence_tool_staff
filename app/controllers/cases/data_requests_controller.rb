@@ -66,7 +66,6 @@ module Cases
 
     def send_email
       @recipient_emails = @data_request.recipient_emails
-
       @no_email_present = @recipient_emails.empty?
 
       if @commissioning_document.probation? && !handled_sending_to_branston_archives?
@@ -88,6 +87,8 @@ module Cases
       if @email.email_branston_archives == "yes"
         @data_request.update!(email_branston_archives: true)
         @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
+      else
+        @data_request.update!(email_branston_archives: false)
       end
 
       true
