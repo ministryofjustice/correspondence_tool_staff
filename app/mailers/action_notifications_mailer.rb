@@ -1,4 +1,6 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
+  after_deliver :set_notify_id
+
   def new_assignment(assignment, recipient)
     SentryContextProvider.set_context
     @assignment = assignment
@@ -124,13 +126,12 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
-    data_request_email = DataRequestEmail.find_or_create_by!(
+    @data_request_email = DataRequestEmail.find_or_create_by!(
       email_address: recipient,
       data_request: commissioning_document.data_request,
     )
 
-    # Sets dreid header with reference to record which can be used to update with Notify ID in MailDeliveryObserver
-    mail(to: recipient, dreid: data_request_email.id)
+    mail(to: recipient)
   end
 
   def rpi_email(rpi, target)
@@ -177,5 +178,14 @@ private
     when "Commissioning"
       set_email_reply_to(Settings.commissioning_notify_reply_to)
     end
+  end
+
+  def set_notify_id
+    return if message.delivery_handler != ActionNotificationsMailer
+    return if message.govuk_notify_response.nil?
+    return if @data_request_email.id.nil?
+
+    data_request_email = DataRequestEmail.find(@data_request_email.id)
+    data_request_email.update!(notify_id: message.govuk_notify_response.id)
   end
 end
