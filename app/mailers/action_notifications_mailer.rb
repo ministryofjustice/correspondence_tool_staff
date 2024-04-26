@@ -1,6 +1,8 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
   after_deliver :set_notify_id
 
+  attr_reader :data_request_email
+
   def new_assignment(assignment, recipient)
     SentryContextProvider.set_context
     @assignment = assignment
@@ -181,11 +183,9 @@ private
   end
 
   def set_notify_id
-    return if message.delivery_handler != ActionNotificationsMailer
     return if message.govuk_notify_response.nil?
-    return if @data_request_email.id.nil?
+    return if data_request_email.nil?
 
-    data_request_email = DataRequestEmail.find(@data_request_email.id)
     data_request_email.update!(notify_id: message.govuk_notify_response.id)
   end
 end
