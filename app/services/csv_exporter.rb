@@ -166,8 +166,8 @@ class CSVExporter
       @kase.respond_to?(:original_external_deadline) ? @kase.num_days_late_against_original_deadline : nil,
 
       @kase.respond_to?(:case_originally_rejected) ? humanize_boolean(@kase.case_originally_rejected) : nil,
-      @kase.respond_to?(:rejected_reasons) && @kase.rejected_reasons,
-      @kase.respond_to?(:other_rejected_reason) && @kase.other_rejected_reason,
+      @kase.respond_to?(:rejected_reasons) ? @kase.rejected_reasons : nil,
+      @kase.respond_to?(:other_rejected_reason) ? @kase.other_rejected_reason : nil,
     ]
   rescue StandardError => e
     raise CSVExporterError, "Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{e.class} #{e.message}"
