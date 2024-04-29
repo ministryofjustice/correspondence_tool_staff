@@ -49,9 +49,6 @@ class CSVExporter
     "Original internal deadline",
     "Original external deadline",
     "Number of days late against original deadline",
-    "Case originally rejected",
-    "Rejected reasons",
-    "Other rejected reason",
   ].freeze
 
   CSV_COLUMN_FIELDS = %w[
@@ -100,9 +97,6 @@ class CSVExporter
     original_internal_deadline
     original_external_deadline
     num_days_late_against_original_deadline
-    case_originally_rejected
-    rejected_reasons
-    other_rejected_reason
   ].freeze
 
   def initialize(kase)
@@ -164,10 +158,6 @@ class CSVExporter
       @kase.respond_to?(:original_internal_deadline) ? @kase.original_internal_deadline&.to_s : nil,
       @kase.respond_to?(:original_external_deadline) ? @kase.original_external_deadline&.to_s : nil,
       @kase.respond_to?(:original_external_deadline) ? @kase.num_days_late_against_original_deadline : nil,
-
-      @kase.respond_to?(:case_originally_rejected) ? humanize_boolean(@kase.case_originally_rejected) : nil,
-      @kase.respond_to?(:rejected_reasons) ? @kase.rejected_reasons : nil,
-      @kase.respond_to?(:other_rejected_reason) ? @kase.other_rejected_reason : nil,
     ]
   rescue StandardError => e
     raise CSVExporterError, "Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{e.class} #{e.message}"
