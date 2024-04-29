@@ -274,6 +274,9 @@ module Warehouse
         case_report.number_of_days_for_vetting = kase.number_of_days_for_vetting
         case_report.user_dealing_with_vetting = kase.user_dealing_with_vetting&.full_name
         case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
+        case_report.case_originally_rejected = humanize_boolean(kase.case_originally_rejected)
+        case_report.rejected_reasons = kase.rejected_reasons
+        case_report.other_rejected_reason = kase.other_rejected_reason
       end
 
       def process_offender_sar_complaint(kase, case_report)
