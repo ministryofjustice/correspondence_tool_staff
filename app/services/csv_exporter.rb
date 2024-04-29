@@ -167,6 +167,7 @@ class CSVExporter
 
       @kase.respond_to?(:case_originally_rejected) ? humanize_boolean(@kase.case_originally_rejected) : nil,
       @kase.respond_to?(:rejected_reasons) && @kase.rejected_reasons,
+      @kase.respond_to?(:other_rejected_reason) && @kase.other_rejected_reason,
     ]
   rescue StandardError => e
     raise CSVExporterError, "Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{e.class} #{e.message}"
