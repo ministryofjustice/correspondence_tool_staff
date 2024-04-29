@@ -31,8 +31,16 @@ describe CommissioningDocumentEmailService do
 
     it "sends an email for every contact email address" do
       expect(ActionNotificationsMailer).to receive(:commissioning_email).twice.and_return(mailer)
-      expect(mailer).to receive(:deliver_later).twice
+      expect(mailer).to receive(:deliver_later!).twice
       service.send!
+    end
+
+    it "uses the expected queue" do
+      expect {
+        service.send!
+      }.to(
+        have_enqueued_job.on_queue("correspondence_tool_staff_mailers").at_least(2).times,
+      )
     end
 
     it "sets commissioning document as sent" do
@@ -54,7 +62,7 @@ describe CommissioningDocumentEmailService do
 
       it "also sends an email to branston archives" do
         expect(ActionNotificationsMailer).to receive(:commissioning_email).exactly(3).times.and_return(mailer)
-        expect(mailer).to receive(:deliver_later).exactly(3).times
+        expect(mailer).to receive(:deliver_later!).exactly(3).times
         service.send!
       end
     end

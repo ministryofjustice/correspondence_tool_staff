@@ -59,6 +59,9 @@ module CorrespondencePlatform
     # Use MailDeliveryJob
     config.action_mailer.delivery_job = "ActionMailer::MailDeliveryJob"
 
+    # Set default queue name
+    config.action_mailer.deliver_later_queue_name = "mailers"
+
     config.after_initialize do
       # instantiate a ConfigurableStateMachine::Machine on start up. This will
       # force the validation of all state machine configuration file.
