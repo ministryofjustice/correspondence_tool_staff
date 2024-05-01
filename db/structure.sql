@@ -1350,8 +1350,8 @@ CREATE TABLE public.warehouse_case_reports (
     request_method character varying,
     sent_to_sscl date,
     rejected character varying DEFAULT 'No'::character varying,
-    case_originally_rejected boolean,
-    rejected_reasons character varying,
+    case_originally_rejected character varying,
+    rejected_reasons character varying[] DEFAULT '{}'::character varying[],
     other_rejected_reason character varying
 );
 
@@ -2446,4 +2446,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240315113554'),
 ('20240322151613'),
 ('20240422134737'),
-('20240422143916');
+('20240422143916'),
+('20240501152558');
