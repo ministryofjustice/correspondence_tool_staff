@@ -229,6 +229,30 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
     end
   end
 
+  describe "#rejected_reasons_select" do
+    it "returns hash with selection" do
+      rejected_case = create(:offender_sar_case, :rejected)
+      expect(described_class.rejected_reasons_selection(rejected_case)).to match({ "cctv_bwcv" => "No",
+                                                                                   "change_of_name_certificate" => "No",
+                                                                                   "court_data_request" => "Yes",
+                                                                                   "data_previously_requested" => "No",
+                                                                                   "further_identification" => "Yes",
+                                                                                   "identification_for_ex_inmate_probation" => "No",
+                                                                                   "illegible_handwriting_unreadable_content" => "No",
+                                                                                   "id_required" => "No",
+                                                                                   "invalid_authority" => "No",
+                                                                                   "medical_data" => "No",
+                                                                                   "observation_book_entries" => "No",
+                                                                                   "police_data" => "No",
+                                                                                   "social_services_data" => "No",
+                                                                                   "telephone_recordings_logs" => "No",
+                                                                                   "telephone_transcripts" => "No",
+                                                                                   "third_party_identification" => "No",
+                                                                                   "what_data_no_data_requested" => "No",
+                                                                                   "other" => "No" })
+    end
+  end
+
   def compare_closuredetails(kase, result, case_report)
     if kase.ico?
       original_case_csv_row = CSVExporter.new(kase.original_case).to_csv
