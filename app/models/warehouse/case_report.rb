@@ -261,6 +261,17 @@ module Warehouse
         boolean ? "Yes" : nil
       end
 
+      def rejected_reasons_selection(kase)
+        reasons_hash = Case::SAR::Offender::REJECTED_REASONS.dup
+        reasons_hash.each do |key, _|
+          reasons_hash[key] = if kase.rejected_reasons.include?(key)
+                                "Yes"
+                              else
+                                "No"
+                              end
+        end
+      end
+
       def process_class_related_process(kase, case_report)
         (CLASS_CASE_REPORT_DATA_PROCESSES[kase.class.name] || []).each do |process_function_name|
           send(process_function_name, kase, case_report)
@@ -275,7 +286,7 @@ module Warehouse
         case_report.user_dealing_with_vetting = kase.user_dealing_with_vetting&.full_name
         case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
         case_report.case_originally_rejected = humanize_boolean(kase.case_originally_rejected)
-        case_report.rejected_reasons = kase.rejected_reasons
+        case_report.rejected_reasons = rejected_reasons_selection(kase)
         case_report.other_rejected_reason = kase.other_rejected_reason
       end
 
