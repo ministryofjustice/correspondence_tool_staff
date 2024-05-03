@@ -287,7 +287,6 @@ module Warehouse
         case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
         case_report.case_originally_rejected = humanize_boolean(kase.case_originally_rejected)
         case_report.rejected_reasons = rejected_reasons_selection(kase)
-        debugger
         case_report.other_rejected_reason = kase.other_rejected_reason
       end
 
