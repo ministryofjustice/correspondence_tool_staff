@@ -15,7 +15,7 @@
 #  contact_type_id     :bigint
 #  data_request_name   :string
 #  escalation_name     :string
-#  escalation_email    :string
+#  escalation_emails   :string
 #
 require "rails_helper"
 
