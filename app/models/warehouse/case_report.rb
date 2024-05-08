@@ -76,6 +76,9 @@
 #  request_method                              :string
 #  sent_to_sscl                                :date
 #  rejected                                    :string           default("No")
+#  case_originally_rejected                    :string
+#  other_rejected_reason                       :string
+#  rejected_reasons                            :json
 #
 module Warehouse
   class CaseReport < ApplicationRecord

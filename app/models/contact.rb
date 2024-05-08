@@ -15,7 +15,7 @@
 #  contact_type_id     :bigint
 #  data_request_name   :string
 #  escalation_name     :string
-#  escalation_emails    :string
+#  escalation_emails   :string
 #
 class Contact < ApplicationRecord
   EMAIL_REGEX = /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
