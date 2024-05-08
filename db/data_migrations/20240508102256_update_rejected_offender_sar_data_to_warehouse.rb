@@ -19,4 +19,3 @@ class UpdateRejectedOffenderSARDataToWarehouse < ActiveRecord::DataMigration
     SQL
   end
 end
-
