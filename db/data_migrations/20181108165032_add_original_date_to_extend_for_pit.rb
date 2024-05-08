@@ -1,4 +1,4 @@
-class AddOriginalDateToExtendForPit < ActiveRecord::DataMigration
+class AddOriginalDateToExtendForPIT < ActiveRecord::DataMigration
   def up
     transitions = CaseTransition.where(event: "extend_for_pit")
     transitions.each do |transition|
