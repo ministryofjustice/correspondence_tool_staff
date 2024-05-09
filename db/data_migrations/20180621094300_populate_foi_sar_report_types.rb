@@ -1,4 +1,4 @@
-class PopulateFOIsarReportTypes < ActiveRecord::DataMigration
+class PopulateFOISARReportTypes < ActiveRecord::DataMigration
   def up
     ReportType.reset_column_information
     attrs = {
