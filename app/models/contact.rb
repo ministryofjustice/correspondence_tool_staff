@@ -1,8 +1,31 @@
+# == Schema Information
+#
+# Table name: contacts
+#
+#  id                  :bigint           not null, primary key
+#  name                :string
+#  address_line_1      :string
+#  address_line_2      :string
+#  town                :string
+#  county              :string
+#  postcode            :string
+#  data_request_emails :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  contact_type_id     :bigint
+#  data_request_name   :string
+#  escalation_name     :string
+#  escalation_emails   :string
+#
 class Contact < ApplicationRecord
+  EMAIL_REGEX = /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+
   validates :name, presence: true
   validates :address_line_1, presence: true
   validates :postcode, presence: true
   validates :contact_type, presence: true
+  validates :escalation_name, presence: true, if: :prison?
+  validates :escalation_emails, presence: true, if: :prison?
   validate :validate_emails
 
   belongs_to :contact_type, class_name: "CategoryReference", inverse_of: :contacts
@@ -37,6 +60,10 @@ class Contact < ApplicationRecord
     data_request_emails&.split("\n")
   end
 
+  def prison?
+    contact_type&.code == "prison"
+  end
+
 private
 
   def format_address(separator)
@@ -52,10 +79,19 @@ private
   end
 
   def validate_emails
-    return if data_request_emails.blank?
+    if prison? && escalation_emails.present?
+      escalation_emails.split.each do |email|
+        next if email =~ EMAIL_REGEX
 
-    data_request_emails.split.each do |email|
-      next if email =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+        errors.add(
+          :escalation_emails,
+          :invalid,
+        )
+      end
+    end
+
+    data_request_emails.present? && data_request_emails.split.each do |email|
+      next if email =~ EMAIL_REGEX
 
       errors.add(
         :data_request_emails,

@@ -8,7 +8,7 @@ namespace :kilo_map do
   task :load_sars, [:filename] => :environment do |_task, args|
     if args[:filename].present?
       require Rails.root.join("lib/tasks/rake_task_helpers/sars_loader.rb")
-      loader = SarsLoader.new(args[:filename])
+      loader = SARsLoader.new(args[:filename])
       loader.run
     else
       puts "ERROR! Invoke with filename, e.g. 'rake kilo_map:load_sars[filename]'"

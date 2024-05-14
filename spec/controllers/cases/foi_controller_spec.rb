@@ -2,7 +2,7 @@ require "rails_helper"
 require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
-RSpec.describe Cases::FoiController, type: :controller do
+RSpec.describe Cases::FOIController, type: :controller do
   describe "#new" do
     let(:case_types) do
       %w[

@@ -1,4 +1,4 @@
-class AddHasPitExtensionPropertyToCases < ActiveRecord::DataMigration
+class AddHasPITExtensionPropertyToCases < ActiveRecord::DataMigration
   def up
     # only try to fix up non-deleted cases
     Case::Base.all.each do |kase|

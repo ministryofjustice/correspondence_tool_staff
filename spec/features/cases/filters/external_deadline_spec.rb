@@ -1,7 +1,9 @@
 require "rails_helper"
 
 def working_hours
-  Time.zone.today.workday? && Time.zone.now.during_business_hours?
+  freeze_time do
+    Time.zone.today.workday? && Time.zone.now.during_business_hours?
+  end
 end
 
 # rubocop:disable RSpec/BeforeAfterAll
@@ -10,42 +12,44 @@ feature "filtering by external deadline", if: working_hours do
 
   describe "external deadline filter", js: true do
     before(:all) do
-      @all_cases = %i[
-        std_draft_foi
-        std_closed_foi
-      ]
-
-      @setup = StandardSetup.new(only_cases: @all_cases)
-
-      @case_due_today = create :case,
-                               received_date: 20.business_days.ago,
-                               subject: "prison guards today"
-      @case_due_next_3_days = create :case,
-                                     received_date: 18.business_days.ago,
-                                     subject: "prison guards next 3 days"
-      @case_due_next_8_days = create :case,
-                                     received_date: 12.business_days.ago,
-                                     subject: "prison guards next 8 days"
-
-      @all_case_numbers = @setup.cases.values.map(&:number) +
-        [
-          @case_due_today.number,
-          @case_due_next_3_days.number,
-          @case_due_next_8_days.number,
+      freeze_time do
+        @all_cases = %i[
+          std_draft_foi
+          std_closed_foi
         ]
 
-      @all_open_case_numbers = [@setup.std_draft_foi.number,
-                                @case_due_today.number,
-                                @case_due_next_3_days.number,
-                                @case_due_next_8_days.number]
+        @setup = StandardSetup.new(only_cases: @all_cases)
 
-      # add a common search term to them all
-      #
-      @setup.cases.each do |_kase_name, kase|
-        kase.subject += " prison guards"
-        kase.save!
+        @case_due_today = create :case,
+                                 received_date: 20.business_days.ago,
+                                 subject: "prison guards today"
+        @case_due_next_3_days = create :case,
+                                       received_date: 18.business_days.ago,
+                                       subject: "prison guards next 3 days"
+        @case_due_next_8_days = create :case,
+                                       received_date: 12.business_days.ago,
+                                       subject: "prison guards next 8 days"
+
+        @all_case_numbers = @setup.cases.values.map(&:number) +
+          [
+            @case_due_today.number,
+            @case_due_next_3_days.number,
+            @case_due_next_8_days.number,
+          ]
+
+        @all_open_case_numbers = [@setup.std_draft_foi.number,
+                                  @case_due_today.number,
+                                  @case_due_next_3_days.number,
+                                  @case_due_next_8_days.number]
+
+        # add a common search term to them all
+        #
+        @setup.cases.each do |_kase_name, kase|
+          kase.subject += " prison guards"
+          kase.save!
+        end
+        Case::Base.update_all_indexes
       end
-      Case::Base.update_all_indexes
     end
 
     after(:all) do
@@ -59,19 +63,27 @@ feature "filtering by external deadline", if: working_hours do
       end
 
       scenario "filtering for today" do
-        filter_today_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        freeze_time do
+          filter_today_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        end
       end
 
       scenario "filtering for the next 3 days" do
-        filter_next_three_days_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        freeze_time do
+          filter_next_three_days_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        end
       end
 
       scenario "filtering for the next 10 days" do
-        filter_next_ten_days_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        freeze_time do
+          filter_next_ten_days_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        end
       end
 
       scenario "filtering for custom from and to date" do
-        filter_custom_dates_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        freeze_time do
+          filter_custom_dates_and_expect_correct_results(open_cases_page, @all_open_case_numbers)
+        end
       end
     end
 
@@ -85,19 +97,27 @@ feature "filtering by external deadline", if: working_hours do
       end
 
       scenario "filtering for today" do
-        filter_today_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        freeze_time do
+          filter_today_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        end
       end
 
       scenario "filtering for the next 3 days" do
-        filter_next_three_days_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        freeze_time do
+          filter_next_three_days_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        end
       end
 
       scenario "filtering for the next 10 days" do
-        filter_next_ten_days_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        freeze_time do
+          filter_next_ten_days_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        end
       end
 
       scenario "filtering for custom from and to date" do
-        filter_custom_dates_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        freeze_time do
+          filter_custom_dates_and_expect_correct_results(cases_search_page, @all_case_numbers)
+        end
       end
     end
 

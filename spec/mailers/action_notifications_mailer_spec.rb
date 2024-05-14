@@ -443,5 +443,43 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         }.to change(DataRequestEmail, :count).by 0
       end
     end
+
+    describe "#set_notify_id" do
+      let(:data_request_email) { create(:data_request_email) }
+      let(:notify_id) { "35daaa7a-2859-4c39-a5f2-bfdb17a053f4" }
+      let(:message) do
+        OpenStruct.new(
+          govuk_notify_response: OpenStruct.new(id: notify_id),
+        )
+      end
+
+      it "updates object with notify ID" do
+        mailer = described_class.new
+        allow(mailer).to receive(:message).and_return(message)
+        allow(mailer).to receive(:data_request_email).and_return(data_request_email)
+
+        mailer.send(:set_notify_id)
+        expect(data_request_email.notify_id).to eq notify_id
+      end
+    end
+  end
+
+  describe "rpi_email" do
+    let(:rpi) { create :personal_information_request }
+    let(:target) { :branston }
+    let(:mail) { described_class.rpi_email(rpi, target) }
+
+    it "sets the template" do
+      expect(mail.govuk_notify_template)
+        .to eq "5e63f6c1-e7d6-47da-845c-fa47343ab882"
+    end
+
+    it "personalises the email" do
+      expect(mail.govuk_notify_personalisation[:content]).to eq rpi.attachment_url(target)
+    end
+
+    it "sets the To address of the email based on the target" do
+      expect(mail.to).to include PersonalInformationRequest.email_for_target(target)
+    end
   end
 end

@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: data_requests
+#
+#  id                      :integer          not null, primary key
+#  case_id                 :integer          not null
+#  user_id                 :integer          not null
+#  location                :string
+#  request_type            :enum             not null
+#  date_requested          :date             not null
+#  cached_date_received    :date
+#  cached_num_pages        :integer          default(0), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  request_type_note       :text             default(""), not null
+#  date_from               :date
+#  date_to                 :date
+#  completed               :boolean          default(FALSE), not null
+#  contact_id              :bigint
+#  email_branston_archives :boolean          default(FALSE)
+#
 class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user

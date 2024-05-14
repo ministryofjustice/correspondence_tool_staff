@@ -30,22 +30,6 @@ module PageObjects
           town.set details[:town] if details[:town]
           county.set details[:county] if details[:county]
           postcode.set details[:postcode] if details[:postcode]
-          set_contact_type(details[:contact_type])
-        end
-
-      private
-
-        def set_contact_type(contact_type)
-          return unless contact_type
-
-          case contact_type
-          when "prison"
-            choose "Prison", visible: false
-          when "probation"
-            choose "Probation", visible: false
-          when "solicitor"
-            choose "Solicitor", visible: false
-          end
         end
       end
     end

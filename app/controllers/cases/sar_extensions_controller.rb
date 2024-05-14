@@ -1,5 +1,5 @@
 module Cases
-  class SarExtensionsController < ApplicationController
+  class SARExtensionsController < ApplicationController
     include SetupCase
 
     before_action :set_case, only: %i[new create destroy]

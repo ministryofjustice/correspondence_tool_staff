@@ -1,7 +1,10 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  resources :contacts, except: :show
+  resources :contacts, except: :show do
+    get "/new_details", on: :collection, to: "contacts#new_details"
+    post "/new_details", on: :collection, to: "contacts#new_details"
+  end
 
   get "/contacts_search", to: "contacts#contacts_search"
 
@@ -91,6 +94,8 @@ Rails.application.routes.draw do
       patch "/move_case_back", on: :member, to: "offender_sar#confirm_move_case_back", as: "confirm_move_case_back"
       get "/record_reason_for_lateness", on: :member, to: "offender_sar#record_reason_for_lateness", as: "record_reason_for_lateness"
       patch "/record_reason_for_lateness", on: :member, to: "offender_sar#confirm_record_reason_for_lateness", as: "confirm_record_reason_for_lateness"
+      get "/accepted_date_received", on: :member, to: "offender_sar#accepted_date_received", as: "accepted_date_received"
+      patch "/accepted_date_received", on: :member, to: "offender_sar#confirm_accepted_date_received", as: "confirm_accepted_date_received"
       patch "/confirm_update_partial_flags", on: :member, to: "offender_sar#confirm_update_partial_flags", as: "confirm_update_partial_flags"
       patch "/confirm_sent_to_sscl", on: :member, to: "offender_sar#confirm_sent_to_sscl", as: "confirm_sent_to_sscl"
       member do
@@ -298,6 +303,7 @@ Rails.application.routes.draw do
       get "users" => "users#index"
       get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
+      get "/dashboard/feedback/:year" => "dashboard#feedback_year", as: :dashboard_feedback_year
       get "/dashboard/exception" => "dashboard#exception"
       get "/dashboard/search_queries" => "dashboard#search_queries"
       get "/dashboard/list_queries" => "dashboard#list_queries"
@@ -310,6 +316,12 @@ Rails.application.routes.draw do
       resources :teams, only: :index
     end
   end
+
+  namespace :api do
+    post "rpi" => "rpi#create"
+  end
+
+  get "rpi/:target/:id" => "rpi#download", as: :rpi_file_download
 
   get "ping", to: "heartbeat#ping", format: :json
   get "healthcheck", to: "heartbeat#healthcheck", as: "healthcheck", format: :json

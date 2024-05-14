@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R901OffenderSarCasesReport do
+  describe R901OffenderSARCasesReport do
     before(:all) { DbHousekeeping.clean(seed: true) }
 
     after(:all) do
@@ -50,6 +50,34 @@ module Stats
           "Waiting for data",
           offender_sar_case.num_days_taken,
           "No",
+          "No",
+        )
+      end
+
+      it "returns correct columns for rejected offender sar" do
+        report = described_class.new
+        rejected_offender_sar_case = create :offender_sar_case, :rejected,
+                                            subject_type: "ex_probation_service_user",
+                                            subject_full_name: "testing analyse_case"
+        result = report.analyse_case(rejected_offender_sar_case)
+        expect(result).to include(
+          rejected_offender_sar_case.number,
+          rejected_offender_sar_case.decorate.pretty_type,
+          "",
+          "",
+          rejected_offender_sar_case.received_date,
+          rejected_offender_sar_case.external_deadline,
+          "",
+          "Data subject",
+          nil,
+          "testing analyse_case",
+          "Ex-probation service user",
+          0,
+          "in time",
+          "Invalid submission",
+          rejected_offender_sar_case.num_days_taken,
+          "No",
+          "Yes",
         )
       end
 
@@ -98,6 +126,8 @@ module Stats
         @sar_4 = create :accepted_sar, identifier: "sar-4"
         @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: "osar-4"
 
+        @rejected_offender_sar_1 = create :offender_sar_case, :rejected, identifier: "rosar-1"
+
         @offender_sar_complaint_1 = create :offender_sar_complaint, :ready_to_copy, identifier: "osar-complaint-4"
       end
 
@@ -108,6 +138,7 @@ module Stats
           @offender_sar_2,
           @offender_sar_3,
           @offender_sar_4,
+          @rejected_offender_sar_1,
           @offender_sar_complaint_1.original_case,
           @offender_sar_complaint_1,
         ])

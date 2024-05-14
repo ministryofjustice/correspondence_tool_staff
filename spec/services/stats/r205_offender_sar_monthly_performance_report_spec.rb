@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R205OffenderSarMonthlyPerformanceReport do
+  describe R205OffenderSARMonthlyPerformanceReport do
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Monthly report"
@@ -11,7 +11,7 @@ module Stats
 
     describe ".case_analyzer" do
       it "returns correct case_analyzer" do
-        expect(described_class.case_analyzer).to eq Stats::OffenderSarAnalyser
+        expect(described_class.case_analyzer).to eq Stats::OffenderSARAnalyser
       end
     end
 
@@ -23,6 +23,8 @@ module Stats
     end
 
     describe "#case_scope" do
+      let(:user) { find_or_create :branston_user }
+
       before do
         create_report_type(abbr: :r205)
       end
@@ -45,6 +47,8 @@ module Stats
           @sar_4 = create :accepted_sar, identifier: "sar-4", received_date: @period_end + 61.minutes
           @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: "osar-4", received_date: @period_end + 61.minutes
 
+          @rejected_offender_sar_1 = create :offender_sar_case, :rejected, identifier: "rosar-1", received_date: @period_start + 5.days
+
           @offender_sar_complaint = create :offender_sar_complaint, :ready_to_copy, identifier: "ocomp-5", received_date: @period_end + 61.minutes
         end
       end
@@ -57,6 +61,17 @@ module Stats
         report = described_class.new(period_start: @period_start, period_end: @period_end)
         expect(report.case_scope).to match_array([@offender_sar_2, @offender_sar_3, @offender_sar_4])
         expect(report.case_scope).not_to include [@offender_sar_complaint]
+      end
+
+      it "does not return 'rejected' Offender SAR cases within the selected period" do
+        report = described_class.new(period_start: @period_start, period_end: @period_end)
+        expect(report.case_scope).not_to include [@rejected_offender_sar_1]
+      end
+
+      it "does not return offender sar cases that transitioned from 'rejected' directly to 'closed' within the selected period" do
+        report = described_class.new(period_start: @period_start, period_end: @period_end)
+        @rejected_offender_sar_1.close(user)
+        expect(report.case_scope).not_to include [@rejected_offender_sar_1]
       end
 
       describe "stats values" do

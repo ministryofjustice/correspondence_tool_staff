@@ -1,3 +1,85 @@
+# == Schema Information
+#
+# Table name: warehouse_case_reports
+#
+#  case_id                                     :integer          not null, primary key
+#  created_at                                  :datetime         not null
+#  updated_at                                  :datetime         not null
+#  creator_id                                  :integer
+#  responding_team_id                          :integer
+#  responder_id                                :integer
+#  casework_officer_user_id                    :integer
+#  business_group_id                           :integer
+#  directorate_id                              :integer
+#  director_general_name_property_id           :integer
+#  director_name_property_id                   :integer
+#  deputy_director_name_property_id            :integer
+#  number                                      :string
+#  case_type                                   :string
+#  current_state                               :string
+#  responding_team                             :string
+#  responder                                   :string
+#  date_received                               :date
+#  internal_deadline                           :date
+#  external_deadline                           :date
+#  date_responded                              :date
+#  date_compliant_draft_uploaded               :date
+#  trigger                                     :string
+#  name                                        :string
+#  requester_type                              :string
+#  message                                     :string
+#  info_held                                   :string
+#  outcome                                     :string
+#  refusal_reason                              :string
+#  exemptions                                  :string
+#  postal_address                              :string
+#  email                                       :string
+#  appeal_outcome                              :string
+#  third_party                                 :string
+#  reply_method                                :string
+#  sar_subject_type                            :string
+#  sar_subject_full_name                       :string
+#  business_unit_responsible_for_late_response :string
+#  extended                                    :string
+#  extension_count                             :integer
+#  deletion_reason                             :string
+#  casework_officer                            :string
+#  created_by                                  :string
+#  date_created                                :datetime
+#  business_group                              :string
+#  directorate_name                            :string
+#  director_general_name                       :string
+#  director_name                               :string
+#  deputy_director_name                        :string
+#  draft_in_time                               :string
+#  in_target                                   :string
+#  number_of_days_late                         :integer
+#  info_held_status_id                         :integer
+#  refusal_reason_id                           :integer
+#  outcome_id                                  :integer
+#  appeal_outcome_id                           :integer
+#  number_of_days_taken                        :integer
+#  number_of_exempt_pages                      :integer
+#  number_of_final_pages                       :integer
+#  third_party_company_name                    :string
+#  number_of_days_taken_after_extension        :integer
+#  complaint_subtype                           :string
+#  priority                                    :string
+#  total_cost                                  :decimal(10, 2)
+#  settlement_cost                             :decimal(10, 2)
+#  user_dealing_with_vetting                   :string
+#  user_id_dealing_with_vetting                :integer
+#  number_of_days_for_vetting                  :integer
+#  original_external_deadline                  :date
+#  original_internal_deadline                  :date
+#  num_days_late_against_original_deadline     :integer
+#  request_method                              :string
+#  sent_to_sscl                                :date
+#  rejected                                    :string           default("No")
+#  case_originally_rejected                    :string
+#  other_rejected_reason                       :string
+#  rejected_reasons                            :json
+#
 require "rails_helper"
 
 RSpec.describe ::Warehouse::CaseReport, type: :model do
@@ -8,6 +90,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       create(:closed_case, :fully_refused_exempt_s40, :extended_for_pit),
       create(:sar_case, :extended_deadline_sar),
       create(:offender_sar_case, :third_party),
+      create(:offender_sar_case, :rejected),
       create(:ico_foi_case),
       create(:accepted_ico_sar_case),
       create(:awaiting_responder_ot_ico_foi),
@@ -146,6 +229,30 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       time_taken = (Time.zone.now.to_f - started.to_f).to_f
 
       expect(time_taken).to be >= 10.0 # seconds to wait before next batch
+    end
+  end
+
+  describe "#rejected_reasons_selection" do
+    it "returns hash with selection" do
+      rejected_case = create(:offender_sar_case, :rejected)
+      expect(described_class.rejected_reasons_selection(rejected_case)).to match({ "cctv_bwcv" => "No",
+                                                                                   "change_of_name_certificate" => "No",
+                                                                                   "court_data_request" => "Yes",
+                                                                                   "data_previously_requested" => "No",
+                                                                                   "further_identification" => "Yes",
+                                                                                   "identification_for_ex_inmate_probation" => "No",
+                                                                                   "illegible_handwriting_unreadable_content" => "No",
+                                                                                   "id_required" => "No",
+                                                                                   "invalid_authority" => "No",
+                                                                                   "medical_data" => "No",
+                                                                                   "observation_book_entries" => "No",
+                                                                                   "police_data" => "No",
+                                                                                   "social_services_data" => "No",
+                                                                                   "telephone_recordings_logs" => "No",
+                                                                                   "telephone_transcripts" => "No",
+                                                                                   "third_party_identification" => "No",
+                                                                                   "what_data_no_data_requested" => "No",
+                                                                                   "other" => "No" })
     end
   end
 

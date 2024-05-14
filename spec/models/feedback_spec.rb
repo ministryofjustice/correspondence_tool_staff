@@ -23,4 +23,13 @@ RSpec.describe Feedback, type: :model do
     it { is_expected.to validate_presence_of(:comment) }
     it { is_expected.to validate_presence_of(:email)   }
   end
+
+  describe "by_year scope" do
+    let(:feedback_2021) { create(:feedback, created_at: Date.new(2021, 1, 18)) }
+    let(:feedback_2023) { create(:feedback, created_at: Date.new(2023, 5, 19)) }
+
+    it "only returns feedback from the specified year" do
+      expect(described_class.by_year(2023)).to eq [feedback_2023]
+    end
+  end
 end

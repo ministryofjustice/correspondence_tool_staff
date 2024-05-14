@@ -1,4 +1,4 @@
-class AddAdditionalColumnsForOffenderSarToWarehouseCaseReports < ActiveRecord::Migration[5.2]
+class AddAdditionalColumnsForOffenderSARToWarehouseCaseReports < ActiveRecord::Migration[5.2]
   def change
     %w[
       number_of_days_taken

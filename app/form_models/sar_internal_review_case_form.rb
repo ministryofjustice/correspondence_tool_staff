@@ -1,4 +1,4 @@
-module SarInternalReviewCaseForm
+module SARInternalReviewCaseForm
   extend ActiveSupport::Concern
 
   STEPS = %w[link-sar-case

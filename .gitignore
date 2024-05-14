@@ -35,7 +35,8 @@ env.sh
 # Ignore .DS_Store in all directories
 .DS_Store
 
-/public/assets
+public/assets/*
+!public/assets/govuk-frontend.*
 
 dump.rdb
 
@@ -61,6 +62,7 @@ coverage
 !public/robots.txt
 !lib/assets/kilo_map.csv
 !spec/fixtures/*.xlsx
+!spec/fixtures/*.txt
 !tmp/parallel_runtime_rspec.log
 
 # Generated documentation.
@@ -69,3 +71,5 @@ doc
 
 # ignore secret files
 *secret*.*
+
+.idea/

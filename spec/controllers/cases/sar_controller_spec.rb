@@ -2,7 +2,7 @@ require "rails_helper"
 require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
-RSpec.describe Cases::SarController, type: :controller do
+RSpec.describe Cases::SARController, type: :controller do
   describe "authentication" do
     let(:params) do
       {

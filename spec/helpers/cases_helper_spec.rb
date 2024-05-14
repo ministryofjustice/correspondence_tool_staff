@@ -230,6 +230,13 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           )
       end
     end
+
+    context "when event == :accepted_date_received" do
+      it "generates HTML that links to the accepted date received page" do
+        @case = create(:offender_sar_case, :rejected)
+        expect(action_button_for(:accepted_date_received)).to eq("<a id=\"action--accepted-date-received\" class=\"button\" href=\"/cases/offender_sars/#{@case.id}/accepted_date_received\">Create valid case</a>")
+      end
+    end
   end
 
   describe "#case_uploaded_request_files_class" do

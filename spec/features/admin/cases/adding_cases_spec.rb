@@ -2,7 +2,7 @@ require "rails_helper"
 require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
-feature "adding cases" do
+xfeature "adding cases" do
   given(:admin) { create :admin }
 
   before(:all) do

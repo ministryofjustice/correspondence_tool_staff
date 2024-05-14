@@ -3,7 +3,7 @@ require "csv"
 # This class is used for loading a list of teams into the dev database from the R006_kilo_map CSV
 # file (useful for testing scripts to assign correpsondence types to certain business units only)
 #
-class SarsLoader
+class SARsLoader
   def initialize(filename)
     @filename = filename
     @foi = CorrespondenceType.find_by(abbreviation: "FOI")

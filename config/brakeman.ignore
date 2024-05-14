@@ -47,6 +47,74 @@
       "note": "There is no danger in a HEAD request bypassing the .get? check"
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "33ebca1e717262fbc8f0a0837194eecc0d3f4234e86a01d5b6ba82ddf599d101",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/cases/show.html.slim",
+      "line": 79,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"cases/#{NewOverturnedICOCaseService.new(params[:id]).original_ico_appeal.decorate.type_abbreviation.parameterize.underscore}/case_details\", { :locals => ({ :case_details => NewOverturnedICOCaseService.new(params[:id]).original_ico_appeal.decorate, :link_type => nil, :allow_editing => NewOverturnedICOCaseService.new(params[:id]).original_ico_appeal.decorate.editable? }) })",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::OverturnedICOFOIController",
+          "method": "new_overturned_ico_for",
+          "line": 12,
+          "file": "app/controllers/concerns/overturned_case.rb",
+          "rendered": {
+            "name": "cases/show",
+            "file": "app/views/cases/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "388aeb272d6eebb62685ae89373c083785efc817ecc917441c61ed3066854267",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/cases/show.html.slim",
+      "line": 50,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "action_buttons_for_allowed_events(NewOverturnedICOCaseService.new(params[:id]).original_ico_appeal.decorate, :extend_for_pit, :remove_pit_extension).join(\" \")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::OverturnedICOFOIController",
+          "method": "new_overturned_ico_for",
+          "line": 12,
+          "file": "app/controllers/concerns/overturned_case.rb",
+          "rendered": {
+            "name": "cases/show",
+            "file": "app/views/cases/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "3d91aef01954b313c312d5554cdd8a007a604f76f5ce0605085c17e999f12135",
@@ -173,36 +241,48 @@
       "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
     },
     {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "707e947cbc769047491311c19059d797e1c7410fee0de325f6d4d1eea54ef02c",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/cases/show.html.slim",
-      "line": 79,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(partial => \"cases/#{NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate.type_abbreviation.parameterize.underscore}/case_details\", { :locals => ({ :case_details => NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate, :link_type => nil, :allow_editing => NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate.editable? }) })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Cases::OverturnedIcoFoiController",
-          "method": "new_overturned_ico_for",
-          "line": 12,
-          "file": "app/controllers/concerns/overturned_case.rb",
-          "rendered": {
-            "name": "cases/show",
-            "file": "app/views/cases/show.html.slim"
-          }
-        }
-      ],
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "4db895defeccdd65a65da20a0051cc883db344224c28e786193d14726304f3be",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/cases/offender_sar_controller.rb",
+      "line": 97,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@case.state_machine.send(\"#{params[:transition_name]}!\", params_for_transition)",
+      "render_path": null,
       "location": {
-        "type": "template",
-        "template": "cases/show"
+        "type": "method",
+        "class": "Cases::OffenderSARController",
+        "method": "transition"
       },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
+      "user_input": "params[:transition_name]",
+      "confidence": "High",
       "cwe_id": [
-        22
+        77
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "5b5f3e63501cb064c6d174c2ed50066f9a870972d05e20c7ec0251dce7d67913",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/rpi_controller.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(PersonalInformationRequest.find_by!(:submission_id => params[:id]).temporary_url(params[:target]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "RpiController",
+        "method": "download"
+      },
+      "user_input": "PersonalInformationRequest.find_by!(:submission_id => params[:id]).temporary_url(params[:target])",
+      "confidence": "High",
+      "cwe_id": [
+        601
       ],
       "note": ""
     },
@@ -321,40 +401,6 @@
       "note": "False positive - see commit message"
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "9809c8ef8339317eed4e032bd3c2ff36a9f6637d75f8e5d0101fde7ea2b815f2",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped parameter value",
-      "file": "app/views/cases/show.html.slim",
-      "line": 50,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "action_buttons_for_allowed_events(NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate, :extend_for_pit, :remove_pit_extension).join(\" \")",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Cases::OverturnedIcoFoiController",
-          "method": "new_overturned_ico_for",
-          "line": 12,
-          "file": "app/controllers/concerns/overturned_case.rb",
-          "rendered": {
-            "name": "cases/show",
-            "file": "app/views/cases/show.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "cases/show"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "False positive - vals passed aren't from user input"
-    },
-    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "9863a606e5d2068ebfaa1bc610802142c2fadabee0fee58bf3980c34747ff58c",
@@ -397,29 +443,6 @@
       "confidence": "Medium",
       "cwe_id": [
         915
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Dangerous Send",
-      "warning_code": 23,
-      "fingerprint": "c15ab64c38a8ec755de75720fc037939b65fb73b8e222cf7546411faa843bea1",
-      "check_name": "Send",
-      "message": "User controlled method execution",
-      "file": "app/controllers/cases/offender_sar_controller.rb",
-      "line": 97,
-      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
-      "code": "@case.state_machine.send(\"#{params[:transition_name]}!\", params_for_transition)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Cases::OffenderSarController",
-        "method": "transition"
-      },
-      "user_input": "params[:transition_name]",
-      "confidence": "High",
-      "cwe_id": [
-        77
       ],
       "note": ""
     },
@@ -515,6 +538,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-08-25 09:53:48 +0100",
+  "updated": "2024-04-09 10:01:32 +0100",
   "brakeman_version": "5.4.1"
 }

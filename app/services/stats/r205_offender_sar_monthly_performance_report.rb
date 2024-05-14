@@ -1,5 +1,5 @@
 module Stats
-  class R205OffenderSarMonthlyPerformanceReport < BaseMonthlyPerformanceReport
+  class R205OffenderSARMonthlyPerformanceReport < BaseMonthlyPerformanceReport
     class << self
       def title
         "Monthly report"
@@ -18,12 +18,12 @@ module Stats
       end
 
       def case_analyzer
-        Stats::OffenderSarAnalyser
+        Stats::OffenderSARAnalyser
       end
     end
 
     def case_scope
-      Case::Base.offender_sar.where(received_date: @period_start..@period_end)
+      Case::Base.offender_sar.where(received_date: @period_start..@period_end).where.not("LEFT(cases.number, 1) = 'R'")
     end
 
     def report_type
@@ -31,8 +31,8 @@ module Stats
     end
 
     def add_report_callbacks
-      @stats.add_callback(:before_finalise, -> { OffenderSarCalculations::Callbacks.calculate_total_columns(@stats) })
-      @stats.add_callback(:before_finalise, -> { OffenderSarCalculations::Callbacks.calculate_percentages(@stats) })
+      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_total_columns(@stats) })
+      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_percentages(@stats) })
     end
   end
 end

@@ -31,14 +31,13 @@ feature "Contacts address book", js: true do
   end
 
   given!(:contact_3) do
-    create(:contact,
-           name: "HMP Wellingsville",
+    create(:prison,
+           name: "Wellingsville",
            address_line_1: "789 some lane",
            address_line_2: "little heath",
            town: "bakersville",
            county: "Mercia",
-           postcode: "TH8 9KO",
-           contact_type: CategoryReference.find_by(code: "prison"))
+           postcode: "TH8 9KO")
   end
 
   before(:all) do
@@ -59,12 +58,16 @@ feature "Contacts address book", js: true do
   scenario "branston user can view addresses and create a new address" do
     click_on "Addresses"
     then_expect_heading_to_read_address_book
-    and_expect_contact_details_to_be_present
 
     click_on "Add new address"
-    and_fill_in_and_submit_new_contact_details
+    and_expect_contact_type_details_to_be_present
+    and_fill_in_and_submit_new_contact_type_details
+
+    and_fill_in_and_submit_new_contact_address_details
     and_expect_to_see_success_message
+
     then_expect_new_details_to_be_present
+    then_expect_new_contact_type_to_be_present
   end
 
   scenario "user can edit an existing address" do
@@ -252,7 +255,7 @@ feature "Contacts address book", js: true do
 
   def and_only_solicitor_addressess_are_available
     expect(page).to have_content("Solicitors LLP\n456 fake street")
-    expect(page).not_to have_content("HMP Wellingsville")
+    expect(page).not_to have_content("Wellingsville")
   end
 
   def when_i_open_the_address_selection_dialogue
@@ -275,7 +278,7 @@ feature "Contacts address book", js: true do
     click_link "Back"
     cases_new_offender_sar_subject_details_page.find_an_address_button.click
     expect(page).to have_content("HMP halifax")
-    expect(page).to have_content("HMP Wellingsville")
+    expect(page).to have_content("Wellingsville")
     expect(page).not_to have_content("Solicitors LLP")
   end
 
@@ -297,7 +300,7 @@ feature "Contacts address book", js: true do
   def when_i_navigate_to_offender_sar_subject_page
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-    click_link "Offender SAR - Offender Subject Access Request"
+    click_link "Offender SAR - Offender subject access request"
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
   end
 
@@ -337,7 +340,6 @@ feature "Contacts address book", js: true do
       postcode: "AF6 9JO",
       data_request_name: "Sue Jones",
       data_request_emails: "sue.jones@gmail.com",
-      contact_type: "probation",
     }
 
     contacts_edit_page.edit_contact(details)
@@ -353,18 +355,31 @@ feature "Contacts address book", js: true do
     expect(page).to have_content("FE2 9JK")
   end
 
-  def and_fill_in_and_submit_new_contact_details
+  def and_expect_contact_type_details_to_be_present
+    expect(page).to have_content("Prison")
+    expect(page).to have_content("Probation")
+  end
+
+  def and_fill_in_and_submit_new_contact_address_details
     details = {
       name: "John's law",
       address_line_1: "345 some road",
       postcode: "FG9 5IK",
       data_request_name: "John Smith",
       data_request_emails: "john.smith@gmail.com",
+    }
+
+    contacts_new_details_page.new_contact(details)
+    click_on "Submit"
+  end
+
+  def and_fill_in_and_submit_new_contact_type_details
+    details = {
       contact_type: "solicitor",
     }
 
     contacts_new_page.new_contact(details)
-    click_on "Submit"
+    click_on "Continue"
   end
 
   def and_expect_to_see_success_message
@@ -374,6 +389,10 @@ feature "Contacts address book", js: true do
   def then_expect_new_details_to_be_present
     expect(page).to have_content("345 some road")
     expect(page).to have_content("FG9 5IK")
+  end
+
+  def then_expect_new_contact_type_to_be_present
+    expect(page).to have_content("Solicitor")
   end
 end
 # rubocop:enable RSpec/BeforeAfterAll

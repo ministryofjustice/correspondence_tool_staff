@@ -92,10 +92,14 @@
               closed:
                 add_note_to_case:
                 send_dispatch_letter:
+                  if: Workflows::Predicates#case_not_rejected?
                 preview_cover_page:
+                  if: Workflows::Predicates#case_not_rejected?
                 edit_case:
                 record_sent_to_sscl:
+                  if: Workflows::Predicates#case_not_rejected?
                 date_sent_to_sscl_removed:
+                  if: Workflows::Predicates#case_not_rejected?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
                 mark_as_partial_case:
@@ -105,3 +109,11 @@
                 unmark_as_further_actions_required:
                 annotate_retention_changes:
                 annotate_system_retention_changes:
+              invalid_submission:
+                close:
+                  transition_to: closed
+                edit_case:
+                accepted_date_received:
+                add_note_to_case:
+                validate_rejected_case:
+                  transition_to: data_to_be_requested

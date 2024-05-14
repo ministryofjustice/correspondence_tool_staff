@@ -1,4 +1,8 @@
 //= link_tree ../images
+//= link images/favicon.ico
+//= link images/favicon.svg
+//= link images/govuk-icon-mask.svg
+//= link images/govuk-icon-180.png
 //= link ie_shame.css
 //= link application.css
 //= link print.css
