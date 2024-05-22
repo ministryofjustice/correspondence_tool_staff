@@ -199,6 +199,7 @@ RSpec.describe DataRequest, type: :model do
         expect(build_stubbed(:data_request, request_type: "cross_borders")).to be_valid
         expect(build_stubbed(:data_request, request_type: "cat_a")).to be_valid
         expect(build_stubbed(:data_request, request_type: "ndelius")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "dps")).to be_valid
         expect(build_stubbed(:data_request, request_type: "other", request_type_note: "test")).to be_valid
       end
     end

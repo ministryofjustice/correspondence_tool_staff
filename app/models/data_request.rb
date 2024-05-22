@@ -57,6 +57,7 @@ class DataRequest < ApplicationRecord
     cross_borders: "cross_borders",
     cat_a: "cat_a",
     ndelius: "ndelius",
+    dps: "dps",
     other: "other",
   }
 
