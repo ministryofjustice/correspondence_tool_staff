@@ -1,9 +1,8 @@
 GIT
-  remote: https://github.com/hernanvicente/rails-data-migrations.git
-  revision: 1447e4b30cbb96c392477fa7b205a77d25e86ecd
-  branch: rails-7.1-support
+  remote: https://github.com/anjlab/rails-data-migrations
+  revision: 727f933eec032a8f8e53364c5134d16d4bef1d75
   specs:
-    rails-data-migrations (1.2.1)
+    rails-data-migrations (1.3.0)
       rails (>= 4.0.0)
 
 GIT
