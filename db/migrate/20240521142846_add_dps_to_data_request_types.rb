@@ -5,5 +5,5 @@ class AddDpsToDataRequestTypes < ActiveRecord::Migration[7.1]
       ALTER TYPE request_types ADD VALUE 'dps';
     SQL
   end
-  # rubocop:disable Rails/ReversibleMigration
+  # rubocop:enable Rails/ReversibleMigration
 end
