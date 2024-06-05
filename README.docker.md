@@ -380,7 +380,7 @@ Continuous integration is carried out by SemaphoreCI.
 
 ### Data Migrations
 
-The app uses the `rails-data-migrations` gem https://github.com/OffgridElectric/rails-data-migrations
+The app uses the `rails-data-migrations` gem https://github.com/anjlab/rails-data-migrations
 
 Data migrations work like regular migrations but for data; they're found in `db/data_migrations`.
 
