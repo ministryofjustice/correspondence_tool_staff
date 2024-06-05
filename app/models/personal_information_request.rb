@@ -69,7 +69,7 @@ class PersonalInformationRequest < ApplicationRecord
   def self.build(payload)
     rpi = PersonalInformationRequest.new
 
-    data = if @payload[:submissionId].present?
+    data = if payload[:submissionId].present?
              RequestPersonalInformation::Data.new(payload)
            else
              RequestPersonalInformation::DataV2.new(payload)
