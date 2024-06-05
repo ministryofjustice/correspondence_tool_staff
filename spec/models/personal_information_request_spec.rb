@@ -59,7 +59,7 @@ describe PersonalInformationRequest do
     }
   end
 
-  let(:valid_data_v2) {
+  let(:valid_data_v2) do
     {
       "submission_id": "57188f93-5795-44b2-8544-c5b336298c30",
       "answers": {
@@ -102,7 +102,7 @@ describe PersonalInformationRequest do
       },
       "attachments": [],
     }
-  }
+  end
 
   describe "default scope" do
     it "does not return requests whose files have been deleted" do
