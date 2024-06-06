@@ -319,6 +319,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     post "rpi" => "rpi#create"
+    post "rpi/v2" => "rpi_v2#create"
   end
 
   get "rpi/:target/:id" => "rpi#download", as: :rpi_file_download
