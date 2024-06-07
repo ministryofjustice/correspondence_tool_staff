@@ -100,4 +100,40 @@ describe RequestPersonalInformation::DataV2 do
       end
     end
   end
+
+  describe "#photo_id_file_name" do
+    context "when requester uploads are provided" do
+      let(:payload) { { answers: { requester_photo_file_name: "requester.jpg", subject_photo_file_name: "subject.jpg" } } }
+
+      it "returns requester filename" do
+        expect(data.photo_id_file_name).to eq "requester.jpg"
+      end
+    end
+
+    context "when only subject uploads are provided" do
+      let(:payload) { { answers: { subject_photo_file_name: "subject.jpg" } } }
+
+      it "returns subject filename" do
+        expect(data.photo_id_file_name).to eq "subject.jpg"
+      end
+    end
+  end
+
+  describe "#proof_of_address_file_name" do
+    context "when requester uploads are provided" do
+      let(:payload) { { answers: { requester_proof_of_address_file_name: "requester.jpg", subject_proof_of_address_file_name: "subject.jpg" } } }
+
+      it "returns requester filename" do
+        expect(data.proof_of_address_file_name).to eq "requester.jpg"
+      end
+    end
+
+    context "when only subject uploads are provided" do
+      let(:payload) { { answers: { subject_proof_of_address_file_name: "subject.jpg" } } }
+
+      it "returns subject filename" do
+        expect(data.proof_of_address_file_name).to eq "subject.jpg"
+      end
+    end
+  end
 end

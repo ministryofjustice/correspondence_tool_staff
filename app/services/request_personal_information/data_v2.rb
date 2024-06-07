@@ -70,11 +70,11 @@ class RequestPersonalInformation::DataV2
   end
 
   def photo_id_file_name
-    answers[:requester_photo_file_name]
+    answers[:requester_photo_file_name] || answers[:subject_photo_file_name]
   end
 
   def proof_of_address_file_name
-    answers[:requester_proof_of_address_file_name]
+    answers[:requester_proof_of_address_file_name] || answers[:subject_proof_of_address_file_name]
   end
 
   def subject_photo_id_file_name
