@@ -18,6 +18,6 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def highlight_flag
-    object.normal? ? "" : object.priority.humanize
+    object.normal? ? "" : object.priority.humanize + " priority"
   end
 end

@@ -24,7 +24,7 @@ section.govuk-tabs__panel
                          clear_params: {} }
 
   - if @global_nav_manager.current_page.tabs.present?
-    
+
     = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
 
     .grid-row
@@ -87,7 +87,8 @@ section.govuk-tabs__panel
                       = t('.view_case')
                     = link_to kase.number, case_path(kase.id)
                   td aria-label="#{t('.flag')}"
-                    = kase.highlight_flag
+                    span class="flag"
+                      = kase.highlight_flag
                   td aria-label="#{t('.type')}"
                     = "#{kase.pretty_type} "
                   td aria-label="#{t('.request_detail')}"

@@ -16,7 +16,7 @@
           .search-results-summary.column-one-third
             strong
               = @cases.total_count
-            = " #{ 'case'.pluralize(@cases.total_count)} found" 
+            = " #{ 'case'.pluralize(@cases.total_count)} found"
 
           .search-results-order.column-one-third
             = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
@@ -52,7 +52,9 @@
             td aria-label="#{t('common.case_list.number')}"
               = case_link_with_hash(kase, :number, @page, position)
             td aria-label="#{t('common.case_list.flag')}"
-              = kase.highlight_flag
+              - if kase.highlight_flag != " "
+                  span class="flag"
+                    = kase.highlight_flag
             td aria-label="#{t('common.case_list.type')}"
               = "#{kase.pretty_type} "
             td aria-label="#{t('common.case_list.request_detail')}"

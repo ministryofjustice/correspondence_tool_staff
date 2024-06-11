@@ -96,9 +96,9 @@ describe Case::SAR::OffenderComplaintDecorator do
       expect(offender_sar_complaint.highlight_flag).to eq ""
     end
 
-    it 'returns string of "High" when priority is high' do
+    it 'returns string of "High priority" when priority is high' do
       offender_sar_complaint.priority = "high"
-      expect(offender_sar_complaint.highlight_flag).to eq "High"
+      expect(offender_sar_complaint.highlight_flag).to eq "High priority"
     end
   end
 end

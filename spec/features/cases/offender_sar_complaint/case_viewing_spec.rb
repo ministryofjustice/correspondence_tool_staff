@@ -16,7 +16,7 @@ feature "Viewing for cases", js: true do
     click_link("My open cases")
 
     expect(page).to have_content("In time (5)")
-    expect(page).to have_content("Late (4)")
+    expect(page).to have_content("Late (5)")
 
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_complaint_type_link.click
@@ -24,7 +24,7 @@ feature "Viewing for cases", js: true do
     open_cases_page.case_filters.apply_filters_button.click
 
     expect(page).to have_content("In time (2)")
-    expect(page).to have_content("Late (3)")
+    expect(page).to have_content("Late (4)")
   end
 
   def set_up_cases
@@ -32,6 +32,7 @@ feature "Viewing for cases", js: true do
     create(:accepted_complaint_case)
     create(:accepted_complaint_case)
     make_case_late(create(:accepted_complaint_case))
+    make_case_high_priority(create(:accepted_complaint_case))
 
     create(:accepted_complaint_case, complaint_type: "litigation")
     create(:accepted_complaint_case, complaint_type: "litigation")
@@ -44,10 +45,27 @@ feature "Viewing for cases", js: true do
         ),
       )
     end
+
+=begin
+    3.times do
+      make_case_high_priority(
+        create(
+          :accepted_complaint_case,
+          complaint_type: "litigation",
+        )
+      )
+    end
+=end
   end
 
   def make_case_late(kase)
     kase.external_deadline = 5.days.ago
     kase.save!(validate: false)
   end
+
+  def make_case_high_priority(kase)
+    kase.priority = "high"
+    kase.save!(validate: false)
+  end
+
 end
