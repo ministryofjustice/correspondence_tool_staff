@@ -46,16 +46,14 @@ feature "Viewing for cases", js: true do
       )
     end
 
-=begin
-    3.times do
-      make_case_high_priority(
-        create(
-          :accepted_complaint_case,
-          complaint_type: "litigation",
-        )
-      )
-    end
-=end
+    #     3.times do
+    #       make_case_high_priority(
+    #         create(
+    #           :accepted_complaint_case,
+    #           complaint_type: "litigation",
+    #         )
+    #       )
+    #     end
   end
 
   def make_case_late(kase)
@@ -67,5 +65,4 @@ feature "Viewing for cases", js: true do
     kase.priority = "high"
     kase.save!(validate: false)
   end
-
 end
