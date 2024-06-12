@@ -15,8 +15,9 @@ feature "Viewing for cases", js: true do
 
     click_link("My open cases")
 
-    expect(page).to have_content("In time (5)")
-    expect(page).to have_content("Late (5)")
+    expect(page).to have_content("In time (6)")
+    #expect(page).to have_css('span.moj-badge.moj-badge--red', text: "High priority")
+    expect(page).to have_content("Late (4)")
 
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_complaint_type_link.click
@@ -24,7 +25,15 @@ feature "Viewing for cases", js: true do
     open_cases_page.case_filters.apply_filters_button.click
 
     expect(page).to have_content("In time (2)")
-    expect(page).to have_content("Late (4)")
+    expect(page).to have_content("Late (3)")
+
+    open_cases_page.case_filters.filter_cases_link.click
+    open_cases_page.case_filters.filter_complaint_type_link.click
+    open_cases_page.filter_complaint_type_content.complaint_standard_checkbox.click
+    open_cases_page.case_filters.apply_filters_button.click
+
+    expect(page).to have_content("In time (2)")
+    #expect(page).to have_content("Late (3)")
   end
 
   def set_up_cases
@@ -46,14 +55,12 @@ feature "Viewing for cases", js: true do
       )
     end
 
-    #     3.times do
-    #       make_case_high_priority(
-    #         create(
-    #           :accepted_complaint_case,
-    #           complaint_type: "litigation",
-    #         )
-    #       )
-    #     end
+   make_case_high_priority(
+     create(
+       :accepted_complaint_case,
+       complaint_type: "complaint",
+     )
+   )
   end
 
   def make_case_late(kase)
