@@ -8,6 +8,7 @@ describe Case::BaseDecorator, type: :model do
            responder:,
            responding_team:).decorate
   end
+  # let(:offender_sar_complaint)  { create(:offender_sar_complaint, :high_priority, :flagged).decorate }
   let(:approved_ico)        { create(:approved_ico_foi_case).decorate }
   let(:responded_ico)       { create(:responded_ico_foi_case).decorate }
   let(:upheld_ico_case)     { create(:closed_ico_foi_case).decorate }
@@ -44,6 +45,8 @@ describe Case::BaseDecorator, type: :model do
         expect(Case::FOI::TimelinessReview.new.decorate).to be_instance_of Case::FOI::TimelinessReviewDecorator
       end
     end
+
+
   end
 
   describe "#who_its_with" do
@@ -172,6 +175,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#trigger_case_marker" do
+    context "when Offender SAR Complaint High priority" do
+      it "returns the Trigger case badge" do
+        flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
+        expect(flagged_case.trigger_case_marker)
+          .to eq '<div class="offender_sar_complaint-flag"><span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
+      end
+    end
+
     context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate

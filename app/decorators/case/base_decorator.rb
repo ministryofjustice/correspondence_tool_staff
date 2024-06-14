@@ -67,6 +67,12 @@ class Case::BaseDecorator < Draper::Decorator
           "Trigger" +
           h.content_tag(:span, " case", class: "visually-hidden")
       end
+    elsif "#{object.type_abbreviation.downcase}" == "offender_sar_complaint" && high_priority?
+      h.content_tag :div, class: "#{object.type_abbreviation.downcase}-flag" do
+        h.content_tag(:span, "This is a ", class: "visually-hidden") + # rubocop:disable Style/StringConcatenation
+          "#{object.priority.capitalize}" + " priority" +
+          h.content_tag(:span, " case", class: "visually-hidden")
+      end
     else
       " "
     end

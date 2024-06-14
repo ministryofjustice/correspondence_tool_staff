@@ -55,6 +55,10 @@ FactoryBot.define do
     settlement_cost                 { 0 }
     total_cost                      { 0 }
 
+    trait :high_priority do
+      priority  { "high" }
+    end
+
     trait :third_party_complaint do
       third_party { true }
       third_party_relationship { "Solicitor" }
