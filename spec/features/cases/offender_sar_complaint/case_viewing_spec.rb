@@ -35,7 +35,7 @@ feature "Viewing for cases", js: true do
 
     click_link("My open cases")
 
-    expect(page).to have_content( "High priority")
+    expect(page).to have_content("High priority")
     expect(page).to have_css("div#flag.offender_sar_complaint-highlight-flag")
   end
 
