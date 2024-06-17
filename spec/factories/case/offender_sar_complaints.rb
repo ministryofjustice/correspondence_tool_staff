@@ -56,7 +56,7 @@ FactoryBot.define do
     total_cost                      { 0 }
 
     trait :high_priority do
-      priority  { "high" }
+      priority { "high" }
     end
 
     trait :third_party_complaint do

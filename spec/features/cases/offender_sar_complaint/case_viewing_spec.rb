@@ -16,7 +16,6 @@ feature "Viewing for cases", js: true do
     click_link("My open cases")
 
     expect(page).to have_content("In time (7)")
-    # expect(page).to have_css('span.moj-badge.moj-badge--red', text: "High priority")
     expect(page).to have_content("Late (4)")
 
     open_cases_page.case_filters.filter_cases_link.click
@@ -29,20 +28,16 @@ feature "Viewing for cases", js: true do
     expect(page).to have_content("Late (3)")
   end
 
-  scenario "Filter cases 'Filter by priority' - Priority High" do
+  scenario "View cases with - Priority High flag" do
     login_as responder
 
     cases_page.load
 
     click_link("My open cases")
 
-  open_cases_page.case_filters.filter_cases_link.click
-  open_cases_page.case_filters.filter_complaint_type_link
-  open_cases_page.filter_complaint_priority_content.high_checkbox.click
-  open_cases_page.case_filters.apply_filters_button.click
-
-  expect(page).to have_content("In time (1)")
-  expect(page).to have_content("Late (0)")
+    expect(page).to have_content( "High priority")
+    expect(page).to have_css("div#flag.offender_sar_complaint-highlight-flag")
+  end
 
   def set_up_cases
     create(:accepted_complaint_case)

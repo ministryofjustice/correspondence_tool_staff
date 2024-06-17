@@ -45,8 +45,6 @@ describe Case::BaseDecorator, type: :model do
         expect(Case::FOI::TimelinessReview.new.decorate).to be_instance_of Case::FOI::TimelinessReviewDecorator
       end
     end
-
-
   end
 
   describe "#who_its_with" do

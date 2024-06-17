@@ -18,6 +18,14 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def highlight_flag
-    object.normal? ? "" : "#{object.priority.humanize} priority"
+    if high_priority?
+      h.content_tag :div, id: "flag", class: "#{object.type_abbreviation.downcase}-highlight-flag" do
+        h.content_tag(:span, "This is a ", class: "visually-hidden") +
+        "#{object.priority.capitalize}" + " priority" +
+        h.content_tag(:span, " case", class: "visually-hidden")  # rubocop:disable Style/StringConcatenation
+      end
+    else
+      " "
+    end
   end
 end
