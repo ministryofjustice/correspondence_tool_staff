@@ -185,7 +185,6 @@ describe Case::BaseDecorator, type: :model do
         'This is a </span>' + "Trigger" + '<span class:"visually-hidden"> case</span></div>'
       end
     end
-  end
 
   describe "#external_deadline" do
     it "returns the external deadline" do
@@ -442,3 +441,4 @@ describe Case::BaseDecorator, type: :model do
       end
     end
   end
+end
