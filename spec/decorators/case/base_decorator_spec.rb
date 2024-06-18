@@ -171,20 +171,20 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
-    context "when unflagged case" do
-      it "returns space" do
-        unflagged_case = create(:case).decorate
-        expect(unflagged_case.trigger_case_marker).to eq " "
-      end
+  context "when unflagged case" do
+    it "returns space" do
+      unflagged_case = create(:case).decorate
+      expect(unflagged_case.trigger_case_marker).to eq " "
     end
+  end
 
-    context "when flagged case" do
-      it "returns the Trigger case badge" do
-        flagged_case = create(:case, :flagged).decorate
-        expect(flagged_case.trigger_case_marker).to eq '<div class:"foi-trigger"><span class:"visually-hidden">' +
-        'This is a </span>' + "Trigger" + '<span class:"visually-hidden"> case</span></div>'
-      end
+  context "when flagged case" do
+    it "returns the Trigger case badge" do
+      flagged_case = create(:case, :flagged).decorate
+      expect(flagged_case.trigger_case_marker).to eq '<div class:"foi-trigger"><span class:"visually-hidden">'
+      "This is a </span>Trigger<span class:\"visually-hidden\"> case</span></div>"
     end
+  end
 
   describe "#external_deadline" do
     it "returns the external deadline" do
