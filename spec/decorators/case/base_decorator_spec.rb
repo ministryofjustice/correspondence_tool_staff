@@ -174,10 +174,9 @@ describe Case::BaseDecorator, type: :model do
 
   describe "#trigger_case_marker" do
     context "when Offender SAR Complaint High priority" do
-      it "returns the Trigger case badge" do
+      it "returns the se badge" do
         flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
-        expect(flagged_case.trigger_case_marker)
-          .to eq '<div class="offender_sar_complaint-flag"><span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
+        expect(flagged_case.highlight_flag).to eq '<div id="flag" class="offender_sar_complaint-highlight-flag"><span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
       end
     end
 

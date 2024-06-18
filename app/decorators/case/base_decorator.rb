@@ -63,7 +63,8 @@ class Case::BaseDecorator < Draper::Decorator
   def trigger_case_marker
     if object.flagged?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-trigger" do
-        "#{h.content_tag(:span, 'This is a ', class: 'visually-hidden')}Trigger#{h.content_tag(:span, ' case', class: 'visually-hidden')}"
+        h.content_tag(:span, "This is a ", class: "visually-hidden") +
+          "Trigger" + h.content_tag(:span, " case", class: "visually-hidden") # rubocop:disable Style/StringConcatenation
       end
     else
       " "
