@@ -18,6 +18,13 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def highlight_flag
-    object.normal? ? "" : "#{object.priority.humanize} priority"
+    if object.high?
+      h.content_tag :div, class: "#{object.type_abbreviation.downcase}-flag" do
+        h.content_tag(:span, "This is a ", class: "visually-hidden") +
+          "#{object.priority.humanize} priority" + h.content_tag(:span, " case", class: "visually-hidden")
+      end
+    else
+      ""
+    end
   end
 end
