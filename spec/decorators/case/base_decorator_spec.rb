@@ -442,4 +442,3 @@ describe Case::BaseDecorator, type: :model do
       end
     end
   end
-end

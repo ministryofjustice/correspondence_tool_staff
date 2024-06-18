@@ -92,7 +92,7 @@ describe Case::SAR::OffenderComplaintDecorator do
   end
 
   describe "#highlight_flag" do
-    let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, :high_priority)}
+    let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, :high_priority) }
 
     context "when Offender SAR Complaint - high priority" do
       it 'returns string of "High priority"' do
@@ -104,7 +104,6 @@ describe Case::SAR::OffenderComplaintDecorator do
         flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
         expect(flagged_case.highlight_flag).to have_css("div#flag.offender_sar_complaint-highlight-flag")
       end
-
     end
 
     context "when Offender SAR Complaint - normal priority" do
@@ -113,6 +112,4 @@ describe Case::SAR::OffenderComplaintDecorator do
       end
     end
   end
-
-
 end
