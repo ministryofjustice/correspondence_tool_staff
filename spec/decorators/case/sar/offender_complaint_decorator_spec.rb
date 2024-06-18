@@ -96,12 +96,8 @@ describe Case::SAR::OffenderComplaintDecorator do
     context "when Offender SAR Complaint - high priority" do
       it 'returns string of "High priority"' do
         flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
-        expect(flagged_case.highlight_flag).to eq "High priority"
-      end
-
-      it "returns a badge" do
-        flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
-        expect(flagged_case.highlight_flag).to have_css("div#flag.offender_sar_complaint-highlight-flag")
+        expect(flagged_case.highlight_flag).to eq '<div class="offender_sar_complaint-flag">' +
+        '<span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
       end
     end
 

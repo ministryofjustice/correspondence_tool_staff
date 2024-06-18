@@ -20,7 +20,7 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   def highlight_flag
     if object.high?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-flag" do
-        h.content_tag(:span, "This is a ", class: "visually-hidden") +
+        h.content_tag(:span, "This is a ", class: "visually-hidden") + # rubocop:disable Style/StringConcatenation
           "#{object.priority.humanize} priority" + h.content_tag(:span, " case", class: "visually-hidden")
       end
     else
