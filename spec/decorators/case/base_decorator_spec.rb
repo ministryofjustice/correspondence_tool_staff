@@ -171,14 +171,6 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
-  describe "#trigger_case_marker" do
-    context "when Offender SAR Complaint High priority" do
-      it "returns a flag badge" do
-        flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
-        expect(flagged_case.highlight_flag).to eq '<div id="flag" class="offender_sar_complaint-highlight-flag"><span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
-      end
-    end
-
     context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate
@@ -189,8 +181,8 @@ describe Case::BaseDecorator, type: :model do
     context "when flagged case" do
       it "returns the Trigger case badge" do
         flagged_case = create(:case, :flagged).decorate
-        expect(flagged_case.trigger_case_marker)
-          .to eq '<div class:"foi-trigger"><span class:"visually-hidden">This is a </span>Trigger<span class:"visually-hidden"> case</span></div>'
+        expect(flagged_case.trigger_case_marker).to eq '<div class:"foi-trigger"><span class:"visually-hidden">' +
+        'This is a </span>' + "Trigger" + '<span class:"visually-hidden"> case</span></div>'
       end
     end
   end
@@ -206,8 +198,9 @@ describe Case::BaseDecorator, type: :model do
     context "when flagged case" do
       it "returns the Trigger case badge" do
         flagged_case = create(:case, :flagged).decorate
-        expect(flagged_case.highlight_flag)
-          .to eq '<div class="foi-trigger"><span class="visually-hidden">This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+        expect(flagged_case.highlight_flag).to eq '&lt;div class=&quot;foi-trigger&quot;&gt;\&lt;span ' + class=&quot;visually-hidden&quot;&gt;'
+          +<br/>'This is a &lt;/span&gt;' + &quot;Trigger&quot;
+          + '&lt;span class=&quot;visually-hidden&quot;&gt; case&lt;/span&gt;&lt;/div&gt;'
       end
     end
   end

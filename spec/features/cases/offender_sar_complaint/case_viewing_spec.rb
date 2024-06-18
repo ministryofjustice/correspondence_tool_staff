@@ -15,7 +15,7 @@ feature "Viewing for cases", js: true do
 
     click_link("My open cases")
 
-    expect(page).to have_content("In time (7)")
+    expect(page).to have_content("In time (5)")
     expect(page).to have_content("Late (4)")
 
     open_cases_page.case_filters.filter_cases_link.click
@@ -28,23 +28,11 @@ feature "Viewing for cases", js: true do
     expect(page).to have_content("Late (3)")
   end
 
-  scenario "View cases with - Priority High flag" do
-    login_as responder
-
-    cases_page.load
-
-    click_link("My open cases")
-
-    expect(page).to have_content("High priority")
-    expect(page).to have_css("div#flag.offender_sar_complaint-highlight-flag")
-  end
-
   def set_up_cases
     create(:accepted_complaint_case)
     create(:accepted_complaint_case)
     create(:accepted_complaint_case)
     make_case_late(create(:accepted_complaint_case))
-    make_case_high_priority(create(:accepted_complaint_case))
 
     create(:accepted_complaint_case, complaint_type: "litigation")
     create(:accepted_complaint_case, complaint_type: "litigation")
@@ -57,21 +45,10 @@ feature "Viewing for cases", js: true do
         ),
       )
     end
-
-    make_case_high_priority(
-      create(
-        :accepted_complaint_case,
-      ),
-    )
   end
 
   def make_case_late(kase)
     kase.external_deadline = 5.days.ago
-    kase.save!(validate: false)
-  end
-
-  def make_case_high_priority(kase)
-    kase.priority = "high"
     kase.save!(validate: false)
   end
 end
