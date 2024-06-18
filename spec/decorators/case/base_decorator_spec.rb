@@ -8,7 +8,6 @@ describe Case::BaseDecorator, type: :model do
            responder:,
            responding_team:).decorate
   end
-  # let(:offender_sar_complaint)  { create(:offender_sar_complaint, :high_priority, :flagged).decorate }
   let(:approved_ico)        { create(:approved_ico_foi_case).decorate }
   let(:responded_ico)       { create(:responded_ico_foi_case).decorate }
   let(:upheld_ico_case)     { create(:closed_ico_foi_case).decorate }
@@ -174,7 +173,7 @@ describe Case::BaseDecorator, type: :model do
 
   describe "#trigger_case_marker" do
     context "when Offender SAR Complaint High priority" do
-      it "returns the se badge" do
+      it "returns a flag badge" do
         flagged_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
         expect(flagged_case.highlight_flag).to eq '<div id="flag" class="offender_sar_complaint-highlight-flag"><span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
       end
@@ -191,7 +190,7 @@ describe Case::BaseDecorator, type: :model do
       it "returns the Trigger case badge" do
         flagged_case = create(:case, :flagged).decorate
         expect(flagged_case.trigger_case_marker)
-          .to eq '<div class="foi-trigger"><span class="visually-hidden">This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+          .to eq '<div class:"foi-trigger"><span class:"visually-hidden">This is a </span>Trigger<span class:"visually-hidden"> case</span></div>'
       end
     end
   end
