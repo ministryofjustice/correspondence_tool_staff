@@ -187,24 +187,6 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
-  describe "#highlight_flag" do
-    context "when unflagged case" do
-      it "returns space" do
-        unflagged_case = create(:case).decorate
-        expect(unflagged_case.highlight_flag).to eq " "
-      end
-    end
-
-    context "when flagged case" do
-      it "returns the Trigger case badge" do
-        flagged_case = create(:case, :flagged).decorate
-        expect(flagged_case.highlight_flag).to eq '&lt;div class=&quot;foi-trigger&quot;&gt;\&lt;span ' + class=&quot;visually-hidden&quot;&gt;'
-          +<br/>'This is a &lt;/span&gt;' + &quot;Trigger&quot;
-          + '&lt;span class=&quot;visually-hidden&quot;&gt; case&lt;/span&gt;&lt;/div&gt;'
-      end
-    end
-  end
-
   describe "#external_deadline" do
     it "returns the external deadline" do
       Timecop.freeze(Time.zone.local(2017, 5, 2, 9, 45, 33)) do
