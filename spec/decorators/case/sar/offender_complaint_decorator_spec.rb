@@ -2,7 +2,6 @@ require "rails_helper"
 
 describe Case::SAR::OffenderComplaintDecorator do
   let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
-  let(:accepted_complaint_case) { :high_priority }
 
   it "instantiates the correct decorator" do
     expect(Case::SAR::OffenderComplaint.new.decorate).to be_instance_of described_class
@@ -93,19 +92,15 @@ describe Case::SAR::OffenderComplaintDecorator do
   end
 
   describe "#highlight_flag" do
-    context "when Offender SAR Complaint - high priority" do
-      it 'returns string of "High priority"' do
-        priority_case = create(:accepted_complaint_case, :high_priority, :flagged).decorate
-        expect(priority_case.highlight_flag).to eq '<div class="offender_sar_complaint-priority_flag">' \
-          '<span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
-      end
+    it 'returns string of "High priority" in a badge' do
+      priority_case = create(:offender_sar_complaint, priority: "high").decorate
+      expect(priority_case.highlight_flag).to eq '<div class="offender_sar_complaint-priority_flag">' \
+        '<span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
     end
 
-    context "when Offender SAR Complaint - normal priority" do
-      it "returns blank string when priority is normal" do
-        priority_case = create(:accepted_complaint_case, :flagged).decorate
-        expect(priority_case.highlight_flag).to eq ""
-      end
+    it "returns blank string when priority is normal" do
+      priority_case = create(:offender_sar_complaint, priority: "normal").decorate
+      expect(priority_case.highlight_flag).to eq ""
     end
   end
 end
