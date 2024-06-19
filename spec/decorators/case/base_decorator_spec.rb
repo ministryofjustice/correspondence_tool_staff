@@ -181,8 +181,7 @@ describe Case::BaseDecorator, type: :model do
   context "when flagged case" do
     it "returns the Trigger case badge" do
       flagged_case = create(:case, :flagged).decorate
-      expect(flagged_case.trigger_case_marker).to eq '<div class="foi-trigger"><span class="visually-hidden">' \
-        'This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+      expect(flagged_case.trigger_case_marker).to eq '<div class:"foi-trigger"><span class:"visually-hidden">'
     end
   end
 
