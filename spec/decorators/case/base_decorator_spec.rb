@@ -171,17 +171,37 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
-  context "when unflagged case" do
-    it "returns space" do
-      unflagged_case = create(:case).decorate
-      expect(unflagged_case.trigger_case_marker).to eq " "
+  describe "#trigger_case_marker" do
+    context "when unflagged case" do
+      it "returns space" do
+        unflagged_case = create(:case).decorate
+        expect(unflagged_case.trigger_case_marker).to eq " "
+      end
+    end
+
+    context "when flagged case" do
+      it "returns the Trigger case badge" do
+        flagged_case = create(:case, :flagged).decorate
+        expect(flagged_case.trigger_case_marker)
+          .to eq '<div class="foi-trigger"><span class="visually-hidden">This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+      end
     end
   end
 
-  context "when flagged case" do
-    it "returns the Trigger case badge" do
-      flagged_case = create(:case, :flagged).decorate
-      expect(flagged_case.trigger_case_marker).to eq '<div class:"foi-trigger"><span class:"visually-hidden">'
+  describe "#highlight_flag" do
+    context "when unflagged case" do
+      it "returns space" do
+        unflagged_case = create(:case).decorate
+        expect(unflagged_case.highlight_flag).to eq " "
+      end
+    end
+
+    context "when flagged case" do
+      it "returns the Trigger case badge" do
+        flagged_case = create(:case, :flagged).decorate
+        expect(flagged_case.highlight_flag)
+          .to eq '<div class="foi-trigger"><span class="visually-hidden">This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+      end
     end
   end
 
