@@ -16,7 +16,7 @@
           .search-results-summary.column-one-third
             strong
               = @cases.total_count
-            = " #{ 'case'.pluralize(@cases.total_count)} found" 
+            = " #{ 'case'.pluralize(@cases.total_count)} found"
 
           .search-results-order.column-one-third
             = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
