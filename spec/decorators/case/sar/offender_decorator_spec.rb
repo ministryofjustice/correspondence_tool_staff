@@ -134,4 +134,21 @@ describe Case::SAR::OffenderDecorator do
       expect(offender_sar_case.request_methods_for_display).to eq %w[email post web_portal]
     end
   end
+
+  describe "#is_high_profile?" do
+    context "when case is flagged as high profile" do
+      it 'returns string of "High profile" in a badge' do
+        high_profile_case = create(:offender_sar_case, flag_as_high_profile: true).decorate
+        expect(high_profile_case.highlight_flag).to eq '<div class="offender_sar-profile_flag">' \
+                                                         '<span class="visually-hidden">This is a High profile case</span>High profile<span class="visually-hidden"> case</span></div>'
+      end
+    end
+
+    context "when case is  not flagged as high-profile" do
+      it "returns string of ''" do
+        kase = create(:offender_sar_case,  flag_as_high_profile: false)
+        expect(kase).not_to be_flag_as_high_profile
+      end
+    end
+  end
 end
