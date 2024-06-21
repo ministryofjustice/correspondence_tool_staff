@@ -986,20 +986,4 @@ describe Case::SAR::Offender do
       end
     end
   end
-
-  describe "#is_high_profile?" do
-    context "when case is flagged as high profile" do
-      it "returns true" do
-        high_profile_case = create(:offender_sar_case, flag_as_high_profile: true)
-        expect(high_profile_case.flag_as_high_profile).to eq true
-      end
-    end
-
-    context "when case is not flagged as high-profile" do
-      it "returns false" do
-        high_profile_case = create(:offender_sar_case, flag_as_high_profile: false)
-        expect(high_profile_case.flag_as_high_profile).to eq false
-      end
-    end
-  end
 end

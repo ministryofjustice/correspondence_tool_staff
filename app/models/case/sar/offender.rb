@@ -505,10 +505,6 @@ class Case::SAR::Offender < Case::Base
     self.number = next_number
   end
 
-  def is_high_profile?
-    flag_as_high_profile? ? true : false
-  end
-
 private
 
   def set_subject
