@@ -24,7 +24,7 @@ section.govuk-tabs__panel
                          clear_params: {} }
 
   - if @global_nav_manager.current_page.tabs.present?
-    
+
     = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
 
     .grid-row

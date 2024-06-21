@@ -92,13 +92,15 @@ describe Case::SAR::OffenderComplaintDecorator do
   end
 
   describe "#highlight_flag" do
-    it "returns blank string when priority is normal" do
-      expect(offender_sar_complaint.highlight_flag).to eq ""
+    it 'returns string of "High priority" in a badge' do
+      priority_case = create(:offender_sar_complaint, priority: "high").decorate
+      expect(priority_case.highlight_flag).to eq '<div class="offender_sar_complaint-priority_flag">' \
+        '<span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
     end
 
-    it 'returns string of "High" when priority is high' do
-      offender_sar_complaint.priority = "high"
-      expect(offender_sar_complaint.highlight_flag).to eq "High"
+    it "returns blank string when priority is normal" do
+      priority_case = create(:offender_sar_complaint, priority: "normal").decorate
+      expect(priority_case.highlight_flag).to eq ""
     end
   end
 end
