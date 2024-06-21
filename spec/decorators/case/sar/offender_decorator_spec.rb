@@ -135,7 +135,7 @@ describe Case::SAR::OffenderDecorator do
     end
   end
 
-  describe "#is_high_profile?" do
+  describe "#highlight_flag" do
     it 'returns string of "High profile" in a badge' do
       high_profile_case = create(:offender_sar_case, flag_as_high_profile: true).decorate
       expect(high_profile_case.highlight_flag).to eq '<div class="offender_sar_complaint-priority_flag">' \
