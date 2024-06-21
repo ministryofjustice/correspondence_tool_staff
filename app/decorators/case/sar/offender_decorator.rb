@@ -31,8 +31,9 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   def highlight_flag
     if object.flag_as_high_profile?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-profile_flag" do
-        h.content_tag(:span, "This is a ", class: "visually-hidden") +
-          "High profile" + h.content_tag(:span, " case", class: "visually-hidden")
+        h.content_tag(:span, "This is a ", class: "visually-hidden") + # rubocop:disable Style/StringConcatenation
+          "High profile" +
+          h.content_tag(:span, " case", class: "visually-hidden")
       end
     else
       ""
