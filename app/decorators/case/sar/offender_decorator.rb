@@ -30,8 +30,10 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
 
   def highlight_flag
     if object.flag_as_high_profile?
-      '<div class="offender_sar-profile_flag"><span class="visually-hidden">' \
-        'This is a </span>High priority<span class="visually-hidden"> case</span></div>'
+      h.content_tag :div, class: "#{object.type_abbreviation.downcase}-profile_flag" do
+        h.content_tag(:span, "This is a ", class: "visually-hidden") +
+          "High profile" + h.content_tag(:span, " case", class: "visually-hidden")
+        end
     else
       ""
     end
