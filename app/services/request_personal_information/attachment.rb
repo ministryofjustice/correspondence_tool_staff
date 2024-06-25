@@ -4,6 +4,8 @@ class RequestPersonalInformation::Attachment
   end
 
   def file_data
+    return file if encryption_key.nil?
+
     RequestPersonalInformation::Cryptography.new(
       encryption_key: Base64.strict_decode64(encryption_key),
       encryption_iv: Base64.strict_decode64(encryption_iv),
