@@ -67,8 +67,13 @@ class PersonalInformationRequest < ApplicationRecord
   default_scope { where(deleted: false) }
 
   def self.build(payload)
-    data = RequestPersonalInformation::Data.new(payload)
     rpi = PersonalInformationRequest.new
+
+    data = if payload[:submissionId].present?
+             RequestPersonalInformation::Data.new(payload)
+           else
+             RequestPersonalInformation::DataV2.new(payload)
+           end
 
     rpi.build_with(data)
 
