@@ -1,8 +1,13 @@
 hr
-.grid-row
-  .column-two-thirds
-    .feedback
-      .feedback-notification
-      = form_for Feedback.new, url: feedback_path, remote: true do|f|
-        = f.text_area :comment, {rows: 4}
-        = f.submit t('button.feedback'), {class: 'button-secondary'}
+details
+  summary
+    span.summary
+      = "Help make this service better"
+
+  .grid-row
+    .column-two-thirds
+      .feedback
+        .feedback-notification
+        = form_for Feedback.new, url: feedback_path, remote: true do|f|
+          = f.text_area :comment, {rows: 4, label: nil}
+          = f.submit t('button.feedback'), {class: 'button-secondary'}
