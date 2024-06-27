@@ -1,6 +1,6 @@
                 = t :"helpers.label.data_request.request_type.#{data_request.request_type}"
                 - if data_request.display_request_type_note?
-                  = ": #{'\n'} #{data_request.request_type_note}"
+                  = ":<br>#{data_request.request_type_note}".html_safe
                 - if data_request.request_dates_either_present?
                   span.data-detail<
                     br

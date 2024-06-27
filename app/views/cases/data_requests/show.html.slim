@@ -29,7 +29,7 @@ span.visually-hidden
       p.data_request_request_type
         = t("helpers.label.data_request.request_type.#{@data_request.request_type}")
         - if @data_request.request_type_note?
-          = ":\n #{@data_request.request_type_note}"
+          = ":<br>#{@data_request.request_type_note}".html_safe
     .form-group
       label.form-label
         = t('helpers.fieldset.data_request.date_requested')
