@@ -5,7 +5,7 @@ module PageObjects
       element :email_field, "#user_email"
       element :send, 'input[type="submit"][value="Send me password reset instructions"]'
       element :error_message, ".error-summary"
-      section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, ".feedback"
+      section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, "#feedback"
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
       def send_reset_instructions(email)

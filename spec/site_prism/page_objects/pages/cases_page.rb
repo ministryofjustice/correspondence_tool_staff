@@ -41,7 +41,7 @@ module PageObjects
 
       element :remove_original_link, ".js-remove-original"
       element :new_case_button, 'a.button[href="/cases/new"]'
-      section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, ".feedback"
+      section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, "#feedback"
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
       section :pagination, PageObjects::Sections::PaginationSection, ".pagination"

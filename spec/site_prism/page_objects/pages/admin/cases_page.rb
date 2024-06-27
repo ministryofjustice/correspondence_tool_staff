@@ -29,7 +29,7 @@ module PageObjects
           element :who_its_with, 'td[aria-label="With"]'
         end
 
-        section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, ".feedback"
+        section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, "#feedback"
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
         section :pagination, PageObjects::Sections::PaginationSection, ".pagination"
