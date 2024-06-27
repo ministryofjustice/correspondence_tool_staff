@@ -21,7 +21,7 @@ describe "cases/data_requests/show", type: :view do
         cached_num_pages: 32,
         completed: true,
         cached_date_received: Date.new(2022, 11, 0o2),
-        )
+      )
     end
 
     let(:data_request) do
