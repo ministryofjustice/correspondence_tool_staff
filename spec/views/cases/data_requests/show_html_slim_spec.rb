@@ -84,7 +84,7 @@ describe "cases/data_requests/show", type: :view do
       end
     end
 
-    context "when data request for other or Nomis other records is selected" do
+    context "when data request for Nomis other records is selected" do
       before do
         assign(:data_request, data_request_other)
         assign(:case, data_request.kase)
