@@ -1,7 +1,7 @@
                 = t :"helpers.label.data_request.request_type.#{data_request.request_type}"
                 - if data_request.display_request_type_note?
                   = ":"
-                  <div>"#{data_request.request_type_note}"
+                  div "#{data_request.request_type_note}"
                 - if data_request.request_dates_either_present?
                   span.data-detail<
                     br
