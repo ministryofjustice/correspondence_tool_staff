@@ -97,7 +97,8 @@ describe "cases/data_requests/show", type: :view do
         expect(page.page_heading.heading.text).to eq "View data request"
         expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
         expect(page.data.location.text).to eq "HMP Leicester"
-        expect(page.data.request_type.text).to eq("NOMIS other:<br>My details of request")
+        expect(page.data.request_type.text).to eq("NOMIS other:")
+        expect(page).to have_selector("#request_type_note_other", text: "My details of request")
         expect(page.data.date_requested.text).to eq "21 Oct 2022"
         expect(page.data.date_from.text).to eq "15 Aug 2018"
         expect(page.data.date_to.text).to eq "N/A"
