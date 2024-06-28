@@ -651,9 +651,6 @@ en:
         escalation_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
-      feedback:
-        comment: |
-          Let us know what you were doing and what could be improved or fixed.
       ico:
         original_case_number_html: |
           Enter original case  reference number to link to.  For example 170131001.<br>
@@ -955,7 +952,7 @@ en:
           timeliness: Timeliness
           not_applicable: Not applicable
       feedback:
-        comment: Help make this service better
+        comment: Let us know what you were doing and what could be improved or fixed.
       search_query:
         business_unit_name_filter: Business unit
       business_group:

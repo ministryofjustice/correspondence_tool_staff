@@ -25,7 +25,7 @@ module PageObjects
           end
         end
 
-        section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, ".feedback"
+        section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, "#feedback"
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
         section :homepage_navigation, PageObjects::Sections::HomepageNavigationSection, "#homepage-navigation"
 

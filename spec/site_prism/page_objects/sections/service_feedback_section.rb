@@ -1,6 +1,8 @@
 module PageObjects
   module Sections
     class ServiceFeedbackSection < SitePrism::Section
+      element :details_button, "summary"
+
       element :feedback_form, "#new_feedback"
       element :feedback_textarea, "#new_feedback textarea"
 
