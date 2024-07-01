@@ -112,12 +112,20 @@ jobs:
       - name: Rollout restart deployment
         run: |
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions \
-          parliamentary-questions-rails-app="${{ vars.ECR_URL }}:$SHA"
-
+          deployment/track-a-query \
+          webapp="${{ vars.ECR_URL }}:$SHA" \
+          quickjobs="${{ vars.ECR_URL }}:$SHA" \
+          uploads="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA"
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions-sidekiq \
-          parliamentary-questions-rails-jobs="${{ vars.ECR_URL }}:$SHA"
+          deployment/track-a-query-jobs \
+          jobs="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl set image -n ${KUBE_NAMESPACE} \
+          cronjobs/close-expired-rejected-offender-sars \
+          jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -131,7 +139,7 @@ jobs:
                   "fields": [
                     {
                       "title": "Project",
-                      "value": "Parliamentary Questions",
+                      "value": "Correspondence Tool Staff",
                       "short": true
                     }
                   ],
@@ -204,20 +212,20 @@ jobs:
       - name: Rollout restart deployment
         run: |
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions \
-          parliamentary-questions-rails-app="${{ vars.ECR_URL }}:$SHA"
-
+          deployment/track-a-query \
+          webapp="${{ vars.ECR_URL }}:$SHA" \
+          quickjobs="${{ vars.ECR_URL }}:$SHA" \
+          uploads="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA"
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions-sidekiq \
-          parliamentary-questions-rails-jobs="${{ vars.ECR_URL }}:$SHA"
-
+          deployment/track-a-query-jobs \
+          jobs="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA"
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          jobs/nightly-import \
-          nightly-import="${{ vars.ECR_URL }}:$SHA"
-
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          jobs/trim-database \
-          trim-database="${{ vars.ECR_URL }}:$SHA"
+          cronjobs/close-expired-rejected-offender-sars \
+          jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -231,7 +239,7 @@ jobs:
                   "fields": [
                     {
                       "title": "Project",
-                      "value": "Parliamentary Questions",
+                      "value": "Correspondence Tool Staff",
                       "short": true
                     }
                   ],
@@ -305,20 +313,25 @@ jobs:
       - name: Rollout restart deployment
         run: |
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions \
-          parliamentary-questions-rails-app="${{ vars.ECR_URL }}:$SHA"
-
+          deployment/track-a-query \
+          webapp="${{ vars.ECR_URL }}:$SHA" \
+          quickjobs="${{ vars.ECR_URL }}:$SHA" \
+          uploads="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA" 
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/parliamentary-questions-sidekiq \
-          parliamentary-questions-rails-jobs="${{ vars.ECR_URL }}:$SHA"
-
+          deployment/track-a-query-jobs \
+          jobs="${{ vars.ECR_URL }}:$SHA" \
+          anonjobs="${{ vars.ECR_URL }}:$SHA" \
+          pending-migrations="${{ vars.ECR_URL }}:$SHA"
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          jobs/nightly-import \
-          nightly-import="${{ vars.ECR_URL }}:$SHA"
-
+          cronjobs/close-expired-rejected-offender-sars \
+          jobs="${{ vars.ECR_URL }}:$SHA"
+          
           kubectl set image -n ${KUBE_NAMESPACE} \
-          jobs/early-bird-dispatch \
-          early-bird-dispatch="${{ vars.ECR_URL }}:$SHA"
+          cronjobs/eamil-status \
+          jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -332,7 +345,7 @@ jobs:
                   "fields": [
                     {
                       "title": "Project",
-                      "value": "Parliamentary Questions",
+                      "value": "Correspondence Tool Staff",
                       "short": true
                     }
                   ],
@@ -362,7 +375,7 @@ jobs:
                   "fields": [
                     {
                       "title": "Project",
-                      "value": "Parliamentary Questions",
+                      "value": "Correspondence Tool Staff",
                       "short": true
                     }
                   ],
