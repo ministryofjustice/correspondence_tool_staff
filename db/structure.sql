@@ -56,7 +56,8 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_other',
     'nomis_contact_logs',
     'probation_records',
-    'cctv_and_bwcf',
+    'cctv',
+    'bwcf',
     'telephone_recordings',
     'telephone_pin_logs',
     'probation_archive',
@@ -2451,4 +2452,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160802134012'),
 ('20160802130203'),
 ('20160722121207');
-
