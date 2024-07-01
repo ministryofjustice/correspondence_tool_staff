@@ -28,7 +28,7 @@ development:
 
 test:
   <<: *default
-  url: <%= ENV.fetch('DATABASE_URL', 'postgres://localhost/correspondence_platform_test') %>
+  database: correspondence_platform_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *default
