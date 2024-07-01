@@ -21,13 +21,11 @@
                 = data_request.location
               td
                 = render "cases/offender_sar/data_request_request_type", data_request: data_request
-
               td
                 time datetime="#{data_request.date_requested}"
                   = l data_request.date_requested, format: :default
               td
-                / this td left intentionally empty
-
+                = data_request.cached_num_pages
               td
                 - if data_request.cached_date_received.present?
                   time datetime="#{data_request.cached_date_received}"
