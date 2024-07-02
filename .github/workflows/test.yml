@@ -26,6 +26,8 @@ jobs:
           POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          ACCESS_KEY_ID: not_real
+          SECRET_ACCESS_KEY: not_real
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
