@@ -713,7 +713,6 @@ en:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
           nomis_other: NOMIS other
-          cctv_and_bwcf: CCTV & BWCF
           court: Court
           telephone_pin_logs: Telephone PIN logs
           telephone_recordings: Telephone recordings
@@ -728,6 +727,9 @@ en:
           cat_a: CAT A
           ndelius: Ndelius contact lists
           dps: DPS
+          cctv: CCTV
+          bwcf: BWCF
+
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received

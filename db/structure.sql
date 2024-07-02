@@ -2280,6 +2280,7 @@ ALTER TABLE ONLY public.data_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240701203227'),
 ('20240521142846'),
 ('20240502125941'),
 ('20240501152558'),
