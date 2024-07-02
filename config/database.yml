@@ -28,7 +28,8 @@ development:
 
 test:
   <<: *default
-  database: correspondence_platform_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: correspondence_platform_test
+  url: <%= ENV["DATABASE_URL"] %>
 
 production:
   <<: *default
