@@ -126,6 +126,16 @@ describe DataRequestDecorator, type: :model do
       expect(data_request.decorate).to be_display_request_type_note
     end
 
+    it "returns true when request_type is 'cctv'" do
+      data_request = create(:data_request, request_type: "cctv")
+      expect(data_request.decorate).to be_display_request_type_note
+    end
+
+    it "returns true when request_type is 'bwcf'" do
+      data_request = create(:data_request, request_type: "bwcf")
+      expect(data_request.decorate).to be_display_request_type_note
+    end
+
     it "returns false when request_type is not an other type" do
       data_request = create(:data_request, request_type: "security_records")
       expect(data_request.decorate).not_to be_display_request_type_note
