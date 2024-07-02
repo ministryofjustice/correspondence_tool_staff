@@ -57,6 +57,8 @@ class DataRequest < ApplicationRecord
     cat_a: "cat_a",
     ndelius: "ndelius",
     dps: "dps",
+    cctv: "cctv",
+    bwcf: "bwcf"
     other: "other",
   }
 
