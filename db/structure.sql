@@ -57,6 +57,8 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_contact_logs',
     'probation_records',
     'cctv_and_bwcf',
+    'cctv',
+    'bwcf',
     'telephone_recordings',
     'telephone_pin_logs',
     'probation_archive',
@@ -2279,6 +2281,7 @@ ALTER TABLE ONLY public.data_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240701203227'),
 ('20240521142846'),
 ('20240502125941'),
 ('20240501152558'),
@@ -2451,4 +2454,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160802134012'),
 ('20160802130203'),
 ('20160722121207');
-
