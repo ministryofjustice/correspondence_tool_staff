@@ -1,6 +1,8 @@
 test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
+  access_key_id: not_real
+  secret_access_key: not_real
 
 local:
   service: Disk
