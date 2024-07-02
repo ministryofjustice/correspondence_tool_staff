@@ -713,6 +713,7 @@ en:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
           nomis_other: NOMIS other
+          cctv_and_bwcf: CCTV & BWCF
           court: Court
           telephone_pin_logs: Telephone PIN logs
           telephone_recordings: Telephone recordings

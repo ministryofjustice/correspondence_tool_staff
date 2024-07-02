@@ -48,6 +48,7 @@ class DataRequest < ApplicationRecord
     nomis_other: "nomis_other",
     nomis_contact_logs: "nomis_contact_logs",
     probation_records: "probation_records",
+    cctv_and_bwcf: "cctv_and_bwcf",
     telephone_recordings: "telephone_recordings",
     probation_archive: "probation_archive",
     mappa: "mappa",

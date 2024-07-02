@@ -56,6 +56,7 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_other',
     'nomis_contact_logs',
     'probation_records',
+    'cctv_and_bwcf',
     'cctv',
     'bwcf',
     'telephone_recordings',

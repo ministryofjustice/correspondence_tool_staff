@@ -190,6 +190,7 @@ RSpec.describe DataRequest, type: :model do
         expect(build_stubbed(:data_request, request_type: "nomis_other")).to be_valid
         expect(build_stubbed(:data_request, request_type: "nomis_contact_logs")).to be_valid
         expect(build_stubbed(:data_request, request_type: "probation_records")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "cctv_and_bwcf")).to be_valid
         expect(build_stubbed(:data_request, request_type: "cctv")).to be_valid
         expect(build_stubbed(:data_request, request_type: "bwcf")).to be_valid
         expect(build_stubbed(:data_request, request_type: "telephone_recordings")).to be_valid
