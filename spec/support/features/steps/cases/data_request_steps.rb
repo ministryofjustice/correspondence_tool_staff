@@ -21,6 +21,7 @@ def record_a_data_request_of_bwcf(checked_case, request_values)
   data_request_page.form.set_date_requested(request_values[:date_requested])
   click_on "Continue"
 end
+
 def record_a_data_request_of_nomis_other(checked_case, request_values)
   cases_show_page.load(id: checked_case.id)
   click_on "Record data request"
