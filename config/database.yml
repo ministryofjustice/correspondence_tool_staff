@@ -29,8 +29,6 @@ development:
 test:
   <<: *default
   database: correspondence_platform_test<%= ENV['TEST_ENV_NUMBER'] %>
-  access_key_id: not_real
-  secret_access_key: not_real
 
 production:
   <<: *default
