@@ -60,9 +60,6 @@ jobs:
         run: |
           yarn install --pure-lockfile
 
-      - name: Setup test database
-        run: bin/rails db:setup
-
       - name: Lint Ruby files
         run: bundle exec rubocop
 
