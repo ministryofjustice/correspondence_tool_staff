@@ -74,7 +74,6 @@ jobs:
       - name: Run unit and feature tests
         run: |
           export COVERAGE=1
-          bundle exec rake parallel:setup[2]
           bundle exec rake parallel:spec
 
       - name: Code coverage
