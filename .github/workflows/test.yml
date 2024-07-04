@@ -71,10 +71,9 @@ jobs:
       - name: Security audit application code
         run: bundle exec brakeman -q
 
-      - name: Run tests
+      - name: Run unit and feature tests
         run: |
           export COVERAGE=1
-          bundle exec rake parallel:create
           bundle exec rake parallel:prepare
           bundle exec rake parallel:spec
 
