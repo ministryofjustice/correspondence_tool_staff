@@ -34,11 +34,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: AWS credentials
-        run: |
-          access_key_id=123
-          secret_access_key=456
-
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
@@ -66,6 +61,9 @@ jobs:
           yarn install --pure-lockfile
 
       - name: Setup test database
+        env:
+          access_key_id: 123
+          secret_access_key: 456
         run: bin/rails db:setup
 
       - name: Lint Ruby files
