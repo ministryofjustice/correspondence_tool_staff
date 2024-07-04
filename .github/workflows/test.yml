@@ -73,7 +73,6 @@ jobs:
 
       - name: Run tests
         run: |
-          export PARALLEL_TEST_PROCESSORS=8
           export COVERAGE=1
           bundle exec rake parallel:create
           bundle exec rake parallel:prepare
