@@ -34,6 +34,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: AWS credentials
+        run: |
+          access_key_id=123
+          secret_access_key=456
+
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
