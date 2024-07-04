@@ -72,7 +72,8 @@ jobs:
         run: bundle exec brakeman -q
 
       - name: Run tests
-        run: bundle exec rspec
+        run: |
+          bundle exec rake parallel:spec
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
