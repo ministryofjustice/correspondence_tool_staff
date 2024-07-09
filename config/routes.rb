@@ -293,13 +293,6 @@ Rails.application.routes.draw do
   authenticated :user, ->(u) { u.admin? } do
     namespace :admin do
       root to: redirect("/admin/cases")
-      resources :cases do
-        get ":correspondence_type",
-            action: :new,
-            on: :new,
-            as: "",
-            defaults: { correspondence_type: "" }
-      end
       get "users" => "users#index"
       get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
