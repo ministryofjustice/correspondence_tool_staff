@@ -10,8 +10,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  linting:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Lint Ruby files
+        run: bundle exec rubocop
+
+      - name: Security audit application code
+        run: bundle exec brakeman -q
+
   test:
     name: Test groups ${{ matrix.ci_job_index }}
+    needs: linting
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -36,8 +58,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_total_jobs: [8]
-        ci_job_index: [ "0, 1", "2, 3", "4", "5", "6", "7"]
+        ci_total_jobs: [4]
+        ci_job_index: [
+          "0, 1",
+          "2, 3",
+          "4, 5",
+          "6, 7"
+        ]
 
     steps:
       - name: Checkout code
@@ -82,12 +109,12 @@ jobs:
           echo "::group::parallel:spec"
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
 
-      # - name: Code coverage
-      #   uses: joshmfrankel/simplecov-check-action@main
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     minimum_suite_coverage: 92
-      #     minimum_file_coverage: 100
+      - name: Code coverage
+        uses: joshmfrankel/simplecov-check-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_suite_coverage: 92
+          minimum_file_coverage: 100
 
   build-and-deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
