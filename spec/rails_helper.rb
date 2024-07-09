@@ -11,6 +11,18 @@ unless ENV["COVERAGE"].nil?
     add_filter "/app/mailers/application_mailer.rb"
     add_filter "/lib/"
   end
+
+  class ActiveSupport::TestCase
+    parallelize(workers: 6)
+
+    parallelize_setup do |worker|
+      SimpleCov.command_name "#{SimpleCov.command_name}-#{worker}"
+    end
+
+    parallelize_teardown do
+      SimpleCov.result
+    end
+  end
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
