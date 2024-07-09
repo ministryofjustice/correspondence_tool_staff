@@ -18,7 +18,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/correspondence_platform_test"
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
       CI_TOTAL_JOBS: ${{ matrix.ci_total_jobs }}
@@ -27,7 +27,7 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-          POSTGRES_DB: correspondence_platform_test
+          POSTGRES_DB: correspondence_platform_test${{ matrix.ci_job_index }}
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
