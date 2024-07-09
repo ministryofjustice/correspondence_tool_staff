@@ -12,8 +12,6 @@ concurrency:
 jobs:
   linting:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
     env:
       RAILS_ENV: test
     steps:
@@ -97,11 +95,17 @@ jobs:
 
       - name: Run unit and feature tests
         run: |
-          echo "::group::parallel:setup"
           bundle exec rake parallel:setup[2]
-          echo "::group::parallel:spec"
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
 
+  coverage:
+    needs: linting
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+    env:
+      RAILS_ENV: test
+    steps:
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
         with:
@@ -111,6 +115,6 @@ jobs:
 
   build-and-deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs: test
+    needs: coverage
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
