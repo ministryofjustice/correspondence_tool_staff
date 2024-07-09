@@ -78,7 +78,7 @@ jobs:
           yarn install --pure-lockfile
 
       - name: Setup test database
-        run: bundle exec rake parallel:setup[2]
+        run: bundle exec rake parallel:setup
 
       - name: Lint Ruby files
         run: bundle exec rubocop
