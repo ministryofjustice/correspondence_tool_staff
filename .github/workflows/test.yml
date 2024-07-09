@@ -99,7 +99,7 @@ jobs:
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
 
   coverage:
-    needs: linting
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       checks: write
