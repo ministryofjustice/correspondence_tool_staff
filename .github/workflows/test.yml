@@ -77,10 +77,8 @@ jobs:
         run: |
           yarn install --pure-lockfile
 
-#      - name: Setup test database
-#        env:
-#          RAILS_ENV: test
-#        run: bundle exec rake parallel:setup
+      - name: Setup test database
+        run: bin/rails db:prepare
 
       - name: Lint Ruby files
         run: bundle exec rubocop
@@ -89,15 +87,8 @@ jobs:
         run: bundle exec brakeman -q
 
       - name: Run unit and feature tests
-        env:
-          RAILS_ENV: test
         run: |
-          echo "::group::parallel:setup"
-          bundle exec rake parallel:setup[2]
-          echo "::endgroup::"
-          echo "::group::parallel:spec"
-          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
-          echo "::endgroup::"
+          bundle exec rake parallel:spec
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
