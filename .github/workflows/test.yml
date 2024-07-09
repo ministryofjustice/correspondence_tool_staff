@@ -63,6 +63,7 @@ jobs:
 
       - name: Setup test database
         run: |
+          bundle exec rake parallel:drop
           bundle exec rake parallel:setup
 
       - name: Lint Ruby files
