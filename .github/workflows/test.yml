@@ -78,7 +78,7 @@ jobs:
           yarn install --pure-lockfile
 
       - name: Setup test database
-        run: bin/rails db:setup
+        run: bundle exec rake parallel:setup[2]
 
       - name: Lint Ruby files
         run: bundle exec rubocop
@@ -90,7 +90,6 @@ jobs:
         run: |
           export COVERAGE=1
           echo "::group::parallel:setup"
-          bundle exec rake parallel:setup[2]
           echo "::endgroup::"
           echo "::group::parallel:spec"
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
