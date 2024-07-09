@@ -20,22 +20,6 @@ jobs:
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/correspondence_platform_test"
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
-      CI_TOTAL_JOBS: ${{ matrix.ci_total_jobs }}
-      CI_JOB_INDEX: ${{ matrix.ci_job_index }}
-    strategy:
-      fail-fast: false
-      matrix:
-        # Set N number of parallel jobs you want to run.
-        # Normally equal to the number of CPU cores but in this case relates to the total number of test groups to be run across all runners.
-        ci_total_jobs: [ 4 ]
-        # Remember to update ci_node_index below to 0..N-1
-        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc. For larger runners runners with more CPU adjust accordingly.
-        ci_job_index:
-          [
-            "0, 1",
-            "2, 3",
-          ]
-
     services:
       postgres:
         image: postgres:12-alpine
