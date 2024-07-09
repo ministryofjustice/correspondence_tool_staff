@@ -293,6 +293,7 @@ Rails.application.routes.draw do
   authenticated :user, ->(u) { u.admin? } do
     namespace :admin do
       root to: redirect("/admin/cases")
+      resources :cases, only: :index
       get "users" => "users#index"
       get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
