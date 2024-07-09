@@ -24,6 +24,7 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
+          POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
