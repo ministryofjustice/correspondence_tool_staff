@@ -17,7 +17,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-#      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/correspondence_platform_test"
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/correspondence_platform_test"
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
     services:
@@ -62,7 +62,7 @@ jobs:
           yarn install --pure-lockfile
 
       - name: Setup test database
-        run: bundle exec rake parallel:setup
+        run: bin/rails db:setup
 
       - name: Lint Ruby files
         run: bundle exec rubocop
