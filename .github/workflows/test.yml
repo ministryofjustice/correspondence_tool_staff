@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rspec:
+  test:
     runs-on: ubuntu-latest
     permissions:
       checks: write
