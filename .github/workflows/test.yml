@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  rspec:
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -20,6 +20,20 @@ jobs:
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/correspondence_platform_test"
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
+    strategy:
+      fail-fast: false
+      matrix:
+        # Set N number of parallel jobs you want to run.
+        # Normally equal to the number of CPU cores but in this case relates to the total number of test groups to be run across all runners.
+        ci_total_jobs: [ 4 ]
+        # Remember to update ci_node_index below to 0..N-1
+        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc. For larger runners runners with more CPU adjust accordingly.
+        ci_job_index:
+          [
+            "0, 1",
+            "2, 3",
+          ]
+
     services:
       postgres:
         image: postgres:12-alpine
@@ -27,6 +41,8 @@ jobs:
           POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          CI_TOTAL_JOBS: ${{ matrix.ci_total_jobs }}
+          CI_JOB_INDEX: ${{ matrix.ci_job_index }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -73,7 +89,12 @@ jobs:
       - name: Run unit and feature tests
         run: |
           export COVERAGE=1
-          bundle exec rake parallel:spec
+          echo "::group::parallel:setup"
+          bundle exec rake parallel:setup[2]
+          echo "::endgroup::"
+          echo "::group::parallel:spec"
+          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
+          echo "::endgroup::"
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
