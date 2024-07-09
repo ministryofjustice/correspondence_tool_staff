@@ -80,7 +80,7 @@ jobs:
       - name: Setup test database
         env:
           RAILS_ENV: test
-        run: bundle exec rake parallel:spec
+        run: bundle exec rake parallel:setup
 
       - name: Lint Ruby files
         run: bundle exec rubocop
