@@ -94,12 +94,7 @@ jobs:
         run: |
           echo "\n\n$RAILS_ENV\n\n"
           export COVERAGE=1
-#          echo "::group::parallel:setup"
-          bundle exec rspec
-#          echo "::endgroup::"
-#          echo "::group::parallel:spec"
-#          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" ./spec
-#          echo "::endgroup::"
+          bundle exec rspec 
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
