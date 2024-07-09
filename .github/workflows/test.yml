@@ -24,8 +24,7 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-#          POSTGRES_DB: correspondence_platform_test
-          RAILS_ENV: test
+          POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
@@ -62,9 +61,9 @@ jobs:
         run: |
           yarn install --pure-lockfile
 
-      - name: Setup test database
-        run: |
-          bundle exec rake parallel:setup
+#      - name: Setup test database
+#        run: |
+#          bundle exec rake parallel:setup
 
       - name: Lint Ruby files
         run: bundle exec rubocop
@@ -75,7 +74,8 @@ jobs:
       - name: Run unit and feature tests
         run: |
           export COVERAGE=1
-          bundle exec rake parallel:spec
+          bin/bundle exec rake parallel:setup
+          bin/bundle exec rake parallel:spec
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
