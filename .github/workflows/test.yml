@@ -24,7 +24,8 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-          POSTGRES_DB: correspondence_platform_test
+#          POSTGRES_DB: correspondence_platform_test
+          RAILS_ENV: test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
@@ -63,7 +64,6 @@ jobs:
 
       - name: Setup test database
         run: |
-          bundle exec rake parallel:drop
           bundle exec rake parallel:setup
 
       - name: Lint Ruby files
