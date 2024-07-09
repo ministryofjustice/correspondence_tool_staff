@@ -49,7 +49,7 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-          POSTGRES_DB: correspondence_platform_test${{ TEST_ENV_NUMBER }}
+          POSTGRES_DB: correspondence_platform_test${{ matrix.ci_job_index }}
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
