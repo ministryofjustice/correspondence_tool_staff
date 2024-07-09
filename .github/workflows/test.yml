@@ -49,7 +49,7 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-          POSTGRES_DB: correspondence_platform_test${{ matrix.ci_job_index }}
+          POSTGRES_DB: correspondence_platform_test${{ TEST_ENV_NUMBER }}
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         ports:
@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_total_jobs: [4]
+        ci_total_jobs: [8]
         ci_job_index: [
           "0, 1",
           "2, 3",
@@ -95,12 +95,6 @@ jobs:
       - name: Install packages
         run: |
           yarn install --pure-lockfile
-
-      # - name: Lint Ruby files
-      #   run: bundle exec rubocop
-
-      # - name: Security audit application code
-      #   run: bundle exec brakeman -q
 
       - name: Run unit and feature tests
         run: |
