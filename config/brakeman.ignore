@@ -247,7 +247,7 @@
       "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/cases/offender_sar_controller.rb",
-      "line": 97,
+      "line": 109,
       "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "@case.state_machine.send(\"#{params[:transition_name]}!\", params_for_transition)",
       "render_path": null,
@@ -331,40 +331,6 @@
         22
       ],
       "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "9347f47fb707c56f4b4e111aa271ae3a64aa2f6f8ceecbe5338f05e4208f913c",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/cases/new.html.slim",
-      "line": 15,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(partial => \"admin/cases/#{CTS::Cases::Create.new(Rails.logger, params[case_and_type]).new_case.type_abbreviation.downcase}/new\", { :locals => ({ :kase => CTS::Cases::Create.new(Rails.logger, params[case_and_type]).new_case }) })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::CasesController",
-          "method": "create",
-          "line": 32,
-          "file": "app/controllers/admin/cases_controller.rb",
-          "rendered": {
-            "name": "admin/cases/new",
-            "file": "app/views/admin/cases/new.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/cases/new"
-      },
-      "user_input": "params[case_and_type]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": "If incorrect path past error is thrown, false positive"
     },
     {
       "warning_type": "Remote Code Execution",
@@ -538,6 +504,6 @@
       "note": ""
     }
   ],
-  "updated": "2024-04-09 10:01:32 +0100",
+  "updated": "2024-07-09 11:31:05 +0100",
   "brakeman_version": "5.4.1"
 }
