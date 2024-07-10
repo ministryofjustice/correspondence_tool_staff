@@ -40,7 +40,6 @@ jobs:
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
-      CI_TOTAL_JOBS: 4
     services:
       postgres:
         image: postgres:12-alpine
@@ -82,8 +81,8 @@ jobs:
 
       - name: Run unit and feature tests
         run: |
-          bundle exec rake parallel:setup[${{CI_TOTAL_JOBS}}]
-          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}"
+          bundle exec rake parallel:setup[4]
+          bundle exec parallel_rspec -n 4
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
