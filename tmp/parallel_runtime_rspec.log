@@ -1,6 +1,4 @@
-Run options: include {:focus=>true}
 
-All examples were filtered out; ignoring {:focus=>true}
 spec/state_machines/ico_event_spec.rb:19.020617000060156
 spec/features/cases/offender_sar_complaint/case_closing_spec.rb:17.98283800005447
 spec/services/mark_response_as_sent_service_spec.rb:13.69093799998518
@@ -53,9 +51,6 @@ spec/models/commissioning_document_template/prison_spec.rb:0.06686299992725253
 spec/models/reporting_period/calculator_spec.rb:0.05479000008199364
 spec/models/business_group_spec.rb:0.033513000002130866
 spec/models/reporting_period/year_to_date_spec.rb:0.02248299994971603
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/offender_sar_complaint/case_editing_spec.rb:53.133965000044554
 spec/features/cases/filters/timeliness_spec.rb:45.853046000003815
 spec/features/cases/ico/editing_case_spec.rb:41.07956899993587
@@ -114,9 +109,6 @@ spec/views/cases/_case_history_html_slim_spec.rb:0.013429999933578074
 spec/models/directorate_spec.rb:0.010974999982863665
 spec/lib/feature_set_spec.rb:0.008757999981753528
 spec/models/singular_spec.rb:0.002687999978661537
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/state_machines/workflows/overturned_foi_permitted_events/full_approval_spec.rb:40.118436000077054
 spec/features/cases/overturned_foi/case_closing_spec.rb:39.86171199998353
 spec/models/case/base_spec.rb:35.216439999989234
@@ -176,9 +168,6 @@ spec/models/category_reference_spec.rb:0.007877999916672707
 spec/jobs/pdf_maker_job_spec.rb:0.007822999963536859
 spec/models/concerns/searchable_spec.rb:0.006227000034414232
 spec/features/admin/cases/adding_cases_spec.rb:0.0020279999589547515
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/user_journeys/ico/trigger_e2e_journey_spec.rb:47.34891299996525
 spec/services/stats/r004_cabinet_office_report_spec.rb:42.35148499999195
 spec/state_machines/workflows/overturned_foi_permitted_events/trigger_spec.rb:22.322922999970615
@@ -237,9 +226,6 @@ spec/models/commissioning_document_template/base_spec.rb:0.02057799999602139
 spec/services/bypass_params_manager_spec.rb:0.005730999982915819
 spec/services/csv_generator_spec.rb:0.004329000017605722
 spec/features/admin/cases/create_overturned_foi_spec.rb:0.0002899999963119626
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/offender_sar_complaint/case_creating_spec.rb:90.00734100001864
 spec/models/warehouse/case_report_spec.rb:42.635130999959074
 spec/models/case/scopes_spec.rb:22.55073999997694
@@ -297,9 +283,6 @@ spec/views/layouts/_header_html_slim_spec.rb:0.023569000069983304
 spec/helpers/views_helper_spec.rb:0.018626000033691525
 spec/state_machines/configurable_state_machine/duplicate_key_detector_spec.rb:0.013090999913401902
 spec/services/request_personal_information/attachment_spec.rb:0.004535999963991344
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/offender_sar_complaint/case_progressing_spec.rb:117.45980000006966
 spec/state_machines/foi_event_spec.rb:23.139416999998502
 spec/features/cases/offender_sar/case_progressing_spec.rb:19.23123699997086
@@ -357,9 +340,6 @@ spec/models/feedback_spec.rb:0.012727999943308532
 spec/services/global_nav_manager/tab_spec.rb:0.010567000019364059
 spec/routing/filters_routes_spec.rb:0.009997999994084239
 spec/i18n_spec.rb:0.0002880000974982977
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/ico/case_creating/creating_spec.rb:47.035531000001356
 spec/controllers/cases/ico_controller_spec.rb:41.360731999971904
 spec/factory_specs/overturned_ico_foi_factory_spec.rb:29.975869999965653
@@ -419,9 +399,6 @@ spec/models/case_closure/approval_flag/ico_offender_complaint_spec.rb:0.02524300
 spec/presenters/retention_schedule_case_note_spec.rb:0.016361000016331673
 spec/features/admin/cases/create_overturned_sar_spec.rb:0.007120999973267317
 spec/services/stats/stats_collector_spec.rb:0.007120999973267317
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/user_journeys/foi/trigger_e2e_spec.rb:48.593246000004
 spec/features/cases/offender_sar/case_creating_spec.rb:46.567823000019416
 spec/features/user_journeys/foi/compliance_review_trigger_e2e_spec.rb:40.14899700006936
@@ -482,9 +459,6 @@ spec/forms/base_form_object_spec.rb:0.016912000020965934
 spec/models/case_number_counter_spec.rb:0.013098999974317849
 spec/models/reporting_period/last_quarter_spec.rb:0.0011580000864341855
 spec/models/reporting_period/date_interval_spec.rb:0.0010689999908208847
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/list_filter_journey_spec.rb:298.1131789999781
 spec/lib/cts/cases/cli_spec.rb:10.656629999983124
 spec/controllers/cases/offender_sar_complaint_controller_spec.rb:9.358849999960512
@@ -534,9 +508,6 @@ spec/decorators/correspondence_type_decorator_spec.rb:0.014448000001721084
 spec/services/request_personal_information/cryptography_spec.rb:0.0025369999930262566
 spec/models/reporting_period/quarter_to_date_spec.rb:0.0012839999981224537
 spec/models/reporting_period/last_month_spec.rb:0.0009040000149980187
-Run options: include {:focus=>true}
-
-All examples were filtered out; ignoring {:focus=>true}
 spec/features/cases/search_filter_journeys_spec.rb:372.5340020000003
 spec/features/cases/offender_sar/add_data_requests_spec.rb:13.23434800002724
 spec/factory_specs/ico_factory_spec.rb:7.025989000103436
