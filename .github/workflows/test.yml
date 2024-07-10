@@ -55,10 +55,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_total_jobs: [8]
+        ci_total_jobs: [16]
         ci_job_index: [
           "0, 1, 2, 3",
-          "4, 5, 6, 7"
+          "4, 5, 6, 7",
+          "8, 9, 10, 11",
+          "12, 13, 14, 15"
         ]
 
     steps:
