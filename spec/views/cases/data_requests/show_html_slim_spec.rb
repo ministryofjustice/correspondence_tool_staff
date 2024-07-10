@@ -9,6 +9,21 @@ describe "cases/data_requests/show", type: :view do
       )
     end
 
+    let(:data_request_other) do
+      create(
+        :data_request,
+        offender_sar_case: kase,
+        location: "HMP Leicester",
+        request_type: "nomis_other",
+        request_type_note: "My details of request",
+        date_requested: Date.new(2022, 10, 21),
+        date_from: Date.new(2018, 8, 15),
+        cached_num_pages: 32,
+        completed: true,
+        cached_date_received: Date.new(2022, 11, 0o2),
+      )
+    end
+
     let(:data_request) do
       create(
         :data_request,
@@ -59,6 +74,30 @@ describe "cases/data_requests/show", type: :view do
         expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
         expect(page.data.location.text).to eq "HMP Leicester"
         expect(page.data.request_type.text).to eq "All prison records"
+        expect(page.data.date_requested.text).to eq "21 Oct 2022"
+        expect(page.data.date_from.text).to eq "15 Aug 2018"
+        expect(page.data.date_to.text).to eq "N/A"
+        expect(page.data.pages_received.text).to eq "32"
+        expect(page.data.completed.text).to eq "Yes"
+        expect(page.data.date_completed.text).to eq "2 Nov 2022"
+        expect(page.link_edit.text).to eq "Edit data request"
+      end
+    end
+
+    context "when data request for Nomis other records is selected" do
+      before do
+        assign(:data_request, data_request_other)
+        assign(:case, data_request.kase)
+
+        render
+        data_request_show_page.load(rendered)
+      end
+
+      it "has required content" do
+        expect(page.page_heading.heading.text).to eq "View data request"
+        expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
+        expect(page.data.location.text).to eq "HMP Leicester"
+        expect(page.data.request_type.text).to eq("NOMIS other:My details of request")
         expect(page.data.date_requested.text).to eq "21 Oct 2022"
         expect(page.data.date_from.text).to eq "15 Aug 2018"
         expect(page.data.date_to.text).to eq "N/A"
