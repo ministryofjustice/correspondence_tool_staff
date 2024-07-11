@@ -236,14 +236,6 @@ Some of these older migrations made use of the gem `schema_plus_enums` which is 
 
 Individual correspondence items can be quickly created by logging in as David Attenborough, and using the admin tab to create any kind of case in any state.
 
-##### Creating bulk test correspondence items
-
-To create 200 cases in various states with various responders for search testing, you can use the following rake task:
-```
-rake seed:search:data
-```
-It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
-
 ### Additional Setup
 
 #### Libreoffice

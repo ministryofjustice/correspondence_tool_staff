@@ -35,7 +35,7 @@ describe "cases/cover_pages/show", type: :view do
       expect(row.location).to have_text "HMP Leicester"
       expect(row.request_type).to have_text "All prison records 15 Aug 2018 -  15 Aug 2019"
       expect(row.date_requested).to have_text "15 Aug 2020"
-      expect(row.pages.text).to eq ""
+      expect(row.pages.text).to eq "32"
       expect(row.date_received).to have_text "15 Aug 2020"
     end
   end

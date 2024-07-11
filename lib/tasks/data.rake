@@ -134,12 +134,6 @@ namespace :data do
       end
     end
 
-    desc "Add Business Unit roles"
-    task add_business_unit_roles: :environment do
-      require Rails.root.join("lib/cts/teams/roles_seeder")
-      CTS::Teams::RolesSeeder.new.run
-    end
-
     desc "Fix invalid Offender SAR cases"
     task fix_invalid_offender_sar_cases: :environment do
       fix_invalid_offender_sar_cases
