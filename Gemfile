@@ -84,6 +84,7 @@ group :test do
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
   gem "simplecov"
+  gem "simplecov-json", require: false
   gem "site_prism", "< 5.0"
 end
 

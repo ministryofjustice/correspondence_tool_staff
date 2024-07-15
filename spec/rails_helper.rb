@@ -1,16 +1,18 @@
 unless ENV["COVERAGE"].nil?
   require "simplecov"
-  SimpleCov.command_name "rspec #{ENV['TEST_ENV_NUMBER'] || ''}"
+  require "simplecov-json"
+
+  if ENV["CI"]
+    formatter SimpleCov::Formatter::SimpleFormatter
+  else
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::JSONFormatter,
+    ])
+  end
+
   SimpleCov.start "rails" do
-    add_group "Services", "app/services"
-    add_group "Policies", "app/policies"
-    add_group "Decorators", "app/decorators"
-    add_group "Validators", "app/validators"
-    # application doesn't use action cable
-    add_filter "/app/channels/"
-    # all emails (including devise ones) get sent via gov.uk notify service
-    add_filter "/app/mailers/application_mailer.rb"
-    add_filter "/lib/"
+    command_name "Job #{ENV['TEST_ENV_NUMBER']}" if ENV["TEST_ENV_NUMBER"]
   end
 end
 
