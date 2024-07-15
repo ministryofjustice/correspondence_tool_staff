@@ -110,7 +110,8 @@ jobs:
   coverage:
     needs: test
     runs-on: ubuntu-latest
-
+    env:
+      RAILS_ENV: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
