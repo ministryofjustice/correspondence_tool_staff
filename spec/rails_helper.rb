@@ -24,7 +24,7 @@ require "capybara/rspec"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Capybara.default_max_wait_time = 4
+Capybara.default_max_wait_time = 1
 
 options = Selenium::WebDriver::Chrome::Options.new
 options.add_argument("--headless")
