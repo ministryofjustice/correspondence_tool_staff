@@ -3,7 +3,7 @@ unless ENV["COVERAGE"].nil?
   require "simplecov-json"
 
   if ENV["CI"]
-    formatter SimpleCov::Formatter::SimpleFormatter
+    SimpleCov.formatter = SimpleCov::Formatter::SimpleFormatter
   else
     SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
       SimpleCov::Formatter::HTMLFormatter,
@@ -11,9 +11,7 @@ unless ENV["COVERAGE"].nil?
     ])
   end
 
-  SimpleCov.start "rails" do
-    command_name "Job #{ENV['TEST_ENV_NUMBER']}" if ENV["TEST_ENV_NUMBER"]
-  end
+  SimpleCov.start "rails"
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'

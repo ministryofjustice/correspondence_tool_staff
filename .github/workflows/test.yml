@@ -101,6 +101,9 @@ jobs:
           bundle exec rake parallel:setup[4]
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
 
+      - name: collate coverage
+        run: bundle exec rake coverage:report
+
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
         with:
