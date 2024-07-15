@@ -101,10 +101,32 @@ jobs:
           bundle exec rake parallel:setup[4]
           bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
 
-      - name: collate coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: "coverage-${CI_JOB_INDEX}"
+          path: "coverage/.resultset.json"
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+
+      - name: Collate coverage
         run: bundle exec rake coverage:report
 
-      - name: Code coverage
+      - name: Code coverage result
         uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -113,6 +135,6 @@ jobs:
 
   build-and-deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs: test
+    needs: coverage
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
