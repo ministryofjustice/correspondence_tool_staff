@@ -39,8 +39,6 @@ jobs:
       fail-fast: false
       matrix:
         ci_total_jobs: [16]
-        # Remember to update ci_node_index below to 0..N-1
-        # When you run 2 parallel jobs then first job will have index 0, the second job will have index 1 etc. For larger runners runners with more CPU adjust accordingly.
         ci_job_index:
           [
             "0, 1, 2, 3",

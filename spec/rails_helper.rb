@@ -11,6 +11,10 @@ unless ENV["COVERAGE"].nil?
     add_filter "/app/mailers/application_mailer.rb"
     add_filter "/lib/"
   end
+
+  if ENV['TEST_ENV_NUMBER'].present?
+    SimpleCov.command_name "rspec #{ENV['TEST_ENV_NUMBER']}"
+  end
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
