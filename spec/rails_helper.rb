@@ -1,5 +1,6 @@
 unless ENV["COVERAGE"].nil?
   require "simplecov"
+  SimpleCov.command_name "rspec #{ENV['TEST_ENV_NUMBER'] || ''}"
   SimpleCov.start "rails" do
     add_group "Services", "app/services"
     add_group "Policies", "app/policies"
@@ -10,10 +11,6 @@ unless ENV["COVERAGE"].nil?
     # all emails (including devise ones) get sent via gov.uk notify service
     add_filter "/app/mailers/application_mailer.rb"
     add_filter "/lib/"
-  end
-
-  if ENV['TEST_ENV_NUMBER'].present?
-    SimpleCov.command_name "rspec #{ENV['TEST_ENV_NUMBER']}"
   end
 end
 
