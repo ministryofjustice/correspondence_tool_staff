@@ -82,8 +82,8 @@ jobs:
 
       - name: Run unit and feature tests
         run: |
-          bundle exec rake parallel:setup[4]
-          bundle exec parallel_rspec -n 4
+          bundle exec rake parallel:setup[6]
+          bundle exec rake parallel:rspec[6]
 
       - name: Code coverage
         uses: joshmfrankel/simplecov-check-action@main
