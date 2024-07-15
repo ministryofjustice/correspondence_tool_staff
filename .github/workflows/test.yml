@@ -104,7 +104,7 @@ jobs:
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{CI_JOB_INDEX}}
+          name: coverage-${{env.CI_JOB_INDEX}}
           path: coverage/.resultset.json
 
   coverage:
