@@ -1,13 +1,13 @@
-spec/features/cases/search_filter_journeys_spec.rb:372.5340020000003
-spec/features/cases/list_filter_journey_spec.rb:298.1131789999781
 spec/features/cases/offender_sar_complaint/case_progressing_spec.rb:117.45980000006966
+spec/features/cases/search_filter_journeys_spec.rb:106.5340020000003
 spec/features/cases/offender_sar_complaint/case_creating_spec.rb:90.00734100001864
+spec/features/cases/list_filter_journey_spec.rb:83.1131789999781
+spec/features/cases/filters/external_deadline_spec.rb:69.45980000006966
 spec/features/cases/offender_sar_complaint/case_editing_spec.rb:53.133965000044554
 spec/features/user_journeys/foi/trigger_e2e_spec.rb:48.593246000004
 spec/features/user_journeys/ico/trigger_e2e_journey_spec.rb:47.34891299996525
 spec/features/cases/ico/case_creating/creating_spec.rb:47.035531000001356
 spec/features/cases/offender_sar/case_creating_spec.rb:46.567823000019416
-spec/features/cases/filters/timeliness_spec.rb:45.853046000003815
 spec/models/warehouse/case_report_spec.rb:42.635130999959074
 spec/services/stats/r004_cabinet_office_report_spec.rb:42.35148499999195
 spec/controllers/cases/ico_controller_spec.rb:41.360731999971904
@@ -40,6 +40,7 @@ spec/features/cases/ico/require_further_action_ico_foi_spec.rb:16.85001699998974
 spec/features/cases/offender_sar/case_editing_spec.rb:16.677566000027582
 spec/features/cases/offender_sar/case_closing_spec.rb:16.676473999978043
 spec/features/cases/foi/case_creating/creating_spec.rb:16.082118000020273
+spec/features/cases/filters/timeliness_spec.rb:15.853046000003815
 spec/services/stats/r102_sar_appeals_performance_report_spec.rb:15.849040000000969
 spec/controllers/cases/messages_controller_spec.rb:15.760163000086322
 spec/features/user_journeys/sar/non_trigger_spec.rb:15.34774999995716
