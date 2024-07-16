@@ -102,7 +102,7 @@ jobs:
       - name: Setup databases
         uses: nick-fields/retry@v3
         with:
-          retry_on: error
+          timeout_minutes: 1
           max_attempts: 3
           command: bin/rake 'parallel:setup[4]'
 
