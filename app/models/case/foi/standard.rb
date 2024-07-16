@@ -108,7 +108,7 @@ class Case::FOI::Standard < Case::Base
 
     disclosure_approval_date = transitions.where(
       event: "approve",
-      acting_team: default_clearance_team,
+      acting_team_id: default_clearance_team.id,
     ).last.created_at.to_date
 
     internal_deadline = @deadline_calculator.internal_deadline_for_date(
