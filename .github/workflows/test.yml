@@ -94,10 +94,15 @@ jobs:
       - name: Install packages
         run: yarn install --pure-lockfile
 
+      - name: Setup databases
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          command: bin/rake 'parallel:setup[4]'
+
       - name: Run unit and feature tests
-        run: |
-          bin/rake 'parallel:setup[4]'
-          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
+        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
