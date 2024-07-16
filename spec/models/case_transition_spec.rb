@@ -28,14 +28,14 @@ RSpec.describe CaseTransition, type: :model do
   let(:assign_responder_transition) do
     create :case_transition_assign_responder,
            case_id: kase.id,
-           acting_team_id: managing_team.id,
-           target_team_id: responding_team.id
+           acting_team: managing_team,
+           target_team: responding_team
   end
   let(:flag_case_for_clearance_transition) do
     create :flag_case_for_clearance_transition,
            case_id: kase.id,
-           acting_team_id: managing_team.id,
-           target_team_id: approving_team.id
+           acting_team: managing_team,
+           target_team: approving_team
   end
 
   it "has a acting_team_id" do
@@ -160,8 +160,8 @@ RSpec.describe CaseTransition, type: :model do
       kase = create :accepted_case
       transition = described_class.new(
         case_id: kase.id,
-        acting_user_id: kase.responder.id,
-        acting_team_id: kase.responding_team.id,
+        acting_user: kase.responder,
+        acting_team: kase.responding_team,
       )
 
       %w[

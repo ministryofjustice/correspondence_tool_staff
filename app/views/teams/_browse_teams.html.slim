@@ -35,6 +35,6 @@ div.form-group.directorate-selector
             = "This team has a special role and cannot be joined"
           - else
             = link_to t('teams.join.join_with_this_team'),
-                join_teams_form_team_path(@team, target_team_id: business_unit.id ),
+                join_teams_form_team_path(@team, target_team: business_unit ),
                 method: :get,
                 class: 'button'

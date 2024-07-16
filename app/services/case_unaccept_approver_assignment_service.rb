@@ -46,7 +46,7 @@ private
   def last_flagged_for_team(kase, by_team, for_team)
     flagging_events = %w[take_on_for_approval flag_for_clearance unflag_for_clearance]
     flagging_transitions = kase.transitions.where(event: flagging_events)
-    flagging_transitions_for_teams = flagging_transitions.where(acting_team_id: by_team.id, target_team_id: for_team.id)
+    flagging_transitions_for_teams = flagging_transitions.where(acting_team: by_team, target_team: for_team)
     last_flagging_transition_for_team = flagging_transitions_for_teams.last
     last_flagging_transition_for_team&.event.in? %w[take_on_for_approval flag_for_clearance]
   end

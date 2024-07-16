@@ -114,6 +114,7 @@ module ConfigurableStateMachine
       @roles = roles
       @roles = [roles] if roles.is_a?(String)
       @roles = extract_roles_from_metadata(metadata) if roles.nil?
+      p "1"
       @user = extract_user_from_metadata(metadata)
     end
 
@@ -327,6 +328,7 @@ module ConfigurableStateMachine
 
     def extract_roles_from_metadata(metadata)
       team = extract_team_from_metadata(metadata)
+      p 4
       user = extract_user_from_metadata(metadata)
       if team.nil?
         user.roles
