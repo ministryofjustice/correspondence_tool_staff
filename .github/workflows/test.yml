@@ -126,7 +126,7 @@ jobs:
       - name: Download coverage
         uses: actions/download-artifact@v4
         with:
-          path: coverage
+          path: coveragezip
 
       - name: Collate coverage
         run: bundle exec rake coverage:report
