@@ -3,6 +3,21 @@ namespace :coverage do
   task report: :environment do
     require "simplecov"
 
-    SimpleCov.collate Dir["coverage*"]
+    Dir.foreach("coverage") do |file_name|
+      next if File.directory?(file_name) || File.extname(file_name) != ".zip"
+
+      file = File.join("coverage", file_name)
+
+      Zip::File.open(file) do |zip_file|
+        zip_file.each do |f|
+          fpath = File.join("coverage", "#{SecureRandom.hex}.json")
+          zip_file.extract(f, fpath)
+        end
+      end
+
+      File.delete(file)
+    end
+
+    SimpleCov.collate Dir["coverage/*"]
   end
 end

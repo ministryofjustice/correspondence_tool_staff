@@ -82,7 +82,7 @@ jobs:
 
       - name: Find yarn cache location
         id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: JS package cache
         uses: actions/cache@v4
@@ -125,6 +125,8 @@ jobs:
 
       - name: Download coverage
         uses: actions/download-artifact@v4
+        with:
+          path: coverage
 
       - name: Collate coverage
         run: bundle exec rake coverage:report
