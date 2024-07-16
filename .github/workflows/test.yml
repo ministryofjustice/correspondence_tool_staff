@@ -99,7 +99,7 @@ jobs:
         with:
           timeout_minutes: 1
           max_attempts: 3
-          command: bin/rake 'parallel:setup[4]'
+          command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
       - name: Run unit and feature tests
         run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
