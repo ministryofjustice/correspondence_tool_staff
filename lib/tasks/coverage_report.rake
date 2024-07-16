@@ -1,5 +1,6 @@
 def directory_loop(name)
   Dir.foreach(name) do |file_name|
+    p file_name
     next if [".", ".."].include?(file_name)
 
     file = File.join(name, file_name)
@@ -9,6 +10,7 @@ def directory_loop(name)
     else
       next if File.extname(file_name) != ".zip"
 
+      p "Found zip"
       Zip::File.open(file) do |zip_file|
         zip_file.each do |f|
           fpath = File.join("coverage", "#{SecureRandom.hex}.json")
