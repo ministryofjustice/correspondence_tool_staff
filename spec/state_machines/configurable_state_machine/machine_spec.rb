@@ -366,7 +366,7 @@ module ConfigurableStateMachine
             machine = described_class.new(config:, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
                      event_name: :destroy_case,
-                     metadata: { acting_user: @manager, acting_team: @managing_team },
+                     metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
                    )).to be true
           end
         end
@@ -877,14 +877,14 @@ module ConfigurableStateMachine
 
         context "when acting_user_id no team" do
           it "extracts all three roles" do
-            metadata = { acting_user: user }
+            metadata = { acting_user_id: user.id }
             expect(machine.__send__(:extract_roles_from_metadata, metadata)).to match_array expected_roles
           end
         end
 
         context "when acting_team_id" do
           it "extracts the role for managing team" do
-            metadata = { acting_user: user, acting_team: managing_team }
+            metadata = { acting_user: user, acting_team_id: managing_team.id }
             expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq %w[manager]
           end
         end
