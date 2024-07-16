@@ -30,7 +30,6 @@ jobs:
         run: bundle exec brakeman -q
 
   test:
-    needs: linting
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -142,6 +141,6 @@ jobs:
 
   build-and-deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs: coverage
+    needs: [linting, coverage]
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
