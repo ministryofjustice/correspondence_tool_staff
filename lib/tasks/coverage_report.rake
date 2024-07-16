@@ -1,6 +1,5 @@
 def directory_loop(name)
   Dir.foreach(name) do |file_name|
-    p file_name
     next if [".", ".."].include?(file_name)
 
     file = File.join(name, file_name)
@@ -26,8 +25,6 @@ namespace :coverage do
   task report: :environment do
     require "simplecov"
 
-    Dir.mkdir("coverage") unless File.exist?("coverage")
-    directory_loop("coveragezip")
-    SimpleCov.collate Dir["coverage/*"]
+    SimpleCov.collate Dir["coverage/coverage*/.resultset.json"]
   end
 end
