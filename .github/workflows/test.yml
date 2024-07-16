@@ -103,7 +103,8 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           timeout_seconds: 10
-          max_attempts: 2
+          retry_on: error
+          max_attempts: 3
           command: bin/rake 'parallel:setup[4]'
 
       - name: Run unit and feature tests
