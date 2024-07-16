@@ -80,11 +80,6 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 14.17.5
-
       - name: Find yarn cache location
         id: yarn-cache
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -94,17 +89,20 @@ jobs:
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Install packages
-        run: |
-          yarn install --pure-lockfile
+        run: yarn install --pure-lockfile
+
+      - name: Setup databases
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
       - name: Run unit and feature tests
-        run: |
-          bin/rake 'parallel:setup[4]'
-          bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
+        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
