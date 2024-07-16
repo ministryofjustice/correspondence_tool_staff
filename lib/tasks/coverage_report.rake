@@ -4,7 +4,7 @@ namespace :coverage do
     require "simplecov"
 
     Dir.foreach("coverage") do |file_name|
-      next if File.directory?(file_name) || File.extname(file_name) != ".zip"
+      next if File.directory?(file_name)
 
       file = File.join("coverage", file_name)
 
