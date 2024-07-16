@@ -93,8 +93,8 @@ private
 
   def move_associations_to_new_team
     Assignment.where(case_id: @team.assigned_open_cases.ids, team_id: @team.id).update_all(team_id: @target_team.id)
-    CaseTransition.where(acting_team: @team).update_all(acting_team: @target_team)
-    CaseTransition.where(target_team: @team).update_all(target_team: @target_team)
+    CaseTransition.where(acting_team: @team).update_all(acting_team_id: @target_team.id)
+    CaseTransition.where(target_team: @team).update_all(target_team_id: @target_team.id)
   end
 
   def deactivate_old_team
