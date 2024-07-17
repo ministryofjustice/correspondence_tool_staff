@@ -34,10 +34,10 @@ moj.Modules.DataRequestActions = {
 
   clearNoteField: function() {
     if (!$('#data_request_request_type_bwcf').is(':checked')) {
-      $('#request_type_note_for_bwcf_panel').empty();
+      $('#request_type_bwcf_panel').empty();
     }
     if (!$('#data_request_request_type_cctv').is(':checked')) {
-      $('#request_type_note_for_cctv_panel').empty();
+      $('#request_type_cctv_panel').empty();
     }
     if (!$('#data_request_request_type_other').is(':checked')) {
       $('#request_type_other_panel').empty();
