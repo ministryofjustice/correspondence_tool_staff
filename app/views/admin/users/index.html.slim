@@ -13,6 +13,11 @@
     = " #{ 'active user'.pluralize(@active_users_count)}"
 
 .grid-row
+  = form_with method: :get do |f|
+    = f.text_field :search_for, value: params[:search_for]
+    = f.submit "Search"
+
+.grid-row
   .column-full.table-container.container
     table.users.table-font-xsmall.report
       colgroup
@@ -24,6 +29,8 @@
         th scope='col'
           = t('.email')
         th scope='col'
+          = t('.deactivated')
+        th scope='col'
           = t('.teams')
         th scope='col'
           = t('.cases')
@@ -34,6 +41,8 @@
               = user.full_name
             td aria-label="#{t('.email')}"
               = user.email
+            td aria-label="#{t('.deactivated')}"
+              = user.deactivated? ? user.deleted_at.strftime("%d/%m/%Y") : "No"
             td aria-label="#{t('.teams')}"
               ul
                 - user.teams.each do |team|
