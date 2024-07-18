@@ -221,7 +221,7 @@ module ConfigurableStateMachine
             allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
-                     metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
+                     metadata: { acting_user: @manager, acting_team: @managing_team },
                    )).to be false
           end
         end
@@ -234,7 +234,7 @@ module ConfigurableStateMachine
             allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
-                     metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
+                     metadata: { acting_user: @manager, acting_team: @managing_team },
                    )).to be true
           end
         end
@@ -251,7 +251,7 @@ module ConfigurableStateMachine
             allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
-                     metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
+                     metadata: { acting_user: @manager, acting_team: @managing_team },
                    )).to be true
           end
         end
@@ -376,7 +376,7 @@ module ConfigurableStateMachine
             machine = described_class.new(config:, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
                      event_name: :close_case,
-                     metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
+                     metadata: { acting_user: @manager, acting_team: @managing_team },
                    )).to be false
           end
         end
@@ -434,7 +434,7 @@ module ConfigurableStateMachine
             machine = described_class.new(config:, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
                      event_name: :destroy_case,
-                     metadata: { acting_user_id: @manager.id },
+                     metadata: { acting_user: @manager },
                    )).to be true
           end
         end
@@ -444,7 +444,7 @@ module ConfigurableStateMachine
             machine = described_class.new(config:, kase: @unassigned_case)
             expect(machine.can_trigger_event?(
                      event_name: :close_case,
-                     metadata: { acting_user_id: @manager.id },
+                     metadata: { acting_user: @manager },
                    )).to be false
           end
         end
@@ -884,14 +884,14 @@ module ConfigurableStateMachine
 
         context "when acting_team_id" do
           it "extracts the role for managing team" do
-            metadata = { acting_user_id: user.id, acting_team_id: managing_team.id }
+            metadata = { acting_user: user, acting_team_id: managing_team.id }
             expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq %w[manager]
           end
         end
 
         context "when acting_team" do
           it "extracts the role for approver" do
-            metadata = { acting_user_id: user.id, acting_team: responding_team }
+            metadata = { acting_user: user, acting_team: responding_team }
             expect(machine.__send__(:extract_roles_from_metadata, metadata)).to eq %w[responder]
           end
         end
@@ -902,7 +902,7 @@ module ConfigurableStateMachine
       describe "invalid event" do
         it "raises" do
           expect {
-            machine.next_state_for_event(:dummy_event, acting_user_id: @manager.id)
+            machine.next_state_for_event(:dummy_event, acting_user: @manager)
           }.to raise_error ConfigurableStateMachine::InvalidEventError
         end
       end
@@ -913,7 +913,7 @@ module ConfigurableStateMachine
           machine = described_class.new(config:, kase:)
           manager = kase.managing_team.users.first
           expect(kase.current_state).to eq "drafting"
-          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user: manager)
           expect(next_state).to eq "ready_to_send"
         end
       end
@@ -928,7 +928,7 @@ module ConfigurableStateMachine
             allow_any_instance_of(ConfigurableStateMachine::DummyConditional) # rubocop:disable RSpec/AnyInstance
               .to receive(:remove_response).and_return("drafting")
             expect(kase.current_state).to eq "awaiting_dispatch"
-            next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
+            next_state = machine.next_state_for_event(:remove_response, acting_user: manager)
             expect(next_state).to eq "drafting"
           end
         end
@@ -941,7 +941,7 @@ module ConfigurableStateMachine
 
         it "returns the current state of the case" do
           expect(kase.current_state).to eq "unassigned"
-          next_state = machine.next_state_for_event(:add_message_to_case, acting_user_id: manager.id)
+          next_state = machine.next_state_for_event(:add_message_to_case, acting_user: manager)
           expect(next_state).to eq "unassigned"
         end
       end

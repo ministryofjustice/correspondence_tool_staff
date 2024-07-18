@@ -82,25 +82,25 @@ describe CaseUnacceptApproverAssignmentService do
           # press officer flagging it for themselves and flags for dacu disclosure as side effect
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 acting_user_id: press_officer.id,            # user: press_officer
-                 target_team_id: dacu_disclosure.id,          # approving_team: dacu_disclosure
-                 acting_team_id: press_office.id              # managing_team: press_office
+                 acting_user: press_officer,            # user: press_officer
+                 target_team: dacu_disclosure,          # approving_team: dacu_disclosure
+                 acting_team: press_office              # managing_team: press_office
 
           # press office flagging it for themselves
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 acting_user_id: press_officer.id,            # user: press_officer
-                 acting_team_id: press_office.id,             # approving_team: press_office
-                 target_team_id: press_office.id,             # managing_team: press_office
-                 target_user_id: press_officer.id
+                 acting_user: press_officer,            # user: press_officer
+                 acting_team: press_office,             # approving_team: press_office
+                 target_team: press_office,             # managing_team: press_office
+                 target_user: press_officer
 
           # press office flagging it for themselves and flags for private office as a side effect
           create :flag_case_for_clearance_transition,
                  case: assigned_to_press_office_case,
-                 acting_user_id: press_officer.id,
-                 acting_team_id: press_office.id,             # managing_team: press_office
-                 target_user_id: private_officer.id,          # user: private_officer
-                 target_team_id: private_office.id            # approving_team: private_office
+                 acting_user: press_officer,
+                 acting_team: press_office,             # managing_team: press_office
+                 target_user: private_officer,          # user: private_officer
+                 target_team: private_office            # approving_team: private_office
         end
 
         it "deletes approver assignments" do
@@ -148,9 +148,9 @@ describe CaseUnacceptApproverAssignmentService do
           private_office_transition = assigned_to_press_office_case
                                         .transitions
                                         .where(event: :take_on_for_approval,
-                                               target_team_id: private_office.id)
-          private_office_transition.update acting_team_id: private_office.id, # rubocop:disable Rails/SaveBang
-                                           acting_user_id: private_officer.id
+                                               target_team: private_office)
+          private_office_transition.update acting_team: private_office, # rubocop:disable Rails/SaveBang
+                                           acting_user: private_officer
         end
 
         it "deletes only assignments made by press office" do

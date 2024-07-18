@@ -595,7 +595,7 @@ describe Case::BasePolicy do
       expect(described_class).to permit(manager, closed_case)
       expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
         event_name: :update_closure,
-        metadata: { acting_user_id: manager.id },
+        metadata: { acting_user: manager },
       )
     end
 
@@ -604,7 +604,7 @@ describe Case::BasePolicy do
       expect(described_class).not_to permit(manager, closed_case)
       expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
         event_name: :update_closure,
-        metadata: { acting_user_id: manager.id },
+        metadata: { acting_user: manager },
       )
     end
   end
