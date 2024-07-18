@@ -548,7 +548,7 @@ private
   check :can_trigger_event do |event_name|
     self.case.state_machine.can_trigger_event?(
       event_name:,
-      metadata: { acting_user_id: user.id },
+      metadata: { acting_user: user },
     )
   end
 end

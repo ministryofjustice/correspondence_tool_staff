@@ -1,5 +1,16 @@
 unless ENV["COVERAGE"].nil?
   require "simplecov"
+  require "simplecov-json"
+
+  if ENV["CI"]
+    SimpleCov.formatter = SimpleCov::Formatter::SimpleFormatter
+  else
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::JSONFormatter,
+    ])
+  end
+
   SimpleCov.start "rails" do
     add_group "Services", "app/services"
     add_group "Policies", "app/policies"
@@ -24,7 +35,7 @@ require "capybara/rspec"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Capybara.default_max_wait_time = 4
+Capybara.default_max_wait_time = 1
 
 options = Selenium::WebDriver::Chrome::Options.new
 options.add_argument("--headless")

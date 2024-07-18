@@ -438,8 +438,8 @@ class Case::Base < ApplicationRecord
       to_workflow: workflow,
       sort_key: CaseTransition.next_sort_key(self),
       most_recent: true,
-      acting_user_id: creator.id,
-      acting_team_id: managing_team.id,
+      acting_user: creator,
+      acting_team: managing_team,
     }
     CaseTransition.create!(attrs)
   end
