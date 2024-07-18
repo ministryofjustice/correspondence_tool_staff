@@ -30,7 +30,7 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def display_request_type_note?
-    %w[other nomis_other cctv bwcf].include?(request_type)
+    %w[other nomis_other cctv bwcf].include?(request_type) && request_type_note.present?
   end
 
 private

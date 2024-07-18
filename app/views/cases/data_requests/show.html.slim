@@ -31,7 +31,7 @@ span.visually-hidden
         - if @data_request.display_request_type_note? && @data_request.request_type_note.present?
           =":"
           br
-          = data_request.request_type_note
+          = @data_request.request_type_note
     .form-group
       label.form-label
         = t('helpers.fieldset.data_request.date_requested')
