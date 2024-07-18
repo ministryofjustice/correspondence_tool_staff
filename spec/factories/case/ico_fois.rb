@@ -59,7 +59,7 @@ FactoryBot.define do
         )
         create :flag_case_for_clearance_transition,
                case: kase,
-               target_team_id: evaluator.approving_team.id
+               target_team: evaluator.approving_team
       end
     end
   end

@@ -19,7 +19,7 @@ RSpec::Matchers.define :use_event do |event_name|
     state_machine = next_step_info.instance_variable_get :@state_machine
     expect(state_machine).to have_received(:next_state_for_event)
                                .with(event_name,
-                                     acting_user_id: disclosure_specialist.id)
+                                     acting_user: disclosure_specialist)
                                .at_least(1).times
   end
 end

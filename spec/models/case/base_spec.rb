@@ -1241,8 +1241,8 @@ RSpec.describe Case::Base, type: :model do
         metadata: {},
         sort_key: kase.transitions.empty? ? 10 : kase.transitions.maximum(:sort_key) + 10,
         most_recent: false,
-        acting_user_id: acting_team.users.first.id,
-        acting_team_id: acting_team.id,
+        acting_user: acting_team.users.first,
+        acting_team:,
         target_user_id: target_user&.id,
         target_team_id: target_team&.id,
       )
