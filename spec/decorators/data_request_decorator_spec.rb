@@ -122,17 +122,17 @@ describe DataRequestDecorator, type: :model do
     end
 
     it "returns true when request_type is 'nomis_other'" do
-      data_request = create(:data_request, request_type: "nomis_other")
+      data_request = create(:data_request, request_type: "nomis_other", request_type_note: "nomis other details")
       expect(data_request.decorate).to be_display_request_type_note
     end
 
     it "returns true when request_type is 'cctv'" do
-      data_request = create(:data_request, request_type: "cctv")
+      data_request = create(:data_request, request_type: "cctv", request_type_note: "cctv details")
       expect(data_request.decorate).to be_display_request_type_note
     end
 
     it "returns true when request_type is 'bwcf'" do
-      data_request = create(:data_request, request_type: "bwcf")
+      data_request = create(:data_request, request_type: "bwcf", request_type_note: "bwcf details")
       expect(data_request.decorate).to be_display_request_type_note
     end
 
