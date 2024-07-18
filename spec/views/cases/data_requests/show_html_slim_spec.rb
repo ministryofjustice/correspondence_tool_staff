@@ -58,7 +58,6 @@ describe "cases/data_requests/show", type: :view do
 
     before do
       allow(policy).to receive(:can_record_data_request?).and_return can_record_data_request
-
     end
 
     context "when data request without commissioning document" do
