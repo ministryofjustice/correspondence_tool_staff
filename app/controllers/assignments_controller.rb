@@ -9,14 +9,17 @@ class AssignmentsController < ApplicationController
   ]
 
   before_action :set_case_and_assignment, only: %i[
-    accept
-    accept_or_reject
     assign_to_new_team
-    edit
     execute_assign_to_new_team
     execute_reassign_user
     reassign_user
     unaccept
+  ]
+
+  before_action :set_case_and_valid_assignment, only: %i[
+    accept
+    accept_or_reject
+    edit
   ]
 
   before_action :validate_response, only: :accept_or_reject
@@ -292,10 +295,16 @@ private
     redirect_on_deleted_case! and return
 
     set_case
+    set_assignment
+  end
 
-    if Assignment.exists?(id: params[:id])
-      @assignment = @case.assignments.find(params[:id])
-    end
+  def set_case_and_valid_assignment
+    redirect_on_deleted_case! and return
+
+    set_case
+    set_assignment
+
+    @assignment = nil unless current_user.responding_teams.include?(@assignment.team)
   end
 
   def redirect_on_deleted_case!
@@ -312,6 +321,12 @@ private
               .find(params[:case_id])
               .decorate
     @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.order(id: :desc).decorate
+  end
+
+  def set_assignment
+    if Assignment.exists?(id: params[:id])
+      @assignment = @case.assignments.find(params[:id])
+    end
   end
 
   def set_team_users
