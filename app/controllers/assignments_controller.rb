@@ -309,11 +309,9 @@ private
 
   def set_case
     @case = Case::Base
-              .includes(transitions: %i[target_team acting_team acting_user])
               .find(params[:case_id])
               .decorate
-    @case_transitions = @case.transitions.decorate
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
+    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.order(id: :desc).decorate
   end
 
   def set_team_users
