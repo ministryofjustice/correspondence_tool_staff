@@ -313,6 +313,7 @@ private
               .find(params[:case_id])
               .decorate
     @case_transitions = @case.transitions.decorate
+    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
   end
 
   def set_team_users
