@@ -246,10 +246,6 @@ class Case::Base < ApplicationRecord
           through: :managing_assignment,
           source: :team
 
-  has_one :responder,
-          through: :responder_assignment,
-          source: :user
-
   has_one :responder_assignment,
           -> { last_responding },
           class_name: "Assignment",
