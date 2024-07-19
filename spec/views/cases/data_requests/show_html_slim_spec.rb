@@ -62,7 +62,7 @@ describe "cases/data_requests/show", type: :view do
 
     context "when data request without commissioning document" do
       before do
-        assign(:data_request, data_request)
+        assign(:data_request, data_request.decorate)
         assign(:case, data_request.kase)
 
         render
@@ -86,7 +86,7 @@ describe "cases/data_requests/show", type: :view do
 
     context "when data request for Nomis other records is selected" do
       before do
-        assign(:data_request, data_request_other)
+        assign(:data_request, data_request_other.decorate)
         assign(:case, data_request.kase)
 
         render
@@ -111,7 +111,7 @@ describe "cases/data_requests/show", type: :view do
     context "when commissioning document has been selected" do
       before do
         assign(:commissioning_document, commissioning_document.decorate)
-        assign(:data_request, data_request)
+        assign(:data_request, data_request.decorate)
         assign(:case, data_request.kase)
 
         render
@@ -136,7 +136,7 @@ describe "cases/data_requests/show", type: :view do
         create(:data_request_email, data_request:, created_at: "2023-07-07 14:53", email_address:)
         commissioning_document.sent = true
         assign(:commissioning_document, commissioning_document.decorate)
-        assign(:data_request, data_request)
+        assign(:data_request, data_request.decorate)
         assign(:case, data_request.kase)
 
         render
@@ -163,7 +163,7 @@ describe "cases/data_requests/show", type: :view do
       let(:can_record_data_request) { false }
 
       before do
-        assign(:data_request, data_request)
+        assign(:data_request, data_request.decorate)
         assign(:case, data_request.kase)
 
         render
