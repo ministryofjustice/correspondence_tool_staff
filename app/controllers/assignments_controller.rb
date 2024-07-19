@@ -304,7 +304,7 @@ private
     set_case
     set_assignment
 
-    @assignment = nil unless current_user.responding_teams.include?(@assignment.team)
+    @assignment = nil unless current_user.teams_for_case(@case).include?(@assignment.team)
   end
 
   def redirect_on_deleted_case!
