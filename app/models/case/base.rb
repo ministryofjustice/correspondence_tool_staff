@@ -255,6 +255,10 @@ class Case::Base < ApplicationRecord
           class_name: "Assignment",
           foreign_key: :case_id
 
+  has_one :responder,
+          through: :responder_assignment,
+          source: :user
+
   has_one :responding_team,
           through: :responder_assignment,
           source: :team
