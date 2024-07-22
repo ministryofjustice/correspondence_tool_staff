@@ -92,18 +92,23 @@ class AssignmentsController < ApplicationController
   end
 
   def accept_or_reject
-    authorize @case, :can_accept_or_reject_responder_assignment?
+    if @assignment
+      authorize @case, :can_accept_or_reject_responder_assignment?
 
-    if accept?
-      @assignment.accept current_user
-      redirect_to case_path @assignment.case, accepted_now: true
-    elsif valid_reject?
-      @assignment.reject current_user, assignment_params[:reasons_for_rejection]
-      flash[:notice] = "#{@case.number} has been rejected.".html_safe
-      redirect_user_to_specific_landing_page
+      if accept?
+        @assignment.accept current_user
+        redirect_to case_path @assignment.case, accepted_now: true
+      elsif valid_reject?
+        @assignment.reject current_user, assignment_params[:reasons_for_rejection]
+        flash[:notice] = "#{@case.number} has been rejected.".html_safe
+        redirect_user_to_specific_landing_page
+      else
+        @assignment.assign_and_validate_state(assignment_params[:state])
+        render :edit
+      end
     else
-      @assignment.assign_and_validate_state(assignment_params[:state])
-      render :edit
+      flash[:notice] = "Case assignment does not exist."
+      redirect_to case_path @case
     end
   end
 
@@ -334,6 +339,8 @@ private
   end
 
   def validate_response
+    return unless @assignment
+
     if assignment_params[:state].nil?
       @assignment.errors.add(:state, :blank)
     end
