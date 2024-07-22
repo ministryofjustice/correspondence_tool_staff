@@ -19,7 +19,8 @@ module Stats
 
         @team_a = create :business_unit, name: "RTA", directorate: @dir_a
         @team_b = create :business_unit, name: "RTB", directorate: @dir_b
-        @team_c = create :business_unit, name: "RTC", directorate: @dir_cd, moved_to_unit_id: 45
+        @team_new_c = create :business_unit, name: "RTC", directorate: @dir_cd
+        @team_c = create :business_unit, name: "RTC", directorate: @dir_cd, moved_to_unit_id: 4545
         @team_d = create :business_unit, name: "RTD", directorate: @dir_cd
         @team_dacu_disclosure = find_or_create :team_dacu_disclosure
 
