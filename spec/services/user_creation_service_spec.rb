@@ -162,7 +162,9 @@ describe UserCreationService do
 
         it "sets a base error on the user model" do
           service.call
-          expect(service.user.errors[:base]).to eq ["An existing user with this email address already exists with the name: Stephen Richards"]
+          expect(service.user.errors[:base]).to eq [
+            "The user with that email address has a different name. To add them to the team, enter their full name as Stephen Richards",
+          ]
         end
 
         it "returns :existing_user_name_mismatch" do
