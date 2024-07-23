@@ -111,21 +111,23 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query \
-          webapp="${{ vars.ECR_URL }}:$SHA" \
-          quickjobs="${{ vars.ECR_URL }}:$SHA" \
-          uploads="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query-jobs \
-          jobs="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          cronjobs/close-expired-rejected-offender-sars \
-          jobs="${{ vars.ECR_URL }}:$SHA"
+          kubectl apply -f config/kubernetes/development/configmap.yaml -n ${KUBE_NAMESPACE}
+
+          kubectl set image -f config/kubernetes/development/migrations.yaml \
+            migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
+            webapp="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            uploads="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
+            jobs="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -211,21 +213,23 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query \
-          webapp="${{ vars.ECR_URL }}:$SHA" \
-          quickjobs="${{ vars.ECR_URL }}:$SHA" \
-          uploads="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query-jobs \
-          jobs="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          cronjobs/close-expired-rejected-offender-sars \
-          jobs="${{ vars.ECR_URL }}:$SHA"
+          kubectl apply -f config/kubernetes/staging/configmap.yaml -n ${KUBE_NAMESPACE}
+
+          kubectl set image -f config/kubernetes/staging/migrations.yaml \
+            migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
+            webapp="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            uploads="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
+            jobs="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -311,21 +315,23 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query \
-          webapp="${{ vars.ECR_URL }}:$SHA" \
-          quickjobs="${{ vars.ECR_URL }}:$SHA" \
-          uploads="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query-jobs \
-          jobs="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          cronjobs/close-expired-rejected-offender-sars \
-          jobs="${{ vars.ECR_URL }}:$SHA"
+          kubectl apply -f config/kubernetes/qa/configmap.yaml -n ${KUBE_NAMESPACE}
+
+          kubectl set image -f config/kubernetes/qa/migrations.yaml \
+            migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
+            webapp="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            uploads="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
+            jobs="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
@@ -412,26 +418,27 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query \
-          webapp="${{ vars.ECR_URL }}:$SHA" \
-          quickjobs="${{ vars.ECR_URL }}:$SHA" \
-          uploads="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA" 
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          deployment/track-a-query-jobs \
-          jobs="${{ vars.ECR_URL }}:$SHA" \
-          anonjobs="${{ vars.ECR_URL }}:$SHA" \
-          pending-migrations="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          cronjobs/close-expired-rejected-offender-sars \
-          jobs="${{ vars.ECR_URL }}:$SHA"
-          
-          kubectl set image -n ${KUBE_NAMESPACE} \
-          cronjobs/email-status \
-          jobs="${{ vars.ECR_URL }}:$SHA"
+          kubectl apply -f config/kubernetes/production/configmap.yaml -n ${KUBE_NAMESPACE}
+
+          kubectl set image -f config/kubernetes/production/migrations.yaml \
+            migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
+            webapp="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            uploads="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
+            jobs="${{ vars.ECR_URL }}:$SHA" \
+            anonjobs="${{ vars.ECR_URL }}:$SHA" \
+            pending-migrations="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/email-status \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
       - name: Send deploy notification to product Slack channel
         uses: slackapi/slack-github-action@v1.25.0
