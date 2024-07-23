@@ -34,7 +34,7 @@ private
 
       @result = :existing_ok
     else
-      error_message = "An existing user with this email address already exists with the name: #{@user.full_name}"
+      error_message = "The user with that email address has a different name. To add them to the team, enter their full name as #{@user.full_name.strip}"
       @user = User.new(@params)
       @user.errors.add(:base, error_message)
     end

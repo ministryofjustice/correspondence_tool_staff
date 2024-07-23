@@ -1282,6 +1282,7 @@ en:
     users:
       index:
         cases: Cases
+        deactivated: Deactivated
         email: Email
         full_name: Name
         heading: Users
