@@ -31,6 +31,9 @@ config/environments/*.local.yml
 env.sh
 .env.sh
 
+#Ignore local upload and attachments
+/uploads
+public/uploads
 
 # Ignore .DS_Store in all directories
 .DS_Store
