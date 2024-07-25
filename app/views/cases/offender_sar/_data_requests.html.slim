@@ -11,21 +11,23 @@
       table#data-request-table.report
         thead
           tr
+            th Data area
             th Location
-            th Data
+            th Data requests
             th Date requested
             th Pages received
             th Date completed
             th Status
             th
-            th
         tbody
           - case_details.data_requests.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request|
             tr
               td
+                / = data_request.data_area
+              td
                 = data_request.location
               td
-                = render "cases/offender_sar/data_request_request_type", data_request: data_request
+                / = data_request.sub_request
               td
                 - if data_request.date_requested.present?
                   time datetime="#{data_request.date_requested}"
@@ -40,9 +42,6 @@
                 = data_request.status
               td
                 = link_to t('cases.data_requests.show.link'), case_data_request_path(case_details, data_request), class: 'data-requests__show'
-              td
-                - if policy(case_details).can_record_data_request? && allow_editing
-                  = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__edit'
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '3', value_span: '3' }
