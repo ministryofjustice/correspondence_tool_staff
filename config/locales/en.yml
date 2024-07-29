@@ -1637,7 +1637,7 @@ en:
       upto: "Up to"
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
-    data_requests_area:
+    data_request_area:
       show:
         heading: Data requested
     commissioning_documents:
