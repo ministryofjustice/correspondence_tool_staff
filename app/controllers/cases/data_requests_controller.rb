@@ -12,6 +12,10 @@ module Cases
       @data_request = DataRequest.new
     end
 
+    def new_area
+      @data_request_area = DataRequestArea.new
+    end
+
     def create
       service = DataRequestCreateService.new(
         kase: @case,
@@ -118,7 +122,7 @@ module Cases
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
-        :date_to_dd, :date_to_mm, :date_to_yyyy
+        :date_to_dd, :date_to_mm, :date_to_yyyy,
       )
     end
 
@@ -133,7 +137,7 @@ module Cases
         :date_to_dd, :date_to_mm, :date_to_yyyy,
         :cached_num_pages,
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
-        :completed
+        :completed,
       )
     end
 

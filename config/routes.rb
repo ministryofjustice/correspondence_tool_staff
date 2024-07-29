@@ -222,6 +222,9 @@ Rails.application.routes.draw do
         post :send_email
       end
 
+      get "/data_request_area", on: :collection, to: "data_requests#new_area"
+      post "/data_request_area", on: :collection, to: "data_requests#new_area"
+
       resources :commissioning_documents, only: %i[new edit create update] do
         member do
           get :download

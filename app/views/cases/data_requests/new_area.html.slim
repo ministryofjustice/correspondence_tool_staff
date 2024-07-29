@@ -1,0 +1,32 @@
+- content_for :page_title do
+  = t('page_title.data_request_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @data_request_area,
+   "#{pluralize(@data_request_area.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @data_request_area, method: :post, url: data_request_area_case_data_requests_path do |f|
+
+  = f.radio_button_fieldset :data_request_area,
+    choices: DataRequestArea::DATA_REQUEST_AREAS.keys do |fieldset|
+    - fieldset.radio_input('prison')
+    - fieldset.radio_input('probation')
+    - fieldset.radio_input('branston')
+    - fieldset.radio_input('branston_registry')
+    - fieldset.radio_input('mappa')
+
+  .button-holder
+    = f.submit 'Continue', class: 'button'
+    = link_to('Cancel', contacts_url, class: 'acts-like-button moj-style-link')

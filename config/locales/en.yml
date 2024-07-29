@@ -369,6 +369,9 @@ en:
               blank: cannot be blank
             location:
               blank: cannot be blank
+        data_request_area:
+          data_request_area:
+            blank: Select where the data you are requesting is from
         linked_case:
           missing: "does not exist"
           references_self: "cannot link to the same case"
@@ -555,6 +558,8 @@ en:
         date_from: Date from
         date_to: Date to
         date_requested: Date requested
+      data_request_area:
+        data_request_area: Where is the data you are requesting from?
       commissioning_document:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
@@ -730,6 +735,13 @@ en:
           dps: DPS
           cctv: CCTV
           bwcf: BWCF
+      data_request_area:
+        data_request_area:
+          prison: Prison
+          probation: Probation
+          branston: Branston
+          branston_registry: Branston Registry
+          mappa: MAPPA
 
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
@@ -1607,6 +1619,8 @@ en:
         heading: Record data request
         date_from_copy: Request all data held from this date onward
         date_to_copy: Request all data held up until this date
+      new_area:
+        heading: Record data request
       onwards: "onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"

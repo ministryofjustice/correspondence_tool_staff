@@ -57,8 +57,6 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_contact_logs',
     'probation_records',
     'cctv_and_bwcf',
-    'cctv',
-    'bwcf',
     'telephone_recordings',
     'telephone_pin_logs',
     'probation_archive',
@@ -69,7 +67,9 @@ CREATE TYPE public.request_types AS ENUM (
     'cross_borders',
     'cat_a',
     'ndelius',
-    'dps'
+    'dps',
+    'cctv',
+    'bwcf'
 );
 
 
@@ -712,7 +712,8 @@ CREATE TABLE public.data_requests (
     date_to date,
     completed boolean DEFAULT false NOT NULL,
     contact_id bigint,
-    email_branston_archives boolean DEFAULT false
+    email_branston_archives boolean DEFAULT false,
+    data_request_area text DEFAULT ''::text NOT NULL
 );
 
 
@@ -2281,6 +2282,7 @@ ALTER TABLE ONLY public.data_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240728165314'),
 ('20240701203227'),
 ('20240521142846'),
 ('20240502125941'),
@@ -2454,3 +2456,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160802134012'),
 ('20160802130203'),
 ('20160722121207');
+
