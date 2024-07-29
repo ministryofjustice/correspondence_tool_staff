@@ -46,6 +46,19 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 
 
 --
+-- Name: data_request_area_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.data_request_area_type AS ENUM (
+    'prison',
+    'probation',
+    'branston',
+    'branston_registry',
+    'mappa'
+);
+
+
+--
 -- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -658,6 +671,37 @@ CREATE TABLE public.data_migrations (
 
 
 --
+-- Name: data_request_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_request_areas (
+    id bigint NOT NULL,
+    case_id bigint,
+    area_type character varying,
+    data_request_area_type public.data_request_area_type NOT NULL
+);
+
+
+--
+-- Name: data_request_areas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_request_areas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_request_areas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_request_areas_id_seq OWNED BY public.data_request_areas.id;
+
+
+--
 -- Name: data_request_emails; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -712,8 +756,7 @@ CREATE TABLE public.data_requests (
     date_to date,
     completed boolean DEFAULT false NOT NULL,
     contact_id bigint,
-    email_branston_archives boolean DEFAULT false,
-    data_request_area text DEFAULT ''::text NOT NULL
+    email_branston_archives boolean DEFAULT false
 );
 
 
@@ -1452,6 +1495,13 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: data_request_areas id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas ALTER COLUMN id SET DEFAULT nextval('public.data_request_areas_id_seq'::regclass);
+
+
+--
 -- Name: data_request_emails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1688,6 +1738,14 @@ ALTER TABLE ONLY public.correspondence_types
 
 ALTER TABLE ONLY public.data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: data_request_areas data_request_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT data_request_areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -2011,6 +2069,13 @@ CREATE INDEX index_contacts_on_contact_type_id ON public.contacts USING btree (c
 
 
 --
+-- Name: index_data_request_areas_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_case_id ON public.data_request_areas USING btree (case_id);
+
+
+--
 -- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2282,7 +2347,7 @@ ALTER TABLE ONLY public.data_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20240728165314'),
+('20240729145714'),
 ('20240701203227'),
 ('20240521142846'),
 ('20240502125941'),

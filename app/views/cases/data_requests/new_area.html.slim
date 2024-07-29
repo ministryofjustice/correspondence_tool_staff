@@ -19,8 +19,9 @@ span.visually-hidden
 
 = form_for @data_request_area, method: :post, url: data_request_area_case_data_requests_path do |f|
 
+  = f.hidden_field :data_request_default_area
   = f.radio_button_fieldset :data_request_area,
-    choices: DataRequestArea::DATA_REQUEST_AREAS.keys do |fieldset|
+    choices: DataRequestArea::data_request_area_types.keys do |fieldset|
     - fieldset.radio_input('prison')
     - fieldset.radio_input('probation')
     - fieldset.radio_input('branston')

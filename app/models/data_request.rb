@@ -23,6 +23,7 @@ class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
+  belongs_to :data_request_area, inverse_of: :data_requests
   has_one    :commissioning_document
   has_many   :data_request_emails
 

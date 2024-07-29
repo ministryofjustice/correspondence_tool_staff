@@ -223,7 +223,8 @@ Rails.application.routes.draw do
       end
 
       get "/data_request_area", on: :collection, to: "data_requests#new_area"
-      post "/data_request_area", on: :collection, to: "data_requests#new_area"
+      post "/data_request_area", on: :collection, to: "data_requests#confirm_new_area"
+      get "/view_data_request_area", on: :collection, to: "data_requests#show_area"
 
       resources :commissioning_documents, only: %i[new edit create update] do
         member do

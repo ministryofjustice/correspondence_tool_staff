@@ -8,12 +8,21 @@ module Cases
     before_action :authorize_action
     after_action  :verify_authorized
 
-    def new
-      @data_request = DataRequest.new
-    end
-
     def new_area
       @data_request_area = DataRequestArea.new
+    end
+
+    def confirm_new_area
+      @data_request_area = DataRequestArea.new(data_request_area_params)
+      if @data_request_area.valid?
+        redirect_to view_data_request_area_case_data_requests_path(@case)
+      else
+        render :new_area
+      end
+    end
+
+    def new
+      @data_request = DataRequest.new
     end
 
     def create
@@ -31,13 +40,17 @@ module Cases
       when :error
         @case = service.case
         @data_request = service.data_request
-        render :new
+        render :new_area
       else
         raise ArgumentError, "Unknown result: #{service.result.inspect}"
       end
     end
 
     def show; end
+
+    def show_area
+      case_data_requests_path(@case)
+    end
 
     def edit; end
 
@@ -139,6 +152,10 @@ module Cases
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
         :completed,
       )
+    end
+
+    def data_request_area_params
+      params.require(:data_request_area).permit(:data_request_area)
     end
 
     def authorize_action
