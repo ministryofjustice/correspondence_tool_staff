@@ -48,9 +48,7 @@ module Cases
 
     def show; end
 
-    def show_area
-      case_data_requests_path(@case)
-    end
+    def show_area; end
 
     def edit; end
 
