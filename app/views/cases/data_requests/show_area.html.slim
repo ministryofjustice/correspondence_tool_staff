@@ -13,3 +13,18 @@ span.visually-hidden
   = @case.number
 
 = render partial: 'layouts/header'
+
+.grid-row
+  .column-full.data-requests-area
+    h2.request--heading.data-requests-area__title
+      = t('cases.data_requests_area.show.heading')
+
+      table#data-request-area-table.report
+        thead
+          tr
+            th Data
+            th Date requested
+            th Pages received
+            th Date completed
+            th Status
+            th

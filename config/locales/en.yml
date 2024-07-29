@@ -370,8 +370,9 @@ en:
             location:
               blank: cannot be blank
         data_request_area:
-          data_request_area:
-            blank: Select where the data you are requesting is from
+          attributes:
+            data_request_area:
+              blank: Select where the data you are requesting is from
         linked_case:
           missing: "does not exist"
           references_self: "cannot link to the same case"
@@ -1636,6 +1637,9 @@ en:
       upto: "Up to"
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
+    data_requests_area:
+      show:
+        heading: Data requested
     commissioning_documents:
       new:
         heading: Select Day 1 request document
