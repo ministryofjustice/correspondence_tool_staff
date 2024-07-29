@@ -19,6 +19,8 @@ module Cases
       else
         render :new_area
       end
+    rescue ActionController::ParameterMissing
+      redirect_to case_path(@case)
     end
 
     def new
