@@ -676,9 +676,18 @@ CREATE TABLE public.data_migrations (
 
 CREATE TABLE public.data_request_areas (
     id bigint NOT NULL,
-    case_id bigint,
-    area_type character varying,
-    data_request_area_type public.data_request_area_type NOT NULL
+    case_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    contact_id bigint,
+    data_request_area_type public.data_request_area_type NOT NULL,
+    cached_num_pages integer DEFAULT 0,
+    num_of_requests integer DEFAULT 0,
+    completed boolean DEFAULT false,
+    date_requested date,
+    date_completed date,
+    location character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2076,6 +2085,20 @@ CREATE INDEX index_data_request_areas_on_case_id ON public.data_request_areas US
 
 
 --
+-- Name: index_data_request_areas_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_contact_id ON public.data_request_areas USING btree (contact_id);
+
+
+--
+-- Name: index_data_request_areas_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_user_id ON public.data_request_areas USING btree (user_id);
+
+
+--
 -- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2325,6 +2348,14 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
+-- Name: data_request_areas fk_rails_990e98d18c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT fk_rails_990e98d18c FOREIGN KEY (case_id) REFERENCES public.cases(id);
+
+
+--
 -- Name: contacts fk_rails_b8815787ee; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2338,6 +2369,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.data_requests
     ADD CONSTRAINT fk_rails_e762904f02 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
+-- Name: data_request_areas fk_rails_f77cc65959; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT fk_rails_f77cc65959 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
 
 
 --

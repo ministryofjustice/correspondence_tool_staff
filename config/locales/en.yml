@@ -371,7 +371,7 @@ en:
               blank: cannot be blank
         data_request_area:
           attributes:
-            data_request_area:
+            data_request_area_type:
               blank: Select where the data you are requesting is from
         linked_case:
           missing: "does not exist"
@@ -560,7 +560,7 @@ en:
         date_to: Date to
         date_requested: Date requested
       data_request_area:
-        data_request_area: Where is the data you are requesting from?
+        data_request_area_type: Where is the data you are requesting from?
       commissioning_document:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
@@ -737,7 +737,7 @@ en:
           cctv: CCTV
           bwcf: BWCF
       data_request_area:
-        data_request_area:
+        data_request_area_type:
           prison: Prison
           probation: Probation
           branston: Branston
@@ -1638,6 +1638,10 @@ en:
         heading: Record data request
       show:
         heading: Data requested
+      create:
+        success: Data request area successfully recorded
+      update:
+        success: Data request area updated
     commissioning_documents:
       new:
         heading: Select Day 1 request document
