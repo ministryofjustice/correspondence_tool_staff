@@ -17,7 +17,7 @@ span.visually-hidden
 = GovukElementsErrorsHelper.error_summary @data_request_area,
    "#{pluralize(@data_request_area.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for @data_request_area do |f|
+= form_for @data_request_area, url: case_data_request_areas_path(@case) do |f|
 
   = f.hidden_field :data_request_default_area
   = f.radio_button_fieldset :data_request_area,

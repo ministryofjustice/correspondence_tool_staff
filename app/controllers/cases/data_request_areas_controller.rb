@@ -1,8 +1,7 @@
 module Cases
-  class DataRequestAreaController < ApplicationController
+  class DataRequestAreasController < ApplicationController
     before_action :set_case
     before_action :set_data_request_area, only: %i[show edit update destroy]
-
 
     def new
       @data_request_area = DataRequestArea.new
@@ -23,7 +22,7 @@ module Cases
       @data_request_area = DataRequestArea.find(params[:id])
     end
 
-    private
+  private
 
     def set_case
       @case = Case::Base.find(params[:case_id])
@@ -36,6 +35,5 @@ module Cases
     def data_request_area_params
       params.require(:data_request_area).permit(:data_request_area)
     end
-
   end
 end

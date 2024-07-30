@@ -216,7 +216,7 @@ Rails.application.routes.draw do
 
     resource :cover_page, only: [:show], path: "cover-page"
 
-    resources :data_request_area do
+    resources :data_request_areas do
       resources :data_requests do
         member do
           get :send_email
