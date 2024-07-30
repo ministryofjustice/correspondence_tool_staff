@@ -1,28 +1,25 @@
 module Cases
-  class DataRequestAreasController < ApplicationController
+  class DataRequestAreaController < ApplicationController
     before_action :set_case
     before_action :set_data_request_area, only: %i[show edit update destroy]
 
 
     def new
-      debugger
       @data_request_area = DataRequestArea.new
     end
 
     def create
-      debugger
       @data_request_area = DataRequestArea.new(data_request_area_params)
       if @data_request_area.valid?
         redirect_to case_data_request_area_path(@case)
       else
-        render :new_area
+        render :new
       end
     rescue ActionController::ParameterMissing
       redirect_to case_path(@case)
     end
 
     def show
-      debugger
       @data_request_area = DataRequestArea.find(params[:id])
     end
 
