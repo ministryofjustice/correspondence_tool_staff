@@ -29,19 +29,11 @@ module Cases
       end
     end
 
-    # def show
-    #   @data_request_area = DataRequestArea.find(params[:id])
-    # end
-
   private
 
     def set_case
       @case = Case::Base.find(params[:case_id])
     end
-
-    # def set_data_request_area
-    #   @data_request_area = DataRequestArea.find(params[:id])
-    # end
 
     def create_params
       params.require(:data_request_area).permit(:data_request_area_type)
