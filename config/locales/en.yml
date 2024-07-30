@@ -546,6 +546,7 @@ en:
     download_document: Download Day 1 request document
     generate_document: Generate Day 1 request document
     send_email: Send commissioning email
+    add_data_request_type: Add data request type
 
   helpers:
     fieldset:
@@ -1643,7 +1644,7 @@ en:
       update:
         success: Data request area updated
       index:
-        none: No data requests recorded
+        heading: Data requested
     commissioning_documents:
       new:
         heading: Select Day 1 request document

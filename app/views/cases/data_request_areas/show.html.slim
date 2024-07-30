@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-/ = link_to("Back", case_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -15,9 +15,9 @@ span.visually-hidden
 = render partial: 'layouts/header'
 
 .grid-row
-  .column-full.data-requests-area
-    h2.request--heading.data-requests-area__title
-      = t('cases.data_request_areas.show.heading')
+  .column-full.data-request-area
+    h2.request--heading.data-request-area__title
+      = t('cases.data_request_areas.index.heading')
 
       table#data-request-area-table.report
         thead
@@ -28,3 +28,6 @@ span.visually-hidden
             th Date completed
             th Status
             th
+      hr
+      div.button-holder
+        = link_to t('button.add_data_request_type'), new_case_data_request_area_data_request_path(@case, @data_request_area), class: 'button button-high '
