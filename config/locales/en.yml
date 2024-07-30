@@ -1637,11 +1637,13 @@ en:
       new:
         heading: Record data request
       show:
-        heading: Data requested
+        heading: View data request area
       create:
         success: Data request area successfully recorded
       update:
         success: Data request area updated
+      index:
+        none: No data requests recorded
     commissioning_documents:
       new:
         heading: Select Day 1 request document

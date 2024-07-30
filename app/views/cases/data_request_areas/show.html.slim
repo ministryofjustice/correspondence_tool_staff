@@ -1,12 +1,12 @@
 - content_for :page_title do
-  = t('page_title.data_request_show_page')
+  = t('page_title.data_request_area_show_page')
 
 - content_for :heading
   = t('.heading')
 
 - content_for :sub_heading
 
-/ = link_to("Back", data_request_area_case_data_requests_path(@case), class: 'govuk-back-link')
+/ = link_to("Back", case_path(@case), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -17,7 +17,7 @@ span.visually-hidden
 .grid-row
   .column-full.data-requests-area
     h2.request--heading.data-requests-area__title
-      = t('cases.data_request_area.show.heading')
+      = t('cases.data_request_areas.show.heading')
 
       table#data-request-area-table.report
         thead
