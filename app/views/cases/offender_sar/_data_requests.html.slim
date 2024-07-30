@@ -40,8 +40,8 @@
                     = l data_request.cached_date_received, format: :default
               td
                 = data_request.status
-              td
-                = link_to t('cases.data_requests.show.link'), new_case_data_request_area_path(case_details, data_request), class: 'data-requests__show'
+              / td
+                = link_to t('cases.data_requests.show.link'), new_area_case_data_request_area_index_path(case_details, data_request), class: 'data-requests__show'
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '3', value_span: '3' }
