@@ -8,21 +8,6 @@ module Cases
     before_action :authorize_action
     after_action  :verify_authorized
 
-    # def new_area
-    #   @data_request_area = DataRequestArea.new
-    # end
-    #
-    # def confirm_new_area
-    #   @data_request_area = DataRequestArea.new(data_request_area_params)
-    #   if @data_request_area.valid?
-    #     redirect_to show_area_case_data_request_area_path(@case)
-    #   else
-    #     render :new_area
-    #   end
-    # rescue ActionController::ParameterMissing
-    #   redirect_to case_path(@case)
-    # end
-
     def new
       @data_request = DataRequest.new
     end
@@ -42,15 +27,13 @@ module Cases
       when :error
         @case = service.case
         @data_request = service.data_request
-        render :new_area
+        render :new
       else
         raise ArgumentError, "Unknown result: #{service.result.inspect}"
       end
     end
 
     def show; end
-
-    # def show_area; end
 
     def edit; end
 
@@ -135,7 +118,7 @@ module Cases
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
-        :date_to_dd, :date_to_mm, :date_to_yyyy,
+        :date_to_dd, :date_to_mm, :date_to_yyyy
       )
     end
 
@@ -150,7 +133,7 @@ module Cases
         :date_to_dd, :date_to_mm, :date_to_yyyy,
         :cached_num_pages,
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
-        :completed,
+        :completed
       )
     end
 
