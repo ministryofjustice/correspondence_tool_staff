@@ -1,5 +1,8 @@
 class DataRequestArea < ApplicationRecord
+  belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
+  belongs_to :user
   has_many :data_requests
+
   attribute :data_request_area
 
   validates :data_request_area, presence: true

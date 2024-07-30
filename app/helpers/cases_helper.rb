@@ -206,7 +206,7 @@ module CasesHelper
               class: "button-secondary", method: :delete
     when :record_data_request
       link_to "Record data request",
-              data_request_area_case_data_requests_path(@case),
+              new_case_data_request_area_path(@case),
               id: "action--record-data-request",
               class: "button-tertiary"
     when :upload_request_files

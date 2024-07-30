@@ -1620,10 +1620,6 @@ en:
         heading: Record data request
         date_from_copy: Request all data held from this date onward
         date_to_copy: Request all data held up until this date
-      new_area:
-        heading: Record data request
-      show_area:
-        heading: View data request
       onwards: "onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
@@ -1638,6 +1634,8 @@ en:
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
     data_request_area:
+      new:
+        heading: Record data request
       show:
         heading: Data requested
     commissioning_documents:

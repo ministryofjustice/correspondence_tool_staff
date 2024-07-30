@@ -8,20 +8,20 @@ module Cases
     before_action :authorize_action
     after_action  :verify_authorized
 
-    def new_area
-      @data_request_area = DataRequestArea.new
-    end
-
-    def confirm_new_area
-      @data_request_area = DataRequestArea.new(data_request_area_params)
-      if @data_request_area.valid?
-        redirect_to view_data_request_area_case_data_requests_path(@case)
-      else
-        render :new_area
-      end
-    rescue ActionController::ParameterMissing
-      redirect_to case_path(@case)
-    end
+    # def new_area
+    #   @data_request_area = DataRequestArea.new
+    # end
+    #
+    # def confirm_new_area
+    #   @data_request_area = DataRequestArea.new(data_request_area_params)
+    #   if @data_request_area.valid?
+    #     redirect_to show_area_case_data_request_area_path(@case)
+    #   else
+    #     render :new_area
+    #   end
+    # rescue ActionController::ParameterMissing
+    #   redirect_to case_path(@case)
+    # end
 
     def new
       @data_request = DataRequest.new
@@ -50,7 +50,7 @@ module Cases
 
     def show; end
 
-    def show_area; end
+    # def show_area; end
 
     def edit; end
 
@@ -152,10 +152,6 @@ module Cases
         :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
         :completed,
       )
-    end
-
-    def data_request_area_params
-      params.require(:data_request_area).permit(:data_request_area)
     end
 
     def authorize_action
