@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_data_request_area_path(@case), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -73,7 +73,7 @@ span.visually-hidden
         p.data_request_date_completed
           = l @data_request.cached_date_received, format: :default
     - if @case.editable? && policy(@case).can_record_data_request?
-        = link_to t('.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
+        = link_to t('.edit_link'), edit_case_data_request_area_data_request_path(@case, @data_request), class: 'data-requests__action'
     - if @commissioning_document.present? && FeatureSet.email_commissioning_document.enabled?
       hr
       div.commissioning-document
@@ -98,7 +98,7 @@ span.visually-hidden
                   span = @commissioning_document.change_link
         - unless @commissioning_document.sent? || !policy(@case).can_record_data_request?
           div.button-holder
-            = link_to t('button.send_email'), send_email_case_data_request_path(@case, @data_request), class: 'button button-high data_request_send_email'
+            = link_to t('button.send_email'), send_email_case_data_request_area_data_request_path(@case, @data_request), class: 'button button-high data_request_send_email'
 
         - if @data_request.data_request_emails.present?
           h2.heading-medium

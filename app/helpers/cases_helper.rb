@@ -204,9 +204,14 @@ module CasesHelper
               case_sar_extensions_path(@case),
               id: "action--remove-extended-deadline-for-sar",
               class: "button-secondary", method: :delete
-    when :record_data_request
+    when :record_data_request_area
       link_to "Record data request",
               new_case_data_request_area_path(@case),
+              id: "action--record-data-request",
+              class: "button-tertiary"
+    when :record_data_request
+      link_to "Record data request",
+              new_case_data_request_area_data_request_path(@case, @data_request_area),
               id: "action--record-data-request",
               class: "button-tertiary"
     when :upload_request_files

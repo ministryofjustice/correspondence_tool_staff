@@ -1645,6 +1645,7 @@ en:
         success: Data request area updated
       index:
         heading: Data requested
+        none: No data requests recorded
     commissioning_documents:
       new:
         heading: Select Day 1 request document

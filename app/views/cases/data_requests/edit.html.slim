@@ -22,6 +22,6 @@ span.visually-hidden
     - pretty_request_type = t :"helpers.label.data_request.request_type.#{@data_request.request_type}", default: @data_request.request_type.humanize
     h2.data-request__location.lede= @data_request.location + ": #{pretty_request_type}"
     .form-group
-      = form_for @data_request, as: :data_request, url: case_data_request_path(@case, @data_request), method: :patch do |f|
+      = form_for @data_request, as: :data_request, url: case_data_request_area_data_requests_path(@case, @data_request), method: :patch do |f|
 
         = render 'form', f: f

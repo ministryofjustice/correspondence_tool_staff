@@ -1,0 +1,53 @@
+.grid-row
+  .column-full.data-request-areas
+    h2.request--heading.data-request-areas__title
+      = t('cases.data_request_areas.index.heading')
+
+    - if case_details.data_request_areas.empty?
+      p.data-request-areas__none
+        = t('cases.data_request_areas.index.none')
+
+    - else
+      table#data-request-areas-table.report
+        thead
+          tr
+            th Data area
+            th Location
+            th Data requests
+            th Date requested
+            th Pages received
+            th Date completed
+            th Status
+            th
+        tbody
+          - case_details.data_request_areas.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request_area|
+            tr
+              td
+              / = data_request_area.data_area
+              td
+                = data_request_area.location
+              td
+              / = data_request_area.sub_request
+              td
+                - if data_request_area.date_requested.present?
+                  time datetime="#{data_request_area.date_requested}"
+                    = l data_request_area.date_requested, format: :default
+              td
+                = data_request_area.cached_num_pages
+              td
+                - if data_request_area.cached_date_received.present?
+                  time datetime="#{data_request_area.cached_date_received}"
+                    = l data_request_area.cached_date_received, format: :default
+              td
+                = data_request_area.status
+                  / td
+                = link_to t('cases.data_request_areas.show.link'), new_area_case_data_request_area_index_path(case_details, data_request), class: 'data-requests__show'
+
+          - if case_details.data_request_areas.many?
+            = render partial: 'shared/table_total_row', locals: { total: case_details.data_request_areas.sum(:cached_num_pages), label_span: '3', value_span: '3' }
+.data-request-buttons
+  - if policy(case_details).can_record_data_request_area? && allow_editing
+    = action_button_for(:record_data_request_area)
+  - if case_details.current_state != 'to_be_assessed' && allow_editing
+    = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
+    = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
