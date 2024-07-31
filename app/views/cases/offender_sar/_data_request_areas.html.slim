@@ -44,10 +44,7 @@
                 = link_to t('cases.data_request_areas.show.link'), case_data_request_area_path(case_details, data_request_area), class: 'data-requests__show'
 
           - if case_details.data_request_areas.many?
-            = render partial: 'shared/table_total_row', locals: { total: case_details.data_request_areas.sum(:cached_num_pages), label_span: '3', value_span: '3' }
+            = render partial: 'shared/table_total_row', locals: { total: case_details.data_request_areas.sum(:cached_num_pages), label_span: '4', value_span: '4' }
 .data-request-buttons
   - if policy(case_details).can_record_data_request? && allow_editing
     = action_button_for(:record_data_request_area)
-  - if case_details.current_state != 'to_be_assessed' && allow_editing
-    = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
-    = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
