@@ -9,6 +9,9 @@ class DataRequestArea < ApplicationRecord
 
   attribute :data_request_area_type
 
+  scope :completed, -> { where(completed: true) }
+  scope :in_progress, -> { where(completed: false) }
+
   enum data_request_area_type: {
     prison: "prison",
     probation: "probation",
@@ -16,4 +19,12 @@ class DataRequestArea < ApplicationRecord
     branston_registry: "branston_registry",
     mappa: "mappa"
   }
+
+  def kase
+    offender_sar_case
+  end
+
+  def status
+    completed? ? "Completed" : "In progress"
+  end
 end

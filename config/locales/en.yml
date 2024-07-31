@@ -1639,6 +1639,7 @@ en:
         heading: Record data request
       show:
         heading: View data request area
+        link: View
       create:
         success: Data request area successfully recorded
       update:
