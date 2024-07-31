@@ -14,6 +14,8 @@ class CreateDataRequestArea < ActiveRecord::Migration[7.1]
       t.boolean :completed, default: false
       t.date :date_requested
       t.date :cached_date_received, null: true
+      t.date :date_from, null: true
+      t.date :date_to, null: true
       t.string :location
       t.timestamps
     end

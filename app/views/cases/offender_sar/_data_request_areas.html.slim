@@ -23,7 +23,7 @@
           - case_details.data_request_areas.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request_area|
             tr
               td
-                = data_request_area.data_request_area_type
+                = render "cases/offender_sar/data_request_area_request_type", data_request_area: data_request_area
               td
                 = data_request_area.location
               td
@@ -48,3 +48,7 @@
 .data-request-buttons
   - if policy(case_details).can_record_data_request? && allow_editing
     = action_button_for(:record_data_request_area)
+    - if case_details.current_state != 'to_be_assessed' && allow_editing
+      = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
+      = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
+

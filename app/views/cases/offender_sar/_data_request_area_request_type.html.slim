@@ -1,0 +1,18 @@
+                = t :"helpers.label.data_request_area.request_type.#{data_request_area.data_request_area_type}"
+                - if data_request_area.request_dates_either_present?
+                  span.data-detail<
+                    br
+                    - if data_request_area.date_from.present?
+                      time datetime="#{data_request_area.date_from}"
+                        = l data_request_area.date_from, format: :default
+                    - if data_request_area.request_dates_both_present?
+                      = " - "
+                    - if data_request_area.request_date_from_only?
+                      span<
+                        = t('cases.data_requests.onwards')
+                    - if data_request_area.request_date_to_only?
+                      span<
+                        = t('cases.data_request_areas.upto')
+                    - if data_request_area.date_to.present?
+                      time< datetime="#{data_request_area.date_to}"
+                        = l data_request_area.date_to, format: :default

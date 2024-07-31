@@ -20,11 +20,37 @@ class DataRequestArea < ApplicationRecord
     mappa: "mappa"
   }
 
+  acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
+
   def kase
     offender_sar_case
   end
 
   def status
     completed? ? "Completed" : "In progress"
+  end
+
+  def num_of_requests
+    data_requests.count
+  end
+
+  def request_dates_either_present?
+    date_from.present? || date_to.present?
+  end
+
+  def request_dates_both_present?
+    date_from.present? && date_to.present?
+  end
+
+  def request_date_from_only?
+    date_from.present? && date_to.blank?
+  end
+
+  def request_date_to_only?
+    date_from.blank? && date_to.present?
+  end
+
+  def request_dates_absent?
+    date_from.blank? && date_to.blank?
   end
 end

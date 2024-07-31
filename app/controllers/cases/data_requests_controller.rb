@@ -5,7 +5,7 @@ module Cases
     before_action :set_case
     before_action :set_data_request, only: %i[show edit update destroy send_email]
     before_action :set_commissioning_document, only: %i[show send_email]
-    before_action :set_data_request_area, only: %i[new show send_email]
+    before_action :set_data_request_area
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -17,14 +17,16 @@ module Cases
       service = DataRequestCreateService.new(
         kase: @case,
         user: current_user,
+        data_request_area: @data_request_area,
         data_request_params: create_params,
       )
+
       service.call
 
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @case = service.case
         @data_request = service.data_request
@@ -103,7 +105,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = @case.data_request_areas&.decorate
+      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id])
     end
 
     def set_commissioning_document

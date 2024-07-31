@@ -685,6 +685,8 @@ CREATE TABLE public.data_request_areas (
     completed boolean DEFAULT false,
     date_requested date,
     cached_date_received date,
+    date_from date,
+    date_to date,
     location character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -765,7 +767,8 @@ CREATE TABLE public.data_requests (
     date_to date,
     completed boolean DEFAULT false NOT NULL,
     contact_id bigint,
-    email_branston_archives boolean DEFAULT false
+    email_branston_archives boolean DEFAULT false,
+    data_request_area_id bigint
 );
 
 
@@ -2127,6 +2130,13 @@ CREATE INDEX index_data_requests_on_contact_id ON public.data_requests USING btr
 
 
 --
+-- Name: index_data_requests_on_data_request_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_data_request_area_id ON public.data_requests USING btree (data_request_area_id);
+
+
+--
 -- Name: index_data_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2364,6 +2374,14 @@ ALTER TABLE ONLY public.contacts
 
 
 --
+-- Name: data_requests fk_rails_c007c7e0da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT fk_rails_c007c7e0da FOREIGN KEY (data_request_area_id) REFERENCES public.data_request_areas(id);
+
+
+--
 -- Name: data_requests fk_rails_e762904f02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2386,6 +2404,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240731104518'),
 ('20240729145714'),
 ('20240701203227'),
 ('20240521142846'),

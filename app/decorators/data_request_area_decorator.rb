@@ -29,10 +29,6 @@ class DataRequestAreaDecorator < Draper::Decorator
     request_type_note if request_type == "other"
   end
 
-  def display_request_type_note?
-    %w[other nomis_other cctv bwcf].include?(request_type) && request_type_note.present?
-  end
-
   private
 
   def date_format(date)
