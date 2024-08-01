@@ -1,6 +1,3 @@
-@import 'jquery-ui/core';
-@import 'jquery-ui/button';
-@import 'jquery-ui/dialog';
 // From GDS's alphagov/govuk_frontend_toolkit
 @import 'colours';
 @import 'font_stack';
@@ -10,7 +7,9 @@
 @import 'typography';
 @import 'grid_layout';
 @import 'shims';
-
+@import 'jquery-ui/core';
+@import 'jquery-ui/button';
+@import 'jquery-ui/dialog';
 
 @import 'design-patterns/alpha-beta';
 @import 'design-patterns/buttons';
