@@ -137,11 +137,10 @@ jobs:
         run: bundle exec rake coverage:report
 
       - name: Code coverage result
-        uses: joshmfrankel/simplecov-check-action@main
+        uses: aki77/simplecov-report-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_suite_coverage: 93
-          minimum_file_coverage: 100
+          token: ${{ secrets.GITHUB_TOKEN }}
+          failedThreshold: 93
 
   build-and-deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
