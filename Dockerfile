@@ -34,6 +34,7 @@ FROM ruby:3.1.4-alpine
 WORKDIR /app
 
 RUN apk --no-cache add \
+    nodejs \
     postgresql-client
 
 RUN addgroup -g 1000 -S appgroup && \
