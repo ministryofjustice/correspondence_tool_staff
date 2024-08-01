@@ -44,7 +44,7 @@ RUN addgroup -g 1000 -S appgroup && \
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
-RUN mkdir -p log tmp
+RUN mkdir -p log tmp tmp/pids
 RUN chown -R appuser:appgroup db log tmp
 
 USER 1000
