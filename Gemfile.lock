@@ -705,5 +705,8 @@ DEPENDENCIES
   turbolinks (~> 5)
   tzinfo-data
 
+RUBY VERSION
+   ruby 3.1.4p223
+
 BUNDLED WITH
    2.4.19
