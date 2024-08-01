@@ -41,11 +41,11 @@ RUN addgroup -g 1000 -S appgroup && \
     adduser -u 1000 -S appuser -G appgroup
 
 # Copy files generated in the builder image
-COPY --from=builder /app /app
+COPY --chown=appuser:appgroup --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir -p log tmp tmp/pids
-RUN chown -R appuser:appgroup db log tmp
+RUN chown -R appuser:appgroup log tmp
 
 USER 1000
 
