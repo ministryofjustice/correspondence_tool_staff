@@ -1,6 +1,11 @@
-work
+*.log
+*.dev
+.git*
 log
 tmp
-.idea
-doc
-dumps
+coverage
+.github
+node_modules
+spec
+public/assets
+README.md
