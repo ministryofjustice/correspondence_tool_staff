@@ -113,6 +113,8 @@ jobs:
   coverage:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       RAILS_ENV: test
       AWS_ACCESS_KEY_ID: 123
