@@ -1,44 +1,53 @@
-FROM ruby:3.1.4-alpine
-LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
-RUN set -ex
+FROM ruby:3.1.4-alpine as builder
 
-RUN addgroup --gid 1000 --system appgroup && \
-    adduser --uid 1000 --system appuser --ingroup appgroup
+WORKDIR /app
 
 # Some app dependencies
-RUN apk add libreoffice clamav clamav-daemon freshclam ttf-freefont
+RUN apk --no-cache add \
+    build-base \
+    ruby-dev \
+    postgresql-dev \
+    git \
+    yarn
 
-# Note: .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base - these help with bundle install issues
-RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base git nodejs zip postgresql-client yarn
+COPY .ruby-version Gemfile* package.json yarn.lock ./
 
-RUN apk --update add less && apk -U upgrade && apk --no-cache upgrade musl
-
-WORKDIR /usr/src/app/
-
-COPY Gemfile* ./
-
-RUN gem install bundler -v '~> 2.4.19'
-
+# Install gems and node packages
 RUN bundle config deployment true && \
     bundle config without development test && \
-    bundle install --jobs 4 --retry 3
+    bundle install --jobs 4 --retry 3 && \
+    yarn install --frozen-lockfile --production
 
 COPY . .
 
-RUN yarn install --pure-lockfile
+RUN RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 \
+    bundle exec rake assets:precompile
+
+# Cleanup to save space in the production image
+RUN rm -rf node_modules log/* tmp/* /tmp && \
+    rm -rf /usr/local/bundle/cache
+
+# Build runtime image
+FROM ruby:3.1.4-alpine
+
+# The application runs from /app
+WORKDIR /app
+
+RUN apk --no-cache add \
+    nodejs \
+    postgresql-client
+
+RUN addgroup -g 1000 -S appgroup && \
+    adduser -u 1000 -S appuser -G appgroup
+
+# Copy files generated in the builder image
+COPY --from=builder /app /app
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir -p log tmp tmp/pids
-RUN chown -R appuser:appgroup /usr/src/app/
-USER appuser
+RUN chown -R appuser:appgroup log tmp
+
 USER 1000
-
-RUN RAILS_ENV=production AWS_ACCESS_KEY_ID=not_real AWS_SECRET_ACCESS_KEY=not_real bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> /dev/null
-
-ENV PUMA_PORT 3000
-EXPOSE $PUMA_PORT
-
-RUN chown -R appuser:appgroup ./*
-RUN chmod +x /usr/src/app/config/docker/*
 
 # expect/add ping environment variables
 ARG APP_GIT_COMMIT
