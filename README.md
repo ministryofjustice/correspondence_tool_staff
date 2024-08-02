@@ -36,74 +36,70 @@ $ cd correspondence_tool_staff
 
 ### Installing the app for development
 
-##### Latest Version of Ruby
+#### Latest Version of Ruby
 
 If you don't have `rbenv` already installed, install it as follows:
 ```
 $ brew install rbenv ruby-build
+$ rbenv init
 ```
+
+Follow the instructions printed out from the `rbenv init` command and update your `~/.bash_profile` or equivalent file accordingly, then start a new terminal and navigate to the repo directory.
 
 Use `rbenv` to install the latest version of ruby as defined in `.ruby-version` (make sure you are in the repo path):
 
 ```
 $ rbenv install
-$ rbenv init
-$ rbenv rehash
 ```
 
-Follow the instructions printed out from the `rbenv init` command and update your `~/.bash_profile` or equivalent file accordingly, then start a new terminal and navigate to the repo directory.
+#### Dependencies
 
-#### Database Setup
-The application uses postgresql
+Node.js:
+
+```
+$ brew install node
+```
+
+Yarn
+
+```
+$ brew install yarn
+```
+
+Postgresql
+
 ```
 $ brew install postgresql
 ```
 
-Use the setup command to install gems and create the database with seed data
+#### Setup
+
+Use the following commands to install gems and javascript packages then create the database
+
 ```
 $ bin/setup
+$ yarn install
 ```
 
 #### Seeds
-Seeds can be loaded into the database using the command. The same password will be used for all accounts, and can be set by setting the value of the DEV_PASSWORD environment variable
+Seeds can be loaded into the database using the command. Some environment variables need to be set for this to work.
 
 ```
-$ bundle exec rake db:seed:dev DEV_PASSWORD=correspondence
+$ export SETTINGS__SMOKE_TESTS__USERNAME=user@user.com
+$ export SETTINGS__SMOKE_TESTS__PASSWORD=correspondence
+$ export DEV_PASSWORD=correspondence
+$ bin/rake db:seed:dev
 ```
 
-### Additional Setup
-
-#### Libreoffice
-
-Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
-In production environments, the installation of libreoffice is taken care of during the build
-of the docker container (see the Dockerfile).
-
-In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
-the following shell script needs to created with the name ```/usr/local/bin/soffice```:
+#### Running locally:
 
 ```
-cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
+$ bin/rails server
 ```
 
-The above script is needed by the libreconv gem to do the conversion.
-
-
-##### Dependencies
-
-Node.js:
-Install using `brew install node` and then check its installed using `node -v` and `npm -v`
-
-- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
-- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
-
-##### Installing and running:
-
-Bundle install as normal and then start with
-
-```
-$ bundle exec rails s
-```
+The site will be accessible at http://localhost:3000.
+You can login using one of the users created during the seeding process such as:
+`correspondence-staff-dev+brian.rix@digital.justice.gov.uk` or `correspondence-staff-dev+david.attenborough@digital.justice.gov.uk` with the password set as `DEV_PASSWORD`
 
 ### Testing
 
@@ -159,7 +155,7 @@ It can be set to any value you like.
 
 Examples:
 ```
-$ CHROME_DEBUG=1 bundle exec rspec
+$ CHROME_DEBUG=1 bin/rspec
 ```
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
