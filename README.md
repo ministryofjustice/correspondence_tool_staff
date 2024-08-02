@@ -64,7 +64,12 @@ Use the setup command to install gems and create the database with seed data
 $ bin/setup
 ```
 
+#### Seeds
+Seeds can be loaded into the database using the command. The same password will be used for all accounts, and can be set by setting the value of the DEV_PASSWORD environment variable
 
+```
+$ bundle exec rake db:seed:dev DEV_PASSWORD=correspondence
+```
 
 ### Additional Setup
 
@@ -94,7 +99,11 @@ Install using `brew install node` and then check its installed using `node -v` a
 
 ##### Installing and running:
 
-Bundle install as normal
+Bundle install as normal and then start with
+
+```
+$ bundle exec rails s
+```
 
 ### Testing
 
@@ -198,34 +207,7 @@ Responses and other case attachments are uploaded directly to S3 before being
 submitted to the application to be added to the case. Each deployed environment
 has the permissions is needs to access the uploads bucket for that environment.
 
-In local development, uploads are placed in https://<cloud-platform-generated-s3-bucket-address>/
-
-You'll need to provide access credentials to the aws-sdk gems to access
-it, there are two ways of doing this:
-
-#### Using credentials attached to your IAM account
-
-In order to perform certain actions, you need to have valid S3 credentials active
-You can configure the aws-sdk with your access and secret key by placing them in
- the `[default]` section in `.aws/credentials`:
-
-Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
-
-
-`kubectl -n track-a-query-production get secret track-a-query-ecr-credentials-output -o yaml`
-
-Decode the base64 encoded values for access_key_id and secret_access_key from the output returned e.g.
-
-`$ echo QUtHQTI3SEpTERJV1RBTFc= | base64 --decode; echo`
-
-Place them in `~/.aws/credentals` as the default block:
-
-```
-[default]
-aws_access_key_id = AKIA27HHJDDH3GHI
-aws_secret_access_key = lSlkajsd9asdlaksd73hLKSFAk
-
-```
+In local development, uploads are made to the local filesystem.
 
 #### Dumping the database
 
@@ -263,10 +245,6 @@ The default serializer does not de-serialize the properties column correctly bec
 held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CTSPapertrailSerializer```
 takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
 examples of how to reify a previous version, or get a hash of field values for the previous version.
-
-### Continuous Integration
-
-Continuous integration is carried out by SemaphoreCI.
 
 ### Data Migrations
 
@@ -321,6 +299,7 @@ and then run
 ```
 bundle exec rails smoke
 ```
+
 ### Site prism page manifest file
 
 The tests use the Site Prism gem to manage page objects which behave as an abstract description of the pages in the application; they're used in feature tests for finding elements, describing the URL path for a given page and for defining useful methods e.g. for completing particular form fields on the page in question.
@@ -365,74 +344,6 @@ $ i18n-tasks unused
 $
 ```
 
-### Deploying
-
-#### Dockerisation
-
-Docker images are built from a single `Dockerfile` which uses build arguments to
-control aspects of the build. The available build arguments are:
-
-- _*development_mode*_ enable by setting to a non-nil value/empty string to
-  install gems form the `test` and `development` groups in the `Gemfile`. Used
-  when building with `docker-compose` to build development versions of the
-  images for local development.
-- _*additional_packages*_ set to the list of additional packages to install with
-  `apt-get`. Used by the build system to add packages to the `uploads` container:
-
-  ```
-      clamav clamav-daemon clamav-freshclam libreoffice
-  ```
-
-  These are required to scan the uploaded files for viruses (clamav & Co.) and
-  to generate a PDF preview (libreoffice).
-
-
-  ```
-      nodejs
-  ```
-
-  Required to run Puma with ExecJS
-
-
-  ```
-      zip
-  ```
-
-  Required to run closed case reports
-
-  ```
-      postgresql-client-12.6-r0
-  ```
-
-  Required for debugging database by developers within the running container - app will work without this.
-
-#### ARM Mac Users
-
-If you are creating a local image for deploying to an environment, you will need to change the target platform by running:
-
-```
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
-```
-
-#### Generating Documentation
-
-You can generate documentation for the project with:
-
-```
-bundle exec yardoc
-```
-
-If you need to you can edit settings for Yard in `Rakefile`. The documentation
-is generated in the `doc` folder, to view it on OSX run:
-
-```
-open doc/index.html
-```
-
-#### Guide to our deploy process
-For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
-
-
 ## Keeping secrets and sensitive information secure
 
 There should be *absolutely no secure credentials* committed in this repo. Information about secret management can be found in the related confluence pages.
@@ -463,57 +374,10 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.7.x to Ruby 3.x on local environment
+## Exceptions
+Any exceptions raised in any deployed environment will be sent to [Sentry](https://ministryofjustice.sentry.io/projects/track-a-query).
 
-1. Install Ruby 3.x
-
-```
-$ rbenv install
-```
-it should pick up the version defined in .ruby-version
-
-If you get error somehow telling you not being able to find available stable release 3.x, you could try the following commands
-
-```
-$ brew unlink ruby-build
-$ brew install --HEAD ruby-build
-```
-
-then run following command to check whether you can see 3.x in the list
-```
-$ rbenv install --list-all
-```
-once you confirm, you can re-run `rbenv install` comand to continue the process.
-
-3. Update the gem system
-```
-$ gem update --system
-```
-
-4. Install bundle 2.4.19 and install those gems
-```
-$ gem install bundler -v 2.4.19
-$ bundler install
-```
-
-5. run `rails s` check the app
-
-## Dependabot
-
-Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again).
-
-You can manually combine the changes into one PR and then push this and wait for the tests to run, but this is admin that can be automated so why bother?
-
-The app has a github action "Combine PRs" which automatically combines dependabot PRs that have passed the test suite into one PR which you can then merge.
-
-To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run workflows"
-
-See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
-
-## Addendum
-
-Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
-
+---
 
 ## Docker
 
