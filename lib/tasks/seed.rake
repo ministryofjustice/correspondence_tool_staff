@@ -65,24 +65,27 @@ namespace :db do
     end
 
     desc "seed development teams and users"
-    task dev: %w[db:seed:dev:teams db:seed:dev:users db:seed:dev:letter_templates]
+    task dev: %w[db:seed:dev:correspondence_types db:seed:dev:teams db:seed:dev:users db:seed:dev:letter_templates]
 
     namespace :dev do
       desc "Seed teams for dev environment"
       task teams: :environment do
         require Rails.root.join("db/seeders/dev_team_seeder")
+        puts "Seeding Teams"
         DevTeamSeeder.new.seed!
       end
 
-      desc "Seed users, teams, roles for dev environemnt"
+      desc "Seed users, teams, roles for dev environment"
       task users: :environment do
         require Rails.root.join("db/seeders/dev_user_seeder")
+        puts "Seeding Users"
         DevUserSeeder.new.seed!
       end
 
       desc "Seed letter templates for dev environment"
       task letter_templates: :environment do
         require Rails.root.join("db/seeders/letter_template_seeder")
+        puts "Seeding Letter Templates"
         LetterTemplateSeeder.new.seed!
       end
 
