@@ -20,35 +20,12 @@ An application to allow internal staff users to answer correspondence.
 
 Work should be based off of, and PRed to, the main branch. We use the GitHub
 PR approval process so once your PR is ready you'll need to have one person
-approve it, and the CI tests passing, before it can be merged. Feel free to use
-the issue tags on your PR to indicate if it is a WIP or if it is ready for
-reviewing.
+approve it, and the CI tests passing, before it can be merged.
 
-Please consider using the provided Docker environment to develop this app over your core linux environment. There are [huge benefits using Docker](https://greatminds.consulting/insight/top-10-benefits-you-will-get-by-using-docker) in development including standardisation, increased productivity and CI efficiencies.
 
-### Basic setup using Docker
+### Basic Setup
 
-#### Requirements
-
-* [Docker](https://docs.docker.com/desktop/install/mac-install/)
-* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
-* [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
-
-Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync.
-
-Install Dory
-
-```
-brew install dory
-```
-
-Install Docker Sync
-
-```
-gem install docker-sync
-```
-
-### Getting started
+#### Cloning This Repository
 
 Clone this repository then `cd` into the new directory
 
@@ -57,133 +34,67 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-Environment settings for Docker reside in `.env.example`. When starting Docker the environment will be created for you.
+### Installing the app for development
 
+##### Latest Version of Ruby
 
-> When the service is up and running, an array of pseudo accounts will have been created.
-> The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
-
-### Installation
-
-The easiest way to get the app running is to execute Makefile commands.
-
->The `make` utility is commonly used as a compiler however we use it as a stage to combine, execute and compress
-more cumbersome commands.
-
-Running the following will get the application started. Please be patient, this process may take a good few minutes to
-complete and `dory up` will require root access to write to the host resolver - this is expected.
-
+If you don't have `rbenv` already installed, install it as follows:
 ```
-dory up
-make build
-```
-Once the installation process has completed, a Puma server will be running in your terminal.
-
-The application will be available at the following addresses:
-
-**Application:**
-```
-http://track-a-query.docker/users/sign_in
+$ brew install rbenv ruby-build
 ```
 
-**DB Admin** (login details in `docker-compose.yml`):
-```
-http://pgadmin.track-a-query.docker:5050/
-```
-
-**Selenium Grid UI** (feature tests):
-```
-http://chrome.track-a-query.docker/ui
-```
-
-**BrowserSync:**
-```
-http://track-a-query.docker:3001/
-```
-
-**BrowserSync UI:**
-```
-http://track-a-query.docker:3002/
-```
-
-> During usual operation it is normal to `make down` and `make launch` to stop and start the application, respectively.
-
-### Working in the terminal
-
-Run the following in a separate terminal window.
+Use `rbenv` to install the latest version of ruby as defined in `.ruby-version` (make sure you are in the repo path):
 
 ```
-make shell
+$ rbenv install
+$ rbenv init
+$ rbenv rehash
 ```
 
-From this prompt, You can run `irb`, `rails c` and a host of other commands.
+Follow the instructions printed out from the `rbenv init` command and update your `~/.bash_profile` or equivalent file accordingly, then start a new terminal and navigate to the repo directory.
 
-**IMPORTANT**; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
-
+#### Database Setup
+The application uses postgresql
 ```
-make rebuild
-```
-
-### The Testing Environment
-
-The `docker compose` environment comes packed with a dedicated testing environment that requires an initial setup.
-
-In a separate terminal window, execute:
-
-```
-make specs
+$ brew install postgresql
 ```
 
-Once the interface has initialised, execute:
+Use the setup command to install gems and create the database with seed data
+```
+$ bin/setup
+```
+
+
+
+### Additional Setup
+
+#### Libreoffice
+
+Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
+In production environments, the installation of libreoffice is taken care of during the build
+of the docker container (see the Dockerfile).
+
+In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
+the following shell script needs to created with the name ```/usr/local/bin/soffice```:
 
 ```
-make spec-setup
+cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
 ```
 
-Once set up has completed you won't have to run that again unless the volumes are removed.
-
-------------
-
-### Make commands
-
-There are several `make` commands configured in the `Makefile`. These are mostly just convenience wrappers for longer or more complicated commands.
-
-Nb. with exception to `make spec-setup`, all other `make` commands are run from the host machine, i.e. outside the containers.
-
-| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make docker-shell`                                                                                                                   | Generate an .env file (if not exist), run the app in the background and open an interactive shell.<br/>***Nb.*** does not launch servers for browser viewing, run `make build` instead. This command is for accessing a detached app container in order to execute administrative operations. You may like to run `make shell` to open a prompt in the container launched by `docker compose up`. From within you can run commands such as  `irb` and `rails c` |
-| `make`                                                                                                                                | Alias of `make docker-shell`.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `make build`                                                                                                                          | Build and run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                          |
-| `make launch`                                                                                                                         | Run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                                    |
-| `make rebuild`                                                                                                                        | Runs `make dc-clean` and then rebuilds the application from the ground up and brings it online.                                                                                                                                                                                                                                                                                                                                                                 |
+The above script is needed by the libreconv gem to do the conversion.
 
 
-### Other helpers
-Whilst these can be used independently, they are generally used in the commands above to help overcome complex
-installation.
+##### Dependencies
 
-| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                           |
-|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make setup`                                                                                                                          | Jump into the app container and execute the `install.sh` script                                                                                                       |
-| `make sidekiq`                                                                                                                        | Launch Sidekiq in the background.                                                                                                                                     |
-| `make browser-sync`                                                                                                                   | Launch BrowserSync in the background.                                                                                                                                 |
-| `make server`                                                                                                                         | Launch Puma at the command prompt.                                                                                                                                    |
-| `make servers`                                                                                                                        | A helper to ensure app setup and asynchronously start all servers in this order; Sidekiq, BrowserSync and Puma.                                                       |
-| `make dc-clean`                                                                                                                       | Stop all CTS docker containers, delete all CTS images, volumes and network. Clean the application directory ready for a fresh installation. Nukes databases and Gems. |
-| `make dc-reset`                                                                                                                       | Clean and rebuild the app, displays stdout ***doesn't restart the servers***                                                                                          |
-| `make down`                                                                                                                           | Alias of `docker compose down`                                                                                                                                        |
-| `make up`                                                                                                                             | Alias of `docker compose up`                                                                                                                                          |
-| `make up-daemon`                                                                                                                      | Alias of `docker compose up -d app` - run docker compose in the background                                                                                            |
-| `make restart`                                                                                                                        | Stop docker compose (`down`), relaunch (`up`) and display an interactive shell on the app container                                                                   |
-| `make shell-app`                                                                                                                      | Open an interactive command prompt on the app container                                                                                                               |
-| `make test`                                                                                                                           | Run tests on the application.                                                                                                                                         |
-| `make docker-sync`                                                                                                                    | Starts a docker-sync container used to speed up development on the front end.                                                                                         |
+Node.js:
+Install using `brew install node` and then check its installed using `node -v` and `npm -v`
 
+- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
+- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
 
----------------
+##### Installing and running:
 
-> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.
+Bundle install as normal
 
 ### Testing
 
@@ -245,77 +156,6 @@ When you have set `CHROME_DEBUG`, you should notice chrome start up and appear o
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
 If you have a `debugger`  in your tests the browser will stop at that point.
 
-### Additional Setup
-
-#### Libreoffice
-
-Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
-In production environments, the installation of libreoffice is taken care of during the build
-of the docker container (see the Dockerfile).
-
-In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
-the following shell script needs to created with the name ```/usr/local/bin/soffice```:
-
-```
-cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
-```
-
-The above script is needed by the libreconv gem to do the conversion.
-
-#### BrowserSync Setup
-
-[BrowserSync](https://www.browsersync.io/) is setup and configured for local development
-using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails).
-BrowserSync helps us test across different browsers and devices and sync the
-various actions that take place.
-
-##### Dependencies
-
-Node.js:
-Install using `brew install node` and then check its installed using `node -v` and `npm -v`
-
-- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
-- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
-
-##### Installing and running:
-
-Bundle install as normal then
-After bundle install:
-
-```bash
-bundle exec rails generate browser_sync_rails:install
-```
-
-This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP))
-to install BrowserSync and this command is only required once. If you run into
-problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
-
-To run BrowserSync start your rails server as normal then in a separate terminal window
-run the following rake task:
-
-```bash
-bundle exec rails browser_sync:start
-```
-
-You should see the following output:
-```
-browser-sync start --proxy localhost:3000 --files 'app/assets, app/views'
-[Browsersync] Proxying: http://localhost:3000
-[Browsersync] Access URLs:
- ------------------------------------
-       Local: http://localhost:3001
-    External: http://xxx.xxx.xxx.x:3001
- ------------------------------------
-          UI: http://localhost:3002
- UI External: http://xxx.xxx.xxx.x:3002
- ------------------------------------
-[Browsersync] Watching files...
-```
-Open any number of browsers and use either the local or external address and your
-browser windows should be sync. If you make any changes to assets or views then all
-the browsers should automatically update and sync.
-
-The UI URL are there if you would like to tweak the BrowserSync server and configure it further
 
 #### Emails
 
@@ -673,3 +513,160 @@ See here for the [original developers README](https://github.com/hrvey/combine-p
 ## Addendum
 
 Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
+
+
+## Docker
+
+### Basic setup using Docker
+
+#### Requirements
+
+* [Docker](https://docs.docker.com/desktop/install/mac-install/)
+* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
+* [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
+
+Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync.
+
+Install Dory
+
+```
+brew install dory
+```
+
+Install Docker Sync
+
+```
+gem install docker-sync
+```
+
+### Getting started
+
+Clone this repository then `cd` into the new directory
+
+```
+$ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
+$ cd correspondence_tool_staff
+```
+
+Environment settings for Docker reside in `.env.example`. When starting Docker the environment will be created for you.
+
+
+> When the service is up and running, an array of pseudo accounts will have been created.
+> The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
+
+### Installation
+
+The easiest way to get the app running is to execute Makefile commands.
+
+>The `make` utility is commonly used as a compiler however we use it as a stage to combine, execute and compress
+more cumbersome commands.
+
+Running the following will get the application started. Please be patient, this process may take a good few minutes to
+complete and `dory up` will require root access to write to the host resolver - this is expected.
+
+```
+dory up
+make build
+```
+Once the installation process has completed, a Puma server will be running in your terminal.
+
+The application will be available at the following addresses:
+
+**Application:**
+```
+http://track-a-query.docker/users/sign_in
+```
+
+**DB Admin** (login details in `docker-compose.yml`):
+```
+http://pgadmin.track-a-query.docker:5050/
+```
+
+**Selenium Grid UI** (feature tests):
+```
+http://chrome.track-a-query.docker/ui
+```
+
+**BrowserSync:**
+```
+http://track-a-query.docker:3001/
+```
+
+**BrowserSync UI:**
+```
+http://track-a-query.docker:3002/
+```
+
+> During usual operation it is normal to `make down` and `make launch` to stop and start the application, respectively.
+
+### Working in the terminal
+
+Run the following in a separate terminal window.
+
+```
+make shell
+```
+
+From this prompt, You can run `irb`, `rails c` and a host of other commands.
+
+**IMPORTANT**; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
+
+```
+make rebuild
+```
+
+### The Testing Environment
+
+The `docker compose` environment comes packed with a dedicated testing environment that requires an initial setup.
+
+In a separate terminal window, execute:
+
+```
+make specs
+```
+
+Once the interface has initialised, execute:
+
+```
+make spec-setup
+```
+
+Once set up has completed you won't have to run that again unless the volumes are removed.
+
+------------
+
+### Make commands
+
+There are several `make` commands configured in the `Makefile`. These are mostly just convenience wrappers for longer or more complicated commands.
+
+Nb. with exception to `make spec-setup`, all other `make` commands are run from the host machine, i.e. outside the containers.
+
+| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `make docker-shell`                                                                                                                   | Generate an .env file (if not exist), run the app in the background and open an interactive shell.<br/>***Nb.*** does not launch servers for browser viewing, run `make build` instead. This command is for accessing a detached app container in order to execute administrative operations. You may like to run `make shell` to open a prompt in the container launched by `docker compose up`. From within you can run commands such as  `irb` and `rails c` |
+| `make`                                                                                                                                | Alias of `make docker-shell`.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `make build`                                                                                                                          | Build and run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                          |
+| `make launch`                                                                                                                         | Run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                                    |
+| `make rebuild`                                                                                                                        | Runs `make dc-clean` and then rebuilds the application from the ground up and brings it online.                                                                                                                                                                                                                                                                                                                                                                 |
+
+
+### Other helpers
+Whilst these can be used independently, they are generally used in the commands above to help overcome complex
+installation.
+
+| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                           |
+|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `make setup`                                                                                                                          | Jump into the app container and execute the `install.sh` script                                                                                                       |
+| `make sidekiq`                                                                                                                        | Launch Sidekiq in the background.                                                                                                                                     |
+| `make browser-sync`                                                                                                                   | Launch BrowserSync in the background.                                                                                                                                 |
+| `make server`                                                                                                                         | Launch Puma at the command prompt.                                                                                                                                    |
+| `make servers`                                                                                                                        | A helper to ensure app setup and asynchronously start all servers in this order; Sidekiq, BrowserSync and Puma.                                                       |
+| `make dc-clean`                                                                                                                       | Stop all CTS docker containers, delete all CTS images, volumes and network. Clean the application directory ready for a fresh installation. Nukes databases and Gems. |
+| `make dc-reset`                                                                                                                       | Clean and rebuild the app, displays stdout ***doesn't restart the servers***                                                                                          |
+| `make down`                                                                                                                           | Alias of `docker compose down`                                                                                                                                        |
+| `make up`                                                                                                                             | Alias of `docker compose up`                                                                                                                                          |
+| `make up-daemon`                                                                                                                      | Alias of `docker compose up -d app` - run docker compose in the background                                                                                            |
+| `make restart`                                                                                                                        | Stop docker compose (`down`), relaunch (`up`) and display an interactive shell on the app container                                                                   |
+| `make shell-app`                                                                                                                      | Open an interactive command prompt on the app container                                                                                                               |
+| `make test`                                                                                                                           | Run tests on the application.                                                                                                                                         |
+| `make docker-sync`                                                                                                                    | Starts a docker-sync container used to speed up development on the front end.                                                                                         |
