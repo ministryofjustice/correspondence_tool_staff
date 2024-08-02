@@ -65,35 +65,47 @@ namespace :db do
     end
 
     desc "seed development teams and users"
-    task dev: %w[db:seed:dev:correspondence_types db:seed:dev:teams db:seed:dev:users db:seed:dev:letter_templates]
+    task dev: %w[db:seed:dev:misc db:seed:dev:teams db:seed:dev:users db:seed:dev:letter_templates]
 
     namespace :dev do
       desc "Seed teams for dev environment"
       task teams: :environment do
         require Rails.root.join("db/seeders/dev_team_seeder")
-        puts "Seeding Teams"
+        puts "Seeding teams"
         DevTeamSeeder.new.seed!
       end
 
       desc "Seed users, teams, roles for dev environment"
       task users: :environment do
         require Rails.root.join("db/seeders/dev_user_seeder")
-        puts "Seeding Users"
+        puts "Seeding users"
         DevUserSeeder.new.seed!
       end
 
       desc "Seed letter templates for dev environment"
       task letter_templates: :environment do
         require Rails.root.join("db/seeders/letter_template_seeder")
-        puts "Seeding Letter Templates"
+        puts "Seeding letter templates"
         LetterTemplateSeeder.new.seed!
       end
 
-      desc "Seed correspondence_types for development environments"
-      task correspondence_types: :environment do
+      desc "Seed categories and closure metadata"
+      task misc: :environment do
         require Rails.root.join("db/seeders/correspondence_type_seeder")
-        puts "Seeding Correspondence Types"
+        puts "Seeding correspondence types"
         CorrespondenceTypeSeeder.new.seed!
+        require Rails.root.join("db/seeders/case_category_reference_seeder")
+        puts "Seeding Reasons for lateness"
+        CaseCategoryReferenceSeeder::ReasonsForLateness.seed!
+        require Rails.root.join("db/seeders/report_type_seeder")
+        puts "Seeding report types"
+        ReportTypeSeeder.new.seed!
+        require Rails.root.join("db/seeders/case_closure_metadata_seeder")
+        puts "Seeding metadata"
+        CaseClosure::MetadataSeeder.seed!
+        require Rails.root.join("db/seeders/category_reference_seeder")
+        puts "Seeding contact types"
+        CategoryReferenceSeeder::ContactTypeSeeder.seed!
       end
     end
   end
