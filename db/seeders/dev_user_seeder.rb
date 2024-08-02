@@ -54,14 +54,12 @@ class DevUserSeeder
       Rails.logger.debug "***** Dev users will not be seeded in production environment *****"
       Rails.logger.debug "=================================================================="
       Rails.logger.debug ""
-      return
     else
       foi = CorrespondenceType.foi
       @users.each do |user_name, user_info_list|
         user_info_list.each do |user_info|
           team_abbr = user_info[:team]
           team = @teams[team_abbr]
-          # team_name = @teams.find { |t| t.second == team_abbr } .first
           email = email_from_name(user_name)
           role = user_info[:role]
 
