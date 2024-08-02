@@ -1,4 +1,4 @@
-class DevAWSS3
+class DevAwsS3
   class Bucket
     attr_accessor :name
 
