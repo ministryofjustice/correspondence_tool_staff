@@ -344,6 +344,10 @@ GEM
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.16.7-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.7-x86_64-linux)
+      racc (~> 1.4)
     notifications-ruby-client (5.4.0)
       jwt (>= 1.5, < 3)
     oauth2 (1.4.9)
@@ -616,7 +620,9 @@ GEM
     zeitwerk (2.6.17)
 
 PLATFORMS
+  arm64-darwin-21
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   aasm (~> 5.2)
