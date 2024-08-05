@@ -54,14 +54,12 @@ class DevUserSeeder
       Rails.logger.debug "***** Dev users will not be seeded in production environment *****"
       Rails.logger.debug "=================================================================="
       Rails.logger.debug ""
-      return
     else
       foi = CorrespondenceType.foi
       @users.each do |user_name, user_info_list|
         user_info_list.each do |user_info|
           team_abbr = user_info[:team]
           team = @teams[team_abbr]
-          # team_name = @teams.find { |t| t.second == team_abbr } .first
           email = email_from_name(user_name)
           role = user_info[:role]
 
@@ -96,31 +94,6 @@ class DevUserSeeder
           end
         end
       end
-    end
-
-    # # add Dave Allen into Disclosure and Comms & Information teams as well
-    # my_user = User.find_by_full_name! 'Dave Allen'
-    # team = BusinessUnit.find_by_name! 'Disclosure'
-    # TeamsUsersRole.find_or_create_by!(user: my_user, team: team, role: 'approver')
-    # team = BusinessUnit.find_by_name 'Communications and Information'
-    # TeamsUsersRole.find_or_create_by!(user: my_user, team: team, role: 'responder')
-
-    # # add Dasha Diss into BMT and Comms and information teams as well
-    # my_user = User.find_by_full_name! 'Dasha Diss'
-    # team = BusinessUnit.find_by_name! 'Disclosure BMT'
-    # TeamsUsersRole.find_or_create_by!(user: my_user, team: team, role: 'manager')
-    # team = BusinessUnit.find_by_name 'Communications and Information'
-    # TeamsUsersRole.find_or_create_by!(user: my_user, team: team, role: 'responder')
-
-    smoketest_user = User.find_or_create_by!(email: Settings.smoke_tests.username) do |user|
-      user.full_name             = "Smokey Test(DO NOT EDIT)"
-      user.password              = Settings.smoke_tests.password
-      user.password_confirmation = Settings.smoke_tests.password
-      Rails.logger.debug "Created Smoke Test user"
-    end
-
-    TeamsUsersRole.find_or_create_by!(team: BusinessUnit.dacu_bmt, user: smoketest_user, role: "manager") do
-      Rails.logger.debug "Created Team/Role link to user"
     end
   end
 

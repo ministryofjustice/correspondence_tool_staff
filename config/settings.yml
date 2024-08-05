@@ -248,9 +248,6 @@ global_navigation:
       search_cases:
       teams:
 
-smoke_tests:
-  site_url: 'http://localhost:3000'
-
 enabled_features:
   # A tempory feature flag to hide editing functionality on overturneds until the feature is built
   edit_overturned:

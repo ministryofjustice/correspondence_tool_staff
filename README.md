@@ -82,13 +82,10 @@ $ bin/yarn install
 ```
 
 #### Seeds
-Seeds can be loaded into the database using the command. Some environment variables need to be set for this to work.
+Seeds can be loaded into the database via a rake task. The user accounts password is set with the `DEV_PASSWORD` env var.
 
 ```
-$ export SETTINGS__SMOKE_TESTS__USERNAME=user@user.com
-$ export SETTINGS__SMOKE_TESTS__PASSWORD=correspondence
-$ export DEV_PASSWORD=correspondence
-$ bin/rake db:seed:dev
+$ DEV_PASSWORD=correspondence bin/rake db:seed:dev
 ```
 
 #### Running locally:
@@ -277,24 +274,6 @@ The template body for each letter is maintained in the `letter_templates` table 
 Whenever any changes to the letter templates are required DO NOT EDIT THE DATABASE, but amend the seeder and then on each environment, run `rails db:seed:dev:letter_templates` to delete and re-populate the table.
 
 This is required whenever any new template is added; should someone have edited the versions in the database directly, those changes will be overwritten the next time the seeder is run.
-
-### Smoke Tests
-
-The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
-It checks that sign in was successful and then randomly views one case in the case list view.
-
-To run the smoke test, set the following environment variables:
-
-```
-SETTINGS__SMOKE_TESTS__USERNAME    # the email address to use for smoke tests
-SETTINGS__SMOKE_TESTS__PASSWORD    # The password for the smoketest email account
-```
-
-and then run
-
-```
-bundle exec rails smoke
-```
 
 ### Site prism page manifest file
 
