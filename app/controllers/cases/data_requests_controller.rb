@@ -44,6 +44,7 @@ module Cases
       service = DataRequestUpdateService.new(
         user: current_user,
         data_request: @data_request,
+        data_request_area: @data_request_area,
         params: update_params,
       )
       service.call
@@ -51,10 +52,10 @@ module Cases
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :unprocessed
         flash[:notice] = t(".unprocessed")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @data_request = service.data_request
         render :edit

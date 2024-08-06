@@ -73,7 +73,7 @@ span.visually-hidden
         p.data_request_date_completed
           = l @data_request.cached_date_received, format: :default
     - if @case.editable? && policy(@case).can_record_data_request?
-        = link_to t('.edit_link'), edit_case_data_request_area_data_request_path(@case, @data_request), class: 'data-requests__action'
+        = link_to t('.edit_link'), edit_case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'data-requests__action'
     - if @commissioning_document.present? && FeatureSet.email_commissioning_document.enabled?
       hr
       div.commissioning-document
