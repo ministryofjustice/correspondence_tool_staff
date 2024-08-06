@@ -475,6 +475,7 @@ en:
     case/sar/offender_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_remove_data_request_area?: You are not authorised to remove this data request.
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
@@ -1184,6 +1185,8 @@ en:
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
       record_reason_for_lateness: Record reason for lateness
+      delete_data_request_area: Are you sure you want to delete this data request?
+      delete_error: Cannot delete a data request with outstanding requests
     case/offender_sar_complaint:
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval

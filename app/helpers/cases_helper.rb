@@ -207,13 +207,13 @@ module CasesHelper
     when :record_data_request_area
       link_to "Record data request",
               new_case_data_request_area_path(@case),
-              id: "action--record-data-request",
+              id: "action--record-data-request-area",
               class: "button-tertiary"
     when :record_data_request
-      link_to "Record data request",
+      link_to "Add data request type",
               new_case_data_request_area_data_request_path(@case, @data_request_area),
-              id: "action--record-data-request",
-              class: "button-tertiary"
+              id: "action--record-data-request-type",
+              class: "button"
     when :upload_request_files
       link_to "Upload request files",
               new_case_attachment_path(@case),
@@ -231,7 +231,6 @@ module CasesHelper
               class: "button-secondary"
     when :record_sent_to_sscl
       return if @case.sent_to_sscl_at.present?
-
       link_to "Sent to SSCL",
               edit_step_case_sar_offender_path(@case, "sent_to_sscl"),
               id: "action--send-sent-to-sscl",

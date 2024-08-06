@@ -29,6 +29,16 @@ module Cases
       end
     end
 
+    def destroy
+      @data_request_area.destroy # rubocop:disable Rails/SaveBang
+      respond_to do |format|
+        format.html { redirect_to case_path(@case), notice: "Data request was successfully destroyed." }
+      end
+    rescue ActiveRecord::InvalidForeignKey
+      flash[:alert] = t("common.case/offender_sar.delete_error")
+      redirect_to case_path(@case)
+    end
+
   private
 
     def set_case
