@@ -47,7 +47,13 @@ class DataRequestArea < ApplicationRecord
   end
 
   def status
-    data_requests.all?(&:completed) ? "Completed" : "In progress"
+    if data_requests.exists? && data_requests.all?(&:completed)
+      "Completed"
+    elsif data_requests.exists? && !data_requests.all?(&:completed)
+      "In progress"
+    else
+      "Not started"
+    end
   end
 
   def num_of_requests
@@ -59,11 +65,11 @@ class DataRequestArea < ApplicationRecord
   end
 
   def date_requested
-    data_requests.order(:date_requested).first.date_requested
+    data_requests.order(:date_requested).first&.date_requested
   end
 
   def date_completed
-    data_requests.completed.all? ? data_requests.order(:cached_date_received).last.cached_date_received : ""
+    data_requests.completed.all? ? data_requests.order(:cached_date_received).last&.cached_date_received : ""
   end
 
   def request_dates_either_present?
