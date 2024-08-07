@@ -681,7 +681,6 @@ CREATE TABLE public.data_request_areas (
     contact_id bigint,
     data_request_area_type public.data_request_area_type NOT NULL,
     cached_num_pages integer DEFAULT 0,
-    num_of_requests integer DEFAULT 0,
     completed boolean DEFAULT false,
     date_requested date,
     cached_date_received date,

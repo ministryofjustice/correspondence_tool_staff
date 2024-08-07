@@ -10,7 +10,6 @@ class CreateDataRequestArea < ActiveRecord::Migration[7.1]
       t.enum :data_request_area_type, enum_type: "data_request_area_type", null: false
 
       t.integer :cached_num_pages, default: 0
-      t.integer :num_of_requests, default: 0
       t.boolean :completed, default: false
       t.date :date_requested
       t.date :cached_date_received, null: true
