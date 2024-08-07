@@ -17,6 +17,7 @@
             th Date completed
             th Status
             th
+            th
         tbody
           - case_details.data_requests.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request|
             tr
@@ -44,4 +45,5 @@
 .button-holder
   - if policy(case_details).can_record_data_request? && allow_editing
     = action_button_for(:record_data_request)
-    = link_to t('button.delete'), @data_request_areas, type: 'button', class: 'button-secondary', id: "action--delete-data-request-area",  data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
+    - if case_details.data_requests.none?
+      = link_to t('button.delete'), @data_request_areas, type: 'button', class: 'button-secondary', id: "action--delete-data-request-area",  data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete

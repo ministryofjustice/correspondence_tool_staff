@@ -222,14 +222,14 @@ Rails.application.routes.draw do
           get :send_email
           post :send_email
         end
-      end
 
-      resources :commissioning_documents, only: %i[new edit create update] do
-        member do
-          get :download
-          get :replace
-          patch :upload
-          post :send_email
+        resources :commissioning_documents, only: %i[new edit create update] do
+          member do
+            get :download
+            get :replace
+            patch :upload
+            post :send_email
+          end
         end
       end
     end

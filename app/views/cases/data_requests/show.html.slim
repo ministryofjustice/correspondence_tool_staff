@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_data_request_area_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_data_request_area_path(@case, @data_request_area), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -120,4 +120,4 @@ span.visually-hidden
     - elsif policy(@case).can_record_data_request?
       hr
       div.button-holder
-        = link_to t('button.select_document'), new_case_data_request_area_commissioning_document_path(@case, @data_request), { class: 'button button-high data_request_select_document' }
+        = link_to t('button.select_document'), new_case_data_request_area_data_request_commissioning_document_path(@case, @data_request_area, @data_request), { class: 'button button-high data_request_select_document' }

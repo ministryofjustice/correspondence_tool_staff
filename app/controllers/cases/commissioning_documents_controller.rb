@@ -1,8 +1,13 @@
 module Cases
   class CommissioningDocumentsController < ApplicationController
     before_action :set_case
+    # before_action :set_data_request_area
     before_action :set_data_request
     before_action :set_commissioning_document
+
+    def new
+      debugger
+    end
 
     def create
       @commissioning_document.template_name = create_params[:template_name].to_sym
@@ -84,6 +89,10 @@ module Cases
 
     def set_case
       @case = Case::Base.find(params[:case_id])
+    end
+
+    def set_data_request_area
+      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
     end
 
     def set_data_request

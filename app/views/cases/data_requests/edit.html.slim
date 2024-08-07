@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_data_request_area_path(@case, @data_request_area), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
