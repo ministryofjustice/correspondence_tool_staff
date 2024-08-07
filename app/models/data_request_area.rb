@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: data_request_areas
+#
+#  id                     :bigint           not null, primary key
+#  case_id                :bigint           not null
+#  user_id                :bigint           not null
+#  contact_id             :bigint
+#  data_request_area_type :enum             not null
+#  cached_num_pages       :integer          default(0)
+#  num_of_requests        :integer          default(0)
+#  completed              :boolean          default(FALSE)
+#  date_requested         :date
+#  cached_date_received   :date
+#  date_from              :date
+#  date_to                :date
+#  location               :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
 class DataRequestArea < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
@@ -9,8 +29,8 @@ class DataRequestArea < ApplicationRecord
 
   attribute :data_request_area_type
 
-  scope :completed, -> { where(completed: true) }
-  scope :in_progress, -> { where(completed: false) }
+  scope :completed, -> { data_requests.where(completed: true) }
+  scope :in_progress, -> { data_requests.where(completed: false) }
 
   enum data_request_area_type: {
     prison: "prison",
@@ -27,11 +47,23 @@ class DataRequestArea < ApplicationRecord
   end
 
   def status
-    completed? ? "Completed" : "In progress"
+    data_requests.all?(&:completed) ? "Completed" : "In progress"
   end
 
   def num_of_requests
     data_requests.count
+  end
+
+  def cached_num_pages
+    data_requests.sum(:cached_num_pages)
+  end
+
+  def date_requested
+    data_requests.order(:date_requested).first.date_requested
+  end
+
+  def date_completed
+    data_requests.completed.all? ? data_requests.order(:cached_date_received).last.cached_date_received : ""
   end
 
   def request_dates_either_present?

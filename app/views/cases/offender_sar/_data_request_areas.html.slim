@@ -35,9 +35,9 @@
               td
                 = data_request_area.cached_num_pages
               td
-                - if data_request_area.cached_date_received.present?
-                  time datetime="#{data_request_area.cached_date_received}"
-                    = l data_request_area.cached_date_received, format: :default
+                - if data_request_area.date_completed.present?
+                  time datetime="#{data_request_area.date_completed}"
+                    = l data_request_area.date_completed, format: :default
               td
                 = data_request_area.status
               td
