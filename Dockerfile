@@ -47,7 +47,7 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir -p log tmp tmp/pids
-RUN chown -R appuser:appgroup log tmp
+RUN chown -R appuser:appgroup /app
 
 USER 1000
 
