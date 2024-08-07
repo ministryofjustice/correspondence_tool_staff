@@ -98,7 +98,7 @@ span.visually-hidden
                   span = @commissioning_document.change_link
         - unless @commissioning_document.sent? || !policy(@case).can_record_data_request?
           div.button-holder
-            = link_to t('button.send_email'), send_email_case_data_request_area_data_request_path(@case, @data_request), class: 'button button-high data_request_send_email'
+            = link_to t('button.send_email'), send_email_case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'button button-high data_request_send_email'
 
         - if @data_request.data_request_emails.present?
           h2.heading-medium
