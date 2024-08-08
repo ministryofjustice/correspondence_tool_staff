@@ -1,37 +1,23 @@
 class DataRequestAreaDecorator < Draper::Decorator
   delegate_all
 
-  def request_dates
-    if request_date_from_only?
-      return "from #{date_format(date_from)} to date"
-    end
+  def num_of_requests
+    data_requests.count
+  end
 
-    if request_date_to_only?
-      return "up to #{date_format(date_to)}"
-    end
+  def cached_num_pages
+    data_requests.sum(:cached_num_pages)
+  end
 
-    if request_dates_both_present?
-      return "from #{date_format(date_from)} to #{date_format(date_to)}"
-    end
+  def date_requested
+    data_requests.order(:date_requested).first&.date_requested
+  end
 
-    ""
+  def date_completed
+    data_requests.completed.all? ? data_requests.order(:cached_date_received).last&.cached_date_received : ""
   end
 
   def location
     contact&.name || super
-  end
-
-  def data_request_name
-    contact&.data_request_name || location
-  end
-
-  def data_required
-    request_type_note if request_type == "other"
-  end
-
-  private
-
-  def date_format(date)
-    date.strftime("%d/%m/%Y")
   end
 end

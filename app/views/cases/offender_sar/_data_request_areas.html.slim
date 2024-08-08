@@ -23,7 +23,7 @@
           - case_details.data_request_areas.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request_area|
             tr
               td
-                = render "cases/offender_sar/data_request_area_request_type", data_request_area: data_request_area
+                = t :"helpers.label.data_request_area.data_request_area_type.#{data_request_area.data_request_area_type}"
               td
                 = data_request_area.location
               td
