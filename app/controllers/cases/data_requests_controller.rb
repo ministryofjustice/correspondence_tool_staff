@@ -106,7 +106,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id])
+      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
     end
 
     def set_commissioning_document
