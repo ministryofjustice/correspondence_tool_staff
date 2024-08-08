@@ -36,7 +36,8 @@
               td
                 = data_request_status_tag(data_request.status)
               td
-
+                - if policy(case_details).can_record_data_request? && allow_editing
+                  = link_to t('cases.data_requests.edit.link'), edit_case_data_request_area_data_request_path(case_details, data_request_area, data_request), class: 'data-requests__edit'
               td
                 = link_to t('cases.data_requests.show.link'), case_data_request_area_data_request_path(case_details, data_request_area, data_request), class: 'data-requests__show'
 
