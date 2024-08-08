@@ -547,7 +547,6 @@ en:
     download_document: Download Day 1 request document
     generate_document: Generate Day 1 request document
     send_email: Send commissioning email
-    add_data_request_type: Add data request type
 
   helpers:
     fieldset:
@@ -1645,8 +1644,6 @@ en:
         link: View
       create:
         success: Data request area successfully recorded
-      update:
-        success: Data request area updated
       index:
         heading: Data requested
         none: No data requests recorded
