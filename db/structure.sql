@@ -684,8 +684,6 @@ CREATE TABLE public.data_request_areas (
     completed boolean DEFAULT false,
     date_requested date,
     cached_date_received date,
-    date_from date,
-    date_to date,
     location character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
