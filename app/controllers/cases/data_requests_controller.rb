@@ -119,7 +119,6 @@ module Cases
 
     def create_params
       params.require(:data_request).permit(
-        :location,
         :contact_id,
         :request_type,
         :request_type_note,
@@ -132,7 +131,6 @@ module Cases
 
     def update_params
       params.require(:data_request).permit(
-        :location,
         :contact_id,
         :request_type,
         :request_type_note,
