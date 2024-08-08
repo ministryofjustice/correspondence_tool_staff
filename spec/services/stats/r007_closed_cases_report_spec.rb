@@ -94,6 +94,46 @@ module Stats
           }.by 1
         end
       end
+
+      describe "#report_details" do
+        let(:redis) { instance_double(Redis) }
+        let(:report) { create(:report) }
+        let(:data) { "some data" }
+
+        before do
+          allow(Redis).to receive(:new).and_return(redis)
+          allow(redis).to receive(:exists?).with(report.guid).and_return(exists)
+          allow(redis).to receive(:get).with(report.guid).and_return(data)
+        end
+
+        context "when data is in redis" do
+          let(:exists) { true }
+
+          it "sets the report as complete" do
+            expect {
+              @report.report_details(report)
+            }.to change(report, :status).to Stats::BaseReport::COMPLETE
+          end
+
+          it "returns data stored in Redis" do
+            expect(@report.report_details(report)).to eq data
+          end
+        end
+
+        context "when data is not in redis" do
+          let(:exists) { false }
+
+          it "doesn't change the report status" do
+            expect {
+              @report.report_details(report)
+            }.not_to change(report, :status)
+          end
+
+          it "returns nil" do
+            expect(@report.report_details(report)).to be_nil
+          end
+        end
+      end
     end
   end
 end
