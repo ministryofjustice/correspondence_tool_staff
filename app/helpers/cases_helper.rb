@@ -231,6 +231,7 @@ module CasesHelper
               class: "button-secondary"
     when :record_sent_to_sscl
       return if @case.sent_to_sscl_at.present?
+
       link_to "Sent to SSCL",
               edit_step_case_sar_offender_path(@case, "sent_to_sscl"),
               id: "action--send-sent-to-sscl",

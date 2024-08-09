@@ -19,7 +19,7 @@ class DataRequestAreaCreateService
         @case.state_machine.mark_as_waiting_for_data!(
           acting_user: @user,
           acting_team: BusinessUnit.dacu_branston,
-          )
+        )
       end
 
       @result = :ok
@@ -28,7 +28,7 @@ class DataRequestAreaCreateService
     end
   end
 
-  private
+private
 
   def build_data_request_area(data_request_area_params)
     return nil unless @case.respond_to? :data_request_areas
