@@ -1,0 +1,28 @@
+- content_for :page_title do
+  = t('page_title.data_request_area_show_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+- allow_editing = @case.editable?
+
+div class="case"
+  - if allow_editing
+    section.case-info.has-actions
+      h2.visually-hidden
+        = "Actions you can take on this case"
+
+  section.case-info
+  - if @case.type_of_offender_sar? && !@case.rejected?
+    section.case-info
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }

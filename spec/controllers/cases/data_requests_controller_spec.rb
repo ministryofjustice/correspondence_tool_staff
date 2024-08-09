@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Cases::DataRequestsController, type: :controller do
   let(:manager) { find_or_create :branston_user }
   let(:offender_sar_case) { create :offender_sar_case }
+  let(:data_request_area) { create :data_request_area }
 
   before do
     sign_in manager
@@ -10,7 +11,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
   describe "#new" do
     before do
-      get :new, params: { case_id: offender_sar_case.id }
+      get :new, params: { case_id: offender_sar_case.id, data_request_area_id: data_request_area.id }
     end
 
     it "sets @case" do
@@ -35,13 +36,14 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
             date_requested_yyyy: "2020",
           },
           case_id: offender_sar_case.id,
+          data_request_area_id: data_request_area.id,
         }
       end
 
       it "creates a new DataRequest" do
         expect { post(:create, params:) }
           .to change(DataRequest.all, :size).by 1
-        expect(response).to redirect_to case_path(offender_sar_case)
+        expect(response).to redirect_to case_data_request_area_path(offender_sar_case, data_request_area)
       end
     end
 
@@ -49,13 +51,13 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       let(:invalid_params) do
         {
           data_request: {
-            location: "",
-            request_type: "all_prison_records",
+            request_type: "",
             date_requested_dd: "15",
             date_requested_mm: "8",
             date_requested_yyyy: "2020",
           },
           case_id: offender_sar_case.id,
+          data_request_area_id: data_request_area.id,
         }
       end
 
@@ -81,6 +83,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       {
         id: data_request.id,
         case_id: data_request.case_id,
+        data_request_area_id: data_request_area.id,
       }
     end
 
@@ -97,6 +100,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         create(
           :data_request,
           offender_sar_case: create(:offender_sar_case, :closed),
+          data_request_area: create(:data_request_area),
           cached_num_pages: 10,
           completed: true,
           cached_date_received: Time.zone.yesterday,
@@ -124,6 +128,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       {
         id: data_request.id,
         case_id: data_request.case_id,
+        data_request_area_id: data_request_area.id,
       }
     end
 
@@ -140,6 +145,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         create(
           :data_request,
           offender_sar_case: create(:offender_sar_case, :closed),
+          data_request_area: create(:data_request_area),
           cached_num_pages: 10,
           completed: true,
           cached_date_received: Time.zone.yesterday,
@@ -167,6 +173,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           },
           id: data_request.id,
           case_id: data_request.case_id,
+          data_request_area_id: data_request_area.id,
         }
       end
 
@@ -175,7 +182,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       end
 
       it "updates the DataRequest" do
-        expect(response).to redirect_to case_path(data_request.case_id)
+        expect(response).to redirect_to case_data_request_area_path(offender_sar_case, data_request_area)
         expect(controller).to set_flash[:notice]
       end
 
@@ -193,6 +200,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           },
           id: data_request.id,
           case_id: data_request.case_id,
+          data_request_area_id: data_request_area.id,
         }
       end
 
@@ -214,6 +222,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           },
           id: data_request.id,
           case_id: data_request.case_id,
+          data_request_area_id: data_request_area.id,
         }
       end
 
@@ -229,9 +238,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
   describe "#destroy" do
     it "is not implemented" do
-      data_request = create(:data_request, offender_sar_case:)
+      data_request = create(:data_request)
 
-      expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request.id } }
+      expect { delete :destroy, params: { case_id: offender_sar_case.id, data_request_area_id: data_request_area.id, id: data_request.id } }
         .to raise_error NotImplementedError, "Data request delete unavailable"
     end
   end
@@ -250,6 +259,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       {
         id: data_request.id,
         case_id: data_request.case_id,
+        data_request_area_id: data_request_area.id,
       }
     end
     let(:commissioning_document) { create(:commissioning_document, template_name:) }
@@ -284,6 +294,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           {
             id: data_request.id,
             case_id: data_request.case_id,
+            data_request_area_id: data_request_area.id,
             probation_commissioning_document_email: {
               probation: 1,
               email_branston_archives: "yes",
@@ -308,6 +319,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           {
             id: data_request.id,
             case_id: data_request.case_id,
+            data_request_area_id: data_request_area.id,
             probation_commissioning_document_email: {
               probation: 1,
               email_branston_archives: "no",
@@ -327,6 +339,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           {
             id: data_request.id,
             case_id: data_request.case_id,
+            data_request_area_id: data_request_area.id,
             probation_commissioning_document_email: {
               probation: 1,
             },

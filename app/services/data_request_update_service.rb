@@ -1,10 +1,11 @@
 class DataRequestUpdateService
-  attr_reader :result, :data_request
+  attr_reader :result, :data_request, :data_request_area
 
-  def initialize(user:, data_request:, params:)
+  def initialize(user:, data_request:, params:, data_request_area:)
     @result = nil
     @case = data_request.kase
     @user = user
+    @data_request_area = data_request_area
     @data_request = data_request
     @params = params
     @old_num_pages = @data_request.cached_num_pages

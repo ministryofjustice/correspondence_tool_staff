@@ -45,10 +45,12 @@ en:
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
+    data_request_area_page: Record data request area
     data_request_edit_page: Update page count
     data_request_send_probation_email_page: Do you want to send the commissioning email to Branston Archives?
     data_request_send_email_page: Are you sure you want to send the commissioning email?
     data_request_show_page: View data request
+    data_request_area_show_page: View data request area
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query

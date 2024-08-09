@@ -23,6 +23,7 @@ class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
+  belongs_to :data_request_area, class_name: "DataRequestArea"
   has_one    :commissioning_document
   has_many   :data_request_emails
 
@@ -34,7 +35,6 @@ class DataRequest < ApplicationRecord
   validate :validate_request_type_note
   validate :validate_from_date_before_to_date
   validate :validate_cached_date_received
-  validate :validate_location
 
   before_validation :clean_attributes
 
@@ -141,17 +141,6 @@ private
       errors.add(
         :cached_date_received,
         I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.not_empty"),
-      )
-    end
-  end
-
-  def validate_location
-    if contact_id.present?
-      nil
-    elsif location.blank?
-      errors.add(
-        :location,
-        I18n.t("activerecord.errors.models.data_request.attributes.location.blank"),
       )
     end
   end

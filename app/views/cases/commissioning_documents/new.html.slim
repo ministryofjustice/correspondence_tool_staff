@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
+= link_to("Back", case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -22,7 +22,7 @@ span.visually-hidden
     h2.bold-medium.data-request__number
       = "#{@case.number} - #{@case.subject_full_name}"
 
-    - url = case_data_request_commissioning_documents_path(@case, @data_request)
+    - url = case_data_request_area_data_request_commissioning_documents_path(@case, @data_request_area, @data_request)
     = form_for @commissioning_document, url: url do |f|
       = render 'form', f: f
 

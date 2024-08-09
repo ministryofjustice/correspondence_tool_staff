@@ -5,6 +5,7 @@ module Cases
     before_action :set_case
     before_action :set_data_request, only: %i[show edit update destroy send_email]
     before_action :set_commissioning_document, only: %i[show send_email]
+    before_action :set_data_request_area
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -16,14 +17,16 @@ module Cases
       service = DataRequestCreateService.new(
         kase: @case,
         user: current_user,
+        data_request_area: @data_request_area,
         data_request_params: create_params,
       )
+
       service.call
 
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @case = service.case
         @data_request = service.data_request
@@ -41,6 +44,7 @@ module Cases
       service = DataRequestUpdateService.new(
         user: current_user,
         data_request: @data_request,
+        data_request_area: @data_request_area,
         params: update_params,
       )
       service.call
@@ -48,10 +52,10 @@ module Cases
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :unprocessed
         flash[:notice] = t(".unprocessed")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @data_request = service.data_request
         render :edit
@@ -101,6 +105,10 @@ module Cases
       @data_request = DataRequest.find(params[:id]).decorate
     end
 
+    def set_data_request_area
+      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
+    end
+
     def set_commissioning_document
       @commissioning_document = @data_request.commissioning_document&.decorate
     end
@@ -111,7 +119,6 @@ module Cases
 
     def create_params
       params.require(:data_request).permit(
-        :location,
         :contact_id,
         :request_type,
         :request_type_note,
@@ -124,7 +131,6 @@ module Cases
 
     def update_params
       params.require(:data_request).permit(
-        :location,
         :contact_id,
         :request_type,
         :request_type_note,

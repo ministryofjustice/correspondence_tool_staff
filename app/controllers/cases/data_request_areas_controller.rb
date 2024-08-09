@@ -1,0 +1,56 @@
+module Cases
+  class DataRequestAreasController < ApplicationController
+    before_action :set_case
+    before_action :set_data_request_area, only: %i[destroy]
+
+    def new
+      @data_request_area = DataRequestArea.new
+    end
+
+    def create
+      service = DataRequestAreaCreateService.new(
+        kase: @case,
+        user: current_user,
+        data_request_area_params: create_params,
+      )
+      service.call
+
+      @data_request_area = service.data_request_area
+
+      case service.result
+      when :ok
+        flash[:notice] = t(".success")
+        redirect_to case_data_request_area_path(@case, @data_request_area)
+      when :error
+        @case = service.case
+        render :new
+      else
+        raise ArgumentError, "Unknown result: #{service.result.inspect}"
+      end
+    end
+
+    def destroy
+      @data_request_area.destroy # rubocop:disable Rails/SaveBang
+      respond_to do |format|
+        format.html { redirect_to case_path(@case), notice: "Data request was successfully destroyed." }
+      end
+    rescue ActiveRecord::InvalidForeignKey
+      flash[:alert] = t("common.case/offender_sar.delete_error")
+      redirect_to case_path(@case)
+    end
+
+  private
+
+    def set_case
+      @case = Case::Base.find(params[:case_id])
+    end
+
+    def set_data_request_area
+      @data_request_area = DataRequestArea.find(params[:id])
+    end
+
+    def create_params
+      params.require(:data_request_area).permit(:data_request_area_type)
+    end
+  end
+end
