@@ -75,7 +75,7 @@ module Stats
 
     def report_details(report)
       redis = Redis.new
-      if redis.exists(report.guid)
+      if redis.exists?(report.guid)
         report.status = Stats::BaseReport::COMPLETE
         report.save!
         redis.get(report.guid)

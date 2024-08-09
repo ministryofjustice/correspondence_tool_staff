@@ -33,9 +33,11 @@ FROM ruby:3.1.4-alpine
 # The application runs from /app
 WORKDIR /app
 
+# zip: needed for creating reports
 RUN apk --no-cache add \
     nodejs \
-    postgresql-client
+    postgresql-client \
+    zip
 
 RUN addgroup -g 1000 -S appgroup && \
     adduser -u 1000 -S appuser -G appgroup
@@ -45,7 +47,7 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir -p log tmp tmp/pids
-RUN chown -R appuser:appgroup log tmp
+RUN chown -R appuser:appgroup /app
 
 USER 1000
 

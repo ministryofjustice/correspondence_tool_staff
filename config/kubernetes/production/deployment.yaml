@@ -24,6 +24,11 @@ spec:
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
+          resources:
+            limits:
+              memory: 3Gi
+            requests:
+              memory: 1Gi
           env:
             - name: DATABASE_URL
               valueFrom:

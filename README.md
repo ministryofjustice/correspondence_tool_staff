@@ -90,13 +90,26 @@ $ DEV_PASSWORD=correspondence bin/rake db:seed:dev
 
 #### Running locally:
 
+To just run the web server without any background jobs (usually sufficient):
+
 ```
 $ bin/rails server
+```
+
+If you need any of the background jobs running then start with:
+
+```
+$ bin/dev
 ```
 
 The site will be accessible at http://localhost:3000.
 You can login using one of the users created during the seeding process such as:
 `correspondence-staff-dev+brian.rix@digital.justice.gov.uk` or `correspondence-staff-dev+david.attenborough@digital.justice.gov.uk` with the password set as `DEV_PASSWORD`
+
+### Sidekiq
+
+When the server is running, you can view the sidekiq queues by going to http://localhost:3000/sidekiq.
+This path can also be used on the live site when you are logged in as an admin.
 
 ### Testing
 
