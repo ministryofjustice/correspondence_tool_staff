@@ -20,8 +20,9 @@ RUN bundle config deployment true && \
 
 COPY . .
 
+# assets:non_digested required for static error pages
 RUN RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 \
-    bundle exec rake assets:precompile
+    bundle exec rake assets:precompile assets:non_digested
 
 # Cleanup to save space in the production image
 RUN rm -rf node_modules log/* tmp/* /tmp && \
