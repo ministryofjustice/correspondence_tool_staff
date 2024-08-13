@@ -32,9 +32,7 @@ class DataRequestArea < ApplicationRecord
     branston_registry: "branston_registry",
     mappa: "mappa",
   }
-
-  # acts_as_gov_uk_date(:date_requested, :cached_date_received)
-
+  
   def kase
     offender_sar_case
   end
