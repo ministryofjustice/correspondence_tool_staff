@@ -55,24 +55,4 @@ class DataRequestArea < ApplicationRecord
       "Not started"
     end
   end
-
-  def request_dates_either_present?
-    date_from.present? || date_to.present?
-  end
-
-  def request_dates_both_present?
-    date_from.present? && date_to.present?
-  end
-
-  def request_date_from_only?
-    date_from.present? && date_to.blank?
-  end
-
-  def request_date_to_only?
-    date_from.blank? && date_to.present?
-  end
-
-  def request_dates_absent?
-    date_from.blank? && date_to.blank?
-  end
 end

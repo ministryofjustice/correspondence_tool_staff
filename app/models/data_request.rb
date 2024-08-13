@@ -146,7 +146,7 @@ private
   end
 
   def clean_attributes
-    %i[location request_type_note]
+    %i[request_type_note]
       .each { |f| send("#{f}=", send(f.to_s)&.strip) }
       .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
   end
