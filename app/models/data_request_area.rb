@@ -7,13 +7,6 @@
 #  user_id                :bigint           not null
 #  contact_id             :bigint
 #  data_request_area_type :enum             not null
-#  cached_num_pages       :integer          default(0)
-#  num_of_requests        :integer          default(0)
-#  completed              :boolean          default(FALSE)
-#  date_requested         :date
-#  cached_date_received   :date
-#  date_from              :date
-#  date_to                :date
 #  location               :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
