@@ -49,9 +49,6 @@ class ContactsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to contacts_url, notice: "Address was successfully destroyed." }
     end
-  rescue ActiveRecord::InvalidForeignKey
-    flash[:alert] = t("common.contacts.delete_error")
-    redirect_to contacts_path
   end
 
   def contacts_search
