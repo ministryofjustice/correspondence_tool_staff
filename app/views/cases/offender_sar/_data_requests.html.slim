@@ -46,5 +46,5 @@
 .button-holder
   - if policy(case_details).can_record_data_request? && allow_editing
     = action_button_for(:record_data_request)
-    - if case_details.data_requests.none?
+    - if data_request_area.data_requests.none?
       = link_to t('button.delete'), @data_request_areas, type: 'button', class: 'button-secondary', id: "action--delete-data-request-area",  data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
