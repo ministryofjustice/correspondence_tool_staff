@@ -680,10 +680,6 @@ CREATE TABLE public.data_request_areas (
     user_id bigint NOT NULL,
     contact_id bigint,
     data_request_area_type public.data_request_area_type NOT NULL,
-    cached_num_pages integer DEFAULT 0,
-    completed boolean DEFAULT false,
-    date_requested date,
-    cached_date_received date,
     location character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
