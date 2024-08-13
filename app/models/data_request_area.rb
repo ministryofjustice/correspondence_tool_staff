@@ -37,7 +37,7 @@ class DataRequestArea < ApplicationRecord
     probation: "probation",
     branston: "branston",
     branston_registry: "branston_registry",
-    mappa: "mappa"
+    mappa: "mappa",
   }
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)

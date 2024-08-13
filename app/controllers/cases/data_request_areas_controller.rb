@@ -1,7 +1,7 @@
 module Cases
   class DataRequestAreasController < ApplicationController
     before_action :set_case
-    before_action :set_data_request_area, only: %i[show edit update destroy]
+    before_action :set_data_request_area, only: %i[destroy]
 
     def new
       @data_request_area = DataRequestArea.new
@@ -12,7 +12,7 @@ module Cases
         kase: @case,
         user: current_user,
         data_request_area_params: create_params,
-        )
+      )
       service.call
 
       @data_request_area = service.data_request_area
