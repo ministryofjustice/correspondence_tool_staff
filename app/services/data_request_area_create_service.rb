@@ -14,14 +14,6 @@ class DataRequestAreaCreateService
       next if @data_request_area.blank?
 
       @case.save!
-
-      if @case.allow_waiting_for_data_state?
-        @case.state_machine.mark_as_waiting_for_data!(
-          acting_user: @user,
-          acting_team: BusinessUnit.dacu_branston,
-        )
-      end
-
       @result = :ok
     rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
       @result = :error
