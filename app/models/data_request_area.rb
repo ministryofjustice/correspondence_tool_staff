@@ -18,12 +18,15 @@ class DataRequestArea < ApplicationRecord
   has_many :data_requests
 
   validates :data_request_area_type, presence: true
+  validates :offender_sar_case, presence: true
+  validates :user, presence: true
   attribute :data_request_default_area, default: ""
 
   attribute :data_request_area_type
 
-  scope :completed, -> { data_requests.where(completed: true) }
-  scope :in_progress, -> { data_requests.where(completed: false) }
+  scope :completed, -> { joins(:data_requests).where(data_requests: { completed: true }).distinct }
+  scope :in_progress, -> { joins(:data_requests).where(data_requests: { completed: false }).distinct }
+  scope :not_started, -> { where.not(id: DataRequest.select(:data_request_area_id)) }
 
   enum data_request_area_type: {
     prison: "prison",
