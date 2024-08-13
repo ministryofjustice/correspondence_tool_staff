@@ -29,6 +29,17 @@ class DataRequestDecorator < Draper::Decorator
     %w[other nomis_other cctv bwcf].include?(request_type) && request_type_note.present?
   end
 
+  def data_request_status_tag(status)
+    case status
+    when "Completed"
+      "<strong class='govuk-tag'>Completed</strong>".html_safe
+    when "In progress"
+      "<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>".html_safe
+    when "Not started"
+      "<strong class='govuk-tag govuk-tag--grey'>Not started</strong>".html_safe
+    end
+  end
+
 private
 
   def date_format(date)

@@ -39,7 +39,7 @@
                   time datetime="#{data_request_area.date_completed}"
                     = l data_request_area.date_completed, format: :default
               td
-                = data_request_status_tag(data_request_area.status)
+                = data_request_area.data_request_area_status_tag(data_request_area.status)
               td
                 = link_to t('cases.data_request_areas.show.link'), case_data_request_area_path(case_details, data_request_area), class: 'data-requests__show'
 
