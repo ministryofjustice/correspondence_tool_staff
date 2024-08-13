@@ -1,7 +1,7 @@
 module Cases
   class DataRequestAreasController < ApplicationController
     before_action :set_case
-    before_action :set_data_request_area, only: %i[destroy]
+    before_action :set_data_request_area, only: %i[show edit update destroy]
 
     def new
       @data_request_area = DataRequestArea.new
@@ -30,7 +30,7 @@ module Cases
     end
 
     def destroy
-      @data_request_area.destroy # rubocop:disable Rails/SaveBang
+      @data_request_area.destroy!
       respond_to do |format|
         format.html { redirect_to case_path(@case), notice: "Data request was successfully destroyed." }
       end
