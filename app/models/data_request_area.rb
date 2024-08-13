@@ -32,7 +32,7 @@ class DataRequestArea < ApplicationRecord
     branston_registry: "branston_registry",
     mappa: "mappa",
   }
-  
+
   def kase
     offender_sar_case
   end

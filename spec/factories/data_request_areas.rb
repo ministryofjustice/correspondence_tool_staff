@@ -17,6 +17,5 @@ FactoryBot.define do
     association :user
 
     data_request_area_type { "prison" }
-    date_requested { Date.current }
   end
 end
