@@ -1,6 +1,17 @@
-FROM ruby:3.1.4-alpine as builder
+FROM ruby:3.1.4-alpine as base
 
 WORKDIR /app
+
+# zip: needed for creating reports
+RUN apk --no-cache add \
+    nodejs \
+    postgresql-client \
+    zip
+
+# Ensure latest rubygems is installed
+RUN gem update --system
+
+FROM base as builder
 
 # Some app dependencies
 RUN apk --no-cache add \
@@ -29,16 +40,7 @@ RUN rm -rf node_modules log/* tmp/* /tmp && \
     rm -rf /usr/local/bundle/cache
 
 # Build runtime image
-FROM ruby:3.1.4-alpine
-
-# The application runs from /app
-WORKDIR /app
-
-# zip: needed for creating reports
-RUN apk --no-cache add \
-    nodejs \
-    postgresql-client \
-    zip
+FROM base
 
 RUN addgroup -g 1000 -S appgroup && \
     adduser -u 1000 -S appuser -G appgroup
@@ -48,7 +50,7 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 RUN mkdir -p log tmp tmp/pids
-RUN chown -R appuser:appgroup /app
+RUN chown -R appuser:appgroup ./*
 
 USER 1000
 
