@@ -1,7 +1,7 @@
 - content_for :page_title do
   = t('page_title.data_request_send_probation_email_page')
 
-= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
+= link_to("Back", case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'govuk-back-link')
 
 - content_for :heading
   = t('page_title.data_request_send_probation_email_page')
@@ -16,4 +16,4 @@
         = f.radio_button_fieldset :email_branston_archives, choices: [:yes, :no], legend_options: { class: 'visually-hidden' }
         .button-holder
           = f.submit t('button.continue'), { class: 'button', role: 'button' }
-          = link_to(t('common.cancel'), case_data_request_path(@case, @data_request), class: 'acts-like-button data_request_cancel moj-style-link')
+          = link_to(t('common.cancel'),case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'acts-like-button data_request_cancel moj-style-link')
