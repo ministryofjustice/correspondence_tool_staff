@@ -12,6 +12,7 @@ describe DataRequestUpdateService do
     )
   end
   let(:offender_sar_case) { create :offender_sar_case }
+  let(:data_request_area) { create :data_request_area }
   let(:params) do
     {
       location: "HMP Brixton",
@@ -31,6 +32,7 @@ describe DataRequestUpdateService do
       user:,
       data_request:,
       params:,
+      data_request_area:,
     )
   end
 
@@ -49,6 +51,7 @@ describe DataRequestUpdateService do
           user:,
           data_request:,
           params:,
+          data_request_area:,
         )
       end
 
