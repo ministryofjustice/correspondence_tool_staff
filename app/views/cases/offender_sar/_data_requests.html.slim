@@ -22,7 +22,7 @@
           - data_request_area.data_requests.decorate.order(date_requested: :asc).each do |data_request|
             tr
               td
-                = render "cases/offender_sar/data_request_request_type", data_request: data_request
+                = render "cases/offender_sar/data_request_request_type", case_details: case_details, data_request_area: data_request_area, data_request: data_request
               td
                 - if data_request.date_requested.present?
                   time datetime="#{data_request.date_requested}"
@@ -38,13 +38,51 @@
               td
                 - if policy(case_details).can_record_data_request? && allow_editing
                   = link_to t('cases.data_requests.edit.link'), edit_case_data_request_area_data_request_path(case_details, data_request_area, data_request), class: 'data-requests__edit'
-              td
-                = link_to t('cases.data_requests.show.link'), case_data_request_area_data_request_path(case_details, data_request_area, data_request), class: 'data-requests__show'
-
           - if data_request_area.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: data_request_area.data_requests.sum(:cached_num_pages), label_span: '2', value_span: '5' }
-.button-holder
-  - if policy(case_details).can_record_data_request? && allow_editing
-    = action_button_for(:record_data_request)
-    - if data_request_area.data_requests.none?
-      = link_to t('button.delete'), @data_request_areas, type: 'button', class: 'button-secondary', id: "action--delete-data-request-area",  data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
+    .button-holder
+      - if policy(case_details).can_record_data_request? && allow_editing
+        = action_button_for(:record_data_request)
+        - if data_request_area.data_requests.none?
+          = link_to t('button.delete'), @data_request_areas, type: 'button', class: 'button-secondary', id: "action--delete-data-request-area",  data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
+      hr
+      div.commissioning-document
+        h2.heading-medium
+          = t('cases.data_request_areas.show.emails_header')
+        table.report
+          thead
+            tr
+              th = t('cases.commissioning_documents.table_headings.request_document')
+              th = t('cases.commissioning_documents.table_headings.last_updated')
+              th = t('cases.commissioning_documents.table_headings.action')
+          tbody.document
+            tr
+              td = data_request_area.decorate.request_document
+              / td = @commissioning_document.updated_at
+              / td
+                span = @commissioning_document.download_link
+        / - unless @commissioning_document.sent? || !policy(@case).can_record_data_request?
+          div.button-holder
+            = link_to t('button.send_email'), send_email_case_data_request_area_data_request_path(@case, @data_request_area, @data_request), class: 'button button-high data_request_send_email'
+
+        / - if @data_request.data_request_emails.present?
+          h2.heading-medium
+            = t('.emails_history_header')
+          table.report
+            thead
+              tr
+                th = t('cases.commissioning_documents.email_history_table_headings.email_type')
+                th = t('cases.commissioning_documents.email_history_table_headings.email_address')
+                th = t('cases.commissioning_documents.email_history_table_headings.date_sent')
+                th = t('cases.commissioning_documents.email_history_table_headings.status')
+            tbody.email_details
+              - @data_request.data_request_emails.map(&:decorate).each do |email|
+                tr
+                  td = email.email_type
+                  td = email.email_address
+                  td = email.created_at
+                  td = email.status
+    / - elsif policy(@case).can_record_data_request?
+      hr
+      div.button-holder
+        = link_to t('button.select_document'), new_case_data_request_area_data_request_commissioning_document_path(@case, @data_request_area, @data_request), { class: 'button button-high data_request_select_document' }
