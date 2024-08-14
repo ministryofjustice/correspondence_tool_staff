@@ -24,7 +24,6 @@ class DataRequest < ApplicationRecord
   belongs_to :user
   belongs_to :contact
   belongs_to :data_request_area, class_name: "DataRequestArea"
-  has_one    :commissioning_document
   has_many   :data_request_emails
 
   validates :request_type, presence: true

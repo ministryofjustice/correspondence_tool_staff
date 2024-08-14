@@ -1,4 +1,4 @@
-                = t :"helpers.label.data_request.request_type.#{data_request.request_type}"
+                = link_to t("helpers.label.data_request.request_type.#{data_request.request_type}"), case_data_request_area_data_request_path(case_details, data_request_area, data_request), class: 'data-requests__show'
                 - if data_request.display_request_type_note?
                   = ":"
                   div= data_request.request_type_note

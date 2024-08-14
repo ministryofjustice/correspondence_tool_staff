@@ -4,7 +4,6 @@ module Cases
 
     before_action :set_case
     before_action :set_data_request, only: %i[show edit update destroy send_email]
-    before_action :set_commissioning_document, only: %i[show send_email]
     before_action :set_data_request_area
     before_action :authorize_action
     after_action  :verify_authorized
@@ -107,10 +106,6 @@ module Cases
 
     def set_data_request_area
       @data_request_area = DataRequestArea.find(params[:data_request_area_id])
-    end
-
-    def set_commissioning_document
-      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def email_params

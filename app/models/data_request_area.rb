@@ -16,6 +16,7 @@ class DataRequestArea < ApplicationRecord
   belongs_to :user
   belongs_to :contact
   has_many :data_requests
+  has_one :commissioning_document
 
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true

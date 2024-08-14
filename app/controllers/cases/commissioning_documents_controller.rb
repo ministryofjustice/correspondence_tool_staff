@@ -72,7 +72,6 @@ module Cases
 
     def send_email
       service = CommissioningDocumentEmailService.new(
-        data_request: @data_request,
         data_request_area: @data_request_area,
         current_user:,
         commissioning_document: @commissioning_document,

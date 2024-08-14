@@ -32,11 +32,11 @@ class DataRequestDecorator < Draper::Decorator
   def data_request_status_tag(status)
     case status
     when "Completed"
-      "<strong class='govuk-tag'>Completed</strong>".html_safe
+      "<strong class='govuk-tag govuk-tag--green'>Completed</strong>".html_safe
     when "In progress"
       "<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>".html_safe
     when "Not started"
-      "<strong class='govuk-tag govuk-tag--grey'>Not started</strong>".html_safe
+      "<strong class='govuk-tag govuk-tag--red'>Not started</strong>".html_safe
     end
   end
 

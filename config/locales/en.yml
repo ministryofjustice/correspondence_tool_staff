@@ -1609,8 +1609,6 @@ en:
         heading: View data request
         link: View
         edit_link: Edit data request
-        emails_header: Commissioning emails
-        emails_history_header: Email history
       edit:
         heading: Edit data request
         link: Edit
@@ -1642,6 +1640,8 @@ en:
       show:
         heading: View data request area
         link: View
+        emails_header: Commissioning emails
+        emails_history_header: Email history
       create:
         success: Data request area successfully recorded
       index:

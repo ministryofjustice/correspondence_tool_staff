@@ -35,7 +35,7 @@ class CommissioningDocument < ApplicationRecord
     telephone: "telephone",
   }
 
-  belongs_to :data_request
+  belongs_to :data_request_area
   belongs_to :attachment, class_name: "CaseAttachment"
 
   validates :data_request, presence: true
@@ -82,7 +82,11 @@ private
   end
 
   def request_type
-    template.request_type
+    debugger
+    @data_request_area = DataRequestArea.find(params[:id])
+    @data_request_area.data_request_area_type
+
+    # template.request_type
   end
 
   def timestamp
