@@ -109,6 +109,8 @@ module PageObjects
         cases_extend_for_pit: "Cases::ExtendForPITPage",
         cases_extend_sar_deadline: "Cases::ExtendSARDeadlinePage",
         data_request: "Cases::DataRequestPage",
+        data_request_area: "Cases::DataRequestAreaPage",
+        data_request_area_show: "Cases::DataRequestAreaShowPage",
         data_request_edit: "Cases::DataRequestEditPage",
         data_request_show: "Cases::DataRequestShowPage",
         data_request_send_probation_email:

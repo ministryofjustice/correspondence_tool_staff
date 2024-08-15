@@ -47,8 +47,8 @@ module PageObjects
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, ".case-status"
 
-        section :data_requests,
-                PageObjects::Sections::Cases::DataRequestsSection, ".data-requests"
+        section :data_request_areas,
+                PageObjects::Sections::Cases::DataRequestAreasSection, ".data-request-areas"
 
         section :data_request_actions, ".data-request-buttons" do
           element :record_data_request, "#action--record-data-request"
