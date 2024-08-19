@@ -18,6 +18,16 @@ module PageObjects
             make_radio_button_choice("data_request_area_data_request_area_type_#{request_type}")
           end
 
+          def make_radio_button_choice(choice_id)
+            selector = "input##{choice_id}"
+
+            if Capybara.current_driver == Capybara.javascript_driver
+              find(selector, visible: false).click
+            else
+              find(selector).set(true)
+            end
+          end
+
           element :submit_button, ".button"
         end
       end
