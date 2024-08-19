@@ -10,7 +10,6 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-        element :location, ".data-request__location"
         element :request_type, ".data-request__request_type"
 
         section :form, "form#edit_data_request" do
