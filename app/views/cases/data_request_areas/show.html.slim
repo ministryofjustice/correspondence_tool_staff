@@ -2,7 +2,7 @@
   = t('page_title.data_request_area_show_page')
 
 - content_for :heading
-  = t('.heading')
+  = t('.heading', data_request_area_type: @data_request_area.data_request_area_type.capitalize)
 
 - content_for :sub_heading
 
@@ -22,7 +22,11 @@ div class="case"
       h2.visually-hidden
         = "Actions you can take on this case"
 
+  h2.bold-medium.data-request-area
+    = "#{@case.number} - #{@case.subject_full_name}"
+
   section.case-info
   - if @case.type_of_offender_sar? && !@case.rejected?
     section.case-info
+      = render partial: 'cases/data_request_areas/location', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }

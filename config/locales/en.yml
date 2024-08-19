@@ -1638,7 +1638,7 @@ en:
       new:
         heading: Record data request
       show:
-        heading: View data request area
+        heading: "View %{data_request_area_type} data request area"
         link: View
         emails_header: Commissioning emails
         emails_history_header: Email history
