@@ -81,13 +81,10 @@ private
     TEMPLATE_TYPES[template_name.to_sym].new(data_request:)
   end
 
-  def request_type
-    debugger
-    @data_request_area = DataRequestArea.find(params[:id])
-    @data_request_area.data_request_area_type
-
-    # template.request_type
-  end
+  # def request_type
+  #   @data_request_area = DataRequestArea.find(params[:id])
+  #   @data_request_area.data_request_area_type
+  # end
 
   def timestamp
     Time.current.strftime("%Y%m%dT%H%M")
