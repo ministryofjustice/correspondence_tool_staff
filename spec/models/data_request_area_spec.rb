@@ -21,6 +21,7 @@ RSpec.describe DataRequestArea, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build_stubbed(:user),
           data_request_area_type: "prison",
+          location: "X" * 500, # Max length
         )
       end
 

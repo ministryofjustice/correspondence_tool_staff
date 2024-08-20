@@ -28,7 +28,6 @@ RSpec.describe DataRequest, type: :model do
         described_class.new(
           offender_sar_case: build(:offender_sar_case),
           user: build_stubbed(:user),
-          location: "X" * 500, # Max length
           request_type: "all_prison_records",
           request_type_note: "",
           date_requested: Date.current,

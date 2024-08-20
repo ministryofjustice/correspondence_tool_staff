@@ -29,6 +29,29 @@ module Cases
       end
     end
 
+    def update
+      service = DataRequestAreaUpdateService.new(
+        user: current_user,
+        data_request_area: @data_request_area,
+        params: update_location_params,
+        )
+      service.call
+
+      case service.result
+      when :ok
+        flash[:notice] = t(".success")
+        redirect_to case_data_request_area_path(@case, @data_request_area)
+      when :unprocessed
+        flash[:notice] = t(".unprocessed")
+        redirect_to case_data_request_area_path(@case, @data_request_area)
+      when :error
+        @data_request = service.data_request
+        render :show
+      else
+        raise ArgumentError, "Unknown result: #{service.result.inspect}"
+      end
+    end
+
     def destroy
       @data_request_area.destroy!
       respond_to do |format|
@@ -48,6 +71,11 @@ module Cases
 
     def create_params
       params.require(:data_request_area).permit(:data_request_area_type)
+    end
+
+    # Only the location can be updated for a data request area
+    def update_location_params
+      params.require(:data_request_area).permit(:location, :contact_id)
     end
   end
 end

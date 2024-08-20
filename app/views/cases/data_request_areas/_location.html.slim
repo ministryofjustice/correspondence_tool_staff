@@ -1,0 +1,16 @@
+.form-group.data-request
+  = form_for @data_request_area, url: case_data_request_area_path(@case, @data_request_area), method: :patch do |f|
+
+    .data-request-area__single.js-data-request-area__form
+      h3.page-heading--secondary.data-request-area__position
+
+      = f.text_field :location,
+        maxlength: 500,
+        class: 'contact_input',
+        disabled: true
+
+      = f.hidden_field :contact_id, class: 'contact_id_input'
+      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
+
+      .button-holder
+        = f.submit t('button.save_changes'), { class: 'button' }

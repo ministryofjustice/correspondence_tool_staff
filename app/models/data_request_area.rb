@@ -21,9 +21,13 @@ class DataRequestArea < ApplicationRecord
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
-  attribute :data_request_default_area, default: ""
 
+  #TODO this should call when attempting to send commissioning doc
+  # validate  :validate_location
+
+  attribute :data_request_default_area, default: ""
   attribute :data_request_area_type
+  attribute :location
 
   scope :completed, -> { joins(:data_requests).where(data_requests: { completed: true }).distinct }
   scope :in_progress, -> { joins(:data_requests).where(data_requests: { completed: false }).distinct }
@@ -50,4 +54,17 @@ class DataRequestArea < ApplicationRecord
       "Not started"
     end
   end
+
+  private
+
+  # def validate_location
+  #   if contact_id.present?
+  #     nil
+  #   elsif location.blank?
+  #     errors.add(
+  #       :location,
+  #       I18n.t("activerecord.errors.models.data_request_area.attributes.location.blank"),
+  #       )
+  #   end
+  # end
 end

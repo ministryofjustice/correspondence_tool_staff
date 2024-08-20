@@ -7,7 +7,6 @@ describe DataRequestUpdateService do
   let(:data_request) do
     create(
       :data_request,
-      location: "HMP Leicester",
       request_type: "all_prison_records",
     )
   end
@@ -15,7 +14,6 @@ describe DataRequestUpdateService do
   let(:data_request_area) { create :data_request_area }
   let(:params) do
     {
-      location: "HMP Brixton",
       request_type: "all_prison_records",
       request_type_note: "Lorem ipsum",
       date_from_dd: "15",

@@ -10,10 +10,10 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
+        element :location, 'input[name*="[location]"]'
+
         section :data_requests,
                 PageObjects::Sections::Cases::DataRequestsSection, ".data-requests"
-
-        #TODO add location form
 
         # section :commissioning_document, ".commissioning-document" do
         #   section :row, "tbody.document tr" do

@@ -8,7 +8,6 @@ describe DataRequestCreateService do
   let(:data_request_area) { create :data_request_area }
   let(:data_request_attributes) do
     {
-      location: "The Clinic",
       request_type: "all_prison_records",
       request_type_note: "Lorem ipsum",
       date_requested_dd: "15",
@@ -66,7 +65,6 @@ describe DataRequestCreateService do
       it "creates a data request with the attributes given" do
         service.call
         expect(service.data_request).to be_persisted
-        expect(service.data_request.location).to eq "The Clinic"
         expect(service.data_request.request_type).to eq "all_prison_records"
         expect(service.data_request.request_type_note).to eq "Lorem ipsum"
         expect(service.data_request.date_from).to eq Date.new(2018, 8, 15)

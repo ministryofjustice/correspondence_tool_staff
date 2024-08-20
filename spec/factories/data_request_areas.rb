@@ -16,6 +16,7 @@ FactoryBot.define do
     association :offender_sar_case
     association :user
 
+    location { Faker::Company.name }
     data_request_area_type { "prison" }
   end
 end

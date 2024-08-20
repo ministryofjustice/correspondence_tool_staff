@@ -367,12 +367,12 @@ en:
               not_empty: should be blank if the request is not complete
             request_type:
               blank: cannot be blank
-            location:
-              blank: cannot be blank
         data_request_area:
           attributes:
             data_request_area_type:
               blank: Select where the data you are requesting is from
+            location:
+              blank: cannot be blank
         linked_case:
           missing: "does not exist"
           references_self: "cannot link to the same case"
@@ -1647,6 +1647,9 @@ en:
       index:
         heading: Data requested
         none: No data requests recorded
+      update:
+        success: Data request area updated
+        unprocessed: No changes made
     commissioning_documents:
       new:
         heading: Select Day 1 request document
