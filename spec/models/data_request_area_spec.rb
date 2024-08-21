@@ -110,6 +110,22 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#clean_attributes" do
+    subject(:data_request_area) { build :data_request_area }
+
+    it "ensures string attributes do not have leading/trailing spaces" do
+      data_request_area.location = "  The location"
+      data_request_area.send(:clean_attributes)
+      expect(data_request_area.location).to eq "The location"
+    end
+
+    it "ensures string attributes have the first letter capitalised" do
+      data_request_area.location = "leicester"
+      data_request_area.send(:clean_attributes)
+      expect(data_request_area.location).to eq "Leicester"
+    end
+  end
+
   describe "scopes" do
     let(:data_request_area_in_progress) do
       data_request_area = create(:data_request_area)

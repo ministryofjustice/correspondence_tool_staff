@@ -71,12 +71,6 @@ RSpec.describe DataRequest, type: :model do
 
       it { is_expected.to be_valid }
 
-      it "requires contact when there is no location" do
-        data_request.location = nil
-        data_request.contact_id = nil
-        expect(data_request.valid?).to be false
-      end
-
       it "requires a request type" do
         invalid_values = ["", " ", nil]
 
@@ -219,27 +213,6 @@ RSpec.describe DataRequest, type: :model do
         expect(kase).not_to be_valid
         expect(kase.errors[:request_type]).to eq ["cannot be blank"]
       end
-    end
-  end
-
-  describe "#clean_attributes" do
-    subject(:data_request) { build :data_request }
-
-    it "ensures string attributes do not have leading/trailing spaces" do
-      data_request.location = "  The location"
-      data_request.send(:clean_attributes)
-      expect(data_request.location).to eq "The location"
-    end
-
-    it "ensures string attributes have the first letter capitalised" do
-      data_request.location = "leicester"
-      data_request.send(:clean_attributes)
-      expect(data_request.location).to eq "Leicester"
-    end
-
-    it "is executed before validating" do
-      data_request.location = "             " # Meets min string length req
-      expect(data_request.valid?).to be false
     end
   end
 

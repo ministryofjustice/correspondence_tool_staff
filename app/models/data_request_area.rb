@@ -17,10 +17,13 @@ class DataRequestArea < ApplicationRecord
   belongs_to :contact
   has_many :data_requests
   has_one :commissioning_document
+  has_many :data_request_emails
 
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
+
+  before_validation :clean_attributes
 
   #TODO this should call when attempting to send commissioning doc
   # validate  :validate_location
@@ -57,14 +60,9 @@ class DataRequestArea < ApplicationRecord
 
   private
 
-  # def validate_location
-  #   if contact_id.present?
-  #     nil
-  #   elsif location.blank?
-  #     errors.add(
-  #       :location,
-  #       I18n.t("activerecord.errors.models.data_request_area.attributes.location.blank"),
-  #       )
-  #   end
-  # end
+  def clean_attributes
+    %i[location]
+      .each { |f| send("#{f}=", send(f.to_s)&.strip) }
+      .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
+  end
 end
