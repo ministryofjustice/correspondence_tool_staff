@@ -2,6 +2,8 @@ module Cases
   class DataRequestAreasController < ApplicationController
     before_action :set_case
     before_action :set_data_request_area, only: %i[show edit update destroy]
+    before_action :authorize_action
+    after_action  :verify_authorized
 
     def new
       @data_request_area = DataRequestArea.new
@@ -80,6 +82,14 @@ module Cases
     # Only the location can be updated for a data request area
     def update_location_params
       params.require(:data_request_area).permit(:location, :contact_id)
+    end
+
+    def authorize_action
+      if action_name == "show"
+        authorize @case, :show?
+      else
+        authorize @case, :can_record_data_request?
+      end
     end
   end
 end
