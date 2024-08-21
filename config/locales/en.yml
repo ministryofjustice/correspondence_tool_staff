@@ -1652,6 +1652,8 @@ en:
       update:
         success: Data request area updated
         unprocessed: No changes made
+      location:
+        no_location: Location must be selected before commissioning email can be sent.
     commissioning_documents:
       new:
         heading: Select Day 1 request document

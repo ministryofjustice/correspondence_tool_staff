@@ -52,6 +52,10 @@ module Cases
       end
     end
 
+    def show
+      @no_location_present = @data_request_area.contact_id.nil?
+    end
+
     def destroy
       @data_request_area.destroy!
       respond_to do |format|
