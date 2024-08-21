@@ -114,7 +114,6 @@ module Cases
 
     def create_params
       params.require(:data_request).permit(
-        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
@@ -126,7 +125,6 @@ module Cases
 
     def update_params
       params.require(:data_request).permit(
-        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,

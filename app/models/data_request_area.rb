@@ -28,10 +28,6 @@ class DataRequestArea < ApplicationRecord
   #TODO this should call when attempting to send commissioning doc
   # validate  :validate_location
 
-  attribute :data_request_default_area, default: ""
-  attribute :data_request_area_type
-  attribute :location
-
   scope :completed, -> { joins(:data_requests).where(data_requests: { completed: true }).distinct }
   scope :in_progress, -> { joins(:data_requests).where(data_requests: { completed: false }).distinct }
   scope :not_started, -> { where.not(id: DataRequest.select(:data_request_area_id)) }
@@ -50,11 +46,11 @@ class DataRequestArea < ApplicationRecord
 
   def status
     if data_requests.exists? && data_requests.all?(&:completed)
-      "Completed"
+      :completed
     elsif data_requests.exists? && !data_requests.all?(&:completed)
-      "In progress"
+      :in_progress
     else
-      "Not started"
+      :not_started
     end
   end
 

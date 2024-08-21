@@ -24,7 +24,6 @@ module Cases
         flash[:notice] = t(".success")
         redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
-        @case = service.case
         render :new
       else
         raise ArgumentError, "Unknown result: #{service.result.inspect}"
@@ -47,7 +46,6 @@ module Cases
         flash[:notice] = t(".unprocessed")
         redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
-        @data_request = service.data_request
         render :show
       else
         raise ArgumentError, "Unknown result: #{service.result.inspect}"

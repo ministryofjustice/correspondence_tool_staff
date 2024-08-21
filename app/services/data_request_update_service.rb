@@ -5,7 +5,6 @@ class DataRequestUpdateService
     @result = nil
     @case = data_request.kase
     @user = user
-    @data_request_area = data_request_area
     @data_request = data_request
     @params = params
     @old_num_pages = @data_request.cached_num_pages

@@ -23,7 +23,7 @@ class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
-  belongs_to :data_request_area, class_name: "DataRequestArea"
+  belongs_to :data_request_area
 
   validates :request_type, presence: true
   validates :offender_sar_case, presence: true
@@ -68,7 +68,7 @@ class DataRequest < ApplicationRecord
   end
 
   def status
-    completed? ? "Completed" : "In progress"
+    completed? ? :completed : :in_progress
   end
 
   def other?
