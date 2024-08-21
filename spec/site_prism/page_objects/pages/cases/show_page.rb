@@ -50,8 +50,8 @@ module PageObjects
         section :data_request_areas,
                 PageObjects::Sections::Cases::DataRequestAreasSection, ".data-request-areas"
 
-        section :data_request_actions, ".data-request-buttons" do
-          element :record_data_request, "#action--record-data-request"
+        section :data_request_area_actions, ".data-request-area-buttons" do
+          element :record_data_request_area, "#action--record-data-request-area"
         end
 
         section :flags_items, ".multiple-choice" do
