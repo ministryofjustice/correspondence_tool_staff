@@ -539,6 +539,7 @@ en:
     next_page_assign: Create case
     request_amends: Request amends
     save_changes: Save changes
+    save_location: Save location
     search: Search
     edit: Edit
     delete: Delete
@@ -738,6 +739,7 @@ en:
           cctv: CCTV
           bwcf: BWCF
       data_request_area:
+        location: Location
         data_request_area_type:
           prison: Prison
           probation: Probation
