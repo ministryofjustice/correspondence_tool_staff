@@ -2,7 +2,6 @@ module Cases
   class CommissioningDocumentsController < ApplicationController
     before_action :set_case
     before_action :set_data_request_area
-    before_action :set_data_request
     before_action :set_commissioning_document
 
     def create
@@ -88,15 +87,11 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
-    end
-
-    def set_data_request
-      @data_request = DataRequest.find(params[:data_request_id])
+      @data_request_area = @case.data_request_areas.find(params[:id])
     end
 
     def set_commissioning_document
-      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request: @data_request)
+      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area)
     end
 
     def create_params

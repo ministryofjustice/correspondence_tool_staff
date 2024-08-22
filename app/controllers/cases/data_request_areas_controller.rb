@@ -70,7 +70,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = DataRequestArea.find(params[:id])
+      @data_request_area = @case.data_request_areas.find(params[:id])
     end
 
     def create_params
