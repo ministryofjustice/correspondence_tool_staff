@@ -7,11 +7,12 @@ describe DataRequestUpdateService do
   let(:data_request) do
     create(
       :data_request,
+      data_request_area:,
       request_type: "all_prison_records",
     )
   end
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area) { create :data_request_area }
+  let(:data_request_area) { create :data_request_area, location: "HMP Brixton" }
   let(:params) do
     {
       request_type: "all_prison_records",
@@ -30,7 +31,6 @@ describe DataRequestUpdateService do
       user:,
       data_request:,
       params:,
-      data_request_area:,
     )
   end
 
@@ -49,7 +49,6 @@ describe DataRequestUpdateService do
           user:,
           data_request:,
           params:,
-          data_request_area:,
         )
       end
 

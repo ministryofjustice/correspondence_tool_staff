@@ -43,7 +43,6 @@ module Cases
       service = DataRequestUpdateService.new(
         user: current_user,
         data_request: @data_request,
-        data_request_area: @data_request_area,
         params: update_params,
       )
       service.call
