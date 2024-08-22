@@ -28,7 +28,7 @@ RSpec.describe DataRequestArea, type: :model do
       it { is_expected.to be_valid }
 
       it "defaults to not started" do
-        expect(data_request_area.status).to eq "Not started"
+        expect(data_request_area.status).to eq :not_started
       end
     end
   end
@@ -87,7 +87,7 @@ RSpec.describe DataRequestArea, type: :model do
       let(:data_request_area) { build(:data_request_area) }
 
       it "returns 'Not started'" do
-        expect(data_request_area.status).to eq "Not started"
+        expect(data_request_area.status).to eq :not_started
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe DataRequestArea, type: :model do
       let!(:data_request) { create(:data_request, completed: false, data_request_area:) }
 
       it "returns 'In progress'" do
-        expect(data_request_area.status).to eq "In progress"
+        expect(data_request_area.status).to eq :in_progress
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.describe DataRequestArea, type: :model do
       let!(:data_request) { create(:data_request, :completed, cached_date_received: Date.new(2024, 8, 13), data_request_area:) }
 
       it "returns 'Completed'" do
-        expect(data_request_area.status).to eq "Completed"
+        expect(data_request_area.status).to eq :completed
       end
     end
   end
