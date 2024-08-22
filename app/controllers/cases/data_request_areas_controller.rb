@@ -85,6 +85,8 @@ module Cases
     def authorize_action
       if action_name == "show"
         authorize @case, :show?
+      elsif action_name == "update"
+        authorize @case, :edit?
       else
         authorize @case, :can_record_data_request?
       end
