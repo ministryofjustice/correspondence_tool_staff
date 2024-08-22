@@ -54,7 +54,7 @@ class DataRequest < ApplicationRecord
     court: "court",
     cross_borders: "cross_borders",
     cat_a: "cat_a",
-    ndelius: "ndelius",
+    ndelius_contact_lists: "ndelius_contact_lists",
     dps: "dps",
     cctv: "cctv",
     bwcf: "bwcf",
