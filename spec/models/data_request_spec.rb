@@ -62,7 +62,7 @@ RSpec.describe DataRequest, type: :model do
 
       it "defaults to in progress" do
         expect(data_request.completed).to eq false
-        expect(data_request.status).to eq "In progress"
+        expect(data_request.status).to eq :in_progress
       end
     end
 
@@ -221,7 +221,7 @@ RSpec.describe DataRequest, type: :model do
       let!(:data_request) { build_stubbed(:data_request) }
 
       it "returns completed" do
-        expect(data_request.status).to eq "In progress"
+        expect(data_request.status).to eq :in_progress
       end
     end
 
@@ -229,7 +229,7 @@ RSpec.describe DataRequest, type: :model do
       let!(:data_request) { build_stubbed(:data_request, :completed) }
 
       it "returns completed" do
-        expect(data_request.status).to eq "Completed"
+        expect(data_request.status).to eq :completed
       end
     end
   end
