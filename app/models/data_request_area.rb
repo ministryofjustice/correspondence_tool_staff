@@ -23,6 +23,8 @@ class DataRequestArea < ApplicationRecord
   validates :offender_sar_case, presence: true
   validates :user, presence: true
 
+  attribute :data_request_default_area, default: ""
+
   before_validation :clean_attributes
 
   #TODO this should call when attempting to send commissioning doc

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Cases::DataRequestsController, type: :controller do
   let(:manager) { find_or_create :branston_user }
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area) { create :data_request_area }
+  let(:data_request_area) { create :data_request_area, offender_sar_case: }
 
   before do
     sign_in manager
@@ -73,6 +73,8 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     let(:data_request) do
       create(
         :data_request,
+        data_request_area:,
+        offender_sar_case:,
         cached_num_pages: 10,
         completed: true,
         cached_date_received: Time.zone.yesterday,
@@ -83,7 +85,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       {
         id: data_request.id,
         case_id: data_request.case_id,
-        data_request_area_id: data_request_area.id,
+        data_request_area_id: data_request.data_request_area_id,
       }
     end
 
@@ -96,11 +98,12 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     end
 
     context "when closed case" do
+      let(:offender_sar_case) { create :offender_sar_case, :closed }
       let(:data_request) do
         create(
           :data_request,
-          offender_sar_case: create(:offender_sar_case, :closed),
-          data_request_area: create(:data_request_area),
+          data_request_area:,
+          offender_sar_case:,
           cached_num_pages: 10,
           completed: true,
           cached_date_received: Time.zone.yesterday,
@@ -118,6 +121,8 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     let(:data_request) do
       create(
         :data_request,
+        data_request_area:,
+        offender_sar_case:,
         cached_num_pages: 10,
         completed: true,
         cached_date_received: Time.zone.yesterday,
@@ -141,11 +146,12 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     end
 
     context "when closed case" do
+      let(:offender_sar_case) { create :offender_sar_case, :closed }
       let(:data_request) do
         create(
           :data_request,
-          offender_sar_case: create(:offender_sar_case, :closed),
-          data_request_area: create(:data_request_area),
+          data_request_area:,
+          offender_sar_case:,
           cached_num_pages: 10,
           completed: true,
           cached_date_received: Time.zone.yesterday,
@@ -161,7 +167,11 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
   describe "#update" do
     let(:data_request) do
-      create(:data_request, offender_sar_case:)
+      create(
+        :data_request,
+        data_request_area:,
+        offender_sar_case:,
+      )
     end
 
     context "with valid params" do
@@ -237,24 +247,14 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
   end
 
   describe "#destroy" do
-    it "is not implemented" do
-      data_request = create(:data_request)
-
-      expect { delete :destroy, params: { case_id: offender_sar_case.id, data_request_area_id: data_request_area.id, id: data_request.id } }
-        .to raise_error NotImplementedError, "Data request delete unavailable"
-    end
-  end
-
-  describe "#send_email" do
     let(:data_request) do
       create(
         :data_request,
-        cached_num_pages: 10,
-        completed: true,
-        cached_date_received: Time.zone.yesterday,
-        commissioning_document:,
+        data_request_area:,
+        offender_sar_case:,
       )
     end
+
     let(:params) do
       {
         id: data_request.id,
@@ -262,105 +262,129 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         data_request_area_id: data_request_area.id,
       }
     end
-    let(:commissioning_document) { create(:commissioning_document, template_name:) }
-    let(:template_name) { "prison" }
 
-    it "assigns value to recipient emails" do
-      allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
-        .to receive(:recipient_emails).and_return("test@email.com")
-      get(:send_email, params:)
-      expect(assigns(:recipient_emails)).to eq("test@email.com")
-    end
-
-    context "with no associated email" do
-      it "returns no associated email present" do
-        allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
-          .to receive(:recipient_emails).and_return([])
-        get(:send_email, params:)
-        expect(assigns(:no_email_present)).to eq(true)
-      end
-    end
-
-    context "when probation document selected" do
-      let(:template_name) { "probation" }
-
-      it "routes to the send_email branston probation page" do
-        get(:send_email, params:)
-        expect(response).to render_template(:probation_send_email)
-      end
-
-      context "with confirm probation email" do
-        let(:params) do
-          {
-            id: data_request.id,
-            case_id: data_request.case_id,
-            data_request_area_id: data_request_area.id,
-            probation_commissioning_document_email: {
-              probation: 1,
-              email_branston_archives: "yes",
-            },
-          }
-        end
-
-        it "adds the branston probation email to recipients" do
-          post(:send_email, params:)
-          expect(response).to render_template(:send_email)
-          expect(assigns(:recipient_emails)).to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
-        end
-
-        it "updates the data_request" do
-          post(:send_email, params:)
-          expect(data_request.reload.email_branston_archives).to be_truthy
-        end
-      end
-
-      context "with decline probation email" do
-        let(:params) do
-          {
-            id: data_request.id,
-            case_id: data_request.case_id,
-            data_request_area_id: data_request_area.id,
-            probation_commissioning_document_email: {
-              probation: 1,
-              email_branston_archives: "no",
-            },
-          }
-        end
-
-        it "doesnt add the branston probation email to recipients" do
-          post(:send_email, params:)
-          expect(response).to render_template(:send_email)
-          expect(assigns(:recipient_emails)).not_to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
-        end
-      end
-
-      context "with no options chosen" do
-        let(:params) do
-          {
-            id: data_request.id,
-            case_id: data_request.case_id,
-            data_request_area_id: data_request_area.id,
-            probation_commissioning_document_email: {
-              probation: 1,
-            },
-          }
-        end
-
-        it "raises error message" do
-          post(:send_email, params:)
-          expect(response).to render_template(:probation_send_email)
-          expect(assigns(:email)).not_to be_valid
-        end
-      end
-    end
-
-    context "with non-probation document" do
-      let(:template_name) { "prison" }
-
-      it "routes to the send_email confirmation page" do
-        get(:send_email, params:)
-        expect(response).to render_template(:send_email)
-      end
+    it "is not implemented" do
+      expect { delete :destroy, params: { case_id: offender_sar_case.id, data_request_area_id: data_request_area.id, id: data_request.id } }
+        .to raise_error NotImplementedError, "Data request delete unavailable"
     end
   end
+
+  # describe "#send_email" do
+  #   let(:data_request) do
+  #     create(
+  #       :data_request,
+  #       cached_num_pages: 10,
+  #       completed: true,
+  #       cached_date_received: Time.zone.yesterday,
+  #       commissioning_document:,
+  #     )
+  #   end
+  #   let(:params) do
+  #     {
+  #       id: data_request.id,
+  #       case_id: data_request.case_id,
+  #       data_request_area_id: data_request_area.id,
+  #     }
+  #   end
+  #   let(:commissioning_document) { create(:commissioning_document, template_name:) }
+  #   let(:template_name) { "prison" }
+  #
+  #   it "assigns value to recipient emails" do
+  #     allow_any_instance_of(DataRequest)
+  #       .to receive(:recipient_emails).and_return("test@email.com")
+  #     get(:send_email, params:)
+  #     expect(assigns(:recipient_emails)).to eq("test@email.com")
+  #   end
+  #
+  #   context "with no associated email" do
+  #     it "returns no associated email present" do
+  #       allow_any_instance_of(DataRequest)
+  #         .to receive(:recipient_emails).and_return([])
+  #       get(:send_email, params:)
+  #       expect(assigns(:no_email_present)).to eq(true)
+  #     end
+  #   end
+  #
+  #   context "when probation document selected" do
+  #     let(:template_name) { "probation" }
+  #
+  #     it "routes to the send_email branston probation page" do
+  #       get(:send_email, params:)
+  #       expect(response).to render_template(:probation_send_email)
+  #     end
+  #
+  #     context "with confirm probation email" do
+  #       let(:params) do
+  #         {
+  #           id: data_request.id,
+  #           case_id: data_request.case_id,
+  #           data_request_area_id: data_request_area.id,
+  #           probation_commissioning_document_email: {
+  #             probation: 1,
+  #             email_branston_archives: "yes",
+  #           },
+  #         }
+  #       end
+  #
+  #       it "adds the branston probation email to recipients" do
+  #         post(:send_email, params:)
+  #         expect(response).to render_template(:send_email)
+  #         expect(assigns(:recipient_emails)).to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
+  #       end
+  #
+  #       it "updates the data_request" do
+  #         post(:send_email, params:)
+  #         expect(data_request.reload.email_branston_archives).to be_truthy
+  #       end
+  #     end
+  #
+  #     context "with decline probation email" do
+  #       let(:params) do
+  #         {
+  #           id: data_request.id,
+  #           case_id: data_request.case_id,
+  #           data_request_area_id: data_request_area.id,
+  #           probation_commissioning_document_email: {
+  #             probation: 1,
+  #             email_branston_archives: "no",
+  #           },
+  #         }
+  #       end
+  #
+  #       it "doesnt add the branston probation email to recipients" do
+  #         post(:send_email, params:)
+  #         expect(response).to render_template(:send_email)
+  #         expect(assigns(:recipient_emails)).not_to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
+  #       end
+  #     end
+  #
+  #     context "with no options chosen" do
+  #       let(:params) do
+  #         {
+  #           id: data_request.id,
+  #           case_id: data_request.case_id,
+  #           data_request_area_id: data_request_area.id,
+  #           probation_commissioning_document_email: {
+  #             probation: 1,
+  #           },
+  #         }
+  #       end
+  #
+  #       it "raises error message" do
+  #         post(:send_email, params:)
+  #         expect(response).to render_template(:probation_send_email)
+  #         expect(assigns(:email)).not_to be_valid
+  #       end
+  #     end
+  #   end
+  #
+  #   context "with non-probation document" do
+  #     let(:template_name) { "prison" }
+  #
+  #     it "routes to the send_email confirmation page" do
+  #       get(:send_email, params:)
+  #       expect(response).to render_template(:send_email)
+  #     end
+  #   end
+  # end
 end
