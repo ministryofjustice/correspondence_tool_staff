@@ -104,7 +104,27 @@ class ReportTypeSeeder
                   seq_id: 1400,
                   default_reporting_period: "year_to_date",
                   offender_sar_complaint: true,
-                  etl: false }].freeze
+                  etl: false },
+                {
+                  abbr: "R901",
+                  full_name: "Open cases report for Offender SAR",
+                  class_name: "Stats::R901OffenderSARCasesReport",
+                  custom_report: false,
+                  standard_report: false,
+                  foi: false,
+                  sar: false,
+                  offender_sar: true,
+                  seq_id: 1100 },
+                {
+                  abbr: "R900",
+                  full_name: "Cases report",
+                  class_name: "Stats::R900CasesReport",
+                  custom_report: false,
+                  standard_report: false,
+                  foi: true,
+                  sar: true,
+                  offender_sar: false,
+                  seq_id: 1000 }].freeze
 
   def seed!(verbose: false)
     Rails.logger.debug "----Seeding ReportTypes----" if verbose
