@@ -1048,6 +1048,7 @@ en:
       answered_late: Answered late
       appeal_outcome: Appeal Outcome
       assign: Assign to a responder
+      assign_vetter: "Allocate Vetting Team member"
       case-details: Case details
       case/ico:
         date_responded: Date response sent to ICO
@@ -1669,6 +1670,9 @@ en:
     assign_to_team_member:
       heading: Assign to a responder
       action: Assign responder
+    assign_to_vetter:
+      heading: Change Vetting Team member
+      action: Change team member
     select_team:
       heading: Select team
     take_case_on:

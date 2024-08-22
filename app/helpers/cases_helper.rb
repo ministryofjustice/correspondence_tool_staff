@@ -122,8 +122,15 @@ module CasesHelper
               id: "action--assign-to-responder",
               class: "button"
     when :assign_to_team_member
-      link_to I18n.t("common.case.assign"),
-              assign_to_team_member_case_assignments_path(@case),
+      link_text = I18n.t("common.case.assign")
+      action_url = assign_to_team_member_case_assignments_path(@case)
+
+      if @case.current_state == "ready_for_vetting"
+        link_text = I18n.t("common.case.assign_vetter")
+        action_url = assign_to_vetter_case_assignments_path(@case)
+      end
+      link_to link_text,
+              action_url,
               id: "action--assign-to-team-member",
               class: "button"
     when :assign_to_new_team
@@ -137,9 +144,9 @@ module CasesHelper
               id: "action--upload-response",
               class: "button"
     when :create_overturned
-      url = @case.original_case_type == "FOI" ? new_case_overturned_ico_fois_path(@case) : new_case_overturned_ico_sars_path(@case)
+      action_url = @case.original_case_type == "FOI" ? new_case_overturned_ico_fois_path(@case) : new_case_overturned_ico_sars_path(@case)
       link_to t("common.case.create_overturned"),
-              url,
+              action_url,
               id: "action--create-overturned",
               class: "button"
     when :respond
@@ -150,13 +157,13 @@ module CasesHelper
     when :reassign_user
       return "" if @assignments.blank?
 
-      path = if @assignments.size > 1
-               select_team_case_assignments_path(@case, assignment_ids: @assignments.map(&:id).join("+"))
-             else
-               reassign_user_case_assignment_path(@case, @assignments.first)
-             end
+      action_url = if @assignments.size > 1
+                     select_team_case_assignments_path(@case, assignment_ids: @assignments.map(&:id).join("+"))
+                   else
+                     reassign_user_case_assignment_path(@case, @assignments.first)
+                   end
       link_to t("common.case.reassign_case"),
-              path,
+              action_url,
               id: "action--reassign-case",
               class: "button"
     when :approve

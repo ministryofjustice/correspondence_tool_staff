@@ -3,6 +3,7 @@ class AssignmentsController < ApplicationController
     assign_to_team
     new
     assign_to_team_member
+    assign_to_vetter
     execute_assign_to_team_member
     select_team
     take_case_on
@@ -209,6 +210,10 @@ class AssignmentsController < ApplicationController
       flash.now[:alert] = service.error_message
       render :reassign_user
     end
+  end
+
+  def assign_to_vetter
+    assign_to_team_member
   end
 
   def assign_to_team_member
