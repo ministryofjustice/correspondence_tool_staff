@@ -487,6 +487,10 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def unassign_vetter
+    responder_assignment.update(user: nil)
+  end
+
   def rejected?
     if persisted?
       number[0] == "R"
