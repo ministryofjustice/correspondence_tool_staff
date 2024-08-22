@@ -3,7 +3,7 @@ module Cases
     NUM_NEW_DATA_REQUESTS = 3
 
     before_action :set_case
-    before_action :set_data_request, only: %i[show edit update destroy send_email]
+    before_action :set_data_request, only: %i[show edit update destroy]
     before_action :set_data_request_area
     before_action :authorize_action
     after_action  :verify_authorized
@@ -105,7 +105,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
+      @data_request_area = @data_request.data_request_area
     end
 
     def email_params
