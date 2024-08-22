@@ -104,7 +104,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = @data_request.data_request_area
+      @data_request_area = DataRequestArea.find(params[:data_request_area_id])
     end
 
     def email_params
