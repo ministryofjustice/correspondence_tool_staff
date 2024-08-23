@@ -488,7 +488,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def unassign_vetter
-    responder_assignment.update(user: nil)
+    responder_assignment&.update(user: nil)
   end
 
   def rejected?
