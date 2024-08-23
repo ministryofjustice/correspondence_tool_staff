@@ -34,6 +34,7 @@ feature "Offender SAR Case creation by a manager" do
     click_on "Mark as ready for vetting"
 
     expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Allocate Vetting Team member"
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Preview cover page"
     expect(cases_show_page).to have_content "Sent to SSCL"

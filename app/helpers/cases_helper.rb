@@ -122,14 +122,12 @@ module CasesHelper
               id: "action--assign-to-responder",
               class: "button"
     when :assign_to_team_member
-      link_text = I18n.t("common.case.assign")
-      action_url = assign_to_team_member_case_assignments_path(@case)
-
-      if @case.current_state == "ready_for_vetting"
-        link_text = I18n.t("common.case.assign_vetter")
-        action_url = assign_to_vetter_case_assignments_path(@case)
-      end
-      link_to link_text,
+      action_url = if @case.current_state == "ready_for_vetting"
+                     assign_to_vetter_case_assignments_path(@case)
+                   else
+                     assign_to_team_member_case_assignments_path(@case)
+                   end
+      link_to I18n.t("common.case/#{@case.type_abbreviation.downcase}.assign"),
               action_url,
               id: "action--assign-to-team-member",
               class: "button"

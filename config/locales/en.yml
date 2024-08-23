@@ -1048,7 +1048,6 @@ en:
       answered_late: Answered late
       appeal_outcome: Appeal Outcome
       assign: Assign to a responder
-      assign_vetter: "Allocate Vetting Team member"
       case-details: Case details
       case/ico:
         date_responded: Date response sent to ICO
@@ -1167,11 +1166,13 @@ en:
     case/ico_foi:
       record_further_action: Start further ICO request
     case/offender_sar:
+      assign: Allocate Vetting Team member
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
       record_reason_for_lateness: Record reason for lateness
     case/offender_sar_complaint:
+      assign: Assign to a responder
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
       add_complaint_appeal_outcome: Add outcome
