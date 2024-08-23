@@ -122,8 +122,7 @@ class ReportTypeSeeder
                   foi: true,
                   sar: true,
                   offender_sar: false,
-                  seq_id: 1000,
-                }].freeze
+                  seq_id: 1000 }].freeze
 
   def seed!(verbose: false)
     Rails.logger.debug "----Seeding ReportTypes----" if verbose
