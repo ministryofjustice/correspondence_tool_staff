@@ -45,9 +45,9 @@ describe CaseAssignToTeamMemberService, type: :service do
         expect(service.result).to eq :ok
       end
 
-      it "triggers an assign_to_team_member! event" do
+      it "triggers an move_to_team_member! event" do
         expect(unassigned_case.state_machine)
-            .to receive(:assign_to_team_member!)
+            .to receive(:move_to_team_member!)
                     .with(
                       acting_user: responder,
                       acting_team: responder.responding_teams.first,
