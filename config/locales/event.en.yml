@@ -11,7 +11,6 @@ en:
     approve: Response cleared
     approve_and_bypass: Cleared - further clearance not required
     assign_responder: Assign responder
-    assign_to_team_member: Assign responder
     assign_to_new_team: Assign to new team
     close: Case closed
     create: Case created
@@ -24,6 +23,7 @@ en:
     extend_sar_deadline: Extended SAR deadline
     flag_for_clearance: Clearance level added
     link_a_case: Case linked
+    move_to_team_member: Assign responder
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
     record_sent_to_sscl: Sent to SSCL for Vetting
@@ -50,7 +50,7 @@ en:
       require_further_action_unassigned_message: Case details updated. Need to reassign the case to a team
       require_further_action_to_responder_team_message: Case details updated. Assigned to %{team}
     case/offender_sar:
-      assign_to_team_member: Assign vetter
+      move_to_team_member: Assign vetter
       rejected:
         create: Rejected case created
 
