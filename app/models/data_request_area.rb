@@ -26,10 +26,6 @@ class DataRequestArea < ApplicationRecord
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
-  
-  scope :completed, -> { joins(:data_requests).where(data_requests: { completed: true }).distinct }
-  scope :in_progress, -> { joins(:data_requests).where(data_requests: { completed: false }).distinct }
-  scope :not_started, -> { where.not(id: DataRequest.select(:data_request_area_id)) }
 
   enum data_request_area_type: {
     prison: "prison",
