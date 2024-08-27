@@ -15,7 +15,7 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
     it "authorises" do
       expect {
         get :assign_to_team_member, params:
-      }.to require_permission(:can_assign_to_team_member?)
+      }.to require_permission(:can_move_to_team_member?)
               .with_args(responder, unassigned_case)
     end
 
@@ -44,7 +44,7 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
     it "authorises" do
       expect {
         get :assign_to_vetter, params:
-      }.to require_permission(:can_assign_to_team_member?).with_args(responder, unassigned_case)
+      }.to require_permission(:can_move_to_team_member?).with_args(responder, unassigned_case)
     end
 
     it "renders the page" do
