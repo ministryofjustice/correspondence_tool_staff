@@ -121,7 +121,7 @@ module CasesHelper
               new_case_assignment_path(@case),
               id: "action--assign-to-responder",
               class: "button"
-    when :assign_to_team_member
+    when :move_to_team_member
       action_url = if @case.current_state == "ready_for_vetting"
                      assign_to_vetter_case_assignments_path(@case)
                    else

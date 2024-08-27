@@ -1166,7 +1166,7 @@ en:
     case/ico_foi:
       record_further_action: Start further ICO request
     case/offender_sar:
-      assign: Allocate Vetting Team member
+      assign: Allocate vetting team member
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
