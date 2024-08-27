@@ -1,5 +1,8 @@
-def record_a_data_request_of_nomis_other(checked_case, request_values)
-  data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)
+def record_a_data_request_of_nomis_other(request_values)
+  click_on "Record data request"
+  data_request_area_page.form.choose_area_request_type("prison")
+  click_on "Continue"
+
   click_on "Add data request type"
 
   data_request_page.form.choose_request_type("nomis_other")

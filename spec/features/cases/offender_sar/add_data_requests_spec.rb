@@ -52,7 +52,7 @@ feature "Data Requests for an Offender SAR" do
     expect(row.request_type).to have_text "Other"
     expect(row.request_type).to have_text "Lorem ipsum"
     expect(row.date_requested).to have_text "15 Aug 2020"
-    
+
     expect(data_request_area_show_page.data_requests.find(".total-label").text).to have_text "Total"
     expect(data_request_area_show_page.data_requests.find(".total-value").text).to have_text "0"
   end
@@ -90,7 +90,9 @@ feature "Data Requests for an Offender SAR" do
       date_to: Date.new(2019, 8, 15),
     }
 
-    record_a_data_request_of_nomis_other(offender_sar_case, request_values)
+    cases_show_page.load(id: offender_sar_case.id)
+
+    record_a_data_request_of_nomis_other(request_values)
     validate_nomis_other_info(request_values)
   end
 end
