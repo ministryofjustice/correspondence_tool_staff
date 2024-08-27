@@ -79,7 +79,7 @@ CREATE TYPE public.request_types AS ENUM (
     'other',
     'cross_borders',
     'cat_a',
-    'ndelius',
+    'ndelius_contact_lists',
     'dps',
     'cctv',
     'bwcf'
