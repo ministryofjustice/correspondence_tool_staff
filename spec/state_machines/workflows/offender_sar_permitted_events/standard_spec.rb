@@ -35,6 +35,7 @@ TRANSITIONS = [
   {
     state: :vetting_in_progress,
     specific_events: %i[
+      assign_to_team_member
       mark_as_ready_to_copy
       preview_cover_page
       move_case_back
