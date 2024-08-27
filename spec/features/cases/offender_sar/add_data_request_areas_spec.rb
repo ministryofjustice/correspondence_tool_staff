@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature "Data Requests for an Offender SAR" do
+feature "Data Request Areas for an Offender SAR" do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
 
