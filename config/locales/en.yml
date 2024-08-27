@@ -1668,7 +1668,7 @@ en:
     reassign_user:
       heading: Change team member
       action: Change team member
-    move_to_team_member:
+    assign_to_team_member:
       heading: Assign to a responder
       action: Assign responder
     assign_to_vetter:
