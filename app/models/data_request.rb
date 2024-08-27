@@ -61,6 +61,12 @@ class DataRequest < ApplicationRecord
     other: "other",
   }
 
+  BRANSTON_DATA_REQUEST_TYPES          = %w[dps nomis_contact_lists nomis_contact_logs nomis_records nomis_other].freeze
+  BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_boarders pdp probation_archive].freeze
+  MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
+  PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv security_records telephone_recordings other].freeze
+  PROBATION_DATA_REQUEST_TYPES         = %w[ndelius_contact_lists probation_records other].freeze
+
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
   def kase
@@ -97,6 +103,21 @@ class DataRequest < ApplicationRecord
 
   def recipient_emails
     contact&.data_request_emails&.split(" ") || []
+  end
+
+  def qet_data_request_types(area)
+    case area
+    when "branston"
+      BRANSTON_DATA_REQUEST_TYPES
+    when "branston_registry"
+      BRANSTON_REGISTRY_DATA_REQUEST_TYPES
+    when "mappa"
+      MAPPA_DATA_REQUEST_TYPES
+    when "prison"
+      PRISON_DATA_REQUEST_TYPES
+    when "probation"
+      PROBATION_DATA_REQUEST_TYPES
+    end
   end
 
 private
