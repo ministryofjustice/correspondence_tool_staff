@@ -73,6 +73,17 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 3000
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: X-Forwarded-Ssl
+                  value: "on"
+            initialDelaySeconds: 40
+            periodSeconds: 60
         - name: quickjobs
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-quick-jobs.sh"]
