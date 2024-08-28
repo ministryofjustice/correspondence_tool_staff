@@ -24,10 +24,10 @@ spec:
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           resources:
             requests:
-              cpu: 25m
+              cpu: 250m
               memory: 1Gi
             limits:
-              cpu: 500m
+              cpu: 1000m
               memory: 3Gi
           env:
             - name: MALLOC_ARENA_MAX
