@@ -1,20 +1,7 @@
 .data-request__single
   h3.page-heading--secondary.data-request__position
 
-  / = @data_request_types.each { |type| puts I18n.t('helpers.label.data_request.request_type.#{type}') }
-  /
-  / hr
-  /
-  / = @data_request_types.each do
-  /   puts data
-  /
-  / hr
-  /
-  / puts #{@data_request_types[0]}
-  / br
-  / puts #{@data_request_types[1]}
-  / br
-  / puts #{@data_request_types[2]}
+  / = @data_request_types.each { |data_request_type| puts I18n.t('helpers.label.data_request.request_type.#{data_request_type}') }
 
   hr
 

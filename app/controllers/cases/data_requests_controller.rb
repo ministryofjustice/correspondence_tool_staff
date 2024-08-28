@@ -10,7 +10,7 @@ module Cases
 
     def new
       @data_request = DataRequest.new
-      # debugger
+      debugger
     end
 
     def create
