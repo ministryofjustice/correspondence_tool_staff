@@ -39,6 +39,7 @@
                 edit_case:
                 move_case_back:
                   transition_to: waiting_for_data
+                  after_transition: Workflows::Hooks#unassign_vetter
                 move_to_team_member:
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
