@@ -20,15 +20,15 @@ spec:
       serviceAccountName: track-a-query
       containers:
         - name: jobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           resources:
+            requests:
+              cpu: 250m
+              memory: 1Gi
             limits:
               cpu: 1000m
-              memory: 3000Mi
-            requests:
-              cpu: 10m
-              memory: 1000Mi
+              memory: 3Gi
           env:
             - name: MALLOC_ARENA_MAX
               value: "2"
@@ -85,15 +85,15 @@ spec:
             successThreshold: 1
             failureThreshold: 3
         - name: anonjobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-anonymizer-jobs.sh"]
           resources:
-            limits:
-              cpu: 1000m
-              memory: 3000Mi
             requests:
-              cpu: 10m
-              memory: 1000Mi
+              cpu: 25m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
           env:
             - name: MALLOC_ARENA_MAX
               value: "2"
@@ -146,7 +146,7 @@ spec:
             failureThreshold: 3
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command:
             - /bin/sh
             - -c
