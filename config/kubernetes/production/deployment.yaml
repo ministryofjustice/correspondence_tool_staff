@@ -73,6 +73,7 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 10
           livenessProbe:
             httpGet:
               path: /ping
@@ -84,6 +85,7 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 10
         - name: quickjobs
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-quick-jobs.sh"]
