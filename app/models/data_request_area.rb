@@ -27,13 +27,6 @@ class DataRequestArea < ApplicationRecord
 
   before_validation :clean_attributes
 
-  #TODO this should call when attempting to send commissioning doc
-  # validate  :validate_location
-
-  scope :completed, -> { joins(:data_requests).where(data_requests: { completed: true }).distinct }
-  scope :in_progress, -> { joins(:data_requests).where(data_requests: { completed: false }).distinct }
-  scope :not_started, -> { where.not(id: DataRequest.select(:data_request_area_id)) }
-
   enum data_request_area_type: {
     prison: "prison",
     probation: "probation",

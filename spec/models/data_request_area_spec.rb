@@ -125,44 +125,4 @@ RSpec.describe DataRequestArea, type: :model do
       expect(data_request_area.location).to eq "Leicester"
     end
   end
-
-  describe "scopes" do
-    let(:data_request_area_in_progress) do
-      data_request_area = create(:data_request_area)
-      create(:data_request, completed: false, data_request_area:)
-      data_request_area
-    end
-
-    let(:data_request_area_completed) do
-      data_request_area = create(:data_request_area)
-      create(:data_request, completed: true, cached_date_received: Date.new(2024, 8, 13), data_request_area:)
-      data_request_area
-    end
-
-    let(:data_request_area_not_started) { create(:data_request_area) }
-
-    describe "scope completed" do
-      it "returns data request areas with completed data requests" do
-        expect(described_class.completed).to include(data_request_area_completed)
-        expect(described_class.completed).not_to include(data_request_area_not_started)
-        expect(described_class.completed).not_to include(data_request_area_in_progress)
-      end
-    end
-
-    describe "scope in_progress" do
-      it "returns data request areas with in-progress (unfinished) data requests" do
-        expect(described_class.in_progress).to include(data_request_area_in_progress)
-        expect(described_class.in_progress).not_to include(data_request_area_not_started)
-        expect(described_class.in_progress).not_to include(data_request_area_completed)
-      end
-    end
-
-    describe "scope not_started" do
-      it "returns data request areas with no data requests" do
-        expect(described_class.not_started).to include(data_request_area_not_started)
-        expect(described_class.not_started).not_to include(data_request_area_in_progress)
-        expect(described_class.not_started).not_to include(data_request_area_completed)
-      end
-    end
-  end
 end
