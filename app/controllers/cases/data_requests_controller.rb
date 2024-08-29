@@ -10,7 +10,7 @@ module Cases
 
     def new
       @data_request = DataRequest.new(
-        data_request_area: @data_request_area
+        data_request_area: @data_request_area,
       )
     end
 
