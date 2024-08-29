@@ -9,8 +9,9 @@ module Cases
     after_action  :verify_authorized
 
     def new
-      @data_request = DataRequest.new
-      debugger
+      @data_request = DataRequest.new(
+        data_request_area: @data_request_area
+      )
     end
 
     def create

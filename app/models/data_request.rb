@@ -105,8 +105,8 @@ class DataRequest < ApplicationRecord
     contact&.data_request_emails&.split(" ") || []
   end
 
-  def qet_data_request_types(area)
-    case area
+  def data_request_types
+    case data_request_area.data_request_area_type
     when "branston"
       BRANSTON_DATA_REQUEST_TYPES
     when "branston_registry"
