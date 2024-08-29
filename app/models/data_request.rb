@@ -62,7 +62,7 @@ class DataRequest < ApplicationRecord
   }
 
   BRANSTON_DATA_REQUEST_TYPES          = %w[dps nomis_contact_lists nomis_contact_logs nomis_records nomis_other].freeze
-  BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_boarders pdp probation_archive].freeze
+  BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_borders pdp probation_archive].freeze
   MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
   PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv security_records telephone_recordings other].freeze
   PROBATION_DATA_REQUEST_TYPES         = %w[ndelius_contact_lists probation_records other].freeze
