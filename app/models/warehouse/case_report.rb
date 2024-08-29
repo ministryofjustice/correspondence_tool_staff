@@ -291,6 +291,7 @@ module Warehouse
         case_report.case_originally_rejected = humanize_boolean(kase.case_originally_rejected)
         case_report.rejected_reasons = rejected_reasons_selection(kase)
         case_report.other_rejected_reason = kase.other_rejected_reason
+        case_report.user_made_valid = kase.user_validated_rejected_case&.full_name
       end
 
       def process_offender_sar_complaint(kase, case_report)
