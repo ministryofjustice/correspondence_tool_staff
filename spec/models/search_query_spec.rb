@@ -339,14 +339,14 @@ describe SearchQuery do
                               @setup.std_draft_irt)
       end
 
-      it "returns the result of searching for search_text with newest case first" do
+      it "returns the result of searching for search_text with newest case first by received date" do
         search_query = create :search_query,
                               user_id: user.id,
                               search_text: "std_draft"
         expect(search_query.results(nil, "search_result_order_by_newest_first"))
-          .to contain_exactly(@setup.std_draft_foi,
-                              @setup.std_draft_foi_late,
-                              @setup.std_draft_irt)
+          .to eq [@setup.std_draft_irt,
+                  @setup.std_draft_foi,
+                  @setup.std_draft_foi_late]
       end
 
       it "returns the result of searching for search_text with oldest case first" do
