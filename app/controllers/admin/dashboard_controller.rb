@@ -28,7 +28,7 @@ class Admin::DashboardController < AdminController
   end
 
   def system
-    @version = `git rev-parse HEAD`.chomp
+    @version = Settings.git_commit
   end
 
 private
