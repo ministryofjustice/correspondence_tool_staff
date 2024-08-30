@@ -35,24 +35,9 @@ require "capybara/rspec"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Capybara.default_max_wait_time = 1
-
-options = Selenium::WebDriver::Chrome::Options.new
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--start-maximized")
-options.add_argument("--window-size=1980,2080")
-options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
-
-Capybara.asset_host = "http://localhost:3000"
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
 Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
+  options.add_preference(:download, { prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s })
 
   unless ENV["CHROME_DEBUG"]
     options.add_argument("--headless")
@@ -66,8 +51,9 @@ Capybara.register_driver :headless_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
+Capybara.default_max_wait_time = 1
+Capybara.asset_host = "http://localhost:3000"
 Capybara.server = :puma, { Silent: true }
-
 Capybara.javascript_driver = :headless_chrome
 
 # Force Timecop Thread Safety to prevent intermittent date related issues during
