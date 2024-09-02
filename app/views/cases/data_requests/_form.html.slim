@@ -1,7 +1,8 @@
-.data-request__single
-  h3.page-heading--secondary.data-request__position
+h3.page-heading--secondary.data-request__position
 
+section.data-request__single
   = f.radio_button_fieldset :request_type, choices: @data_request.data_request_types
+  = f.text_area :request_type_note
 
   = f.gov_uk_date_field :date_requested, { \
     legend_text: 'Date requested',
@@ -9,30 +10,27 @@
     today_button: { class: '' } \
   }
 
-  br
-  hr
-
+section
   = f.gov_uk_date_field :date_from, { \
     legend_text: 'Date from (optional)',
     form_hint_text: t('cases.data_requests.new.date_from_copy'),
   }
 
-  br
-
+section
   = f.gov_uk_date_field :date_to, { \
     legend_text: 'Date to (optional)',
     form_hint_text: t('cases.data_requests.new.date_to_copy'),
   }
 
+section
   - if @data_request.persisted?
     = f.text_field :cached_num_pages, class: 'form-control form-control-1-8'
     = f.check_box_fieldset :completed, [:completed]
-
     = f.gov_uk_date_field :cached_date_received, { \
       legend_text: 'Date when data request is complete',
       form_hint_text: t('helpers.hint.shared.date_example'),
       today_button: { class: '' } \
     }
 
-.button-holder
+section.button-holder
   = f.submit t('.record_request'), { class: 'button', role: 'button' }
