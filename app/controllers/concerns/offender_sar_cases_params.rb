@@ -8,6 +8,7 @@ module OffenderSARCasesParams
       :case_reference_number,
       :delivery_method,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
+      :email,
       :requester_reference,
       :flag_as_high_profile,
       :message,

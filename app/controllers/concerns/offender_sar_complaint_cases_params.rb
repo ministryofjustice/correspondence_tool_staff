@@ -6,6 +6,7 @@ module OffenderSARComplaintCasesParams
       :case_reference_number,
       :complaint_type,
       :complaint_subtype,
+      :email,
       :requester_reference,
       :flag_as_high_profile,
       :gld_contact_name,
