@@ -69,6 +69,7 @@ class Case::SAR::Offender < Case::Base
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
   VETTING_IN_PROCESS_EVENT = "mark_as_vetting_in_progress".freeze
+  VALIDATE_REJECTED_CASE_EVENT = "validate_rejected_case".freeze
   READY_FOR_COPY_EVENT = "mark_as_ready_to_copy".freeze
 
   GOV_UK_DATE_FIELDS = %i[
@@ -489,6 +490,16 @@ class Case::SAR::Offender < Case::Base
 
   def unassign_vetter
     responder_assignment&.update(user: nil)
+  end
+
+  def user_validated_rejected_case
+    user_for_validation = nil
+    transitions.each do |transition|
+      if transition.event == VALIDATE_REJECTED_CASE_EVENT
+        user_for_validation = transition.acting_user
+      end
+    end
+    user_for_validation
   end
 
   def rejected?
