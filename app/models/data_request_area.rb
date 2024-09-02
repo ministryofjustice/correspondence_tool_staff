@@ -49,7 +49,7 @@ class DataRequestArea < ApplicationRecord
     end
   end
 
-  private
+private
 
   def clean_attributes
     %i[location]

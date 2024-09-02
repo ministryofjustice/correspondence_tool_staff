@@ -23,7 +23,7 @@ class DataRequestAreaUpdateService
         acting_user: @user,
         acting_team: BusinessUnit.dacu_branston,
         message: "Data request location updated",
-        )
+      )
 
       @result = :ok
     rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
@@ -31,4 +31,3 @@ class DataRequestAreaUpdateService
     end
   end
 end
-

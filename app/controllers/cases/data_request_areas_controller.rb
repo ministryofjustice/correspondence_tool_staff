@@ -35,7 +35,7 @@ module Cases
         user: current_user,
         data_request_area: @data_request_area,
         params: update_location_params,
-        )
+      )
       service.call
 
       case service.result

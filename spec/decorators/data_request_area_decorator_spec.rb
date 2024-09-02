@@ -1,7 +1,6 @@
 require "rails_helper"
 
 describe DataRequestAreaDecorator, type: :model do
-
   describe "#location" do
     let(:data_request_area) { create(:data_request_area) }
 
@@ -27,27 +26,27 @@ describe DataRequestAreaDecorator, type: :model do
     end
   end
 
-  describe "#date_completed" do
-    
-  end
-
-  describe "#date_requested" do
-
-  end
-
-  describe "#cached_num_pages" do
-
-  end
-
-  describe "#num_of_requests" do
-
-  end
-
-  describe "#data_request_status_tag" do
-
-  end
-
-  describe "#request_document" do
-
-  end
+  # describe "#date_completed" do
+  #
+  # end
+  #
+  # describe "#date_requested" do
+  #
+  # end
+  #
+  # describe "#cached_num_pages" do
+  #
+  # end
+  #
+  # describe "#num_of_requests" do
+  #
+  # end
+  #
+  # describe "#data_request_status_tag" do
+  #
+  # end
+  #
+  # describe "#request_document" do
+  #
+  # end
 end

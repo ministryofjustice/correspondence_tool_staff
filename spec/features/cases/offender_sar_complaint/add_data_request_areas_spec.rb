@@ -37,7 +37,6 @@ feature "Data Request Areas for an Offender SAR Complaint" do
   scenario "delete a data request area which has no data requests", js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
     click_on "Requires data"
-    
     click_on "Record data request"
     expect(data_request_area_page).to be_displayed
 
