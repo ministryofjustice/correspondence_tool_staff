@@ -3,7 +3,7 @@ require "rails_helper"
 describe "cases/data_requests/new", type: :view do
   describe "#new" do
     let(:offender_sar) { create :offender_sar_case }
-    let(:data_request_area) { create :data_request_area }
+    let(:data_request_area) { create :data_request_area, data_request_area_type: "prison" }
     let(:page) { data_request_page }
 
     before do
@@ -25,6 +25,12 @@ describe "cases/data_requests/new", type: :view do
       expect(page.form).to have_date_to_month
       expect(page.form).to have_date_to_year
       expect(page.form.submit_button.value).to eq "Continue"
+    end
+
+    it "renders the correct radio buttons based on data_request_types" do
+      DataRequest::PRISON_DATA_REQUEST_TYPES.each do |type|
+        expect(rendered).to have_selector("input[type=radio][value='#{type}']")
+      end
     end
   end
 end
