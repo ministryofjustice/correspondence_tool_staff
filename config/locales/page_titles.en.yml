@@ -72,6 +72,7 @@ en:
     preview_cover_page: Preview cover page - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
     assign_to_team_member_page: Assign responder - %{case_number} - Track-a-query
+    assign_to_vetter_page: Change vetting team member - %{case_number} - Track-a-query
     request_amends_page: Requesting amendments - %{case_number} - Track-a-query
     search: Searching for a case - Track-a-query
     settings: Business groups - Track-a-query

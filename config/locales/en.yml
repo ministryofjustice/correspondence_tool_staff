@@ -444,7 +444,7 @@ en:
       update?: You are not authorised to edit this case.
       update_closure?: You are not authorised to edit this case.
       upload_responses?: You are not authorised to upload a response for this case.
-      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
     case/ico/foi_policy:
       <<: *case_policy
@@ -1169,11 +1169,13 @@ en:
       record_further_action: Start further ICO request
     case/offender_sar:
       email: "Subject's email"
+      assign: Allocate vetting team member
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
       record_reason_for_lateness: Record reason for lateness
     case/offender_sar_complaint:
+      assign: Assign to a responder
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
       add_complaint_appeal_outcome: Add outcome
@@ -1672,6 +1674,9 @@ en:
     assign_to_team_member:
       heading: Assign to a responder
       action: Assign responder
+    assign_to_vetter:
+      heading: Change Vetting Team member
+      action: Change team member
     select_team:
       heading: Select team
     take_case_on:

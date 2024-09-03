@@ -488,6 +488,10 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def unassign_vetter
+    responder_assignment&.update(user: nil)
+  end
+
   def user_validated_rejected_case
     user_for_validation = nil
     transitions.each do |transition|

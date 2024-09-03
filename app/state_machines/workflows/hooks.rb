@@ -55,6 +55,10 @@ class Workflows::Hooks
     ActionNotificationsMailer.ready_for_press_or_private_review(assignment)
   end
 
+  def unassign_vetter
+    @kase.unassign_vetter
+  end
+
 private
 
   def is_hook_disabled?
