@@ -76,7 +76,6 @@ module Cases
       params.require(:data_request_area).permit(:data_request_area_type)
     end
 
-    # Only the location can be updated for a data request area
     def update_location_params
       params.require(:data_request_area).permit(:location, :contact_id)
     end
