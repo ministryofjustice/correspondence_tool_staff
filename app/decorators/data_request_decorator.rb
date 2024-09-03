@@ -35,9 +35,6 @@ class DataRequestDecorator < Draper::Decorator
       "<strong class='govuk-tag govuk-tag--green'>Completed</strong>".html_safe
     when :in_progress
       "<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>".html_safe
-    when :not_started
-      "<strong class='govuk-tag govuk-tag--red'>Not started</strong>".html_safe
-    end
   end
 
 private
