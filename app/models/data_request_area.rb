@@ -50,8 +50,6 @@ class DataRequestArea < ApplicationRecord
 private
 
   def clean_attributes
-    %i[location]
-      .each { |f| send("#{f}=", send(f.to_s)&.strip) }
-      .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
+    self.location = location&.strip&.upcase_first
   end
 end
