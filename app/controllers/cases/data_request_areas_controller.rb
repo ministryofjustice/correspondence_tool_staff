@@ -3,7 +3,6 @@ module Cases
     before_action :set_case
     before_action :set_data_request_area, only: %i[show update destroy]
     before_action :authorize_action
-    after_action  :verify_authorized
 
     def new
       @data_request_area = DataRequestArea.new
