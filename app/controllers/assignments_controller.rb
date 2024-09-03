@@ -3,6 +3,7 @@ class AssignmentsController < ApplicationController
     assign_to_team
     new
     assign_to_team_member
+    assign_to_vetter
     execute_assign_to_team_member
     select_team
     take_case_on
@@ -211,14 +212,18 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def assign_to_vetter
+    assign_to_team_member
+  end
+
   def assign_to_team_member
-    authorize @case, :can_assign_to_team_member?
+    authorize @case, :can_move_to_team_member?
     @team_users = set_team_members.decorate
     @assignment = @case.assignments.new
   end
 
   def execute_assign_to_team_member
-    authorize @case, :can_assign_to_team_member?
+    authorize @case, :can_move_to_team_member?
     if assign_to_team_member_params.blank?
       flash[:alert] = "No changes were made"
       redirect_to case_path(@case)

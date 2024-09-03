@@ -256,6 +256,7 @@ Rails.application.routes.draw do
         get :select_team
         get :assign_to_team_member
         get :assign_to_team, as: :assign_to_responder_team
+        get :assign_to_vetter
         post :execute_assign_to_team_member
       end
     end
