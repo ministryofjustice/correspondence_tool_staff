@@ -320,12 +320,14 @@ describe CaseSearchService do
             let(:external_deadline_to)   { 10.business_days.from_now.to_date }
 
             it "is used" do
-              @setup.std_draft_foi.update!(external_deadline: 2.business_days.from_now)
-              service.call
-              expect(service.result_set)
-                .to match_array [
-                  @setup.std_draft_foi,
-                ]
+              freeze_time do
+                @setup.std_draft_foi.update!(external_deadline: 2.business_days.from_now)
+                service.call
+                expect(service.result_set)
+                  .to match_array [
+                    @setup.std_draft_foi,
+                  ]
+              end
             end
           end
         end

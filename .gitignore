@@ -12,10 +12,7 @@
 # Ignore all logfiles and tempfiles.
 /tmp/*
 /log/*
-.docker-sync
-.local-dev/.setup-complete
 build
-
 
 # Ignore concatenated state machine config file - it will be regenerated
 # from the constituent parts
@@ -31,6 +28,9 @@ config/environments/*.local.yml
 env.sh
 .env.sh
 
+#Ignore local upload and attachments
+/uploads
+public/uploads
 
 # Ignore .DS_Store in all directories
 .DS_Store

@@ -35,7 +35,6 @@ class StatsController < ApplicationController
     @report = Report.new(create_custom_params)
 
     if @report.valid?
-
       @report.run_and_update!(
         user: current_user,
         period_start: @report.period_start,

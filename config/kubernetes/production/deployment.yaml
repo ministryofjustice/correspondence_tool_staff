@@ -20,10 +20,17 @@ spec:
       serviceAccountName: track-a-query
       containers:
         - name: webapp
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -66,6 +73,7 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 10
           livenessProbe:
             httpGet:
               path: /ping
@@ -77,9 +85,17 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 10
         - name: quickjobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-quick-jobs.sh"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -112,8 +128,15 @@ spec:
             - secretRef:
                 name: app-secrets
         - name: uploads
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command: ["./config/docker/entrypoint-uploads.sh"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -147,7 +170,7 @@ spec:
                 name: app-secrets
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
           command:
             - /bin/sh
             - -c

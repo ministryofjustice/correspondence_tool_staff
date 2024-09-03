@@ -103,14 +103,4 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
-  # lograge configuration - these settings are in addition to the ones
-  # specified in /config/intializers/lograge.rb
-  #
-  config.lograge.keep_original_rails_log = true
-  config.lograge.logger = ActiveSupport::Logger.new Rails.root.join("log/lograge_#{Rails.env}.log")
-
-  if defined?(BetterErrors) && (ENV.key? "SHOW_BETTER_ERRORS_TO")
-    BetterErrors::Middleware.allow_ip! ENV["SHOW_BETTER_ERRORS_TO"]
-  end
 end

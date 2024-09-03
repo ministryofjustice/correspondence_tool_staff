@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+ruby file: ".ruby-version"
+
 gem "activerecord-session_store"
 gem "acts_as_tree", "~> 2.9"
 # Gems to help generating with Excel spreadsheets
@@ -21,7 +23,7 @@ gem "config"
 gem "devise"
 gem "draper", "4.0.2"
 gem "dropzonejs-rails"
-gem "factory_bot_rails", "~> 6.2.0"
+gem "factory_bot_rails", "~> 6.4.3"
 gem "faker", "~> 2.20"
 gem "foreman", "~> 0.87.1"
 gem "gov_uk_date_fields", "~> 3.1"
@@ -67,7 +69,7 @@ gem "sentry-ruby"
 gem "shell-spinner"
 gem "sidekiq", "<7"
 gem "slim-rails", "~> 3.6"
-gem "sprockets", "~> 4.0.2"
+gem "sprockets", "~> 4.2.1"
 
 gem "table_print"
 gem "terser"

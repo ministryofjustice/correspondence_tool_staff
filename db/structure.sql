@@ -1404,7 +1404,8 @@ CREATE TABLE public.warehouse_case_reports (
     rejected character varying DEFAULT 'No'::character varying,
     case_originally_rejected character varying,
     other_rejected_reason character varying,
-    rejected_reasons json
+    rejected_reasons json,
+    user_made_valid character varying
 );
 
 
@@ -2397,6 +2398,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240829160849'),
 ('20240731104518'),
 ('20240729145714'),
 ('20240701203227'),

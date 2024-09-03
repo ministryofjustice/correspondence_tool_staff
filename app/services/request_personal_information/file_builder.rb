@@ -45,10 +45,10 @@ private
   end
 
   def pdf_filename
-    "#{@rpi.submission_id}.pdf"
+    "tmp/#{@rpi.submission_id}.pdf"
   end
 
   def zip_filename
-    "#{@rpi.submission_id}.zip"
+    "tmp/#{@rpi.submission_id}.zip"
   end
 end

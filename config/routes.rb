@@ -320,6 +320,10 @@ Rails.application.routes.draw do
 
   get "rpi/:target/:id" => "rpi#download", as: :rpi_file_download
 
+  if Rails.env.development?
+    post "dev_s3_uploader" => "dev_s3_uploader#create"
+  end
+
   get "ping", to: "heartbeat#ping", format: :json
   get "healthcheck", to: "heartbeat#healthcheck", as: "healthcheck", format: :json
   post "/feedback" => "feedback#create"

@@ -35,36 +35,9 @@ require "capybara/rspec"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Capybara.default_max_wait_time = 1
-
-options = Selenium::WebDriver::Chrome::Options.new
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--start-maximized")
-options.add_argument("--window-size=1980,2080")
-options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
-
-# Add a configuration to connect to Chrome remotely through Selenium Grid
-Capybara.register_driver :remote_selenium do |app|
-  Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:3000"
-
-  # Set the host and port
-  Capybara.server_host = "0.0.0.0"
-  Capybara.server_port = "3000"
-
-  # and point capybara at our chromium docker container
-  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", options:)
-end
-
-Capybara.asset_host = "http://localhost:3000"
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
 Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
+  options.add_preference(:download, { prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s })
 
   unless ENV["CHROME_DEBUG"]
     options.add_argument("--headless")
@@ -78,22 +51,10 @@ Capybara.register_driver :headless_chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
+Capybara.default_max_wait_time = 1
+Capybara.asset_host = "http://localhost:3000"
 Capybara.server = :puma, { Silent: true }
-
-Capybara.javascript_driver = ENV["CHROME_IS_REMOTE"] ? :remote_selenium : :headless_chrome
-
-# Set these env variables to push screenshots for failed tests to S3.
-# if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
-#    ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
-#   Capybara::Screenshot.s3_configuration = {
-#     s3_client_credentials: {
-#       access_key_id: ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'],
-#       secret_access_key: ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'],
-#       region: 'eu-west-2'
-#     },
-#     bucket_name: 'correspondence-staff-travis-test-failure-screenshots',
-#   }
-# end
+Capybara.javascript_driver = :headless_chrome
 
 # Force Timecop Thread Safety to prevent intermittent date related issues during
 # parallel tests. Ensure all Timecop usage in tests are in

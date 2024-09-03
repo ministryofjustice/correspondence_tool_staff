@@ -55,8 +55,6 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
-      AWS_ACCESS_KEY_ID: 123
-      AWS_SECRET_ACCESS_KEY: 456
       COVERAGE: true
       CI: true
       CI_TOTAL_JOBS: ${{ matrix.ci_total_jobs }}
@@ -64,7 +62,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -79,17 +77,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-
-      - name: Find yarn cache location
-        id: yarn-cache
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: JS package cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Install packages
         run: yarn install --pure-lockfile
@@ -113,6 +100,7 @@ jobs:
   coverage:
     needs: test
     runs-on: ubuntu-latest
+    permissions: write-all
     env:
       RAILS_ENV: test
       AWS_ACCESS_KEY_ID: 123
@@ -138,7 +126,7 @@ jobs:
         uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_suite_coverage: 92
+          minimum_suite_coverage: 92.8
           minimum_file_coverage: 100
 
   build-and-deploy:
