@@ -68,8 +68,8 @@ private
          "upload_response_approve_and_bypass",
          "validate_rejected_case"
       object.message
-    when "assign_to_team_member"
-      construct_message_for_assign_to_team_member
+    when "move_to_team_member"
+      construct_message_for_move_to_team_member
     when "reassign_user"
       construct_message_for_reassign_user
     else
@@ -77,7 +77,7 @@ private
     end
   end
 
-  def construct_message_for_assign_to_team_member
+  def construct_message_for_move_to_team_member
     target_user = User.find(object.target_user_id)
     acting_user = User.find(object.acting_user_id)
     if target_user == acting_user
