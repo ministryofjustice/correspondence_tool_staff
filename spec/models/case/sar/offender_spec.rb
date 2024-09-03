@@ -928,6 +928,19 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#unassign_vetter" do
+    let(:responder) { find_or_create :responder }
+    let(:responding_team) { responder.teams.first }
+
+    it "sets responding user to nil" do
+      kase = create :offender_sar_case, :vetting_in_progress
+      kase.assignments << Assignment.new(state: "pending", team_id: responding_team.id, role: "responding", user: responder, approved: false)
+      expect {
+        kase.unassign_vetter
+      }.to change(kase.responder_assignment, :user_id).to nil
+    end
+  end
+
   describe "#partial flags" do
     it "errors when further_actions_required is true but is_partial_case" do
       kase = build_stubbed(:offender_sar_case, is_partial_case: false, further_actions_required: "yes")
