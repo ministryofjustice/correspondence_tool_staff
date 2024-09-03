@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Cases::DataRequestsController, type: :controller do
   let(:manager) { find_or_create :branston_user }
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area) { create :data_request_area, offender_sar_case: }
+  let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: }
 
   before do
     sign_in manager
@@ -21,6 +21,16 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     it "builds @data_request" do
       data_request = assigns(:data_request)
       expect(data_request).to be_a DataRequest
+    end
+
+    it "assigns the correct data_request_area to @data_request" do
+      data_request = assigns(:data_request)
+      expect(data_request.data_request_area).to eq(data_request_area)
+    end
+
+    it "assigns the correct data_request_types for the form" do
+      data_request = assigns(:data_request)
+      expect(data_request.data_request_types).to eq(DataRequest::PRISON_DATA_REQUEST_TYPES)
     end
   end
 
