@@ -96,6 +96,7 @@ jobs:
         with:
           name: coverage-${{env.CI_JOB_INDEX}}
           path: coverage/.resultset.json
+          include-hidden-files: true
 
   coverage:
     needs: test
