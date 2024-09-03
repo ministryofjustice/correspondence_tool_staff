@@ -6,7 +6,6 @@ class DataRequestAreaUpdateService
     @case = data_request_area.kase
     @user = user
     @data_request_area = data_request_area
-    @data_request = data_request
     @params = params
   end
 
