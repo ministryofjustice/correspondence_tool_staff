@@ -7,6 +7,8 @@ module PageObjects
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
+        element :page_banner, ".moj-banner__message"
+
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
