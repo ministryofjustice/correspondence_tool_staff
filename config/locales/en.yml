@@ -273,6 +273,8 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            email:
+              invalid: not in the correct format, like name@example.com
             rejected_reasons:
               blank: Reason for rejecting the case cannot be blank
             other_rejected_reason:
