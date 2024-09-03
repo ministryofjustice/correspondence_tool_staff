@@ -66,6 +66,50 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
+    describe "#data_request_types" do
+      let(:data_request) { create(:data_request, data_request_area: data_request_area) }
+
+      context "when data_request_area_type is 'branston'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "branston") }
+
+        it "returns the BRANSTON_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::BRANSTON_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'branston_registry'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "branston_registry") }
+
+        it "returns the BRANSTON_REGISTRY_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::BRANSTON_REGISTRY_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'mappa'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "mappa") }
+
+        it "returns the MAPPA_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::MAPPA_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'prison'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "prison") }
+
+        it "returns the PRISON_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::PRISON_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'probation'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "probation") }
+
+        it "returns the PROBATION_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::PROBATION_DATA_REQUEST_TYPES)
+        end
+      end
+    end
+
     describe "validation" do
       subject(:data_request) { build :data_request }
 
