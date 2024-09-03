@@ -3,8 +3,8 @@ require "rails_helper"
 feature "Log data received for an Offender SAR Data Request" do
   given!(:manager) { find_or_create :branston_user }
   given!(:offender_sar_case) { create(:offender_sar_case, :data_to_be_requested).decorate }
-  given!(:data_request_area) { create(:data_request_area,  offender_sar_case: offender_sar_case).decorate }
-  given!(:data_request) { create(:data_request, offender_sar_case: offender_sar_case, data_request_area:).decorate }
+  given!(:data_request_area) { create(:data_request_area, offender_sar_case:).decorate }
+  given!(:data_request) { create(:data_request, offender_sar_case:, data_request_area:).decorate }
 
   background do
     login_as manager
@@ -36,7 +36,6 @@ feature "Log data received for an Offender SAR Data Request" do
     row = data_request_area_show_page.data_requests.rows[0]
     expect(row.pages).to have_text "92"
 
-
     # Note pre-filled fields when making further update to the same Data Request
     click_link "Edit"
     expect(data_request_edit_page).to be_displayed
@@ -44,8 +43,8 @@ feature "Log data received for an Offender SAR Data Request" do
   end
 
   context "when multiple data requests are present and have pages logged" do
-    given!(:data_request) { create(:data_request, offender_sar_case: offender_sar_case, data_request_area:, cached_num_pages: 32) }
-    given!(:second_data_request) { create(:data_request, offender_sar_case: offender_sar_case, data_request_area:, cached_num_pages: 32) }
+    given!(:data_request) { create(:data_request, offender_sar_case:, data_request_area:, cached_num_pages: 32) }
+    given!(:second_data_request) { create(:data_request, offender_sar_case:, data_request_area:, cached_num_pages: 32) }
 
     scenario "the total row displays with the correct total pages" do
       data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)
