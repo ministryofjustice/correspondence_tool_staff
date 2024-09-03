@@ -1,7 +1,7 @@
 module Cases
   class DataRequestAreasController < ApplicationController
     before_action :set_case
-    before_action :set_data_request_area, only: %i[show edit update destroy]
+    before_action :set_data_request_area, only: %i[show update destroy]
     before_action :authorize_action
     after_action  :verify_authorized
 
