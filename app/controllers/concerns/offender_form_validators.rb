@@ -9,6 +9,7 @@ private
     set_empty_value_if_unset(params, "flag_as_high_profile")
     object.assign_attributes(params)
     object.validate_date_of_birth
+    object.validate_email_format
   end
 
   def validate_complaint_type(params)
