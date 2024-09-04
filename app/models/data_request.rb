@@ -165,8 +165,6 @@ private
   end
 
   def clean_attributes
-    %i[request_type_note]
-      .each { |f| send("#{f}=", send(f.to_s)&.strip) }
-      .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
+    self.request_type_note = request_type_note&.strip&.upcase_first
   end
 end
