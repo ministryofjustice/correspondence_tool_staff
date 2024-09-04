@@ -93,7 +93,7 @@ RSpec.describe DataRequestArea, type: :model do
 
     context "when data request area has unfinished data request items" do
       let(:data_request_area) { create(:data_request_area) }
-      let(:data_request) { create(:data_request, completed: false, data_request_area:) }
+      let!(:data_request) { create(:data_request, completed: false, data_request_area:) }
 
       it "returns 'In progress'" do
         expect(data_request_area.status).to eq :in_progress
@@ -102,7 +102,7 @@ RSpec.describe DataRequestArea, type: :model do
 
     context "when data request is completed" do
       let(:data_request_area) { create(:data_request_area) }
-      let(:data_request) { create(:data_request, :completed, cached_date_received: Date.new(2024, 8, 13), data_request_area:) }
+      let!(:data_request) { create(:data_request, :completed, cached_date_received: Date.new(2024, 8, 13), data_request_area:) }
 
       it "returns 'Completed'" do
         expect(data_request_area.status).to eq :completed
