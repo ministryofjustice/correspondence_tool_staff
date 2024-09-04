@@ -70,6 +70,8 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_contact_logs',
     'probation_records',
     'cctv_and_bwcf',
+    'cctv',
+    'bwcf',
     'telephone_recordings',
     'telephone_pin_logs',
     'probation_archive',
@@ -79,10 +81,8 @@ CREATE TYPE public.request_types AS ENUM (
     'other',
     'cross_borders',
     'cat_a',
-    'ndelius_contact_lists',
+    'ndelius',
     'dps',
-    'cctv',
-    'bwcf'
 );
 
 
