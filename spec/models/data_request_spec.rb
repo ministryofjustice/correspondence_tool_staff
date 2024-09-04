@@ -260,6 +260,22 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
+  describe "#clean_attributes" do
+    subject(:data_request) { build :data_request }
+
+    it "ensures string attributes do not have leading/trailing spaces" do
+      data_request.request_type_note = "  a note"
+      data_request.send(:clean_attributes)
+      expect(data_request.request_type_note).to eq "A note"
+    end
+
+    it "ensures string attributes have the first letter capitalised" do
+      data_request.request_type_note = "a note"
+      data_request.send(:clean_attributes)
+      expect(data_request.request_type_note).to eq "A note"
+    end
+  end
+
   describe "#status" do
     context "when data request is in progress" do
       let!(:data_request) { build_stubbed(:data_request) }
