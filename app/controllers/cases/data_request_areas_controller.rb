@@ -56,9 +56,11 @@ module Cases
     end
 
     def destroy
-      @data_request_area.destroy! unless @data_request_area.data_requests.exists?
-      respond_to do |format|
-        format.html { redirect_to case_path(@case), notice: "Data request was successfully destroyed." }
+      if @data_request_area.data_requests.exists?
+        redirect_to case_path(@case), notice: "Data request area cannot be destroyed because it has associated data requests."
+      else
+        @data_request_area.destroy!
+        redirect_to case_path(@case), notice: "Data request was successfully destroyed."
       end
     end
 
