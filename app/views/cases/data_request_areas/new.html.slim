@@ -21,12 +21,7 @@ span.visually-hidden
 
   = f.hidden_field :data_request_default_area
   = f.radio_button_fieldset :data_request_area_type,
-    choices: DataRequestArea::data_request_area_types.keys do |fieldset|
-    - fieldset.radio_input('prison')
-    - fieldset.radio_input('probation')
-    - fieldset.radio_input('branston')
-    - fieldset.radio_input('branston_registry')
-    - fieldset.radio_input('mappa')
+    choices: DataRequestArea::data_request_area_types.keys
 
   .button-holder
     = f.submit 'Continue', class: 'button'
