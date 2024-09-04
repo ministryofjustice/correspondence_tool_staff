@@ -8,7 +8,7 @@ gem "acts_as_tree", "~> 2.9"
 # Gems to help generating with Excel spreadsheets
 # undeclared (but documented) dependency on rubyzip
 # This is from the readme of axlsx_rails.
-gem "aasm", "~> 5.2"
+gem "aasm", "~> 5.5"
 gem "caxlsx"
 gem "caxlsx_rails"
 gem "rubyzip", ">= 1.2.4"
