@@ -29,10 +29,6 @@ span.visually-hidden
 - allow_editing = @case.editable?
 
 div class="case"
-  - if allow_editing
-    span.visually-hidden
-      = "Actions you can take on this case"
-
   h2.bold-medium.data-request-area
     = "#{@case.number} - #{@case.subject_full_name}"
 
