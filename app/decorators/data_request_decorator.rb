@@ -21,6 +21,10 @@ class DataRequestDecorator < Draper::Decorator
     contact&.data_request_name
   end
 
+  def location
+    data_request_area.contact&.name || data_request_area&.location
+  end
+
   def data_required
     request_type_note if request_type == "other"
   end
