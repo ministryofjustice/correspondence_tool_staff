@@ -102,11 +102,11 @@ module Cases
     end
 
     def set_data_request
-      @data_request = @data_request_area.data_requests.find(params[:id])
+      @data_request = @data_request_area.data_requests.find(params[:id]).decorate
     end
 
     def set_data_request_area
-      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id])
+      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id]).decorate
     end
 
     def email_params
