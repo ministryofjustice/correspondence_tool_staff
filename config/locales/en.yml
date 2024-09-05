@@ -629,6 +629,7 @@ en:
         filter_case_type: Type
         filter_open_case_status: Status
         filter_sensitivity: Sensitivity
+        filter_caseworker: Complaint caseworker
         filter_complaint_type: Complaint type
         filter_complaint_priority: Priority
         filter_complaint_subtype: Complaint sub type
