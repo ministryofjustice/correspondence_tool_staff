@@ -126,7 +126,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       let!(:data_request_area) { create :data_request_area, offender_sar_case: }
 
       it "is destroyed" do
-        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by -1
+        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by(-1)
         expect(flash[:notice]).to eq("Data request was successfully destroyed.")
         expect(response).to redirect_to case_path(offender_sar_case)
       end

@@ -67,7 +67,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     describe "#data_request_types" do
-      let(:data_request) { create(:data_request, data_request_area: data_request_area) }
+      let(:data_request) { create(:data_request, data_request_area:) }
 
       context "when data_request_area_type is 'branston'" do
         let(:data_request_area) { create(:data_request_area, data_request_area_type: "branston") }

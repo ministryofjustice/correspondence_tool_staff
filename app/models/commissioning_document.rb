@@ -80,7 +80,7 @@ private
   def template
     TEMPLATE_TYPES[template_name.to_sym].new(data_request:)
   end
-  
+
   def timestamp
     Time.current.strftime("%Y%m%dT%H%M")
   end
