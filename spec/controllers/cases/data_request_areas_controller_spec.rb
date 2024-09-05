@@ -114,7 +114,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
   describe "#destroy" do
     context "with a data request item" do
       let(:data_request_area) { create :data_request_area, offender_sar_case: }
-      let!(:data_request) { create :data_request, data_request_area:, offender_sar_case: }
+      let!(:data_request) { create :data_request, data_request_area:, offender_sar_case: } # rubocop:disable RSpec/LetSetup
 
       it "is not destroyed" do
         expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by 0
