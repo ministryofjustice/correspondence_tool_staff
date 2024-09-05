@@ -48,7 +48,7 @@ private
       # i18n-tasks-use t('cases.data_requests.update.log_message_pages_changed')
       I18n.t(".log_message_pages_changed",
              request_type: I18n.t("helpers.label.data_request.request_type.#{data_request.request_type}"),
-             location: @data_request.data_request_area.decorate.location,
+             location: @data_request.location,
              date_changed: Date.current.strftime("%F"),
              old_pages:,
              new_pages:,
