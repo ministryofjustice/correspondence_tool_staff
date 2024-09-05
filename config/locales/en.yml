@@ -273,6 +273,8 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            email:
+              invalid: not in the correct format, like name@example.com
             rejected_reasons:
               blank: Reason for rejecting the case cannot be blank
             other_rejected_reason:
@@ -666,6 +668,7 @@ en:
         related_case_number:  Enter related case  reference number, for example 170131001.
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
+        email: Enter the email address of the data subject
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -861,6 +864,7 @@ en:
         request_method: How was the request received by MOJ?
       offender_sar:
         case_reference_number: Case reference number (CRN)
+        email: Email address (optional)
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Additional case information
@@ -1087,7 +1091,7 @@ en:
       draft_timeliness: Draft timeliness
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
-      email: "Requester’s email"
+      email: "Requester's email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
@@ -1118,7 +1122,7 @@ en:
         status: Retention status
         anonymised_at: Anonymised on
       pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
-      postal_address: "Requester’s postal address"
+      postal_address: "Requester's postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
       progress_for_clearance: "Ready for Disclosure clearance"
@@ -1182,6 +1186,7 @@ en:
     case/ico_foi:
       record_further_action: Start further ICO request
     case/offender_sar:
+      email: "Subject's email"
       assign: Allocate vetting team member
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
