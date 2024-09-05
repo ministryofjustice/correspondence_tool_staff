@@ -17,13 +17,6 @@ class DataRequestAreaUpdateService
       next unless @data_request_area.changed?
 
       @data_request_area.save!
-
-      @case.state_machine.add_data_received!(
-        acting_user: @user,
-        acting_team: BusinessUnit.dacu_branston,
-        message: "Data request location updated",
-      )
-
       @result = :ok
     rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
       @result = :error
