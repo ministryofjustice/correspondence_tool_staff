@@ -40,11 +40,9 @@ class DataRequestArea < ApplicationRecord
   end
 
   def status
-    if data_requests.exists?
-      data_requests.all?(&:completed) ? :completed : :in_progress
-    else
-      :not_started
-    end
+    return :not_started unless data_requests.exists?
+    
+    data_requests.any? { |request| !request.completed? } ? :in_progress : :completed
   end
 
 private
