@@ -17,10 +17,6 @@ class DataRequestDecorator < Draper::Decorator
     ""
   end
 
-  def data_request_name
-    contact&.data_request_name
-  end
-
   def location
     data_request_area.contact&.name || data_request_area&.location
   end
