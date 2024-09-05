@@ -83,33 +83,13 @@ describe DataRequestDecorator, type: :model do
   end
 
   describe "#display_request_type_note?" do
-    it "returns true when request_type is 'other'" do
-      data_request = create(:data_request, request_type: "other", request_type_note: "details")
+    it "returns true when request_type_note is present" do
+      data_request = create(:data_request, request_type_note: "note")
       expect(data_request.decorate).to be_display_request_type_note
-    end
-
-    it "returns true when request_type is 'nomis_other'" do
-      data_request = create(:data_request, request_type: "nomis_other", request_type_note: "nomis other details")
-      expect(data_request.decorate).to be_display_request_type_note
-    end
-
-    it "returns true when request_type is 'cctv'" do
-      data_request = create(:data_request, request_type: "cctv", request_type_note: "cctv details")
-      expect(data_request.decorate).to be_display_request_type_note
-    end
-
-    it "returns true when request_type is 'bwcf'" do
-      data_request = create(:data_request, request_type: "bwcf", request_type_note: "bwcf details")
-      expect(data_request.decorate).to be_display_request_type_note
-    end
-
-    it "returns false when request_type is not an other type" do
-      data_request = create(:data_request, request_type: "security_records")
-      expect(data_request.decorate).not_to be_display_request_type_note
     end
 
     it "returns false when request_type_note is blank" do
-      data_request = create(:data_request, request_type: "bwcf", request_type_note: "")
+      data_request = create(:data_request, request_type_note: "")
       expect(data_request.decorate).not_to be_display_request_type_note
     end
   end
