@@ -93,4 +93,22 @@ describe DataRequestDecorator, type: :model do
       expect(data_request.decorate).not_to be_display_request_type_note
     end
   end
+
+  describe "#data_request_status_tag" do
+    let(:decorated) { create(:data_request).decorate }
+
+    context "when status is :completed" do
+      it 'returns a green "Completed" tag' do
+        expect(decorated.data_request_status_tag(:completed))
+          .to eq("<strong class='govuk-tag govuk-tag--green'>Completed</strong>")
+      end
+    end
+
+    context "when status is :in_progress" do
+      it 'returns a yellow "In progress" tag' do
+        expect(decorated.data_request_status_tag(:in_progress))
+          .to eq("<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>")
+      end
+    end
+  end
 end
