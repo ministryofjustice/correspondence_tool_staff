@@ -919,6 +919,15 @@ class Case::Base < ApplicationRecord
     BusinessUnit.dacu_bmt
   end
 
+  def validate_email_format
+    if email.present? && email !~ /\A.+@.+\z/
+      errors.add(
+        :email,
+        :invalid,
+      )
+    end
+  end
+
 private
 
   def create_deadline_calculator
@@ -966,15 +975,6 @@ private
       end
     end
     errors[:received_date].any?
-  end
-
-  def validate_email_format
-    if email.present? && email !~ /\A.+@.+\z/
-      errors.add(
-        :email,
-        :invalid,
-      )
-    end
   end
 
   def validate_date_draft_compliant
