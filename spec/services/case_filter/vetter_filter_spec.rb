@@ -94,7 +94,7 @@ describe CaseFilter::VetterFilter do
         describe "params that will be submitted when clicking on the crumb" do
           it {
             expect(vetter_filter.crumbs[0].second).to eq "filter_vetter" => [""],
-                                                             "parent_id" => search_query.id
+                                                         "parent_id" => search_query.id
           }
         end
       end
