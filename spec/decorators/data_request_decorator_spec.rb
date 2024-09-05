@@ -95,18 +95,20 @@ describe DataRequestDecorator, type: :model do
   end
 
   describe "#data_request_status_tag" do
-    let(:decorated) { create(:data_request).decorate }
-
     context "when status is :completed" do
+      let(:decorated) { create(:data_request, completed: true, cached_date_received: 1.day.ago).decorate }
+
       it 'returns a green "Completed" tag' do
-        expect(decorated.data_request_status_tag(:completed))
+        expect(decorated.data_request_status_tag)
           .to eq("<strong class='govuk-tag govuk-tag--green'>Completed</strong>")
       end
     end
 
     context "when status is :in_progress" do
+      let(:decorated) { create(:data_request).decorate }
+
       it 'returns a yellow "In progress" tag' do
-        expect(decorated.data_request_status_tag(:in_progress))
+        expect(decorated.data_request_status_tag)
           .to eq("<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>")
       end
     end

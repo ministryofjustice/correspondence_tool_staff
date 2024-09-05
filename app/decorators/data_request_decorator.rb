@@ -29,7 +29,7 @@ class DataRequestDecorator < Draper::Decorator
     request_type_note.present?
   end
 
-  def data_request_status_tag(status)
+  def data_request_status_tag
     case status
     when :completed
       "<strong class='govuk-tag govuk-tag--green'>Completed</strong>".html_safe
