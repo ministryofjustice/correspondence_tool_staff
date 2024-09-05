@@ -637,6 +637,7 @@ en:
         filter_timeliness: Timeliness
         filter_high_profile: Flag as high profile?
         filter_retention_state: Status
+        filter_vetter: Vetting officer
       team:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types

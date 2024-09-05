@@ -42,6 +42,8 @@ en:
         <<: *list_filter_type
       filter_caseworker:
         <<: *list_filter_type
+      filter_vetter:
+        <<: *list_filter_type
       filter_partial_case_flag:
         <<: *list_filter_type
       filter_retention_state:
@@ -63,6 +65,7 @@ en:
       filter_complaint_priority: Filter by priority
       filter_high_profile: Filter by sensitivity
       filter_caseworker: Filter by complaint caseworker
+      filter_vetter: Filter by vetting officer
       filter_retention_state: Filter by GDPR RRD status
       filter_planned_destruction_date: Filter by GDPR destruction deadline
       date_headings:
@@ -101,4 +104,6 @@ en:
       in_time: 'In time'
       late: 'Late'
     filter_caseworker:
+      not_assigned: Not assigned yet
+    filter_vetter:
       not_assigned: Not assigned yet
