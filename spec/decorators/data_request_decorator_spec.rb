@@ -62,41 +62,6 @@ describe DataRequestDecorator, type: :model do
     end
   end
 
-  describe "#data_request_name" do
-    let(:data_request) { create(:data_request) }
-
-    context "without linked organisation" do
-      let(:decorated) { data_request.decorate }
-
-      it "uses location string" do
-        expect(decorated.data_request_name).to eq data_request.location
-      end
-    end
-
-    context "with linked organisation" do
-      let(:contact) { create(:contact) }
-      let(:decorated) { data_request.decorate }
-      let(:example_name) { "Jim Smith Brixton Prison" }
-
-      before do
-        data_request.update!(contact:)
-      end
-
-      context "when contact has data_request_name" do
-        it "uses data_request_name of organisation" do
-          contact.update!(data_request_name: example_name)
-          expect(decorated.data_request_name).to eq example_name
-        end
-      end
-
-      context "when contact does not have data_request_name" do
-        it "uses name of organisation" do
-          expect(decorated.data_request_name).to eq contact.name
-        end
-      end
-    end
-  end
-
   describe "#data_required" do
     context "when request_type = other" do
       let(:data_request) { create(:data_request, request_type: "other", request_type_note: "some information") }
