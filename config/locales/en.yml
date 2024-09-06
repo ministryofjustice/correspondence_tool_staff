@@ -629,6 +629,7 @@ en:
         filter_case_type: Type
         filter_open_case_status: Status
         filter_sensitivity: Sensitivity
+        filter_caseworker: Complaint caseworker
         filter_complaint_type: Complaint type
         filter_complaint_priority: Priority
         filter_complaint_subtype: Complaint sub type
@@ -636,6 +637,7 @@ en:
         filter_timeliness: Timeliness
         filter_high_profile: Flag as high profile?
         filter_retention_state: Status
+        filter_vetter: Vetting officer
       team:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types

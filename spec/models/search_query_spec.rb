@@ -80,6 +80,7 @@ describe SearchQuery do
         filter_complaint_priority
         filter_complaint_subtype
         filter_caseworker
+        filter_vetter
         filter_partial_case_flag
         filter_retention_state
         date_responded_from
@@ -242,6 +243,7 @@ describe SearchQuery do
         filter_complaint_priority
         filter_complaint_subtype
         filter_caseworker
+        filter_vetter
         filter_partial_case_flag
         filter_retention_state
         date_responded_from
@@ -628,6 +630,7 @@ describe SearchQuery do
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
           CaseFilter::CaseworkerFilter,
+          CaseFilter::VetterFilter,
         ]
       end
 
