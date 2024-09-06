@@ -14,7 +14,7 @@ describe DataRequestAreaUpdateService do
   end
 
   describe "#initialize" do
-    it "requires a user. data request area and fields to update" do
+    it "requires a user, data request area and fields to update" do
       expect(service.instance_variable_get(:@user)).to eq user
       expect(service.data_request_area).to eq data_request_area
       expect(service.instance_variable_get(:@params)).to eq params
