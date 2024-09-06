@@ -93,7 +93,10 @@ RSpec.describe DataRequestArea, type: :model do
 
     context "when data request area has unfinished data request items" do
       let(:data_request_area) { create(:data_request_area) }
-      let!(:data_request) { create(:data_request, completed: false, data_request_area:) } # rubocop:disable RSpec/LetSetup
+
+      before do
+        create(:data_request, completed: false, data_request_area:)
+      end
 
       it "returns 'In progress'" do
         expect(data_request_area.status).to eq :in_progress
