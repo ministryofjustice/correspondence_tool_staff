@@ -20,7 +20,7 @@
               td
                 = data_request.location
               td
-                = render "cases/offender_sar/data_request_request_type", case_details: case_details, data_request: data_request
+                = render "cases/offender_sar/data_request_request_type", data_request: data_request
               td
                 time datetime="#{data_request.date_requested}"
                   = l data_request.date_requested, format: :default
