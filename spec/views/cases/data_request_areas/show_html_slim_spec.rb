@@ -25,14 +25,6 @@ describe "cases/data_request_areas/show", type: :view do
       )
     end
 
-    # let(:commissioning_document) do
-    #   create(
-    #     :commissioning_document,
-    #     template_name: "prison",
-    #     updated_at: "2023-04-20 15:27",
-    #     )
-    # end
-
     let(:page) { data_request_area_show_page }
 
     let(:policy) do
@@ -90,123 +82,142 @@ describe "cases/data_request_areas/show", type: :view do
       end
     end
 
-    # context "when data request without commissioning document" do
-    #   before do
-    #     assign(:data_request, data_request_area.data_requests.new)
-    #     assign(:data_request_area, data_request_area.decorate)
-    #     assign(:case, data_request_area.kase)
-    #
-    #     render
-    #     data_request_area_show_page.load(rendered)
-    #   end
-    #
-    #   it "has required content" do
-    #     debugger
-    #     expect(page.page_heading.heading.text).to eq "View Prison data request area"
-    #     expect(page.rows.number.text).to eq "#{kase.number} - Robert Badson"
-    #     expect(page.data.location.text).to eq "HMP Leicester"
-    #     expect(page.data.request_type.text).to eq "All prison records"
-    #     expect(page.data.date_requested.text).to eq "21 Oct 2022"
-    #     expect(page.data.date_from.text).to eq "15 Aug 2018"
-    #     expect(page.data.date_to.text).to eq "N/A"
-    #     expect(page.data.pages_received.text).to eq "32"
-    #     expect(page.data.completed.text).to eq "Yes"
-    #     expect(page.data.date_completed.text).to eq "2 Nov 2022"
-    #     expect(page.link_edit.text).to eq "Edit data request"
-    #   end
-    # end
-    #
-    # context "when data request for Nomis other records is selected" do
-    #   before do
-    #     assign(:data_request, data_request_area.data_requests.new)
-    #     assign(:data_request_area, data_request_area.decorate)
-    #     assign(:case, data_request_area.kase)
-    #
-    #     render
-    #     data_request_area_show_page.load(rendered)
-    #   end
-    #
-    #   it "has required content" do
-    #     expect(page.page_heading.heading.text).to eq "View Prison data request area"
-    #     expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
-    #     expect(page.data.location.text).to eq "HMP Leicester"
-    #     expect(page.data.request_type.text).to eq("NOMIS other:My details of request")
-    #     expect(page.data.date_requested.text).to eq "21 Oct 2022"
-    #     expect(page.data.date_from.text).to eq "15 Aug 2018"
-    #     expect(page.data.date_to.text).to eq "N/A"
-    #     expect(page.data.pages_received.text).to eq "32"
-    #     expect(page.data.completed.text).to eq "Yes"
-    #     expect(page.data.date_completed.text).to eq "2 Nov 2022"
-    #     expect(page.link_edit.text).to eq "Edit data request"
-    #   end
-    # end
+    xcontext "when data request without commissioning document" do
+      let(:commissioning_document) do
+        create(
+          :commissioning_document,
+          template_name: "prison",
+          updated_at: "2023-04-20 15:27",
+        )
+      end
 
-    # context "when commissioning document has been selected" do
-    #   before do
-    #     assign(:commissioning_document, commissioning_document.decorate)
-    #     assign(:data_request, data_request_area.data_requests.new)
-    #     assign(:case, offender_sar)
-    #     assign(:data_request_area, offender_sar.data_request_areas)
-    #
-    #     render
-    #     data_request_area_show_page.load(rendered)
-    #   end
-    #
-    #   it "displays details of the commissioning document" do
-    #     expect(page.commissioning_document.row.request_document.text).to eq "Prison records"
-    #     expect(page.commissioning_document.row.last_updated.text).to eq "20 Apr 2023 15:27"
-    #     expect(page.commissioning_document.row.actions.text).to eq "Download | Replace | Change"
-    #   end
-    #
-    #   it "displays send email button" do
-    #     expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
-    #   end
-    # end
+      before do
+        assign(:data_request, data_request_area.data_requests.new)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
 
-    # context "when commissioning email has been sent" do
-    #   let(:email_address) { "user@prison.gov.uk" }
-    #
-    #   before do
-    #     create(:data_request_email, data_request:, created_at: "2023-07-07 14:53", email_address:)
-    #     commissioning_document.sent = true
-    #     assign(:commissioning_document, commissioning_document.decorate)
-    #     assign(:data_request, data_request.decorate)
-    #     assign(:case, data_request.kase)
-    #
-    #     render
-    #     data_request_show_page.load(rendered)
-    #   end
-    #
-    #   it "only displays Download link" do
-    #     expect(page.commissioning_document.row.actions.text).to eq "Download"
-    #   end
-    #
-    #   it "does not display send email button" do
-    #     expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
-    #   end
-    #
-    #   it "displays email details" do
-    #     expect(page.commissioning_document.email_row.email_type.text).to eq "Day 1 commissioning email"
-    #     expect(page.commissioning_document.email_row.email_address.text).to eq email_address
-    #     expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
-    #     expect(page.commissioning_document.email_row.status.text).to eq "Created"
-    #   end
-    # end
-    #
-    # context "when case is closed" do
-    #   let(:can_record_data_request) { false }
-    #
-    #   before do
-    #     assign(:data_request, data_request.decorate)
-    #     assign(:case, data_request.kase)
-    #
-    #     render
-    #     data_request_show_page.load(rendered)
-    #   end
-    #
-    #   it "does not have edit link" do
-    #     expect(page).not_to have_link_edit
-    #   end
-    # end
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "has required content" do
+        expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
+        expect(page.data.location.text).to eq "HMP Leicester"
+        expect(page.data.request_type.text).to eq "All prison records"
+        expect(page.data.date_requested.text).to eq "21 Oct 2022"
+        expect(page.data.date_from.text).to eq "15 Aug 2018"
+        expect(page.data.date_to.text).to eq "N/A"
+        expect(page.data.pages_received.text).to eq "32"
+        expect(page.data.completed.text).to eq "Yes"
+        expect(page.data.date_completed.text).to eq "2 Nov 2022"
+        expect(page.link_edit.text).to eq "Edit data request"
+      end
+    end
+
+    context "when data request for Nomis other records is selected" do
+      let(:data_request) do
+        create(
+          :data_request,
+          offender_sar_case: kase,
+          data_request_area:,
+          request_type: "nomis_other",
+          request_type_note: "My details of request",
+          date_requested: Date.new(2022, 10, 21),
+          cached_num_pages: 32,
+          completed: true,
+          cached_date_received: Date.new(2022, 11, 0o2),
+        )
+      end
+
+      before do
+        assign(:data_request, data_request)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "has required content" do
+        expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.text).to include("#{kase.number} - Robert Badson")
+        expect(page.data_requests.rows.first.request_type.text).to eq("NOMIS other:My details of request")
+        expect(page.data_requests.rows.first.date_requested.text).to eq "21 Oct 2022"
+        expect(page.data_requests.rows.first.pages.text).to eq "32"
+        expect(page.data_requests.rows.first.date_received.text).to eq "2 Nov 2022"
+        expect(page.data_requests.rows.first.status.text).to eq "Completed"
+        expect(page.data_requests.rows.first.edit.text).to eq "Edit"
+      end
+    end
+
+    xcontext "when commissioning document has been selected" do
+      before do
+        assign(:commissioning_document, commissioning_document.decorate)
+        assign(:data_request, data_request_area.data_requests.new)
+        assign(:case, offender_sar)
+        assign(:data_request_area, offender_sar.data_request_areas)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "displays details of the commissioning document" do
+        expect(page.commissioning_document.row.request_document.text).to eq "Prison records"
+        expect(page.commissioning_document.row.last_updated.text).to eq "20 Apr 2023 15:27"
+        expect(page.commissioning_document.row.actions.text).to eq "Download | Replace | Change"
+      end
+
+      it "displays send email button" do
+        expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
+      end
+    end
+
+    xcontext "when commissioning email has been sent" do
+      let(:email_address) { "user@prison.gov.uk" }
+
+      before do
+        create(:data_request_email, data_request:, created_at: "2023-07-07 14:53", email_address:)
+        commissioning_document.sent = true
+        assign(:commissioning_document, commissioning_document.decorate)
+        assign(:data_request, data_request.decorate)
+        assign(:case, data_request.kase)
+
+        render
+        data_request_show_page.load(rendered)
+      end
+
+      it "only displays Download link" do
+        expect(page.commissioning_document.row.actions.text).to eq "Download"
+      end
+
+      it "does not display send email button" do
+        expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
+      end
+
+      it "displays email details" do
+        expect(page.commissioning_document.email_row.email_type.text).to eq "Day 1 commissioning email"
+        expect(page.commissioning_document.email_row.email_address.text).to eq email_address
+        expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
+        expect(page.commissioning_document.email_row.status.text).to eq "Created"
+      end
+    end
+
+    context "when case is closed" do
+      let(:can_record_data_request) { false }
+
+      before do
+        assign(:data_request, data_request)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "does not have edit link" do
+        expect(page).not_to have_link("Edit")
+      end
+    end
   end
 end
