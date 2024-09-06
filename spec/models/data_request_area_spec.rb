@@ -77,7 +77,7 @@ RSpec.describe DataRequestArea, type: :model do
       it "is invalid and returns an error message" do
         data_request_area = build_stubbed(:data_request_area, data_request_area_type: nil)
         expect(data_request_area).not_to be_valid
-        expect(data_request_area.errors[:data_request_area_type]).to eq ["Select where the data you are requesting is from"]
+        expect(data_request_area.errors[:data_request_area_type]).to eq ["Select what data you are requesting"]
       end
     end
   end

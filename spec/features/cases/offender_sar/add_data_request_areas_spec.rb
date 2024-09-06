@@ -27,7 +27,7 @@ feature "Data Request Areas for an Offender SAR" do
 
     click_on "Continue"
     expect(data_request_area_page).to be_displayed
-    expect(data_request_area_page).to have_text "Select where the data you are requesting is from"
+    expect(data_request_area_page).to have_text "Select what data you are requesting"
   end
 
   scenario "delete a data request area which has no data requests", js: true do

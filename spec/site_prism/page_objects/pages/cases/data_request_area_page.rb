@@ -12,7 +12,7 @@ module PageObjects
 
         section :form, "#new_data_request_area" do
           element :data_request_area_type, :xpath,
-                  '//fieldset[contains(.,"Where is the data you are requesting from?")]'
+                  '//fieldset[contains(.,"What data is needed?")]'
 
           def choose_area_request_type(request_type)
             make_radio_button_choice("data_request_area_data_request_area_type_#{request_type}")
