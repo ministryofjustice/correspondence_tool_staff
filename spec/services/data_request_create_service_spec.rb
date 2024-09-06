@@ -37,8 +37,7 @@ describe DataRequestCreateService do
       expect(service.instance_variable_get(:@data_request_area)).to eq data_request_area
     end
 
-    # No restriction on case type as managed by model
-    it "ignores case type" do
+    it "has no restriction on case type" do
       new_service = described_class.new(
         kase: create(:foi_case),
         user:,
