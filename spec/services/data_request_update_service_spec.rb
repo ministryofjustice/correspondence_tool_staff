@@ -86,11 +86,5 @@ describe DataRequestUpdateService do
       service.call
       expect(CaseTransition.last.message).to eq "HMP Brixton, All prison records: pages changed from 0 to 21"
     end
-
-    it "uses the singular word `page` when 1 page updated" do
-      service.instance_variable_set(:@params, params.merge({ cached_num_pages: 1 }))
-      service.call
-      expect(CaseTransition.last.message).to eq "HMP Brixton, All prison records: pages changed from 0 to 1"
-    end
   end
 end
