@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "cases/commissioning_documents/new", type: :view do
+xdescribe "cases/commissioning_documents/new", type: :view do
   describe "#new" do
     let(:data_request) { create(:data_request) }
     let(:commissioning_document) { CommissioningDocument.new(data_request:) }

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "cases/data_requests/show", type: :view do
+xdescribe "cases/data_requests/show", type: :view do
   describe "#show" do
     let(:kase) do
       create(

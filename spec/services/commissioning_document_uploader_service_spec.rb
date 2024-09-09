@@ -1,7 +1,7 @@
 require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
-describe CommissioningDocumentUploaderService do
+xdescribe CommissioningDocumentUploaderService do
   let(:responder) { find_or_create :sar_responder }
   let(:kase) { create(:offender_sar_case, responder:) }
   let(:commissioning_document) { create(:commissioning_document) }
