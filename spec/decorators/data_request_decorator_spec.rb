@@ -37,27 +37,25 @@ describe DataRequestDecorator, type: :model do
 
   describe "#location" do
     let(:offender_sar_case) { create(:offender_sar_case) }
-    let(:data_request_area) { create(:data_request_area, offender_sar_case:) }
+    let(:data_request_area) { create(:data_request_area, offender_sar_case:, contact: nil, location: "Original Location") }
     let(:data_request) { create(:data_request, offender_sar_case:, data_request_area:) }
+    let(:decorated) { data_request.decorate }
 
-    context "without linked organisation" do
-      let(:decorated) { data_request.decorate }
-
-      it "uses location string" do
-        expect(decorated.location).to eq data_request_area.contact.name
+    context "without linked contact" do
+      it "falls back to data_request_area location string" do
+        expect(decorated.location).to eq "Original Location"
       end
     end
 
-    context "with linked organisation" do
-      let(:contact) { create(:contact) }
-      let(:decorated) { data_request.decorate }
+    context "with linked contact" do
+      let(:contact) { create(:contact, name: "Test Organisation") }
 
       before do
-        data_request_area.update!(contact:)
+        data_request_area.update!(contact: contact)
       end
 
-      it "uses name of organisation" do
-        expect(decorated.location).to eq data_request_area.contact.name
+      it "uses the name of the contact" do
+        expect(decorated.location).to eq "Test Organisation"
       end
     end
   end
