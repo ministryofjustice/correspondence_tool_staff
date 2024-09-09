@@ -300,7 +300,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     let(:template_name) { "prison" }
 
     it "assigns value to recipient emails" do
-      allow_any_instance_of(DataRequest)
+      allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
         .to receive(:recipient_emails).and_return("test@email.com")
       get(:send_email, params:)
       expect(assigns(:recipient_emails)).to eq("test@email.com")
@@ -308,7 +308,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
     context "with no associated email" do
       it "returns no associated email present" do
-        allow_any_instance_of(DataRequest)
+        allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
           .to receive(:recipient_emails).and_return([])
         get(:send_email, params:)
         expect(assigns(:no_email_present)).to eq(true)
