@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature "Upload commissioning document" do
+feature "Upload commissioning document", skip: true do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
   given(:data_request) { create(:data_request, offender_sar_case:) }

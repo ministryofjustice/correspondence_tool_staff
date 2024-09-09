@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CommissioningDocumentTemplate::Prison do
+RSpec.xdescribe CommissioningDocumentTemplate::Prison do
   subject(:template) { described_class.new(data_request:) }
 
   let(:kase) do

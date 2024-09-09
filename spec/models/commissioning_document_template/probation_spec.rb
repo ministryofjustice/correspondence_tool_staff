@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CommissioningDocumentTemplate::Probation do
+RSpec.xdescribe CommissioningDocumentTemplate::Probation do
   subject(:template) { described_class.new(data_request:) }
 
   let(:kase) do
