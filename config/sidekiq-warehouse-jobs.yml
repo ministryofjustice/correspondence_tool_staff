@@ -1,0 +1,5 @@
+---
+:concurrency: 5
+:logfile: ./log/sidekiq-uploads.log
+:queues:
+  - correspondence_tool_staff_warehouse

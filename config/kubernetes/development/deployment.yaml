@@ -112,9 +112,9 @@ spec:
                 name: environment-variables
             - secretRef:
                 name: app-secrets
-        - name: uploads
+        - name: warehouse
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
-          command: ["./config/docker/entrypoint-uploads.sh"]
+          command: ["./config/docker/entrypoint-warehouse-jobs.sh"]
           env:
             - name: DATABASE_URL
               valueFrom:

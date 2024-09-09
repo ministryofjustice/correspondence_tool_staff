@@ -2,6 +2,6 @@
 :concurrency: 5
 :logfile: ./log/sidekiq-background-jobs.log
 :queues:
-  - correspondence_tool_staff_warehouse
   - correspondence_tool_staff_reports
   - correspondence_tool_staff_performance_report
+  - correspondence_tool_staff_pdf_maker
