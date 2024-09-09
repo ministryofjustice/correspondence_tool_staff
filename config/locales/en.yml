@@ -1619,11 +1619,6 @@ en:
       onwards: "onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
-        log_pages: {
-          zero: pages,
-          one: page,
-          other: pages
-        }
         success: Data request updated
         unprocessed: No changes made
       upto: "Up to"
