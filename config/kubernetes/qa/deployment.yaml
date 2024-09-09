@@ -77,40 +77,6 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
-        - name: quickjobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
-          command: ["./config/docker/entrypoint-quick-jobs.sh"]
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-rds-output
-                  key: url
-            - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-rds-output
-                  key: database_password
-            - name: REDIS_URL
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-elasticache-redis-output
-                  key: url
-            - name: REDIS_AUTH_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-elasticache-redis-output
-                  key: auth_token
-            - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-s3-output
-                  key: bucket_name
-          envFrom:
-            - configMapRef:
-                name: environment-variables
-            - secretRef:
-                name: app-secrets
       initContainers:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
