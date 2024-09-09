@@ -30,9 +30,7 @@ describe DataRequestAreaDecorator, type: :model do
     let(:decorated) { data_request_area.decorate }
 
     it "returns the count of data_requests" do
-      create(:data_request, data_request_area:)
-      create(:data_request, data_request_area:)
-      create(:data_request, data_request_area:)
+      create_list(:data_request, 3, data_request_area:)
 
       expect(decorated.num_of_requests).to eq(3)
     end
