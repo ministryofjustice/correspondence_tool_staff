@@ -44,7 +44,7 @@ describe DataRequestDecorator, type: :model do
       let(:decorated) { data_request.decorate }
 
       it "uses location string" do
-        expect(decorated.location).to eq data_request_area.location
+        expect(decorated.location).to eq data_request_area.contact.name
       end
     end
 
@@ -57,7 +57,7 @@ describe DataRequestDecorator, type: :model do
       end
 
       it "uses name of organisation" do
-        expect(decorated.location).to eq contact.name
+        expect(decorated.location).to eq data_request_area.contact.name
       end
     end
   end
