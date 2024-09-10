@@ -118,12 +118,12 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
             webapp="${{ vars.ECR_URL }}:$SHA" \
-            quickjobs="${{ vars.ECR_URL }}:$SHA" \
-            uploads="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
             jobs="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            warehouse="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
@@ -220,12 +220,12 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
             webapp="${{ vars.ECR_URL }}:$SHA" \
-            quickjobs="${{ vars.ECR_URL }}:$SHA" \
-            uploads="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
             jobs="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            warehouse="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
@@ -322,12 +322,12 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
             webapp="${{ vars.ECR_URL }}:$SHA" \
-            quickjobs="${{ vars.ECR_URL }}:$SHA" \
-            uploads="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
             jobs="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            warehouse="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
@@ -425,13 +425,12 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query \
             webapp="${{ vars.ECR_URL }}:$SHA" \
-            quickjobs="${{ vars.ECR_URL }}:$SHA" \
-            uploads="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} deployment/track-a-query-jobs \
             jobs="${{ vars.ECR_URL }}:$SHA" \
-            anonjobs="${{ vars.ECR_URL }}:$SHA" \
+            quickjobs="${{ vars.ECR_URL }}:$SHA" \
+            warehouse="${{ vars.ECR_URL }}:$SHA" \
             pending-migrations="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
