@@ -23,6 +23,8 @@ class DataRequestArea < ApplicationRecord
   validates :offender_sar_case, presence: true
   validates :user, presence: true
 
+  validate :validate_location
+
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
@@ -46,6 +48,17 @@ class DataRequestArea < ApplicationRecord
   end
 
 private
+
+  def validate_location
+    if contact_id.present?
+      nil
+    elsif location.blank?
+      errors.add(
+        :location,
+        I18n.t("activerecord.errors.models.data_request_area.attributes.location.blank"),
+      )
+    end
+  end
 
   def clean_attributes
     self.location = location&.strip&.upcase_first

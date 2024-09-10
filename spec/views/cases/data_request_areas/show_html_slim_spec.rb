@@ -39,26 +39,8 @@ describe "cases/data_request_areas/show", type: :view do
       allow(policy).to receive(:can_record_data_request?).and_return can_record_data_request
     end
 
-    context "when no location has been chosen" do
-      let(:data_request_area) { create :data_request_area, location: nil, offender_sar_case: kase }
-
-      before do
-        assign(:data_request, data_request)
-        assign(:data_request_area, data_request_area.decorate)
-        assign(:case, data_request_area.kase)
-        assign(:no_location_present, true)
-
-        render
-        data_request_area_show_page.load(rendered)
-      end
-
-      it "shows warning message" do
-        expect(page.page_banner.text).to include "Location must be selected before commissioning email can be sent."
-      end
-    end
-
     context "when data request area has a data request" do
-      let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", location: "HMP Leicester", offender_sar_case: kase }
+      let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: kase }
 
       before do
         assign(:data_request, data_request)
@@ -73,6 +55,7 @@ describe "cases/data_request_areas/show", type: :view do
         row = page.data_requests.rows[0]
 
         expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.location.text).to eq "HMP halifax"
         expect(row.request_type.text).to eq "All prison records 15 Aug 2018 onwards"
         expect(row.date_requested.text).to eq "21 Oct 2022"
         expect(row.pages.text).to eq "32"
@@ -142,6 +125,7 @@ describe "cases/data_request_areas/show", type: :view do
       it "has required content" do
         expect(page.page_heading.heading.text).to eq "View Prison data request area"
         expect(page.text).to include("#{kase.number} - Robert Badson")
+        expect(page.location.text).to eq "HMP halifax"
         expect(page.data_requests.rows.first.request_type.text).to eq("NOMIS other:My details of request")
         expect(page.data_requests.rows.first.date_requested.text).to eq "21 Oct 2022"
         expect(page.data_requests.rows.first.pages.text).to eq "32"

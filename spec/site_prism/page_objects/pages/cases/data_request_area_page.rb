@@ -11,6 +11,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
         section :form, "#new_data_request_area" do
+          element :location, 'input[name*="[location]"]'
           element :data_request_area_type, :xpath,
                   '//fieldset[contains(.,"What data is needed?")]'
 

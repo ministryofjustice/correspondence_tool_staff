@@ -5,7 +5,7 @@ class FakeError < ArgumentError; end
 describe DataRequestAreaCreateService do
   let(:user) { create :user }
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area_attributes) { { data_request_area_type: "prison" } }
+  let(:data_request_area_attributes) { { data_request_area_type: "prison", location: "HMP Halifax" } }
   let(:service) do
     described_class.new(
       kase: offender_sar_case,
@@ -42,6 +42,7 @@ describe DataRequestAreaCreateService do
         service.call
         expect(service.data_request_area).to be_persisted
         expect(service.data_request_area.data_request_area_type).to eq "prison"
+        expect(service.data_request_area.location).to eq "HMP Halifax"
       end
     end
 

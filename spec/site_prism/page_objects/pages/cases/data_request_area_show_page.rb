@@ -12,7 +12,7 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-        element :location, 'input[name*="[location]"]'
+        element :location, ".data_request_area_location"
 
         section :data_requests,
                 PageObjects::Sections::Cases::DataRequestsSection, ".data-requests"

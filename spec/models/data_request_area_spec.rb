@@ -34,13 +34,19 @@ RSpec.describe DataRequestArea, type: :model do
   end
 
   describe "validation" do
-    subject(:data_request_area) { build(:data_request_area) }
+    subject(:data_request_area) { build(:data_request_area, location: "HMP") }
 
     it { is_expected.to be_valid }
 
     it "requires data request area type" do
       data_request_area.data_request_area_type = nil
       expect(data_request_area).not_to be_valid
+    end
+
+    it "requires contact when there is no location" do
+      data_request_area.location = nil
+      data_request_area.contact_id = nil
+      expect(data_request_area.valid?).to be false
     end
 
     it "requires a creating user" do
@@ -78,6 +84,22 @@ RSpec.describe DataRequestArea, type: :model do
         data_request_area = build_stubbed(:data_request_area, data_request_area_type: nil)
         expect(data_request_area).not_to be_valid
         expect(data_request_area.errors[:data_request_area_type]).to eq ["Select what data you are requesting"]
+      end
+    end
+  end
+
+  describe "#location" do
+    context "with valid values" do
+      it "does not error" do
+        expect(build_stubbed(:data_request_area, location: "HMP")).to be_valid
+      end
+    end
+
+    context "when nil" do
+      it "is invalid and returns an error message" do
+        data_request_area = build_stubbed(:data_request_area, contact: nil, location: nil)
+        expect(data_request_area).not_to be_valid
+        expect(data_request_area.errors[:location]).to eq ["cannot be blank"]
       end
     end
   end

@@ -27,7 +27,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     context "with valid params" do
       let(:params) do
         {
-          data_request_area: { data_request_area_type: "prison" },
+          data_request_area: { data_request_area_type: "prison", location: "HMP" },
           case_id: offender_sar_case.id,
         }
       end
@@ -41,7 +41,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     context "with invalid params" do
       let(:invalid_params) do
         {
-          data_request_area: { data_request_area_type: "" },
+          data_request_area: { data_request_area_type: "", contact: nil },
           case_id: offender_sar_case.id,
         }
       end
@@ -82,31 +82,6 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       it "allows access" do
         get(:show, params:)
         expect(response).to have_http_status(:ok)
-      end
-    end
-  end
-
-  describe "#update" do
-    let(:data_request_area) { create :data_request_area, offender_sar_case: }
-
-    context "with valid params" do
-      let(:params) do
-        {
-          data_request_area: {
-            location: "HMP Brixton",
-          },
-          case_id: data_request_area.case_id,
-          id: data_request_area.id,
-        }
-      end
-
-      before do
-        patch :update, params:
-      end
-
-      it "updates the DataRequestArea location" do
-        expect(response).to redirect_to case_data_request_area_path(offender_sar_case, data_request_area)
-        expect(controller).to set_flash[:notice]
       end
     end
   end
