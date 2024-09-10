@@ -21,7 +21,7 @@ spec:
       containers:
         - name: webapp
           imagePullPolicy: Always
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
@@ -80,7 +80,7 @@ spec:
             periodSeconds: 60
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           command:
             - /bin/sh
             - -c

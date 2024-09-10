@@ -20,7 +20,7 @@ spec:
       serviceAccountName: track-a-query
       containers:
         - name: webapp
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
@@ -79,7 +79,7 @@ spec:
             periodSeconds: 60
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
           command:
             - /bin/sh
             - -c

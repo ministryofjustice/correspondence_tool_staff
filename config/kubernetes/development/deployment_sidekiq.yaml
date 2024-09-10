@@ -20,7 +20,7 @@ spec:
       serviceAccountName: track-a-query
       containers:
         - name: jobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           env:
             - name: MALLOC_ARENA_MAX
@@ -78,7 +78,7 @@ spec:
             successThreshold: 1
             failureThreshold: 3
         - name: quickjobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           command: ["./config/docker/entrypoint-quick-jobs.sh"]
           env:
             - name: DATABASE_URL
@@ -112,7 +112,7 @@ spec:
             - secretRef:
                 name: app-secrets
         - name: warehouse
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           command: ["./config/docker/entrypoint-warehouse-jobs.sh"]
           env:
             - name: MALLOC_ARENA_MAX
@@ -149,7 +149,7 @@ spec:
                 name: app-secrets
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
           command:
             - /bin/sh
             - -c
