@@ -11,10 +11,10 @@ module CaseFilter
     def available_choices
       caseworkers = { "0" => I18n.t("filters.filter_caseworker.not_assigned") }
       caseworker_ids = Case::SAR::OffenderComplaint
-                        .opened
-                        .accepted_responding
-                        .pluck("assignments.user_id")
-                        .uniq
+                         .opened
+                         .accepted_responding
+                         .pluck("assignments.user_id")
+                         .uniq
       users_scope = User.where(id: caseworker_ids)
       users_scope.each do |user|
         caseworkers[user.id.to_s] = user.full_name
@@ -46,10 +46,10 @@ module CaseFilter
                       .opened
                       .where(
                         id: Case::SAR::OffenderComplaint
-                            .opened.accepted_responding.where(
-                              assignments: { user_id: @query.filter_caseworker },
-                            )
-                            .select(:id),
+                              .opened.accepted_responding.where(
+                                assignments: { user_id: @query.filter_caseworker },
+                              )
+                              .select(:id),
                       )
         filters.reduce(Case::Base.none) do |result, filter|
           result.or(filter)

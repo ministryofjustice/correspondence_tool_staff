@@ -99,6 +99,9 @@ FactoryBot.define do
       create :case_transition_waiting_for_data, case: kase
       create :case_transition_ready_for_vetting, case: kase
       create :case_transition_vetting_in_progress, case: kase
+      kase.assignments.create!(team: kase.responding_team, role: "responding")
+      kase.responder_assignment.update!(user: kase.responding_team.users.first)
+      kase.responder_assignment.accepted!
       kase.reload
     end
   end
