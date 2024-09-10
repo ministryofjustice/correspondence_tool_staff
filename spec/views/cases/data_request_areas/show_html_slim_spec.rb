@@ -54,7 +54,7 @@ describe "cases/data_request_areas/show", type: :view do
       it "has required content" do
         row = page.data_requests.rows[0]
 
-        expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.page_heading.heading.text).to eq "View prison data request area"
         expect(page.location.text).to eq "HMP halifax"
         expect(row.request_type.text).to eq "All prison records 15 Aug 2018 onwards"
         expect(row.date_requested.text).to eq "21 Oct 2022"
@@ -84,7 +84,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       it "has required content" do
-        expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.page_heading.heading.text).to eq "View prison data request area"
         expect(page.data.number.text).to eq "#{kase.number} - Robert Badson"
         expect(page.data.location.text).to eq "HMP Leicester"
         expect(page.data.request_type.text).to eq "All prison records"
@@ -123,7 +123,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       it "has required content" do
-        expect(page.page_heading.heading.text).to eq "View Prison data request area"
+        expect(page.page_heading.heading.text).to eq "View prison data request area"
         expect(page.text).to include("#{kase.number} - Robert Badson")
         expect(page.location.text).to eq "HMP halifax"
         expect(page.data_requests.rows.first.request_type.text).to eq("NOMIS other:My details of request")
