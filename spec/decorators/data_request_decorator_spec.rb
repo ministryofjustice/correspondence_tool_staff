@@ -51,7 +51,7 @@ describe DataRequestDecorator, type: :model do
       let(:contact) { create(:contact, name: "Test Organisation") }
 
       before do
-        data_request_area.update!(contact: contact)
+        data_request_area.update!(contact:)
       end
 
       it "uses the name of the contact" do
