@@ -1,0 +1,39 @@
+- content_for :page_title do
+  = t('page_title.data_request_area_show_page')
+
+- content_for :heading
+  = t('.heading', data_request_area_type: @data_request_area.data_request_area_type.humanize)
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+- if @no_location_present
+  <br/>
+  <br/>
+  <div class="moj-banner" role="region" aria-label="information">
+    <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+      <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"></path>
+    </svg>
+    <div class="moj-banner__message">
+      =t('cases.data_request_areas.location.no_location')
+    </div>
+  </div>
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+- allow_editing = @case.editable?
+
+div class="case"
+  h2.bold-medium.data-request-area
+    = "#{@case.number} - #{@case.subject_full_name}"
+
+  br
+
+    section.case-info
+      = render partial: 'cases/data_request_areas/location', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }

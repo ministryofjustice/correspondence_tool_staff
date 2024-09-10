@@ -23,8 +23,8 @@ FactoryBot.define do
   factory :data_request do
     association :offender_sar_case
     association :user
+    association :data_request_area
 
-    location        { Faker::Company.name }
     request_type    { "all_prison_records" }
     date_requested  { Date.current }
 

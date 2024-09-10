@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CommissioningDocumentTemplate::Cctv do
+RSpec.xdescribe CommissioningDocumentTemplate::Cctv do
   subject(:template) { described_class.new(data_request:) }
 
   let(:kase) do

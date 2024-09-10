@@ -28,7 +28,6 @@ RSpec.describe DataRequest, type: :model do
         described_class.new(
           offender_sar_case: build(:offender_sar_case),
           user: build_stubbed(:user),
-          location: "X" * 500, # Max length
           request_type: "all_prison_records",
           request_type_note: "",
           date_requested: Date.current,
@@ -63,7 +62,51 @@ RSpec.describe DataRequest, type: :model do
 
       it "defaults to in progress" do
         expect(data_request.completed).to eq false
-        expect(data_request.status).to eq "In progress"
+        expect(data_request.status).to eq :in_progress
+      end
+    end
+
+    describe "#data_request_types" do
+      let(:data_request) { create(:data_request, data_request_area:) }
+
+      context "when data_request_area_type is 'branston'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "branston") }
+
+        it "returns the BRANSTON_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::BRANSTON_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'branston_registry'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "branston_registry") }
+
+        it "returns the BRANSTON_REGISTRY_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::BRANSTON_REGISTRY_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'mappa'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "mappa") }
+
+        it "returns the MAPPA_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::MAPPA_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'prison'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "prison") }
+
+        it "returns the PRISON_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::PRISON_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'probation'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "probation") }
+
+        it "returns the PROBATION_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::PROBATION_DATA_REQUEST_TYPES)
+        end
       end
     end
 
@@ -71,12 +114,6 @@ RSpec.describe DataRequest, type: :model do
       subject(:data_request) { build :data_request }
 
       it { is_expected.to be_valid }
-
-      it "requires contact when there is no location" do
-        data_request.location = nil
-        data_request.contact_id = nil
-        expect(data_request.valid?).to be false
-      end
 
       it "requires a request type" do
         invalid_values = ["", " ", nil]
@@ -227,20 +264,15 @@ RSpec.describe DataRequest, type: :model do
     subject(:data_request) { build :data_request }
 
     it "ensures string attributes do not have leading/trailing spaces" do
-      data_request.location = "  The location"
+      data_request.request_type_note = "  a note"
       data_request.send(:clean_attributes)
-      expect(data_request.location).to eq "The location"
+      expect(data_request.request_type_note).to eq "A note"
     end
 
     it "ensures string attributes have the first letter capitalised" do
-      data_request.location = "leicester"
+      data_request.request_type_note = "a note"
       data_request.send(:clean_attributes)
-      expect(data_request.location).to eq "Leicester"
-    end
-
-    it "is executed before validating" do
-      data_request.location = "             " # Meets min string length req
-      expect(data_request.valid?).to be false
+      expect(data_request.request_type_note).to eq "A note"
     end
   end
 
@@ -249,7 +281,7 @@ RSpec.describe DataRequest, type: :model do
       let!(:data_request) { build_stubbed(:data_request) }
 
       it "returns completed" do
-        expect(data_request.status).to eq "In progress"
+        expect(data_request.status).to eq :in_progress
       end
     end
 
@@ -257,7 +289,7 @@ RSpec.describe DataRequest, type: :model do
       let!(:data_request) { build_stubbed(:data_request, :completed) }
 
       it "returns completed" do
-        expect(data_request.status).to eq "Completed"
+        expect(data_request.status).to eq :completed
       end
     end
   end

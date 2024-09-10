@@ -3,27 +3,31 @@ module Cases
     NUM_NEW_DATA_REQUESTS = 3
 
     before_action :set_case
-    before_action :set_data_request, only: %i[show edit update destroy send_email]
-    before_action :set_commissioning_document, only: %i[show send_email]
+    before_action :set_data_request_area
+    before_action :set_data_request, only: %i[show edit update destroy]
     before_action :authorize_action
     after_action  :verify_authorized
 
     def new
-      @data_request = DataRequest.new
+      @data_request = DataRequest.new(
+        data_request_area: @data_request_area,
+      )
     end
 
     def create
       service = DataRequestCreateService.new(
         kase: @case,
         user: current_user,
+        data_request_area: @data_request_area,
         data_request_params: create_params,
       )
+
       service.call
 
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @case = service.case
         @data_request = service.data_request
@@ -48,10 +52,10 @@ module Cases
       case service.result
       when :ok
         flash[:notice] = t(".success")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :unprocessed
         flash[:notice] = t(".unprocessed")
-        redirect_to case_path(@case)
+        redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
         @data_request = service.data_request
         render :edit
@@ -98,11 +102,11 @@ module Cases
     end
 
     def set_data_request
-      @data_request = DataRequest.find(params[:id]).decorate
+      @data_request = @data_request_area.data_requests.find(params[:id]).decorate
     end
 
-    def set_commissioning_document
-      @commissioning_document = @data_request.commissioning_document&.decorate
+    def set_data_request_area
+      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id]).decorate
     end
 
     def email_params
@@ -111,8 +115,6 @@ module Cases
 
     def create_params
       params.require(:data_request).permit(
-        :location,
-        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
@@ -124,8 +126,6 @@ module Cases
 
     def update_params
       params.require(:data_request).permit(
-        :location,
-        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,

@@ -1,7 +1,7 @@
 module Cases
   class CommissioningDocumentsController < ApplicationController
     before_action :set_case
-    before_action :set_data_request
+    before_action :set_data_request_area
     before_action :set_commissioning_document
 
     def create
@@ -10,7 +10,7 @@ module Cases
       if @commissioning_document.valid?
         if FeatureSet.email_commissioning_document.enabled?
           @commissioning_document.save!
-          redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 request document selected"
+          redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request), notice: "Day 1 request document selected"
         else
           send_data(@commissioning_document.document,
                     filename: @commissioning_document.filename,
@@ -27,7 +27,7 @@ module Cases
       if @commissioning_document.valid?
         @commissioning_document.save!
         @commissioning_document.remove_attachment
-        redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 request document updated"
+        redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request), notice: "Day 1 request document updated"
       else
         render :edit
       end
@@ -58,10 +58,10 @@ module Cases
       case service.result
       when :ok
         flash[:notice] = t("notices.commissioning_document_uploaded")
-        redirect_to case_data_request_path(@case, @data_request)
+        redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request)
       when :blank
         flash[:alert] = t("notices.no_commissioning_document_uploaded")
-        redirect_to case_data_request_path(@case, @data_request)
+        redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request)
       else
         @s3_direct_post = S3Uploader.for(@case, "commissioning_document")
         flash.now[:alert] = service.error_message
@@ -71,7 +71,7 @@ module Cases
 
     def send_email
       service = CommissioningDocumentEmailService.new(
-        data_request: @data_request,
+        data_request_area: @data_request_area,
         current_user:,
         commissioning_document: @commissioning_document,
       )
@@ -86,12 +86,12 @@ module Cases
       @case = Case::Base.find(params[:case_id])
     end
 
-    def set_data_request
-      @data_request = DataRequest.find(params[:data_request_id])
+    def set_data_request_area
+      @data_request_area = @case.data_request_areas.find(params[:id])
     end
 
     def set_commissioning_document
-      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request: @data_request)
+      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area)
     end
 
     def create_params

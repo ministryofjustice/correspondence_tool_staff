@@ -369,6 +369,10 @@ en:
               not_empty: should be blank if the request is not complete
             request_type:
               blank: cannot be blank
+        data_request_area:
+          attributes:
+            data_request_area_type:
+              blank: Select what data you are requesting
             location:
               blank: cannot be blank
         linked_case:
@@ -536,6 +540,7 @@ en:
     next_page_assign: Create case
     request_amends: Request amends
     save_changes: Save changes
+    save_location: Save location
     search: Search
     edit: Edit
     delete: Delete
@@ -557,6 +562,8 @@ en:
         date_from: Date from
         date_to: Date to
         date_requested: Date requested
+      data_request_area:
+        data_request_area_type: What data is needed?
       commissioning_document:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
@@ -727,13 +734,20 @@ en:
           probation_records: Probation records
           probation_archive: Probation archive
           other: Other
-          cross_borders: Cross Borders
+          cross_borders: Cross borders
           cat_a: CAT A
-          ndelius: Ndelius contact lists
+          ndelius: nDelius contact lists
           dps: DPS
           cctv: CCTV
           bwcf: BWCF
-
+      data_request_area:
+        location: Location
+        data_request_area_type:
+          prison: Prison
+          probation: Probation
+          branston: Branston
+          branston_registry: Branston Registry
+          mappa: MAPPA
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
@@ -1176,6 +1190,7 @@ en:
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
       record_reason_for_lateness: Record reason for lateness
+      delete_data_request_area: Are you sure you want to delete this data request?
     case/offender_sar_complaint:
       assign: Assign to a responder
       add_approval_flags_for_ico: Add approval
@@ -1600,8 +1615,6 @@ en:
         heading: View data request
         link: View
         edit_link: Edit data request
-        emails_header: Commissioning emails
-        emails_history_header: Email history
       edit:
         heading: Edit data request
         link: Edit
@@ -1627,6 +1640,24 @@ en:
       upto: "Up to"
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
+    data_request_areas:
+      new:
+        heading: Record data request
+      show:
+        heading: "View %{data_request_area_type} data request area"
+        link: View
+        emails_header: Commissioning emails
+        emails_history_header: Email history
+      create:
+        success: Data request area successfully recorded
+      index:
+        heading: Data requested
+        none: No data requests recorded
+      update:
+        success: Data request area updated
+        unprocessed: No changes made
+      location:
+        no_location: Location must be selected before commissioning email can be sent.
     commissioning_documents:
       new:
         heading: Select Day 1 request document

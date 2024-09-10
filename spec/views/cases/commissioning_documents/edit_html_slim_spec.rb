@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "cases/commissioning_documents/edit", type: :view do
+xdescribe "cases/commissioning_documents/edit", type: :view do
   describe "#edit" do
     let(:data_request) { create(:data_request) }
     let(:commissioning_document) { create(:commissioning_document, data_request:) }

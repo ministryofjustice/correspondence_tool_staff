@@ -7,14 +7,14 @@ describe DataRequestUpdateService do
   let(:data_request) do
     create(
       :data_request,
-      location: "HMP Leicester",
+      data_request_area:,
       request_type: "all_prison_records",
     )
   end
   let(:offender_sar_case) { create :offender_sar_case }
+  let(:data_request_area) { create :data_request_area, location: "HMP Brixton" }
   let(:params) do
     {
-      location: "HMP Brixton",
       request_type: "all_prison_records",
       request_type_note: "Lorem ipsum",
       date_from_dd: "15",
@@ -84,6 +84,7 @@ describe DataRequestUpdateService do
   describe "#log_message" do
     it "creates a human readable case history message" do
       service.call
+
       expect(CaseTransition.last.message).to eq "HMP Brixton, All prison records: pages changed from 0 to 21"
     end
 
