@@ -29,6 +29,8 @@ module Cases
       end
     end
 
+    def show; end
+
     def destroy
       if @data_request_area.data_requests.exists?
         redirect_to case_path(@case), notice: "Data request area cannot be destroyed because it has associated data requests."
