@@ -1,18 +1,16 @@
 require "rails_helper"
 
-RSpec.xdescribe CommissioningDocumentTemplate::Probation do
-  subject(:template) { described_class.new(data_request:) }
+RSpec.xdescribe CommissioningDocumentTemplate::CatA do
+  subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
                   number: "20062007",
                   subject_full_name: "Robert Badson",
                   date_of_birth: "2000-03-11",
-                  prison_number: "AB12345",
-                  other_subject_ids: "CD98765",
-                  case_reference_number: "EF45678")
+                  prison_number: "AB12345")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase, location: "HMP Brixton") }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, location: "HMP Brixton") }
 
   describe "#path" do
     it "matches to a file" do
@@ -31,13 +29,10 @@ RSpec.xdescribe CommissioningDocumentTemplate::Probation do
         prison_numbers: "AB12345",
         date_range: "",
         deadline: "26/10/2022",
-        pnc: "CD98765",
-        crn: "EF45678",
-        data_required: "All paper and electronic information",
       }
     end
 
-    it "populates data from the data_request and case" do
+    it "populates data from the data_request_area and case" do
       Timecop.freeze(Date.new(2022, 10, 21)) do
         expect(template.context).to eq expected_context
       end
