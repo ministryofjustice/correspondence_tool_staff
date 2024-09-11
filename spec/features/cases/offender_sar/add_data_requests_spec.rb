@@ -4,6 +4,7 @@ feature "Data Requests for an Offender SAR" do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
   given(:data_request_area) { create(:data_request_area, offender_sar_case:).decorate }
+  given!(:contact) { create(:contact) }
 
   background do
     login_as manager
@@ -15,6 +16,7 @@ feature "Data Requests for an Offender SAR" do
     expect(data_request_page).to be_displayed
 
     request_values = {
+      location: contact.name,
       request_type: "all_prison_records",
       request_type_note: "Lorem ipsum",
       date_requested: Date.new(2020, 8, 15),

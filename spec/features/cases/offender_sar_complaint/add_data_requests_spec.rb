@@ -24,6 +24,9 @@ feature "Data Requests for an Offender SAR complaint" do
 
     click_on "Record data request"
     expect(data_request_area_show_page).to be_displayed
+
+    click_on "Find an address"
+    click_on "Use #{contact.name}"
     data_request_area_page.form.choose_area_request_type("prison")
     click_on "Continue"
 
@@ -72,11 +75,13 @@ feature "Data Requests for an Offender SAR complaint" do
     expect(data_request_area_show_page.data_requests.find(".total-value").text).to have_text "0"
   end
 
-  scenario "partial data entry fails" do
+  scenario "partial data entry fails", js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
     click_on "Requires data"
 
     click_on "Record data request"
+    click_on "Find an address"
+    click_on "Use #{contact.name}"
     data_request_area_page.form.choose_area_request_type("prison")
     click_on "Continue"
 
@@ -91,11 +96,13 @@ feature "Data Requests for an Offender SAR complaint" do
     expect(data_request_page).to have_text "Data requests request type cannot be blank"
   end
 
-  scenario "no data entry fails" do
+  scenario "no data entry fails", js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
     click_on "Requires data"
-    click_on "Record data request"
 
+    click_on "Record data request"
+    click_on "Find an address"
+    click_on "Use #{contact.name}"
     data_request_area_page.form.choose_area_request_type("prison")
     click_on "Continue"
     expect(data_request_area_show_page).to be_displayed
