@@ -1,5 +1,7 @@
 def record_a_data_request_of_nomis_other(request_values)
   click_on "Record data request"
+  click_on "Find an address"
+  click_on "Use #{request_values[:location]}"
   data_request_area_page.form.choose_area_request_type("branston")
   click_on "Continue"
 
