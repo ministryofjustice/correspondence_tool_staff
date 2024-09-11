@@ -724,6 +724,7 @@ en:
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
+          nomis_contact_lists: NOMIS contact lists
           nomis_other: NOMIS other
           cctv_and_bwcf: CCTV & BWCF
           court: Court
