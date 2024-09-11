@@ -82,7 +82,7 @@ CREATE TYPE public.request_types AS ENUM (
     'cross_borders',
     'cat_a',
     'ndelius',
-    'dps',
+    'dps'
 );
 
 
