@@ -55,7 +55,7 @@ private
     elsif location.blank?
       errors.add(
         :location,
-        I18n.t("activerecord.errors.models.data_request_area.attributes.location.blank"),
+        :blank,
       )
     end
   end
