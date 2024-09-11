@@ -85,6 +85,7 @@ feature "Data Requests for an Offender SAR" do
 
   scenario "record data request with data type of NOMIS other and notes", js: true do
     request_values = {
+      location: contact.name,
       request_type: "all_prison_records",
       request_type_note: "Testing nomis-other note",
       date_requested: Date.new(2020, 8, 15),
