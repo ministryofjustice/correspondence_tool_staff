@@ -41,34 +41,6 @@ module Cases
                 type: @commissioning_document.mime_type)
     end
 
-    def replace
-      @s3_direct_post = S3Uploader.for(@case, "commissioning_document")
-    end
-
-    def upload
-      @params = params
-      service = CommissioningDocumentUploaderService.new(
-        kase: @case,
-        commissioning_document: @commissioning_document,
-        current_user:,
-        uploaded_file: create_params[:upload],
-      )
-      service.upload!
-
-      case service.result
-      when :ok
-        flash[:notice] = t("notices.commissioning_document_uploaded")
-        redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request)
-      when :blank
-        flash[:alert] = t("notices.no_commissioning_document_uploaded")
-        redirect_to case_data_request_area_data_request_path(@case, @data_request_area, @data_request)
-      else
-        @s3_direct_post = S3Uploader.for(@case, "commissioning_document")
-        flash.now[:alert] = service.error_message
-        render :replace
-      end
-    end
-
     def send_email
       service = CommissioningDocumentEmailService.new(
         data_request_area: @data_request_area,
@@ -87,7 +59,7 @@ module Cases
     end
 
     def set_data_request_area
-      @data_request_area = @case.data_request_areas.find(params[:id])
+      @data_request_area = @case.data_request_areas.find(params[:data_request_area_id])
     end
 
     def set_commissioning_document

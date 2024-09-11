@@ -47,6 +47,10 @@ class DataRequestArea < ApplicationRecord
     data_requests.map(&:status).all?(:completed) ? :completed : :in_progress
   end
 
+  def recipient_emails
+    contact&.data_request_emails&.split(" ") || []
+  end
+
 private
 
   def validate_location

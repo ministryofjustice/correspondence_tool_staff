@@ -101,10 +101,6 @@ class DataRequest < ApplicationRecord
     date_from.blank? && date_to.blank?
   end
 
-  def recipient_emails
-    contact&.data_request_emails&.split(" ") || []
-  end
-
   def data_request_types
     case data_request_area.data_request_area_type
     when "branston"

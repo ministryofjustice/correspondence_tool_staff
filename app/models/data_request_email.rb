@@ -12,9 +12,9 @@
 #  updated_at      :datetime         not null
 #
 class DataRequestEmail < ApplicationRecord
-  belongs_to :data_request
+  belongs_to :data_request_area
 
-  validates :data_request, presence: true
+  validates :data_request_area, presence: true
   validates :email_address, presence: true
   validates :status, presence: true
 

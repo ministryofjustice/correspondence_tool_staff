@@ -12,15 +12,16 @@
 #
 class CommissioningDocument < ApplicationRecord
   TEMPLATE_TYPES = {
-    cat_a: CommissioningDocumentTemplate::CatA,
-    cctv: CommissioningDocumentTemplate::Cctv,
-    cross_border: CommissioningDocumentTemplate::CrossBorder,
+    # cat_a: CommissioningDocumentTemplate::CatA,
+    # cctv: CommissioningDocumentTemplate::Cctv,
+    # cross_border: CommissioningDocumentTemplate::CrossBorder,
     mappa: CommissioningDocumentTemplate::Mappa,
-    pdp: CommissioningDocumentTemplate::Pdp,
-    prison: CommissioningDocumentTemplate::Prison,
-    probation: CommissioningDocumentTemplate::Probation,
-    security: CommissioningDocumentTemplate::Security,
-    telephone: CommissioningDocumentTemplate::Telephone,
+    standard: CommissioningDocumentTemplate::Standard,
+    # pdp: CommissioningDocumentTemplate::Pdp,
+    # prison: CommissioningDocumentTemplate::Prison,
+    # probation: CommissioningDocumentTemplate::Probation,
+    # security: CommissioningDocumentTemplate::Security,
+    # telephone: CommissioningDocumentTemplate::Telephone,
   }.freeze
 
   enum template_name: {
@@ -33,12 +34,13 @@ class CommissioningDocument < ApplicationRecord
     probation: "probation",
     security: "security",
     telephone: "telephone",
+    standard: "standard",
   }
 
   belongs_to :data_request_area
   belongs_to :attachment, class_name: "CaseAttachment"
 
-  validates :data_request, presence: true
+  validates :data_request_area, presence: true
   validates :template_name, presence: true
 
   delegate :deadline, to: :template
@@ -78,7 +80,7 @@ class CommissioningDocument < ApplicationRecord
 private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request:)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:)
   end
 
   def timestamp
@@ -90,6 +92,6 @@ private
   end
 
   def case_number
-    data_request.kase.number
+    data_request_area.kase.number
   end
 end
