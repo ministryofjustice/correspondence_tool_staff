@@ -41,7 +41,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     context "with invalid params" do
       let(:invalid_params) do
         {
-          data_request_area: { data_request_area_type: "", contact: nil },
+          data_request_area: { data_request_area_type: "", location: nil },
           case_id: offender_sar_case.id,
         }
       end
