@@ -27,9 +27,6 @@ private
 
   def send_emails
     emails = data_request.recipient_emails
-    if data_request.email_branston_archives
-      emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
-    end
 
     emails.map do |email|
       ActionNotificationsMailer.commissioning_email(

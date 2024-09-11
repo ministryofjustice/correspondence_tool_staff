@@ -401,8 +401,6 @@ en:
 
   activemodel:
     attributes:
-      probation_commissioning_document_email:
-        email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
       contact_type:
         contact_type_id: Select the contact type of the new address
       retention_schedule_form:
@@ -418,10 +416,6 @@ en:
             state:
               inclusion: is not a valid status
               forbidden: cannot be changed once case is anonymised
-        probation_commissioning_document_email:
-          attributes:
-            email_branston_archives:
-              blank: ""
         contact_type:
           attributes:
             contact_type_id:

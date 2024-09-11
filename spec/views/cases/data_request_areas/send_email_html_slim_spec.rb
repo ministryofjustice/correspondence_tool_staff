@@ -45,24 +45,6 @@ RSpec.describe "cases/data_request_area/send_email", type: :view do
       end
     end
 
-    context "with data request contact with only the branston probation records email given" do
-      before do
-        assign(:data_request, data_request)
-        assign(:case, data_request.kase)
-        assign(:commissioning_document, commissioning_document)
-        assign(:recipient_emails, [CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL])
-        assign(:no_email_present, true)
-
-        render
-        data_request_email_confirmation_page.load(rendered)
-      end
-
-      it "has required content" do
-        expect(page.page_banner.text).to include "The selected location does not have an email address. Please update or select another."
-        expect(page.button_send_email.disabled?).to eq true
-      end
-    end
-
     context "with data request with contact which has email address" do
       before do
         assign(:data_request, data_request)
