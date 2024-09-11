@@ -1,6 +1,6 @@
 require "rails_helper"
 
-xdescribe "cases/data_requests/send_email", type: :view do
+RSpec.describe "cases/data_request_area/send_email", type: :view do
   describe "#send_email" do
     let(:kase) do
       create(

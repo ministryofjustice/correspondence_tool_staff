@@ -13,7 +13,7 @@
 #
 require "rails_helper"
 
-RSpec.xdescribe DataRequestEmail, type: :model do
+RSpec.describe DataRequestEmail, type: :model do
   let(:job) { class_double(EmailStatusJob) }
 
   describe ".recent" do

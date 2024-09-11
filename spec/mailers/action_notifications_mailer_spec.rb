@@ -407,7 +407,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
   end
 
-  xdescribe "commissioning_email" do
+  describe "commissioning_email" do
     let(:commissioning_document) { create :commissioning_document }
     let(:email_address) { "test@test.com" }
     let(:kase_number) { "12345" }

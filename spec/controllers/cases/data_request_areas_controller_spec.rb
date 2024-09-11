@@ -108,7 +108,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     end
   end
 
-  xdescribe "#send_email" do
+  describe "#send_email" do
     let(:data_request) do
       create(
         :data_request,

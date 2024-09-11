@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.xdescribe Cases::CommissioningDocumentsController, type: :controller do
+RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
   let(:manager) { find_or_create :branston_user }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:data_request) do

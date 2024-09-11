@@ -1,6 +1,6 @@
 require "rails_helper"
 
-xdescribe CommissioningDocumentDecorator, type: :model do
+RSpec.describe CommissioningDocumentDecorator, type: :model do
   let(:commissioning_document) { create(:commissioning_document).decorate }
 
   describe ":request_document" do

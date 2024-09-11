@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.xdescribe CommissioningDocumentTemplate::CatA do
+RSpec.describe CommissioningDocumentTemplate::CatA do
   subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do
