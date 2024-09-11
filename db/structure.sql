@@ -83,7 +83,6 @@ CREATE TYPE public.request_types AS ENUM (
     'cat_a',
     'ndelius',
     'dps',
-    'nomis_contact_lists'
 );
 
 
