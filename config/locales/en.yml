@@ -1615,7 +1615,6 @@ en:
         success: Data request successfully recorded
       show:
         heading: View data request
-        link: View
         edit_link: Edit data request
       edit:
         heading: Edit data request
@@ -1650,11 +1649,6 @@ en:
       index:
         heading: Data requested
         none: No data requests recorded
-      update:
-        success: Data request area updated
-        unprocessed: No changes made
-      location:
-        no_location: Location must be selected before commissioning email can be sent.
     commissioning_documents:
       new:
         heading: Select Day 1 request document

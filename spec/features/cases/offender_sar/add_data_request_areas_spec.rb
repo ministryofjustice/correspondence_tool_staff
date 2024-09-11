@@ -3,6 +3,7 @@ require "rails_helper"
 feature "Data Request Areas for an Offender SAR" do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
+  given!(:contact) { create(:contact) }
 
   background do
     login_as manager
@@ -13,6 +14,8 @@ feature "Data Request Areas for an Offender SAR" do
     click_on "Record data request"
     expect(data_request_area_page).to be_displayed
 
+    click_on "Find an address"
+    click_on "Use #{contact.name}"
     data_request_area_page.form.choose_area_request_type("prison")
     click_on "Continue"
     expect(data_request_area_show_page).to be_displayed
@@ -35,6 +38,8 @@ feature "Data Request Areas for an Offender SAR" do
     click_on "Record data request"
     expect(data_request_area_page).to be_displayed
 
+    click_on "Find an address"
+    click_on "Use #{contact.name}"
     data_request_area_page.form.choose_area_request_type("prison")
     click_on "Continue"
     expect(data_request_area_show_page).to be_displayed
