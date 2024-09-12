@@ -62,8 +62,7 @@ module Cases
 
     def external_deadline
       if @rejected == "true"
-        # calculate_final_date_from_time_units(3, @case.received_date)
-        received_date >> 3
+        calculate_final_date_from_time_units(3, @case.received_date)
       end
     end
 
