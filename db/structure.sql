@@ -149,7 +149,8 @@ CREATE TYPE public.template_name AS ENUM (
     'prison',
     'probation',
     'security',
-    'telephone'
+    'telephone',
+    'standard'
 );
 
 
@@ -2398,6 +2399,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240912095501'),
 ('20240911103932'),
 ('20240911103813'),
 ('20240829160849'),
