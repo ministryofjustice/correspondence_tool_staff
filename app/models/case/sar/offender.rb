@@ -557,10 +557,8 @@ private
                   end
   end
 
-  private
   def set_deadlines
     self.internal_deadline = @deadline_calculator.days_before(90, external_deadline)
     self.escalation_deadline = created_at.to_date
   end
-
 end
