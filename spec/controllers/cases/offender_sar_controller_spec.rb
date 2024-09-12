@@ -513,6 +513,16 @@ RSpec.describe Cases::OffenderSARController, type: :controller do
     end
   end
 
+  describe "#external_deadline for rejected" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected) }
+    let(:received_date) { Time.zone.today }
+
+    it "sets external deadline to 3 calendar months from received date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today >> 3)
+    end
+  end
+
+
   # Utility methods
 
   def third_party_validations_found(errors)
