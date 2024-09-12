@@ -61,7 +61,7 @@ class CommissioningDocument < ApplicationRecord
     if attachment.present?
       attachment.filename
     else
-      "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
+      "Day1_#{data_request_area.data_request_area_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
     end
   end
 
@@ -88,7 +88,7 @@ private
   end
 
   def subject_name
-    data_request.kase.subject_full_name.tr(" ", "-")
+    data_request_area.kase.subject_full_name.tr(" ", "-")
   end
 
   def case_number
