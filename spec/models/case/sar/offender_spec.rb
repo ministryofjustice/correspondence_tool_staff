@@ -93,6 +93,14 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe '#external_deadline for rejected offender sar' do
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("02/08/2024")) }
+
+    it 'returns rejected offender sars extended by 90 days' do
+      expect(case_rejected.external_deadline).to eq(Date.parse("04/11/2024"))
+    end
+  end
+
   describe "#rejected_reasons" do
     context "when the rejected reason other checkbox is selected and a reason is given" do
       let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
