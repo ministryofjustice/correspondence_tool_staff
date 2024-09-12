@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Mappa < CommissioningDocumentTemplate::Base
     def request_type
-      "MAPPA"
+      :MAPPA
     end
 
     def deadline

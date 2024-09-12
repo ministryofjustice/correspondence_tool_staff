@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Standard < CommissioningDocumentTemplate::Base
     def request_type
-      "standard"
+      :Standard
     end
 
     def deadline
