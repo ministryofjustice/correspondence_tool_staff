@@ -557,9 +557,8 @@ private
                   end
   end
 
-private
   def set_deadlines
-    self.external_deadline = 3.month.since(received_date)
+    self.external_deadline = 3.months.since(received_date)
     self.escalation_deadline = created_at.to_date
   end
 end
