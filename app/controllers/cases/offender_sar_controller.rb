@@ -46,7 +46,7 @@ module Cases
       @case.current_step = params[:current_step]
       get_rejected
       load_optional_flags_from_params
-      external_deadline
+
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -57,12 +57,6 @@ module Cases
         go_next_step
       else
         render :new
-      end
-    end
-
-    def external_deadline
-      if @rejected == "true"
-        calculate_final_date_from_time_units(3, @case.received_date)
       end
     end
 
@@ -430,11 +424,6 @@ module Cases
       else
         new_case_path
       end
-    end
-    def calculate_final_date_from_time_units(time_units, base_date)
-      months_later = time_units.month.since(base_date)
-      months_later = months_later.tomorrow until months_later.workday?
-      months_later
     end
   end
 end
