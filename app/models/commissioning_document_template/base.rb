@@ -1,11 +1,11 @@
 module CommissioningDocumentTemplate
   class Base
-    attr_reader :data_request
+    attr_reader :data_request_area
 
-    delegate :kase, to: :data_request
+    delegate :kase, to: :data_request_area
 
-    def initialize(data_request:)
-      @data_request = data_request.decorate
+    def initialize(data_request_area:)
+      @data_request_area = data_request_area.decorate
     end
 
     def path
