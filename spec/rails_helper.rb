@@ -161,7 +161,7 @@ RSpec.configure do |config|
                        TestAWSS3.new.bucket(Settings.case_uploads_s3_bucket))
 
   config.before(:suite) do
-    DbHousekeeping.clean(seed: true)
+    DbHousekeeping.clean(seed: false)
   end
 
   config.after(:suite) do
