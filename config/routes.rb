@@ -224,7 +224,7 @@ Rails.application.routes.draw do
 
       resources :data_requests
 
-      resources :commissioning_documents, only: %i[new edit create update] do
+      resource :commissioning_documents, only: %i[new create] do
         member do
           get :download
           post :send_email
