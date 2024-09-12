@@ -96,8 +96,8 @@ describe Case::SAR::Offender do
   describe "#external_deadline for rejected offender sar" do
     let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("02/08/2024")) }
 
-    it "returns rejected offender sars extended by 90 days" do
-      expect(case_rejected.external_deadline).to eq(Date.parse("04/11/2024"))
+    it "returns rejected offender sars extended by 3 calendar months" do
+      expect(case_rejected.external_deadline).to eq(Date.parse("02/11/2024"))
     end
   end
 
