@@ -143,7 +143,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
       end
 
       it "allow to record reason of lateness when a ready-to-copy case is late " do
-        late_kase = create :offender_sar_case, "ready_to_copy", received_date: 2.months.ago
+        late_kase = create :offender_sar_case, "ready_to_copy", received_date: 4.months.ago
         expect(late_kase.state_machine.permitted_events(responder))
           .to include :capture_reason_for_lateness
         expect(late_kase.state_machine.permitted_events(responder))
