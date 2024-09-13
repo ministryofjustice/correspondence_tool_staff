@@ -47,6 +47,8 @@ class Team < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
 
+  warehousable_attributes :name
+
   def self.hierarchy
     result_set = []
     BusinessGroup.order(:name).each do |bg|
