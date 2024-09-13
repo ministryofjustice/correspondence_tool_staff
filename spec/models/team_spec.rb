@@ -53,6 +53,30 @@ RSpec.describe Team, type: :model do
     end
   end
 
+  describe "warehousable" do
+    let(:team) { create(:team) }
+
+    before do
+      team.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        team.name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("Team", team.id)
+        team.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        team.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        team.save!
+      end
+    end
+  end
+
   context "when multiple teams created" do
     let!(:managing_team)       { find_or_create :team_disclosure_bmt }
     let!(:branston_team)       { find_or_create :team_branston }
