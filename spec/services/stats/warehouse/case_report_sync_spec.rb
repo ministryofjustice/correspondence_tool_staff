@@ -1,6 +1,8 @@
 require "rails_helper"
 
 describe Stats::Warehouse::CaseReportSync do
+  include ActiveJob::TestHelper
+
   describe "#initialize" do
     it "requires a warehousable ActiveRecord instance" do
       not_activerecord = String.new
