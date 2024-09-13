@@ -9,7 +9,7 @@ module Warehousable
     attr_accessor :warehousable
 
     def warehousable_attributes(attributes)
-      self.warehousable = attributes
+      self.warehousable = attributes.to_s
     end
   end
 

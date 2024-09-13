@@ -7,7 +7,7 @@ class DummyUserClass < ApplicationRecord
 end
 
 class DummyRestrictedUserClass < DummyUserClass
-  warehousable_attributes "full_name"
+  warehousable_attributes :full_name
 end
 
 RSpec.describe Warehousable do
@@ -29,7 +29,7 @@ RSpec.describe Warehousable do
     before { object.reload }
 
     it "creates a job when the object is saved with a warehousable attribute" do
-      expect(::Warehouse::CaseSyncJob).to receive(:perform_later)
+      expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("DummyRestrictedUserClass", object.id)
       object.full_name = "Updated name"
       object.save!
     end
