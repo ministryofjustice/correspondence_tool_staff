@@ -556,4 +556,9 @@ private
                     next_number
                   end
   end
+
+  def set_deadlines
+    super
+    self.external_deadline = @deadline_calculator.days_after(90, received_date)
+  end
 end

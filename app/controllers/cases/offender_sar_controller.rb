@@ -46,7 +46,9 @@ module Cases
       @case.current_step = params[:current_step]
       get_rejected
       load_optional_flags_from_params
-
+      if @rejected == "true"
+        set_deadlines
+      end
       if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
