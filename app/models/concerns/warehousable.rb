@@ -2,7 +2,7 @@ module Warehousable
   extend ActiveSupport::Concern
 
   included do
-    cattr_accessor :warehousable
+    class_attribute :warehousable
 
     after_commit :warehouse, if: :update_warehouse?
   end
