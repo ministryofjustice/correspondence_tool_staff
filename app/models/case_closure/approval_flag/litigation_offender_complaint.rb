@@ -18,8 +18,6 @@
 module CaseClosure
   module ApprovalFlag
     class LitigationOffenderComplaint < CaseClosure::Metadatum
-      warehousable_attributes :name
-
       def self.fee_approval
         where(abbreviation: "fee_approval").singular
       end
