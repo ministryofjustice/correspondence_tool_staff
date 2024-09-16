@@ -18,6 +18,8 @@
 module CaseClosure
   module ApprovalFlag
     class ICOOffenderComplaint < CaseClosure::Metadatum
+      warehousable_attributes :name
+
       def self.first_approval
         where(abbreviation: "first_approval").singular
       end

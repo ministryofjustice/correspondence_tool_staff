@@ -82,6 +82,8 @@ class BusinessUnit < Team
   scope :responding, -> { where(role: "responder") }
   scope :active, -> { where(deleted_at: nil) }
 
+  warehousable_attributes :name
+
   after_save :update_search_index
 
   def self.responding_for_correspondence_type(correspondence_type)

@@ -22,6 +22,8 @@ class BusinessGroup < Team
 
   has_many :business_units, through: :directorates
 
+  warehousable_attributes :name
+
   def child_type
     "directorates"
   end
