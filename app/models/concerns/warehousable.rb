@@ -6,16 +6,15 @@ module Warehousable
   end
 
   class_methods do
-    attr_accessor :warehousable
-
     def warehousable_attributes(*attributes)
-      self.warehousable = attributes.map(&:to_s)
+      # Use a class variable so it is inherited by all subclasses
+      @@warehousable = attributes.map(&:to_s) # rubocop:disable Style/ClassVars
     end
   end
 
   def update_warehouse?
-    self.class.warehousable.nil? ||
-      previous_changes.keys.intersect?(self.class.warehousable)
+    @@warehousable.nil? ||
+      previous_changes.keys.intersect?(@@warehousable)
   end
 
   # Add any further warehousing operations here, ideally async
