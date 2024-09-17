@@ -2,12 +2,24 @@ require "rails_helper"
 
 class DummyUserClass < ApplicationRecord
   include Warehousable
-
   self.table_name = "users"
 end
 
-class DummyRestrictedUserClass < DummyUserClass
-  warehousable_attributes "full_name"
+class DummyRestrictedUserClass < ApplicationRecord
+  include Warehousable
+  self.table_name = "users"
+
+  warehousable_attributes :full_name
+end
+
+class DummyInheritingRestrictedUserClass < DummyRestrictedUserClass
+end
+
+class DummyMultipleRestrictedUserClass < ApplicationRecord
+  include Warehousable
+  self.table_name = "users"
+
+  warehousable_attributes :full_name, :email
 end
 
 RSpec.describe Warehousable do
@@ -29,7 +41,7 @@ RSpec.describe Warehousable do
     before { object.reload }
 
     it "creates a job when the object is saved with a warehousable attribute" do
-      expect(::Warehouse::CaseSyncJob).to receive(:perform_later)
+      expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("DummyRestrictedUserClass", object.id)
       object.full_name = "Updated name"
       object.save!
     end
@@ -37,6 +49,42 @@ RSpec.describe Warehousable do
     it "doesn't create a job when the object is saved with a non-warehousable attribute" do
       expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
       object.email = "dummy@user.com"
+      object.save!
+    end
+  end
+
+  context "when class inherits from class that restricts attributes" do
+    let(:object) { DummyInheritingRestrictedUserClass.create(full_name: "Dummy Class") }
+
+    before { object.reload }
+
+    it "creates a job when the object is saved with a warehousable attribute" do
+      expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("DummyInheritingRestrictedUserClass", object.id)
+      object.full_name = "Updated name"
+      object.save!
+    end
+
+    it "doesn't create a job when the object is saved with a non-warehousable attribute" do
+      expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+      object.email = "dummy@user.com"
+      object.save!
+    end
+  end
+
+  context "when class restricts multiple warehousable attributes" do
+    let(:object) { DummyMultipleRestrictedUserClass.create(full_name: "Dummy Class", email: "email@email.com") }
+
+    before { object.reload }
+
+    it "creates a job when the object is saved with a warehousable attribute" do
+      expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("DummyMultipleRestrictedUserClass", object.id)
+      object.full_name = "Updated name"
+      object.save!
+    end
+
+    it "doesn't create a job when the object is saved with a non-warehousable attribute" do
+      expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+      object.sign_in_count = 3
       object.save!
     end
   end
