@@ -28,7 +28,7 @@ div class="case"
   section.case-info
     = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }
 
-  - if @commissioning_document.present? && FeatureSet.email_commissioning_document.enabled?
+  - if FeatureSet.email_commissioning_document.enabled?
     div.commissioning-document
       h2.request--heading
         = t('cases.data_request_areas.show.emails_header')

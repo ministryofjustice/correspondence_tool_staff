@@ -9,18 +9,19 @@ module CommissioningDocumentTemplate
     end
 
     def context
+      request_info = data_request_area.data_requests.map do |request|
+        {
+          request_type: request.request_type.humanize,
+          request_type_note: request.request_type_note.present? ? request.request_type_note : nil,
+          date_from: request.date_from.present? ? date_format(request.date_from) : nil,
+          date_to: request.date_to.present? ? date_format(request.date_to) : nil
+        }
+      end
+
       super.merge(
         addressee_location: data_request_area.location,
-        # date_range: data_request.request_dates.capitalize,
-        deadline:,
-        data_requests: data_request_area.data_requests.map do |request|
-          {
-            request_type: request.request_type,
-            request_type_note: request.request_type_note,
-            date_from: date_format(request.date_from),
-            date_to: date_format(request.date_to),
-          }
-        end
+        deadline: deadline,
+        request_info: request_info
       )
     end
   end
