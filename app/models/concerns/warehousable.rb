@@ -2,12 +2,12 @@ module Warehousable
   extend ActiveSupport::Concern
 
   included do
+    class_attribute :warehousable
+
     after_commit :warehouse, if: :update_warehouse?
   end
 
   class_methods do
-    attr_accessor :warehousable
-
     def warehousable_attributes(*attributes)
       self.warehousable = attributes.map(&:to_s)
     end
