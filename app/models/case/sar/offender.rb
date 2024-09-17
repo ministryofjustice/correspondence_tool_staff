@@ -64,6 +64,8 @@ class Case::SAR::Offender < Case::Base
         CaseClosureService.new(kase, User.system_admin, {}).call
       end
     end
+
+    AUTOCLOSUREDEADLINE = 90
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
@@ -560,7 +562,7 @@ private
   def set_deadlines
     super
     if rejected?
-      self.external_deadline = @deadline_calculator.days_after(90, received_date)
+      self.external_deadline = @deadline_calculator.days_after(AUTOCLOSUREDEADLINE, received_date)
     end
   end
 end
