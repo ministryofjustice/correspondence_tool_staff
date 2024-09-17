@@ -755,15 +755,8 @@ en:
           commissioning_email: Day 1 commissioning email
       commissioning_document:
         template_name:
-          cat_a: CAT A
-          cctv: CCTV & BWCF
-          cross_border: Cross Borders
           mappa: MAPPA
-          pdp: PDP
-          prison: Prison records
-          probation: Probation records
-          security: Security records
-          telephone: Telephone recordings
+          standard: Standard
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
