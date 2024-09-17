@@ -64,8 +64,6 @@ class Case::SAR::Offender < Case::Base
         CaseClosureService.new(kase, User.system_admin, {}).call
       end
     end
-
-    AUTOCLOSUREDEADLINE = 90
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
@@ -83,6 +81,8 @@ class Case::SAR::Offender < Case::Base
     received_date
     sent_to_sscl_at
   ].freeze
+
+  AUTOCLOSUREDEADLINE = 90
 
   REJECTED_REASONS = {
     "cctv_bwcv" => "CCTV / BWCV request",
@@ -565,4 +565,5 @@ private
       self.external_deadline = @deadline_calculator.days_after(AUTOCLOSUREDEADLINE, received_date)
     end
   end
+
 end
