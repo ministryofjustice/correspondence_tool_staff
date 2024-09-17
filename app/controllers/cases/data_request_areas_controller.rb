@@ -30,7 +30,9 @@ module Cases
       end
     end
 
-    def show; end
+    def show
+      @request_ready = @data_request_area.status == :completed
+    end
 
     def destroy
       if @data_request_area.data_requests.exists?
