@@ -91,6 +91,8 @@ class User < ApplicationRecord
     "responder" => 300,
   }.freeze
 
+  warehousable_attributes :full_name
+
   class << self
     def system_admin
       user = User.find_or_initialize_by(full_name: "System update")

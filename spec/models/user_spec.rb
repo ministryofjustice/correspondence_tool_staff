@@ -437,4 +437,28 @@ RSpec.describe User, type: :model do
       expect(team1_other_team_names).not_to include(team1.name)
     end
   end
+
+  describe "warehousable" do
+    let(:user) { create(:user) }
+
+    before do
+      user.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        user.full_name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("User", user.id)
+        user.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        user.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        user.save!
+      end
+    end
+  end
 end
