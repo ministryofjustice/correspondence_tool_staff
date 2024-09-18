@@ -109,27 +109,24 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
   end
 
   describe "#send_email" do
-    let(:data_request) do
+    let(:data_request_area) do
       create(
-        :data_request,
-        cached_num_pages: 10,
-        completed: true,
-        cached_date_received: Time.zone.yesterday,
+        :data_request_area,
+        offender_sar_case:,
         commissioning_document:,
       )
     end
     let(:params) do
       {
-        id: data_request.id,
-        case_id: data_request.case_id,
-        data_request_area_id: data_request_area.id,
+        case_id: data_request_area.case_id,
+        id: data_request_area.id,
       }
     end
     let(:commissioning_document) { create(:commissioning_document, template_name:) }
-    let(:template_name) { "prison" }
+    let(:template_name) { "standard" }
 
     it "assigns value to recipient emails" do
-      allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(DataRequestArea) # rubocop:disable RSpec/AnyInstance
         .to receive(:recipient_emails).and_return("test@email.com")
       get(:send_email, params:)
       expect(assigns(:recipient_emails)).to eq("test@email.com")
@@ -137,7 +134,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
 
     context "with no associated email" do
       it "returns no associated email present" do
-        allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
+        allow_any_instance_of(DataRequestArea) # rubocop:disable RSpec/AnyInstance
           .to receive(:recipient_emails).and_return([])
         get(:send_email, params:)
         expect(assigns(:no_email_present)).to eq(true)

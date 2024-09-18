@@ -21,14 +21,14 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
   describe "#context" do
     let(:expected_context) do
       {
-        addressee_location: "HMP Brixton",
+        addressee_location: "HMP halifax",
         dpa_reference: "20062007",
         offender_name: "Robert Badson",
         date_of_birth: "11/03/2000",
         date: "21/10/2022",
         prison_numbers: "AB12345",
-        date_range: "",
         deadline: "26/10/2022",
+        :request_info => [],
       }
     end
 

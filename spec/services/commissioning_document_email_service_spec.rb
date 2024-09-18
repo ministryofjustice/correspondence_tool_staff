@@ -4,7 +4,7 @@ RSpec.describe CommissioningDocumentEmailService do
   let(:responder) { find_or_create :sar_responder }
   let(:kase) { create(:offender_sar_case, responder:) }
   let(:contact) { create(:contact, data_request_emails: "test@test.com\ntest1@test.com") }
-  let(:data_request) { create(:data_request, offender_sar_case: kase, contact:) }
+  let(:data_request_area) { create(:data_request_area, offender_sar_case: kase, contact:) }
   let(:commissioning_document) { create(:commissioning_document) }
   let(:user) { kase.responder }
   let(:attachment) { create(:commissioning_document_attachment) }
@@ -12,7 +12,7 @@ RSpec.describe CommissioningDocumentEmailService do
   let(:mailer) { double ActionNotificationsMailer } # rubocop:disable RSpec/VerifiedDoubles
   let(:service) do
     described_class.new(
-      data_request:,
+      data_request_area:,
       current_user: responder,
       commissioning_document:,
     )
@@ -52,7 +52,7 @@ RSpec.describe CommissioningDocumentEmailService do
       service.send!
       transistion = kase.transitions.last
       expect(transistion.event).to eq "send_day_1_email"
-      expect(transistion.metadata["message"]).to eq "Prison records requested from #{contact.name}"
+      expect(transistion.metadata["message"]).to eq "Standard requested from #{contact.name}"
     end
   end
 end

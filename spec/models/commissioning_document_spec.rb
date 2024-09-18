@@ -13,11 +13,11 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocument, type: :model do
-  subject(:commissioning_document) { described_class.new(data_request:) }
+  subject(:commissioning_document) { described_class.new(data_request_area:) }
 
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Robert Badson").decorate }
-  let(:data_request) { create(:data_request, offender_sar_case:) }
-  let(:template_type) { :prison }
+  let(:data_request_area) { create(:data_request_area, offender_sar_case:) }
+  let(:template_type) { :standard }
 
   it "can be created" do
     expect(commissioning_document).to be_present
@@ -83,10 +83,10 @@ RSpec.describe CommissioningDocument, type: :model do
     context "when valid object" do
       it "sets the filename as expected" do
         Timecop.freeze(Time.zone.local(2022, 10, 31, 9, 20)) do
-          commissioning_document = described_class.new(data_request:)
+          commissioning_document = described_class.new(data_request_area:)
           commissioning_document.template_name = template_type
           number = offender_sar_case.number
-          expect(commissioning_document.filename).to eq "Day1_HMPS_#{number}_Robert-Badson_20221031T0920.docx"
+          expect(commissioning_document.filename).to eq "Day1_prison_#{number}_Robert-Badson_20221031T0920.docx"
         end
       end
     end

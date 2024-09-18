@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "cases/data_request_area/send_email", type: :view do
+RSpec.describe "cases/data_request_areas/send_email", type: :view do
   describe "#send_email" do
     let(:kase) do
       create(
@@ -9,9 +9,9 @@ RSpec.describe "cases/data_request_area/send_email", type: :view do
       )
     end
 
-    let(:data_request) do
+    let(:data_request_area) do
       create(
-        :data_request,
+        :data_request_area,
         offender_sar_case: kase,
       )
     end
@@ -19,7 +19,7 @@ RSpec.describe "cases/data_request_area/send_email", type: :view do
     let(:commissioning_document) do
       create(
         :commissioning_document,
-        data_request:,
+        data_request_area:,
       )
     end
 
@@ -27,8 +27,8 @@ RSpec.describe "cases/data_request_area/send_email", type: :view do
 
     context "with data request with contact without email address" do
       before do
-        assign(:data_request, data_request)
-        assign(:case, data_request.kase)
+        assign(:data_request_area, data_request_area)
+        assign(:case, data_request_area.kase)
         assign(:commissioning_document, commissioning_document)
         assign(:recipient_emails, [])
         assign(:no_email_present, true)
@@ -47,8 +47,8 @@ RSpec.describe "cases/data_request_area/send_email", type: :view do
 
     context "with data request with contact which has email address" do
       before do
-        assign(:data_request, data_request)
-        assign(:case, data_request.kase)
+        assign(:data_request_area, data_request_area)
+        assign(:case, data_request_area.kase)
         assign(:commissioning_document, commissioning_document)
         assign(:recipient_emails, ["oscar@grouch.com"])
 
