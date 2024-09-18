@@ -37,7 +37,7 @@ span.visually-hidden
 
     - if @recipient_emails.present?
       div
-        = raw @recipient_emails.join("<br>").html_safe
+        = @recipient_emails.join("<br>").html_safe
 
     div.button-holder
       = form_for @commissioning_document, method: :post, url: send_email_case_data_request_area_commissioning_documents_path(@case, @data_request_area) do |f|
