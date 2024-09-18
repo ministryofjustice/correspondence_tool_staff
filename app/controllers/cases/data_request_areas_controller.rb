@@ -31,7 +31,7 @@ module Cases
     end
 
     def show
-      @request_ready = @data_request_area.status == :completed
+      @request_ready = !@data_request_area.completed? && @data_request_area.data_requests.presence
     end
 
     def destroy
@@ -45,7 +45,6 @@ module Cases
 
     def send_email
       @recipient_emails = @data_request_area.recipient_emails
-
       @no_email_present = @recipient_emails.empty?
     end
 

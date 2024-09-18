@@ -41,6 +41,10 @@ class DataRequestArea < ApplicationRecord
     offender_sar_case
   end
 
+  def completed?
+    status == :completed
+  end
+
   def status
     return :not_started unless data_requests.exists?
 
