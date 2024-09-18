@@ -116,7 +116,7 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
         completed: true,
         cached_date_received: Time.zone.yesterday,
         commissioning_document:,
-        )
+      )
     end
     let(:params) do
       {
