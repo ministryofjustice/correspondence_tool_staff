@@ -565,4 +565,11 @@ private
       self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
     end
   end
+
+  def update_deadlines
+    super
+    if changed.include?("received_date") && rejected?
+      self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    end
+  end
 end

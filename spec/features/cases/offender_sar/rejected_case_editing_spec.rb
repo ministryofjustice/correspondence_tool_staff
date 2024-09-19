@@ -74,13 +74,14 @@ feature "Offender SAR Case editing by a manager", :js do
 
     cases_show_page.offender_sar_date_received.change_link.click
     expect(cases_edit_offender_sar_date_received_page).to be_displayed
-    cases_edit_offender_sar_date_received_page.edit_received_date(1.day.ago)
+    cases_edit_offender_sar_date_received_page.edit_received_date(90.day.ago)
+    formatted_date = Time.zone.today.to_date.strftime("%d %b %Y")
+
     click_on "Continue"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Final deadline"
-    expect(cases_show_page).to have_content "16 Dec 2024"
-
+    expect(cases_show_page).to have_content formatted_date
   end
 
   scenario "rejected to closed case remains closed after editing subject details page" do
