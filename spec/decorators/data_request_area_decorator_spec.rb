@@ -85,10 +85,12 @@ describe DataRequestAreaDecorator, type: :model do
 
   describe "#request_document" do
     let(:decorated) { data_request_area.decorate }
+    let!(:commissioning_document) { create :commissioning_document, data_request_area: }
 
-    it 'returns a humanized version of the data_request_area_type with "records" appended' do
-      allow(data_request_area).to receive(:data_request_area_type).and_return("prison")
-      expect(decorated.request_document).to eq("Prison records")
+    it 'displays the current request document' do
+      #TODO update during the chase work to use the relevant stage
+      # debugger
+      expect(decorated.request_document).to eq("Day 1 commissioning")
     end
   end
 

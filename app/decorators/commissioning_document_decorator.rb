@@ -6,6 +6,7 @@ class CommissioningDocumentDecorator < Draper::Decorator
   def request_document
     I18n.t("helpers.label.commissioning_document.stage.day_1")
     # TODO: dynamically choose stage value during chase work
+    # such as I18n.t("helpers.label.commissioning_document.stage.#{stage}")
   end
 
   def updated_at
