@@ -5,7 +5,7 @@ RSpec.describe CommissioningDocumentDecorator, type: :model do
 
   describe ":request_document" do
     it "gets translation for template name" do
-      expect(commissioning_document.request_document).to eq "Prison records"
+      expect(commissioning_document.request_document).to eq "Day 1 commissioning"
     end
   end
 

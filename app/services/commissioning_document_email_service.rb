@@ -31,7 +31,8 @@ private
     data_request_area.kase.state_machine.send_day_1_email!(
       acting_user: current_user,
       acting_team: BusinessUnit.dacu_branston,
-      message: "#{commissioning_document.request_document} requested from #{data_request_area.location}",
+      message: I18n.t("helpers.label.data_request_area.data_request_area_type.#{data_request_area.data_request_area_type}",
+      ) + " requested from #{data_request_area.location}",
     )
   end
 end

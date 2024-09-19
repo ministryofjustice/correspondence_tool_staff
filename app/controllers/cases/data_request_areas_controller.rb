@@ -31,7 +31,7 @@ module Cases
     end
 
     def show
-      @request_ready = !@data_request_area.completed? && @data_request_area.data_requests.presence
+      @request_ready = @data_request_area.data_requests.present?
     end
 
     def destroy

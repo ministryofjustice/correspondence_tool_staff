@@ -757,6 +757,9 @@ en:
         template_name:
           mappa: MAPPA
           standard: Standard
+        stage:
+          day_1: Day 1 commissioning
+          #TODO add in translations for later chase stages i.e chase_1 etc
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
