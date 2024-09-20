@@ -1,7 +1,7 @@
 module PageObjects
   module Pages
     module Cases
-      class DataRequestAreasEmailConfirmationPage < SitePrism::Page
+      class DataRequestAreaEmailConfirmationPage < SitePrism::Page
         set_url "/cases/{case_id}/data_request_areas/{id}/send_email"
 
         section :primary_navigation,

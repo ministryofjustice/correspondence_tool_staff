@@ -23,7 +23,7 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
       )
     end
 
-    let(:page) { data_request_email_confirmation_page }
+    let(:page) { data_request_area_email_confirmation_page }
 
     context "with data request with contact without email address" do
       before do
@@ -34,7 +34,7 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
         assign(:no_email_present, true)
 
         render
-        data_request_email_confirmation_page.load(rendered)
+        data_request_area_email_confirmation_page.load(rendered)
       end
 
       it "has required content" do
@@ -53,7 +53,7 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
         assign(:recipient_emails, ["oscar@grouch.com"])
 
         render
-        data_request_email_confirmation_page.load(rendered)
+        data_request_area_email_confirmation_page.load(rendered)
       end
 
       it "has required content" do
