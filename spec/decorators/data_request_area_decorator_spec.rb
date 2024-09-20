@@ -87,9 +87,8 @@ describe DataRequestAreaDecorator, type: :model do
     let(:decorated) { data_request_area.decorate }
     let!(:commissioning_document) { create :commissioning_document, data_request_area: }
 
-    it 'displays the current request document' do
-      #TODO update during the chase work to use the relevant stage
-      # debugger
+    it "displays the current request document" do
+      # TODO: update during the chase work to use the relevant stage
       expect(decorated.request_document).to eq("Day 1 commissioning")
     end
   end

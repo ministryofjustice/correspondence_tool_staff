@@ -9,16 +9,16 @@ module ViewsHelper
 
   def formatted_data_request_area_type(data_request_area_type)
     case data_request_area_type
-    when 'prison'
-      'prison'
-    when 'branston'
-      'Branston'
-    when 'branston_registry'
-      'Branston Registry'
-    when 'mappa'
-      'MAPPA'
-    when 'probation'
-      'probation'
+    when "prison"
+      "prison"
+    when "branston"
+      "Branston"
+    when "branston_registry"
+      "Branston Registry"
+    when "mappa"
+      "MAPPA"
+    when "probation"
+      "probation"
     end
   end
 end
