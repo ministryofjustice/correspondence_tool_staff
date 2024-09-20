@@ -22,4 +22,30 @@ describe ViewsHelper, type: :helper do
       expect(page_title).to eq("Create Offender SAR case")
     end
   end
+
+  describe "#formatted_data_request_area_type" do
+    it "returns 'prison' for 'prison' data_request_area_type" do
+      expect(formatted_data_request_area_type('prison')).to eq('prison')
+    end
+
+    it "returns 'Branston' for 'branston' data_request_area_type" do
+      expect(formatted_data_request_area_type('branston')).to eq('Branston')
+    end
+
+    it "returns 'Branston registry' for 'branston_registry' data_request_area_type" do
+      expect(formatted_data_request_area_type('branston_registry')).to eq('Branston registry')
+    end
+
+    it "returns 'MAPPA' for 'mappa' data_request_area_type" do
+      expect(formatted_data_request_area_type('mappa')).to eq('MAPPA')
+    end
+
+    it "returns 'probation' for 'probation' data_request_area_type" do
+      expect(formatted_data_request_area_type('probation')).to eq('probation')
+    end
+
+    it "returns the underscored data_request_area_type as a string for unknown types" do
+      expect(formatted_data_request_area_type('unknown_type')).to eq('unknown type')
+    end
+  end
 end

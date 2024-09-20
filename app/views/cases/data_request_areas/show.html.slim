@@ -2,7 +2,7 @@
   = t('page_title.data_request_area_show_page')
 
 - content_for :heading
-  = t('.heading', data_request_area_type: @data_request_area.data_request_area_type.tr('_', ' '))
+  = t('.heading', data_request_area_type: formatted_data_request_area_type(@data_request_area.data_request_area_type))
 
 - content_for :sub_heading
 

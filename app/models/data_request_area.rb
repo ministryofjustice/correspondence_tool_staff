@@ -19,11 +19,11 @@ class DataRequestArea < ApplicationRecord
   has_one :commissioning_document
   has_many :data_request_emails
 
+  validate :validate_location
+
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
-
-  validate :validate_location
 
   attribute :data_request_default_area, default: ""
 

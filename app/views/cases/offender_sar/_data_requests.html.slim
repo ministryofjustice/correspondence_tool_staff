@@ -43,6 +43,6 @@
     .button-holder
       - if policy(case_details).can_record_data_request? && allow_editing
         = action_button_for(:record_data_request)
-        - if data_request_area.data_requests.none?
+        - if data_request_area.data_request_emails.none?
           = link_to t('button.delete'), case_data_request_area_path(case_id: @case.id, id: @data_request_area.id), type: 'button', class: 'govuk-button--warning', id: "action--delete-data-request-area", data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
       hr
