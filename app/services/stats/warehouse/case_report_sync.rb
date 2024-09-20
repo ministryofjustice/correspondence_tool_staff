@@ -1,7 +1,8 @@
 module Stats
   module Warehouse
-    # Separated the Sync operation from the ActiveRecord Warehouse::CaseReport
-    # to prevent the full AR base class from being loaded
+    # The goal of this class is to find a single case that can be synced.
+    # If there are multiple affected cases then new jobs are created
+    # for each case to be synced.
     class CaseReportSync
       # +MAPPINGS+ could be refactored so that the respective class types
       # contain the required information/execution output. The current
@@ -19,22 +20,19 @@ module Stats
       #       or in another table, used to pass to `execute`
       #     ],
       #     execute: ->(record, query){
-      #       method that outputs an Array of `Case::Base` using the `query`
-      #       string
+      #       method that either returns a case object or creates sync
+      #       jobs for each affected case found
       #     }
       #   },
       # }
-      #
-      # This is an alternative implementation to using if/else statements
-      # with hard coded `where` statements
       MAPPINGS = {
         'Assignment': {
           fields: [],
-          execute: ->(record, _) { [record.case] },
+          execute: ->(record, _) { record.case },
         },
         'Case::Base': {
           fields: [],
-          execute: ->(record, _) { [record] },
+          execute: ->(record, _) { record },
         },
         'CaseClosure::Metadatum': {
           fields: %w[
@@ -47,7 +45,7 @@ module Stats
         },
         'CaseTransition': {
           fields: [],
-          execute: ->(record, _) { [record.case] },
+          execute: ->(record, _) { record.case },
         },
         'Team': {
           fields: %w[
@@ -75,47 +73,46 @@ module Stats
         },
       }.freeze
 
-      # Ensure the warehouse remains in sync with changes elsewhere
-      # in the database.
-      #
-      # @note (mseedat-moj): Checking Class Type could be considered a
-      # code-smell, took the pragmatic/simpler decision to maintain sync
-      # operations in one place for this initial 'alpha' implementation
+      # Ensure the warehouse remains in sync with changes elsewhere in the database.
       def initialize(record)
         raise ArgumentError, "record must be an ApplicationRecord" unless record.is_a? ApplicationRecord
 
         syncable, mapping_klass = self.class.syncable?(record)
 
         if syncable
-          cases = self.class.affected_cases(
+          kase = self.class.affected_cases(
             record,
             MAPPINGS[mapping_klass.to_s.to_sym],
           )
-          self.class.sync(cases)
+
+          self.class.sync(kase)
         end
       end
 
       def self.affected_cases(record, setting)
-        # Where clause conditions to search against CaseReport
         query = setting[:fields]
           .map { |f| "#{f} = :param" }
           .join(" OR ")
 
-        # Get all Case(s) related to the CaseReport(s)
         setting[:execute].call(record, query)
       end
 
-      def self.sync(cases)
-        Array.wrap(cases).compact.map do |kase|
-          ::Warehouse::CaseReport.generate(kase)
-        end
+      def self.sync(kase)
+        return unless kase.is_a? Case::Base
+
+        ::Warehouse::CaseReport.generate(kase)
       end
 
       def self.find_cases(record, query)
-        ::Warehouse::CaseReport
-          .includes(:case)
+        case_ids = ::Warehouse::CaseReport
           .where([query, { param: record.id }])
-          .map(&:case)
+          .map(&:case_id)
+
+        case_ids.each do |id|
+          ::Warehouse::CaseSyncJob.perform_later("Case::Base", id)
+        end
+
+        nil
       end
 
       def self.syncable?(record)

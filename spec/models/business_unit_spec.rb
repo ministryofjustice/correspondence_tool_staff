@@ -165,6 +165,30 @@ RSpec.describe BusinessUnit, type: :model do
     end
   end
 
+  describe "warehousable" do
+    let(:bu) { create(:business_unit) }
+
+    before do
+      bu.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        bu.name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("BusinessUnit", bu.id)
+        bu.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        bu.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        bu.save!
+      end
+    end
+  end
+
   it "has a working factory" do
     expect(create(:business_unit)).to be_valid
   end
