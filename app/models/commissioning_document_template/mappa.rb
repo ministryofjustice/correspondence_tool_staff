@@ -9,10 +9,9 @@ module CommissioningDocumentTemplate
     end
 
     def context
-      data_requests_dates = data_request_area.data_requests.decorate.map { |request|
-        request_data = request.request_dates if request.request_dates.present?
-        request_data
-      }.join("\n")
+      data_requests_dates = data_request_area.data_requests.map { |request|
+        request.decorate.request_dates.presence
+      }.compact.join("\n")
 
       super.merge(
         aliases: kase.subject_aliases,

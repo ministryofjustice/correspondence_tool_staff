@@ -10,7 +10,20 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
                   date_of_birth: "2000-03-11",
                   prison_number: "AB12345")
   end
-  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, location: "HMP Brixton") }
+
+  let(:data_request) do
+    build_stubbed(:data_request,
+                  request_type: "all_prison_records",
+                  request_type_note: "more info",
+                  date_from: Date.new(2024, 1, 1),
+                  date_to: Date.new(2024, 8, 8))
+  end
+
+  let(:data_request_area) do
+    build_stubbed(:data_request_area,
+                  offender_sar_case: kase,
+                  data_requests: [data_request])
+  end
 
   describe "#path" do
     it "matches to a file" do
@@ -19,22 +32,63 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
   end
 
   describe "#context" do
-    let(:expected_context) do
-      {
-        addressee_location: "HMP halifax",
-        dpa_reference: "20062007",
-        offender_name: "Robert Badson",
-        date_of_birth: "11/03/2000",
-        date: "21/10/2022",
-        prison_numbers: "AB12345",
-        deadline: "26/10/2022",
-        :request_info => [],
-      }
+    context "with fully populated values" do
+      let(:expected_context) do
+        {
+          addressee_location: "HMP halifax",
+          dpa_reference: "20062007",
+          offender_name: "Robert Badson",
+          date_of_birth: "11/03/2000",
+          date: "21/10/2022",
+          prison_numbers: "AB12345",
+          deadline: "26/10/2022",
+          request_info: [
+            {
+              request_type: "All prison records",
+              request_type_note: "more info",
+              date_from: "01/01/2024",
+              date_to: "08/08/2024",
+            },
+          ],
+        }
+      end
+
+      it "populates data from the data_request_area and case" do
+        Timecop.freeze(Date.new(2022, 10, 21)) do
+          expect(template.context).to eq expected_context
+        end
+      end
     end
 
-    it "populates data from the data_request_area and case" do
-      Timecop.freeze(Date.new(2022, 10, 21)) do
-        expect(template.context).to eq expected_context
+    context "with optional values omitted" do
+      let(:data_request) do
+        build_stubbed(:data_request,
+                      request_type: "all_prison_records")
+      end
+      let(:expected_context) do
+        {
+          addressee_location: "HMP halifax",
+          dpa_reference: "20062007",
+          offender_name: "Robert Badson",
+          date_of_birth: "11/03/2000",
+          date: "21/10/2022",
+          prison_numbers: "AB12345",
+          deadline: "26/10/2022",
+          request_info: [
+            {
+              request_type: "All prison records",
+              request_type_note: nil,
+              date_from: nil,
+              date_to: nil,
+            },
+          ],
+        }
+      end
+
+      it "populates data from the data_request_area and case" do
+        Timecop.freeze(Date.new(2022, 10, 21)) do
+          expect(template.context).to eq expected_context
+        end
       end
     end
   end
