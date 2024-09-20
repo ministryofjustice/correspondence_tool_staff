@@ -28,6 +28,8 @@ class CaseClosure::Metadatum < ApplicationRecord
   validates :name, :abbreviation, :sequence_id, presence: true
   validates :name, :abbreviation, uniqueness: { scope: :type }
 
+  warehousable_attributes :name
+
   def self.id_from_name(name)
     where(name:).first&.id
   end

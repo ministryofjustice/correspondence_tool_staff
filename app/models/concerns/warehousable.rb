@@ -2,7 +2,20 @@ module Warehousable
   extend ActiveSupport::Concern
 
   included do
-    after_commit :warehouse
+    class_attribute :warehousable
+
+    after_commit :warehouse, if: :update_warehouse?
+  end
+
+  class_methods do
+    def warehousable_attributes(*attributes)
+      self.warehousable = attributes.map(&:to_s)
+    end
+  end
+
+  def update_warehouse?
+    self.class.warehousable.nil? ||
+      previous_changes.keys.intersect?(self.class.warehousable)
   end
 
   # Add any further warehousing operations here, ideally async
