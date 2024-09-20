@@ -76,6 +76,14 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#external_deadline for rejected" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected) }
+
+    it "sets external deadline using a calculation of 90 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 90)
+    end
+  end
+
   describe ".close_expired_rejected" do
     let(:rejected_expired) { create(:offender_sar_case, :rejected) }
     let(:system_user) { User.system_admin }
