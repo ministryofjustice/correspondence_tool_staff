@@ -14,14 +14,11 @@ module ViewsHelper
     when 'branston'
       'Branston'
     when 'branston_registry'
-      'Branston registry'
+      'Branston Registry'
     when 'mappa'
       'MAPPA'
     when 'probation'
       'probation'
-    else
-      data_request_area_type.tr('_', ' ') # Default formatting if type does not match
     end
   end
-
 end

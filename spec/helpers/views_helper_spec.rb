@@ -33,7 +33,7 @@ describe ViewsHelper, type: :helper do
     end
 
     it "returns 'Branston registry' for 'branston_registry' data_request_area_type" do
-      expect(formatted_data_request_area_type('branston_registry')).to eq('Branston registry')
+      expect(formatted_data_request_area_type('branston_registry')).to eq('Branston Registry')
     end
 
     it "returns 'MAPPA' for 'mappa' data_request_area_type" do
@@ -42,10 +42,6 @@ describe ViewsHelper, type: :helper do
 
     it "returns 'probation' for 'probation' data_request_area_type" do
       expect(formatted_data_request_area_type('probation')).to eq('probation')
-    end
-
-    it "returns the underscored data_request_area_type as a string for unknown types" do
-      expect(formatted_data_request_area_type('unknown_type')).to eq('unknown type')
     end
   end
 end
