@@ -715,6 +715,7 @@ en:
         escalation_emails: Prison governor email
       data_request:
         location: Location
+        cached_num_pages: Number of pages received
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
@@ -746,7 +747,6 @@ en:
           mappa: MAPPA
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
-        cached_num_pages: Number of pages received
         completed: "Yes, all data received"
         date_completed: Date completed
         send_email_note_text: "Email will be sent to the following recipients:"

@@ -24,7 +24,7 @@ section
 
 section
   - if @data_request.persisted?
-    = f.text_field :cached_num_pages, label_options: { value: t('helpers.label.data_request_area.cached_num_pages') }, class: 'form-control form-control-1-8'
+    = f.text_field :cached_num_pages, label_options: { value: t('helpers.label.data_request.cached_num_pages') }, class: 'form-control form-control-1-8'
     = f.check_box_fieldset :completed, [:completed]
     = f.gov_uk_date_field :cached_date_received, { \
       legend_text: 'Date when data request is complete',
