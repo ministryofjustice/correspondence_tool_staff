@@ -1,8 +1,8 @@
 - content_for :page_title do
-  = t('page_title.data_request_send_email_page')
+  = t('page_title.data_request_area_send_email_page')
 
 - content_for :heading
-  = t('page_title.data_request_send_email_page')
+  = t('page_title.data_request_area_send_email_page')
 
 = link_to("Back", "javascript:history.back()", class: 'govuk-back-link')
 
@@ -41,5 +41,5 @@ span.visually-hidden
 
     div.button-holder
       = form_for @commissioning_document, method: :post, url: send_email_case_data_request_area_commissioning_documents_path(@case, @data_request_area) do |f|
-        = submit_tag t('button.send_email'), class: 'button data_request_send_email', disabled: @no_email_present
+        = submit_tag t('button.send_email'), class: 'button data_request_area_send_email', disabled: @no_email_present
         = link_to(t('common.cancel'), case_data_request_area_path(@case, @data_request_area), class: 'acts-like-button data_request_cancel moj-style-link')

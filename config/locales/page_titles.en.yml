@@ -48,7 +48,7 @@ en:
     data_request_area_page: Record data request area
     data_request_edit_page: Update page count
     data_request_send_probation_email_page: Do you want to send the commissioning email to Branston Archives?
-    data_request_send_email_page: Are you sure you want to send the commissioning email?
+    data_request_area_send_email_page: Are you sure you want to send the commissioning email?
     data_request_show_page: View data request
     data_request_area_show_page: View data request area
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
