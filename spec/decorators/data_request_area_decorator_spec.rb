@@ -85,7 +85,10 @@ describe DataRequestAreaDecorator, type: :model do
 
   describe "#request_document" do
     let(:decorated) { data_request_area.decorate }
-    let!(:commissioning_document) { create :commissioning_document, data_request_area: }
+
+    before do
+      create :commissioning_document, data_request_area:
+    end
 
     it "displays the current request document" do
       # TODO: update during the chase work to use the relevant stage
