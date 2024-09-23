@@ -56,6 +56,7 @@ class Case::SAR::Offender < Case::Base
         subject_aliases: "B",
         third_party_company_name: "B",
         third_party_name: "B",
+        probation_area: "B",
       }
     end
 
@@ -139,7 +140,8 @@ class Case::SAR::Offender < Case::Base
                  further_actions_required: :string,
                  case_originally_rejected: :boolean,
                  other_rejected_reason: :string,
-                 rejected_reasons: [:string, { array: true, default: [] }]
+                 rejected_reasons: [:string, { array: true, default: [] }],
+                 probation_area: :string
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
