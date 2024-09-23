@@ -1112,6 +1112,7 @@ en:
       postal_address: "Requester's postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
+      probation_area: Probation area
       progress_for_clearance: "Ready for Disclosure clearance"
       reason_for_refusal: Outcome
       outcome_reason: Reason for appeal outcome
