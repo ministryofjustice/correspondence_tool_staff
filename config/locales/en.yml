@@ -534,12 +534,10 @@ en:
     next_page_assign: Create case
     request_amends: Request amends
     save_changes: Save changes
-    save_location: Save location
     search: Search
     edit: Edit
     delete: Delete
     update_partial_flags: Update partial case
-    select_document: Select Day 1 request document
     download_document: Download Day 1 request document
     generate_document: Generate Day 1 request document
     send_email: Send commissioning email
@@ -1638,12 +1636,6 @@ en:
         heading: Data requested
         none: No data requests recorded
     commissioning_documents:
-      new:
-        heading: Select Day 1 request document
-      edit:
-        heading: Select Day 1 request document
-      replace:
-        heading: Upload document
       table_headings:
         request_document: Request document
         last_updated: Last updated
