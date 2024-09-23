@@ -82,6 +82,8 @@ class Case::SAR::Offender < Case::Base
     sent_to_sscl_at
   ].freeze
 
+  REJECTED_AUTO_CLOSURE_DEADLINE = 90
+
   REJECTED_REASONS = {
     "cctv_bwcv" => "CCTV / BWCV request",
     "change_of_name_certificate" => "Change of name certificate",
@@ -556,5 +558,19 @@ private
                   else
                     next_number
                   end
+  end
+
+  def set_deadlines
+    super
+    if rejected?
+      self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    end
+  end
+
+  def update_deadlines
+    super
+    if changed.include?("received_date") && rejected?
+      self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    end
   end
 end

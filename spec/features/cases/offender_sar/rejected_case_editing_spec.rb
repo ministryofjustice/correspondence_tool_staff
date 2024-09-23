@@ -69,6 +69,21 @@ feature "Offender SAR Case editing by a manager", :js do
     expect(cases_show_page.case_status).to have_content "Rejected"
   end
 
+  scenario "external_deadline remains 90 days for a rejected case after editing the received_date" do
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+
+    cases_show_page.offender_sar_date_received.change_link.click
+    expect(cases_edit_offender_sar_date_received_page).to be_displayed
+    cases_edit_offender_sar_date_received_page.edit_received_date(90.days.ago)
+    formatted_date = Time.zone.today.to_date.strftime("%d %b %Y")
+
+    click_on "Continue"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Final deadline"
+    expect(cases_show_page).to have_content formatted_date
+  end
+
   scenario "rejected to closed case remains closed after editing subject details page" do
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 

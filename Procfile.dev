@@ -1,4 +1,4 @@
 web: bundle exec rails server -p 3000
 background_jobs: bundle exec sidekiq -C config/sidekiq-background-jobs.yml
-uploads: bundle exec sidekiq -C config/sidekiq-uploads.yml
+warehouse: bundle exec sidekiq -C config/sidekiq-warehouse-jobs.yml
 emails: bundle exec sidekiq -C config/sidekiq-quick-jobs.yml
