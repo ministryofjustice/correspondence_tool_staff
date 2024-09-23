@@ -861,6 +861,7 @@ en:
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
+        probation_area: Probation area
         received_date: "Received at MOJ"
         rejected_reason: Why are you rejecting this case?
         recipient:
