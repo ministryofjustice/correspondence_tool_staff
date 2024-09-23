@@ -133,8 +133,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
     end
 
-    xcontext "when commissioning email has been sent" do
-      # TODO: to be completed during the chase work
+    context "when commissioning email has been sent" do
       let(:email_address) { "user@prison.gov.uk" }
 
       before do
@@ -157,6 +156,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       it "displays email details" do
+
         expect(page.commissioning_document.email_row.email_type.text).to eq "Day 1 commissioning email"
         expect(page.commissioning_document.email_row.email_address.text).to eq email_address
         expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
