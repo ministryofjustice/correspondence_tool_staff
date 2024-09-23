@@ -36,13 +36,5 @@ module Cases
     def set_commissioning_document
       @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area).decorate
     end
-
-    def create_params
-      if params[:commissioning_document]
-        params.require(:commissioning_document).permit(:template_name, upload: [])
-      else
-        ActiveSupport::HashWithIndifferentAccess.new
-      end
-    end
   end
 end
