@@ -57,24 +57,12 @@ module Cases
     end
 
     def set_commissioning_document
-      @data_request_area.commissioning_document = build_commissioning_document
+      @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
+      @commissioning_document = @data_request_area.commissioning_document.decorate
     end
 
     def create_params
       params.require(:data_request_area).permit(:data_request_area_type, :location, :contact_id)
-    end
-
-    def build_commissioning_document
-      template_class = case @data_request_area.data_request_area_type
-                       when "mappa"
-                         CommissioningDocumentTemplate::Mappa
-                       else
-                         CommissioningDocumentTemplate::Standard
-                       end
-
-      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area).decorate
-      @commissioning_document.template_name = template_class.name.demodulize.underscore
-      @commissioning_document
     end
 
     def authorize_action

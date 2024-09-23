@@ -176,6 +176,27 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#build_commissioning_document" do
+    let(:data_request_area) { build(:data_request_area, data_request_area_type: "prison") }
+    let(:mappa_data_request_area) { build(:data_request_area, data_request_area_type: "mappa") }
+
+    it "builds a standard commissioning document template" do
+      document = data_request_area.build_commissioning_document
+      expect(document.template_name).to eq("standard")
+    end
+
+    it "builds a mappa commissioning document" do
+      document = mappa_data_request_area.build_commissioning_document
+      expect(document.template_name).to eq("mappa")
+    end
+
+    it "finds or initializes a commissioning document" do
+      document = data_request_area.build_commissioning_document
+      expect(document).to be_a(CommissioningDocument)
+      expect(document.data_request_area).to eq(data_request_area)
+    end
+  end
+
   describe "#clean_attributes" do
     subject(:data_request_area) { build :data_request_area }
 
