@@ -1,7 +1,5 @@
 module Cases
   class DataRequestsController < ApplicationController
-    NUM_NEW_DATA_REQUESTS = 3
-
     before_action :set_case
     before_action :set_data_request_area
     before_action :set_data_request, only: %i[show edit update destroy]
