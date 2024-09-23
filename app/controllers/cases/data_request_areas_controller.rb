@@ -30,9 +30,7 @@ module Cases
       end
     end
 
-    def show
-      @request_ready = @data_request_area.data_requests.present?
-    end
+    def show; end
 
     def destroy
       if @data_request_area.data_requests.exists?
