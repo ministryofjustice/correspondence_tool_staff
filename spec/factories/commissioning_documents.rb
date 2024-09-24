@@ -12,6 +12,7 @@
 #
 FactoryBot.define do
   factory :commissioning_document do
+    data_request
     data_request_area
     template_name { "standard" }
   end

@@ -30,10 +30,11 @@ class CommissioningDocument < ApplicationRecord
   }
 
   belongs_to :data_request_area
+  belongs_to :data_request
   belongs_to :attachment, class_name: "CaseAttachment"
 
   validates :data_request_area, presence: true
-  validates :data_request, presence: true
+  validates :data_request, presence: true, on: %i[update edit]
   validates :template_name, presence: true
 
   delegate :deadline, to: :template

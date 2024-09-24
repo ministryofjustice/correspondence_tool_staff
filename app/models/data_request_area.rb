@@ -15,7 +15,7 @@ class DataRequestArea < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
-  has_many :data_requests
+  has_many :data_requests, dependent: :destroy
   has_one :commissioning_document
   has_many :data_request_emails
 
