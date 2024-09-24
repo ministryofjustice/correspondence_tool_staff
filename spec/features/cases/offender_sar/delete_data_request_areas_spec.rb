@@ -3,25 +3,15 @@ require "rails_helper"
 feature "Data Request Areas for an Offender SAR" do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
-  given!(:contact) { create(:contact) }
   given!(:data_request_area) { create(:data_request_area, offender_sar_case:).decorate }
 
   background do
     login_as manager
   end
-  scenario "delete a data request area which has no sent emails", js: true do
-    #TODO
-    # update to use emails check
-    data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)    click_on "Record data request"
-    expect(data_request_area_page).to be_displayed
 
-    click_on "Find an address"
-    click_on "Use #{contact.name}"
-    data_request_area_page.form.choose_area_request_type("prison")
-    click_on "Continue"
+  scenario "delete a data request area which has no sent emails", js: true do
+    data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)
     expect(data_request_area_show_page).to be_displayed
-    expect(page).to have_content("Data request area successfully recorded")
-    expect(page).to have_content("No data requests recorded")
 
     accept_confirm do
       click_on "Delete", match: :first
@@ -29,10 +19,10 @@ feature "Data Request Areas for an Offender SAR" do
   end
 
   scenario "cannot delete a data request area which has sent emails", js: true do
-    #TODO
-    # update to use emails check
-    data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)    click_on "Record data request"
-    expect(data_request_area_page).to be_displayed
+    create(:data_request_email, data_request_area:, created_at: "2024-07-07 14:53", email_address: "user@prison.gov.uk")
+    data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)
 
+    expect(data_request_area_show_page).to be_displayed
+    expect(page).not_to have_link("Delete")
   end
 end

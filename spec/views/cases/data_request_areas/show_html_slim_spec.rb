@@ -156,7 +156,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       it "does not display delete button" do
-        expect(page).to have_no_link('Delete', href: case_data_request_area_path(data_request_area.kase, data_request_area))
+        expect(page).to have_no_link("Delete", href: case_data_request_area_path(data_request_area.kase, data_request_area))
       end
 
       it "displays email details" do
@@ -169,7 +169,7 @@ describe "cases/data_request_areas/show", type: :view do
 
     context "when commissioning email has not been sent" do
       before do
-        commissioning_document.update(sent: false)
+        commissioning_document.update!(sent: false)
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request_area, data_request_area.decorate)
         assign(:data_request, data_request.decorate)
@@ -181,11 +181,11 @@ describe "cases/data_request_areas/show", type: :view do
 
       it "displays send email button" do
         expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
-        expect(page).to have_selector('.data_request_area_send_email')
+        expect(page).to have_selector(".data_request_area_send_email")
       end
 
       it "displays delete button" do
-        expect(page).to have_link('Delete', href: case_data_request_area_path(data_request_area.kase, data_request_area))
+        expect(page).to have_link("Delete", href: case_data_request_area_path(data_request_area.kase, data_request_area))
       end
 
       it "does not display email details section" do
