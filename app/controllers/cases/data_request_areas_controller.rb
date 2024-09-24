@@ -34,7 +34,7 @@ module Cases
 
     def destroy
       if @data_request_area.data_request_emails.exists?
-        redirect_to case_path(@case), notice: "Data request area cannot be destroyed because it has associated data requests."
+        redirect_to case_path(@case), notice: "Data request area cannot be destroyed because it has sent emails."
       else
         @data_request_area.destroy!
         redirect_to case_path(@case), notice: "Data request was successfully destroyed."

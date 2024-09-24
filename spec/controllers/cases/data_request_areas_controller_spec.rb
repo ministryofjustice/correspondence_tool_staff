@@ -90,10 +90,14 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     context "with a data request item" do
       let(:data_request_area) { create :data_request_area, offender_sar_case: }
       let!(:data_request) { create :data_request, data_request_area:, offender_sar_case: } # rubocop:disable RSpec/LetSetup
+      let!(:data_request_email) { create(:data_request_email, data_request_area:) }
 
       it "is not destroyed" do
-        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by 0
-        expect(flash[:notice]).to eq("Data request area cannot be destroyed because it has associated data requests.")
+        expect {
+          delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id }
+        }.to change(DataRequestArea.all, :size).by(0)
+        expect(flash[:notice]).to eq("Data request area cannot be destroyed because it has sent emails.")
+        expect(response).to redirect_to case_path(offender_sar_case)
       end
     end
 
@@ -101,7 +105,9 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       let!(:data_request_area) { create :data_request_area, offender_sar_case: }
 
       it "is destroyed" do
-        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by(-1)
+        expect {
+          delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id }
+        }.to change(DataRequestArea.all, :size).by(-1)
         expect(flash[:notice]).to eq("Data request was successfully destroyed.")
         expect(response).to redirect_to case_path(offender_sar_case)
       end
