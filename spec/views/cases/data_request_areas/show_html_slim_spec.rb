@@ -155,12 +155,41 @@ describe "cases/data_request_areas/show", type: :view do
         expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
       end
 
-      it "displays email details" do
+      it "does not display delete button" do
+        expect(page).to have_no_link('Delete', href: case_data_request_area_path(data_request_area.kase, data_request_area))
+      end
 
+      it "displays email details" do
         expect(page.commissioning_document.email_row.email_type.text).to eq "Day 1 commissioning email"
         expect(page.commissioning_document.email_row.email_address.text).to eq email_address
         expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
         expect(page.commissioning_document.email_row.status.text).to eq "Created"
+      end
+    end
+
+    context "when commissioning email has not been sent" do
+      before do
+        commissioning_document.update(sent: false)
+        assign(:commissioning_document, commissioning_document.decorate)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:data_request, data_request.decorate)
+        assign(:case, data_request_area.kase)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "displays send email button" do
+        expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
+        expect(page).to have_selector('.data_request_area_send_email')
+      end
+
+      it "displays delete button" do
+        expect(page).to have_link('Delete', href: case_data_request_area_path(data_request_area.kase, data_request_area))
+      end
+
+      it "does not display email details section" do
+        expect { page.commissioning_document.email_row }.to raise_error(Capybara::ElementNotFound)
       end
     end
   end
