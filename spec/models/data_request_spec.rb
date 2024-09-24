@@ -18,6 +18,7 @@
 #  completed               :boolean          default(FALSE), not null
 #  contact_id              :bigint
 #  email_branston_archives :boolean          default(FALSE)
+#  data_request_area_id    :bigint
 #
 require "rails_helper"
 
