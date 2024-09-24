@@ -560,12 +560,13 @@ ALTER SEQUENCE public.category_references_id_seq OWNED BY public.category_refere
 
 CREATE TABLE public.commissioning_documents (
     id bigint NOT NULL,
-    data_request_area_id bigint,
+    data_request_id bigint,
     template_name public.template_name,
     sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    attachment_id bigint
+    attachment_id bigint,
+    data_request_area_id bigint
 );
 
 
@@ -712,13 +713,14 @@ ALTER SEQUENCE public.data_request_areas_id_seq OWNED BY public.data_request_are
 
 CREATE TABLE public.data_request_emails (
     id bigint NOT NULL,
-    data_request_area_id bigint,
+    data_request_id bigint,
     email_type integer DEFAULT 0,
     email_address character varying,
     notify_id character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    data_request_area_id bigint
 );
 
 
@@ -2055,10 +2057,10 @@ CREATE INDEX index_commissioning_documents_on_attachment_id ON public.commission
 
 
 --
--- Name: index_commissioning_documents_on_data_request_area_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_commissioning_documents_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_commissioning_documents_on_data_request_area_id ON public.commissioning_documents USING btree (data_request_area_id);
+CREATE INDEX index_commissioning_documents_on_data_request_id ON public.commissioning_documents USING btree (data_request_id);
 
 
 --
@@ -2097,10 +2099,10 @@ CREATE INDEX index_data_request_areas_on_user_id ON public.data_request_areas US
 
 
 --
--- Name: index_data_request_emails_on_data_request_area_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_data_request_emails_on_data_request_area_id ON public.data_request_emails USING btree (data_request_area_id);
+CREATE INDEX index_data_request_emails_on_data_request_id ON public.data_request_emails USING btree (data_request_id);
 
 
 --
@@ -2399,9 +2401,9 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20240924085350'),
+('20240924085307'),
 ('20240912095501'),
-('20240911103932'),
-('20240911103813'),
 ('20240829160849'),
 ('20240731104518'),
 ('20240729145714'),
