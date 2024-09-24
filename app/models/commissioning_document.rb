@@ -34,7 +34,7 @@ class CommissioningDocument < ApplicationRecord
   belongs_to :attachment, class_name: "CaseAttachment"
 
   validates :data_request_area, presence: true
-  validates :data_request, presence: true, on: %i[update edit]
+  validates :data_request, presence: true, if: :has_no_request_area?
   validates :template_name, presence: true
 
   delegate :deadline, to: :template
@@ -69,6 +69,10 @@ class CommissioningDocument < ApplicationRecord
     attachment.destroy!
     self.attachment_id = nil
     save!
+  end
+
+  def has_no_request_area?
+    self.data_request_area.nil?
   end
 
 private

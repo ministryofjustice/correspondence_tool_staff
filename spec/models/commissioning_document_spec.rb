@@ -115,4 +115,20 @@ RSpec.describe CommissioningDocument, type: :model do
       expect { attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe "#has_no_request_area?" do
+    context "when data_request_area is nil" do
+      let(:data_request_area) { nil }
+
+      it "returns true" do
+        expect(commissioning_document.has_no_request_area?).to be true
+      end
+    end
+
+    context "when data_request_area is present" do
+      it "returns false" do
+        expect(commissioning_document.has_no_request_area?).to be false
+      end
+    end
+  end
 end
