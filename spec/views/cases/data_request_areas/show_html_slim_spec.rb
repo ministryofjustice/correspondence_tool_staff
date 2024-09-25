@@ -47,7 +47,6 @@ describe "cases/data_request_areas/show", type: :view do
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
         assign(:commissioning_document, data_request_area.commissioning_document.decorate)
-        assign(:request_ready, true)
 
         render
         data_request_area_show_page.load(rendered)
@@ -78,7 +77,6 @@ describe "cases/data_request_areas/show", type: :view do
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
         assign(:commissioning_document, data_request_area.commissioning_document.decorate)
-        assign(:request_ready, false)
 
         render
         data_request_area_show_page.load(rendered)
@@ -114,7 +112,6 @@ describe "cases/data_request_areas/show", type: :view do
         assign(:data_request, data_request)
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
-        assign(:commissioning_document, data_request_area.commissioning_document.decorate)
 
         render
         data_request_area_show_page.load(rendered)
@@ -147,7 +144,7 @@ describe "cases/data_request_areas/show", type: :view do
         data_request_area_show_page.load(rendered)
       end
 
-      it "only displays Download link" do
+      it "displays Download link" do
         expect(page.commissioning_document.row.actions.text).to eq "Download"
       end
 
