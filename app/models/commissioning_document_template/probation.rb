@@ -1,7 +1,5 @@
 module CommissioningDocumentTemplate
   class Probation < CommissioningDocumentTemplate::Base
-    BRANSTON_ARCHIVES_EMAIL = "BranstonRegistryRequests2@justice.gov.uk".freeze
-
     def request_type
       :Probation
     end

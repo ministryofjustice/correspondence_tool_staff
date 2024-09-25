@@ -13,6 +13,7 @@
 #  data_request_area_id :bigint
 #
 class DataRequestEmail < ApplicationRecord
+  belongs_to :data_request
   belongs_to :data_request_area
 
   validates :data_request_area, presence: true
