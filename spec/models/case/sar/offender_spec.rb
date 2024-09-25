@@ -645,6 +645,7 @@ describe Case::SAR::Offender do
         postal_address: "B",
         previous_case_numbers: "B",
         prison_number: "B",
+        probation_area: "B",
         requester_reference: "B",
         subject: "B",
         subject_address: "B",
@@ -889,6 +890,26 @@ describe Case::SAR::Offender do
 
       it "returns it in uppercase" do
         expect(kase.first_prison_number).to eq "A12345"
+      end
+    end
+  end
+
+  describe "#probation_area" do
+    let(:kase) { create :offender_sar_case }
+
+    context "when the area is nil" do
+      let(:kase)  { create :offender_sar_case, probation_area: nil }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to eq ""
+      end
+    end
+
+    context "when the area is an empty string" do
+      let(:kase)  { create :offender_sar_case, probation_area: "" }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to eq ""
       end
     end
   end
