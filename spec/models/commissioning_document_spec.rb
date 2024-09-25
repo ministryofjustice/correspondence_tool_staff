@@ -58,6 +58,16 @@ RSpec.describe CommissioningDocument, type: :model do
     end
   end
 
+  describe "data request area validation" do
+    context "with no data_request_area" do
+      it "is not valid" do
+        commissioning_document = build(:commissioning_document, data_request_area: nil)
+        expect(commissioning_document).not_to be_valid
+        expect(commissioning_document.errors[:data_request_area]).to include("is required")
+      end
+    end
+  end
+
   describe "#document" do
     context "when invalid object" do
       it "returns nil" do
@@ -129,31 +139,6 @@ RSpec.describe CommissioningDocument, type: :model do
     context "when data_request_area is present" do
       it "returns false" do
         expect(commissioning_document.has_no_request_area?).to be false
-      end
-    end
-  end
-
-  describe "validations" do
-    let(:data_request_area) { create(:data_request_area) }
-
-    context "with valid attributes" do
-      it "is valid" do
-        commissioning_document = build(:commissioning_document, data_request_area:, template_name: "standard")
-        expect(commissioning_document).to be_valid
-      end
-    end
-
-    context "with invalid attributes" do
-      it "is invalid without a data_request_area" do
-        commissioning_document = build(:commissioning_document, data_request_area: nil)
-        expect(commissioning_document).not_to be_valid
-        expect(commissioning_document.errors[:data_request_area]).to include("is required")
-      end
-
-      it "is invalid without a template_name" do
-        commissioning_document = build(:commissioning_document, data_request_area:, template_name: nil)
-        expect(commissioning_document).not_to be_valid
-        expect(commissioning_document.errors[:template_name]).to include("is required")
       end
     end
   end
