@@ -13,7 +13,7 @@ module CommissioningDocumentTemplate
         addressee_location: data_request.location,
         aliases: kase.subject_aliases,
         deadline:,
-        )
+      )
     end
   end
 end

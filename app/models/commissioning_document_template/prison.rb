@@ -19,7 +19,7 @@ module CommissioningDocumentTemplate
         date_range: data_request.request_dates,
         deadline:,
         data_required: data_request.data_required || default_data_required,
-        )
+      )
     end
   end
 end
