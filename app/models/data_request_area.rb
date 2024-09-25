@@ -56,15 +56,10 @@ class DataRequestArea < ApplicationRecord
   end
 
   def build_commissioning_document
-    template_class = case data_request_area_type
-                     when "mappa"
-                       CommissioningDocumentTemplate::Mappa
-                     else
-                       CommissioningDocumentTemplate::Standard
-                     end
+    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
 
     commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: self)
-    commissioning_document.template_name = template_class.name.demodulize.underscore
+    commissioning_document.template_name = template_name
     commissioning_document
   end
 
