@@ -176,33 +176,21 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
-  describe "#build_commissioning_document" do
-    let(:data_request_area) { create(:data_request_area, data_request_area_type: "prison") }
-    let(:mappa_data_request_area) { create(:data_request_area, data_request_area_type: "mappa") }
+  describe "#create_commissioning_document" do
+    context "when a new data request area is created" do
+      it "creates a standard commissioning document with the correct template" do
+        data_request_area = create(:data_request_area, data_request_area_type: "prison")
+        document = data_request_area.commissioning_document
 
-    context "when no data requests exist" do
-      it "does not build a commissioning document" do
-        expect(data_request_area.build_commissioning_document).to be_nil
-      end
-    end
-
-    context "when data requests exist" do
-      before { create(:data_request, data_request_area:) }
-
-      it "builds a standard commissioning document template" do
-        document = data_request_area.build_commissioning_document
+        expect(document).to be_present
         expect(document.template_name).to eq("standard")
       end
 
-      it "builds a commissioning document" do
-        document = data_request_area.build_commissioning_document
-        expect(document).to be_a(CommissioningDocument)
-        expect(document.data_request_area).to eq(data_request_area)
-      end
+      it "creates a mappa commissioning document for mappa data request area" do
+        data_request_area = create(:data_request_area, data_request_area_type: "mappa")
+        document = data_request_area.commissioning_document
 
-      it "builds a mappa commissioning document when data request area type is 'mappa'" do
-        create(:data_request, data_request_area: mappa_data_request_area)
-        document = mappa_data_request_area.build_commissioning_document
+        expect(document).to be_present
         expect(document.template_name).to eq("mappa")
       end
     end

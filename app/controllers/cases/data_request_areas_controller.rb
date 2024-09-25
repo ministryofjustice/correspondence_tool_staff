@@ -21,8 +21,6 @@ module Cases
 
       case service.result
       when :ok
-        @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
-
         flash[:notice] = t(".success")
         redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error

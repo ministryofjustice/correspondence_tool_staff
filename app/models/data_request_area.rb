@@ -28,6 +28,8 @@ class DataRequestArea < ApplicationRecord
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
+  after_create :create_commissioning_document
+
 
   enum data_request_area_type: {
     prison: "prison",
@@ -55,11 +57,12 @@ class DataRequestArea < ApplicationRecord
     contact&.data_request_emails&.split(" ") || []
   end
 
-  def build_commissioning_document
+  def create_commissioning_document
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-    commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: self)
-    commissioning_document.template_name = template_name
-    commissioning_document
+    CommissioningDocument.create!(
+      data_request_area: self,
+      template_name: template_name
+    )
   end
 
 private

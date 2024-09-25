@@ -20,7 +20,7 @@ private
 
     file = Tempfile.new
     file.write(commissioning_document.document.force_encoding("UTF-8"))
-    uploader = S3Uploader.new(data_request.kase, current_user)
+    uploader = S3Uploader.new(data_request_area.kase, current_user)
     attachment = uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
     commissioning_document.update_attribute(:attachment, attachment) # rubocop:disable Rails/SkipsModelValidations
   end

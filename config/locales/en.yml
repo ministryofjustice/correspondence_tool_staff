@@ -354,6 +354,8 @@ en:
           attributes:
             template_name:
               blank: is required
+            data_request_area:
+              blank: is required
         data_request:
           attributes:
             date_from:
