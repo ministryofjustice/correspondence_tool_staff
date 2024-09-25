@@ -72,7 +72,7 @@ class CommissioningDocument < ApplicationRecord
   end
 
   def has_no_request_area?
-    self.data_request_area.nil?
+    data_request_area.nil?
   end
 
 private

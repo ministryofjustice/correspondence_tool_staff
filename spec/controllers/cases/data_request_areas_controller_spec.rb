@@ -90,7 +90,10 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
     context "with a data request item" do
       let(:data_request_area) { create :data_request_area, offender_sar_case: }
       let!(:data_request) { create :data_request, data_request_area:, offender_sar_case: } # rubocop:disable RSpec/LetSetup
-      let!(:data_request_email) { create(:data_request_email, data_request_area:) }
+
+      before do
+        create :data_request_email, data_request_area:
+      end
 
       it "is not destroyed" do
         expect {
