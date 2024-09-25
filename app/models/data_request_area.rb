@@ -56,8 +56,6 @@ class DataRequestArea < ApplicationRecord
   end
 
   def build_commissioning_document
-    return nil unless data_requests.exists?
-
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
     commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: self)
     commissioning_document.template_name = template_name

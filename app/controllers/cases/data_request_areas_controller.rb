@@ -21,6 +21,8 @@ module Cases
 
       case service.result
       when :ok
+        @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
+
         flash[:notice] = t(".success")
         redirect_to case_data_request_area_path(@case, @data_request_area)
       when :error
@@ -57,12 +59,7 @@ module Cases
     end
 
     def set_commissioning_document
-      if @data_request_area.data_requests.exists?
-        @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
-        @commissioning_document = @data_request_area.commissioning_document.decorate
-      else
-        @commissioning_document = nil
-      end
+      @commissioning_document = @data_request_area.commissioning_document.decorate
     end
 
     def create_params
