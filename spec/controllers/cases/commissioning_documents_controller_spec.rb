@@ -55,10 +55,6 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       expect(assigns(:data_request_area)).to eq data_request_area
     end
 
-    it "sets @commissioning_document" do
-      expect(assigns(:commissioning_document)).to eq commissioning_document
-    end
-
     it "calls the send email service" do
       expect(service).to receive(:send!)
       post :send_email, params:

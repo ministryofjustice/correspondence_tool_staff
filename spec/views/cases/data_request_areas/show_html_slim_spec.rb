@@ -143,6 +143,7 @@ describe "cases/data_request_areas/show", type: :view do
         commissioning_document.sent = true
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request_area, data_request_area.decorate)
+        assign(:data_request, data_request.decorate)
         assign(:case, data_request_area.kase)
 
         render
