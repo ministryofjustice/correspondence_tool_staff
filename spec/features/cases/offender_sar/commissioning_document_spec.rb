@@ -11,6 +11,7 @@ feature "commissioning document" do
 
   scenario "Download commissioning document" do
     create(:commissioning_document, data_request_area:)
+    create(:data_request, data_request_area:)
     data_request_area_show_page.load(case_id: offender_sar_case.id, data_request_area_id: data_request_area.id)
     click_on "Download"
 
