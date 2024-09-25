@@ -13,7 +13,15 @@
 #
 class CommissioningDocument < ApplicationRecord
   TEMPLATE_TYPES = {
+    cat_a: CommissioningDocumentTemplate::CatA,
+    cctv: CommissioningDocumentTemplate::Cctv,
+    cross_border: CommissioningDocumentTemplate::CrossBorder,
     mappa: CommissioningDocumentTemplate::Mappa,
+    pdp: CommissioningDocumentTemplate::Pdp,
+    prison: CommissioningDocumentTemplate::Prison,
+    probation: CommissioningDocumentTemplate::Probation,
+    security: CommissioningDocumentTemplate::Security,
+    telephone: CommissioningDocumentTemplate::Telephone,
     standard: CommissioningDocumentTemplate::Standard,
   }.freeze
 
