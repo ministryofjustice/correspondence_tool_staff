@@ -38,7 +38,7 @@ module CommissioningDocumentTemplate
     end
 
     def date_format(date)
-      date.strftime("%d/%m/%Y") unless date.nil?
+      date&.strftime("%d/%m/%Y")
     end
   end
 end
