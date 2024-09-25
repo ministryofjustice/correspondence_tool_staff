@@ -30,7 +30,6 @@ class DataRequestArea < ApplicationRecord
   before_validation :clean_attributes
   after_create :create_commissioning_document
 
-
   enum data_request_area_type: {
     prison: "prison",
     probation: "probation",
@@ -61,7 +60,7 @@ class DataRequestArea < ApplicationRecord
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
     CommissioningDocument.create!(
       data_request_area: self,
-      template_name: template_name
+      template_name:,
     )
   end
 

@@ -138,7 +138,7 @@ RSpec.describe CommissioningDocument, type: :model do
 
     context "with valid attributes" do
       it "is valid" do
-        commissioning_document = build(:commissioning_document, data_request_area: data_request_area, template_name: "standard")
+        commissioning_document = build(:commissioning_document, data_request_area:, template_name: "standard")
         expect(commissioning_document).to be_valid
       end
     end
