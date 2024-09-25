@@ -50,6 +50,11 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               date_to: "08/08/2024",
             },
           ],
+          requests: [
+            {
+              request_type: "All prison records",
+            },
+          ],
         }
       end
 
@@ -80,6 +85,52 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               request_type_note: nil,
               date_from: nil,
               date_to: nil,
+            },
+          ],
+          requests: [
+            {
+              request_type: "All prison records",
+            },
+          ],
+        }
+      end
+
+      it "populates data from the data_request_area and case" do
+        Timecop.freeze(Date.new(2022, 10, 21)) do
+          expect(template.context).to eq expected_context
+        end
+      end
+    end
+
+    context "with multiple requests" do
+      let(:data_request) do
+        build_stubbed(:data_request,
+                      request_type: "all_prison_records")
+      end
+      let(:data_request_two) do
+        build_stubbed(:data_request,
+                      request_type: "cat_a")
+      end
+      let(:expected_context) do
+        {
+          addressee_location: "HMP halifax",
+          dpa_reference: "20062007",
+          offender_name: "Robert Badson",
+          date_of_birth: "11/03/2000",
+          date: "21/10/2022",
+          prison_numbers: "AB12345",
+          deadline: "26/10/2022",
+          request_info: [
+            {
+              request_type: "All prison records",
+              request_type_note: nil,
+              date_from: nil,
+              date_to: nil,
+            },
+          ],
+          requests: [
+            {
+              request_type: "All prison records",
             },
           ],
         }

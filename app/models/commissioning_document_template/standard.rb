@@ -18,10 +18,17 @@ module CommissioningDocumentTemplate
         }
       end
 
+      requests = data_request_area.data_requests.map do |request|
+        {
+          request_type: I18n.t("helpers.label.data_request.request_type.#{request.request_type}"),
+        }
+      end
+
       super.merge(
         addressee_location: data_request_area.location,
         deadline:,
         request_info:,
+        requests:,
       )
     end
   end
