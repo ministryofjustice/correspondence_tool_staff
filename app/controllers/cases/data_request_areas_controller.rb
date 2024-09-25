@@ -57,8 +57,12 @@ module Cases
     end
 
     def set_commissioning_document
-      @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
-      @commissioning_document = @data_request_area.commissioning_document.decorate
+      if @data_request_area.data_requests.exists?
+        @data_request_area.commissioning_document = @data_request_area.build_commissioning_document
+        @commissioning_document = @data_request_area.commissioning_document.decorate
+      else
+        @commissioning_document = nil
+      end
     end
 
     def create_params

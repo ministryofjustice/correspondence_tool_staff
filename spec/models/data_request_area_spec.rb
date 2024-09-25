@@ -177,23 +177,60 @@ RSpec.describe DataRequestArea, type: :model do
   end
 
   describe "#build_commissioning_document" do
-    let(:data_request_area) { build(:data_request_area, data_request_area_type: "prison") }
-    let(:mappa_data_request_area) { build(:data_request_area, data_request_area_type: "mappa") }
+    let(:data_request_area) { create(:data_request_area, data_request_area_type: "prison") }
+    let(:mappa_data_request_area) { create(:data_request_area, data_request_area_type: "mappa") }
 
-    it "builds a standard commissioning document template" do
-      document = data_request_area.build_commissioning_document
-      expect(document.template_name).to eq("standard")
+    context "when no data requests exist" do
+      it "does not build a commissioning document" do
+        expect(data_request_area.build_commissioning_document).to be_nil
+      end
     end
 
-    it "builds a mappa commissioning document" do
-      document = mappa_data_request_area.build_commissioning_document
-      expect(document.template_name).to eq("mappa")
+    context "when data requests exist" do
+      before { create(:data_request, data_request_area:) }
+
+      it "builds a standard commissioning document template" do
+        document = data_request_area.build_commissioning_document
+        expect(document.template_name).to eq("standard")
+      end
+
+      it "builds a commissioning document" do
+        document = data_request_area.build_commissioning_document
+        expect(document).to be_a(CommissioningDocument)
+        expect(document.data_request_area).to eq(data_request_area)
+      end
+
+      it "builds a mappa commissioning document when data request area type is 'mappa'" do
+        create(:data_request, data_request_area: mappa_data_request_area)
+        document = mappa_data_request_area.build_commissioning_document
+        expect(document.template_name).to eq("mappa")
+      end
+    end
+  end
+
+  describe "associations" do
+    context "with dependent data_requests" do
+      let(:data_request_area) { create(:data_request_area) }
+
+      before do
+        create(:data_request, data_request_area:)
+      end
+
+      it "destroys associated data_requests when data_request_area is destroyed" do
+        expect { data_request_area.destroy }.to change(DataRequest, :count).by(-1)
+      end
     end
 
-    it "finds or initializes a commissioning document" do
-      document = data_request_area.build_commissioning_document
-      expect(document).to be_a(CommissioningDocument)
-      expect(document.data_request_area).to eq(data_request_area)
+    context "with dependent commissioning_documents" do
+      let(:data_request_area) { create(:data_request_area) }
+
+      before do
+        create(:commissioning_document, data_request_area:)
+      end
+
+      it "destroys associated commissioning_document when data_request_area is destroyed" do
+        expect { data_request_area.destroy }.to change(CommissioningDocument, :count).by(-1)
+      end
     end
   end
 

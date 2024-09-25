@@ -16,7 +16,7 @@ class DataRequestArea < ApplicationRecord
   belongs_to :user
   belongs_to :contact
   has_many :data_requests, dependent: :destroy
-  has_one :commissioning_document
+  has_one :commissioning_document, dependent: :destroy
   has_many :data_request_emails
 
   validate :validate_location
@@ -56,8 +56,9 @@ class DataRequestArea < ApplicationRecord
   end
 
   def build_commissioning_document
-    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
+    return nil unless data_requests.exists?
 
+    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
     commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: self)
     commissioning_document.template_name = template_name
     commissioning_document
