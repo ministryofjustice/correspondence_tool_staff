@@ -70,6 +70,11 @@ describe "cases/data_request_areas/show", type: :view do
         expect(request_count).to eq 1
         expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
       end
+
+      it "translates the data_request_area_type using the relevant key" do
+        translated_area_type = I18n.t("helpers.label.data_request_area.headers.data_request_area_type.#{data_request_area.data_request_area_type}")
+        expect(page.page_heading.heading.text).to eq "View #{translated_area_type} data request area"
+      end
     end
 
     context "when data request area does not have any data requests" do
