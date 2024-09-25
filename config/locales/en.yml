@@ -538,8 +538,6 @@ en:
     edit: Edit
     delete: Delete
     update_partial_flags: Update partial case
-    download_document: Download Day 1 request document
-    generate_document: Generate Day 1 request document
     send_email: Send commissioning email
 
   helpers:
