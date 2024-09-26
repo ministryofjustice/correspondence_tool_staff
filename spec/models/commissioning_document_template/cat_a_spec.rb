@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.xdescribe CommissioningDocumentTemplate::CatA do
-  subject(:template) { described_class.new(data_request_area:) }
+RSpec.describe CommissioningDocumentTemplate::CatA do
+  subject(:template) { described_class.new(data_request:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -10,7 +10,7 @@ RSpec.xdescribe CommissioningDocumentTemplate::CatA do
                   date_of_birth: "2000-03-11",
                   prison_number: "AB12345")
   end
-  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, location: "HMP Brixton") }
+  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase, location: "HMP Brixton") }
 
   describe "#path" do
     it "matches to a file" do

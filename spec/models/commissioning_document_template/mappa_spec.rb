@@ -77,5 +77,36 @@ RSpec.describe CommissioningDocumentTemplate::Mappa do
         end
       end
     end
+
+    context "with multiple data requests" do
+      let(:data_request_2) do
+        build_stubbed(:data_request,
+                      request_type: "mappa",
+                      date_from: Date.new(2024, 9, 15),
+                      date_to: Date.new(2024, 9, 20)).decorate
+      end
+
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_request_area_type: "mappa", data_requests: [data_request, data_request_2]) }
+
+      let(:expected_context) do
+        {
+          dpa_reference: "20062007",
+          offender_name: "Robert Badson",
+          date_of_birth: "11/03/2000",
+          date_range: "from 01/09/2024 to 10/09/2024\nfrom 15/09/2024 to 20/09/2024",
+          aliases: "Bad Bob",
+          date: "21/10/2022",
+          prison_numbers: "AB12345",
+          pnc: "CD98765",
+          deadline: "10/11/2022",
+        }
+      end
+
+      it "populates data from all data_requests in the data_request_area and combines request dates" do
+        Timecop.freeze(Date.new(2022, 10, 21)) do
+          expect(template.context).to eq expected_context
+        end
+      end
+    end
   end
 end

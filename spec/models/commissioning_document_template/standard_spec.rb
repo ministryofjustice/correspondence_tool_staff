@@ -107,10 +107,12 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
         build_stubbed(:data_request,
                       request_type: "all_prison_records")
       end
-      let(:data_request_two) do
+      let(:data_request_2) do
         build_stubbed(:data_request,
                       request_type: "cat_a")
       end
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_request_area_type: "prison", data_requests: [data_request, data_request_2]) }
+
       let(:expected_context) do
         {
           addressee_location: "HMP halifax",
@@ -127,10 +129,19 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               date_from: nil,
               date_to: nil,
             },
+            {
+              request_type: "CAT A",
+              request_type_note: nil,
+              date_from: nil,
+              date_to: nil,
+            },
           ],
           requests: [
             {
               request_type: "All prison records",
+            },
+            {
+              request_type: "CAT A",
             },
           ],
         }
