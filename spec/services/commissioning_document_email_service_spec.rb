@@ -23,6 +23,12 @@ RSpec.describe CommissioningDocumentEmailService do
   end
 
   describe "#send!" do
+    it "adds the file to the commissioning document" do
+      expect {
+        service.send!
+      }.to change(commissioning_document, :attachment)
+    end
+
     it "sends an email for every contact email address" do
       expect(ActionNotificationsMailer).to receive(:commissioning_email).twice.and_return(mailer)
       expect(mailer).to receive(:deliver_later!).twice
