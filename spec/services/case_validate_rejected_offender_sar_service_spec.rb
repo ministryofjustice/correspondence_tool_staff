@@ -2,17 +2,17 @@ require "rails_helper"
 
 describe CaseValidateRejectedOffenderSARService do
   describe "#call" do
-    let(:team)          { find_or_create :team_branston }
-    let(:user)          { find_or_create :branston_user }
-    let(:kase)          { create :offender_sar_case, :rejected, received_date: 1.day.ago.to_date }
-    let(:service)       do
+    let(:team) { find_or_create :team_branston }
+    let(:user) { find_or_create :branston_user }
+    let(:kase) { create :offender_sar_case, :rejected, received_date: 1.day.ago.to_date }
+    let(:service) do
       described_class.new(user:,
                           kase:,
                           params:)
     end
 
     context "when setting a valid date" do
-      let(:params)        { { received_date: Time.zone.today } }
+      let(:params) { { received_date: Time.zone.today } }
 
       it "changes the received date on the case" do
         service.call
@@ -39,6 +39,12 @@ describe CaseValidateRejectedOffenderSARService do
         expect(kase.number).to eq kase_number
       end
 
+      it "updates the deadline" do
+        expect {
+          service.call
+        }.to change(kase, :external_deadline)
+      end
+
       it "sets results to :ok" do
         service.call
         expect(service.result).to eq :ok
@@ -51,6 +57,16 @@ describe CaseValidateRejectedOffenderSARService do
       it "raises an error when it saves" do
         service.call
         expect(service.result).to eq :error
+      end
+    end
+
+    context "when received_date doesn't change" do
+      let(:params) { { received_date: kase.received_date } }
+
+      it "updates the deadline" do
+        expect {
+          service.call
+        }.to change(kase, :external_deadline)
       end
     end
   end

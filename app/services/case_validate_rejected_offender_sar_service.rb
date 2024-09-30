@@ -13,6 +13,8 @@ class CaseValidateRejectedOffenderSARService
     ActiveRecord::Base.transaction do
       @case.assign_attributes(@params)
       @case.set_valid_case_number
+      # Ensure external deadline is updated
+      @case.external_deadline = @case.deadline_calculator.external_deadline
       @case.save!
       @case.state_machine.validate_rejected_case!(
         {
