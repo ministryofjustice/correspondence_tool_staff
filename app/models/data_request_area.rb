@@ -62,6 +62,18 @@ class DataRequestArea < ApplicationRecord
     contact&.data_request_emails&.split(" ") || []
   end
 
+  def request_dates_both_present?
+    data_requests.any? { |request| request.date_from.present? && request.date_to.present? }
+  end
+
+  def request_date_from_only?
+    data_requests.any? { |request| request.date_from.present? && request.date_to.blank? }
+  end
+
+  def request_date_to_only?
+    data_requests.any? { |request| request.date_from.blank? && request.date_to.present? }
+  end
+
 private
 
   def validate_location

@@ -25,6 +25,22 @@ class DataRequestAreaDecorator < Draper::Decorator
     commissioning_document.decorate.request_document
   end
 
+  def request_dates
+    if request_date_from_only?
+      return "from #{date_format(date_from)} to date"
+    end
+
+    if request_date_to_only?
+      return "up to #{date_format(date_to)}"
+    end
+
+    if request_dates_both_present?
+      return "from #{date_format(date_from)} to #{date_format(date_to)}"
+    end
+
+    ""
+  end
+
   def data_request_area_status_tag(status)
     case status
     when :completed
