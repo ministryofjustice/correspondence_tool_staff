@@ -30,10 +30,7 @@ class DataRequestArea < ApplicationRecord
   before_validation :clean_attributes
   after_create do
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-    CommissioningDocument.create!(
-      data_request_area: self,
-      template_name:,
-    )
+    create_commissioning_document(template_name:)
   end
 
   enum data_request_area_type: {
