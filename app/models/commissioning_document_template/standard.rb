@@ -14,7 +14,7 @@ module CommissioningDocumentTemplate
           request_type: I18n.t("helpers.label.data_request.request_type.#{request.request_type}"),
           request_type_note: request.request_type_note.presence,
           date_from: date_format(request.date_from).presence,
-          date_to: date_format(request.date_to).presence
+          date_to: date_format(request.date_to).presence,
         }
       end
     end
@@ -33,7 +33,7 @@ module CommissioningDocumentTemplate
         deadline:,
         request_info:,
         requests:,
-        )
+      )
     end
   end
 end
