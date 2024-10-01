@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe CommissioningDocumentTemplate::MappaArea do
+RSpec.describe CommissioningDocumentTemplate::Mappa do
   subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do

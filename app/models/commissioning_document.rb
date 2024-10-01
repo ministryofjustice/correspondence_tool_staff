@@ -17,7 +17,6 @@ class CommissioningDocument < ApplicationRecord
     cctv: CommissioningDocumentTemplate::Cctv,
     cross_border: CommissioningDocumentTemplate::CrossBorder,
     mappa: CommissioningDocumentTemplate::Mappa,
-    mappa_area: CommissioningDocumentTemplate::MappaArea,
     pdp: CommissioningDocumentTemplate::Pdp,
     prison: CommissioningDocumentTemplate::Prison,
     probation: CommissioningDocumentTemplate::Probation,

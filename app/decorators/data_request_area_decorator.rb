@@ -26,19 +26,9 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def request_dates
-    if request_date_from_only?
-      return "from #{date_format(date_from)} to date"
-    end
-
-    if request_date_to_only?
-      return "up to #{date_format(date_to)}"
-    end
-
-    if request_dates_both_present?
-      return "from #{date_format(date_from)} to #{date_format(date_to)}"
-    end
-
-    ""
+    data_requests.map { |request|
+      request.decorate.request_dates
+    }.join("\n")
   end
 
   def data_request_area_status_tag(status)
