@@ -83,6 +83,50 @@ describe DataRequestAreaDecorator, type: :model do
     end
   end
 
+  describe "#request_dates" do
+    let(:decorated) { data_request_area.decorate }
+
+    context "with only a from date" do
+      before do
+        create(:data_request, data_request_area:, date_from: Date.new(2022, 8, 20))
+      end
+
+      it "returns expected string" do
+        expect(decorated.request_dates).to eq "from 20/08/2022 to date"
+      end
+    end
+
+    context "with only a to date" do
+      before do
+        create(:data_request, data_request_area:, date_to: Date.new(2022, 12, 13))
+      end
+
+      it "returns expected string" do
+        expect(decorated.request_dates).to eq "up to 13/12/2022"
+      end
+    end
+
+    context "with both from and to dates" do
+      before do
+        create(:data_request, data_request_area:, date_from: Date.new(2022, 12, 13), date_to: Date.new(2022, 12, 13))
+      end
+
+      it "returns expected string" do
+        expect(decorated.request_dates).to eq "from 13/12/2022 to 13/12/2022"
+      end
+    end
+
+    context "with neither from nor to dates" do
+      before do
+        create(:data_request, data_request_area:, date_from: nil, date_to: nil)
+      end
+
+      it "returns an empty string" do
+        expect(decorated.request_dates).to eq ""
+      end
+    end
+  end
+
   describe "#request_document" do
     let(:decorated) { data_request_area.decorate }
 
