@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.xdescribe CommissioningDocumentTemplate::Pdp do
-  subject(:template) { described_class.new(data_request:) }
+RSpec.describe CommissioningDocumentTemplate::Pdp do
+  subject(:template) { described_class.new(data_request_area: data_request) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,

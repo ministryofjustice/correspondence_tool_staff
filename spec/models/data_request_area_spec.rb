@@ -135,6 +135,93 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#recipient_emails" do
+    let(:email_1) { "a.smith@email.com" }
+    let(:email_2) { "b.jones@email.com" }
+    let(:email_3) { "c.evans@gmail.com" }
+
+    let(:contact_without_email) { build(:contact, data_request_emails: nil) }
+    let(:contact_with_one_email) { build(:contact, data_request_emails: email_1) }
+    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_1}\n#{email_2}") }
+    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_1}    #{email_2}") }
+
+    context "when there is a contact with no email" do
+      subject(:data_request_area) { build :data_request_area, contact: contact_without_email }
+
+      it { expect(data_request_area.recipient_emails).to eq [] }
+    end
+
+    context "when there is a contact with one email" do
+      subject(:data_request_area) { build :data_request_area, contact: contact_with_one_email }
+
+      it { expect(data_request_area.recipient_emails).to eq [email_1] }
+    end
+
+    context "when there is a contact with two emails" do
+      subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
+
+      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+    end
+
+    context "when there is no contact" do
+      subject(:data_request_area) { build :data_request_area }
+
+      it { expect(data_request_area.recipient_emails).to eq [] }
+    end
+
+    context "when there is a contact with two emails, separated by many spaces" do
+      subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails_including_spaces }
+
+      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+    end
+  end
+
+  describe "#create_commissioning_document" do
+    context "when a new data request area is created" do
+      it "creates a standard commissioning document with the correct template" do
+        data_request_area = create(:data_request_area, data_request_area_type: "prison")
+        document = data_request_area.commissioning_document
+
+        expect(document).to be_present
+        expect(document.template_name).to eq("standard")
+      end
+
+      it "creates a mappa commissioning document for mappa data request area" do
+        data_request_area = create(:data_request_area, data_request_area_type: "mappa")
+        document = data_request_area.commissioning_document
+
+        expect(document).to be_present
+        expect(document.template_name).to eq("mappa")
+      end
+    end
+  end
+
+  describe "associations" do
+    context "with dependent data_requests" do
+      let(:data_request_area) { create(:data_request_area) }
+
+      before do
+        create(:data_request, data_request_area:)
+      end
+
+      it "destroys associated data_requests when data_request_area is destroyed" do
+        expect { data_request_area.destroy }.to change(DataRequest, :count).by(-1)
+      end
+    end
+
+    context "with dependent commissioning_documents" do
+      let(:data_request_area) { create(:data_request_area) }
+
+      before do
+        create(:commissioning_document, data_request_area:)
+      end
+
+      it "destroys associated commissioning_document when data_request_area is destroyed" do
+        expect { data_request_area.destroy }.to change(CommissioningDocument, :count).by(-1)
+      end
+    end
+  end
+
   describe "#clean_attributes" do
     subject(:data_request_area) { build :data_request_area }
 

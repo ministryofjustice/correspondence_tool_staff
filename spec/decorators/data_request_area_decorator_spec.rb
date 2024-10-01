@@ -83,12 +83,53 @@ describe DataRequestAreaDecorator, type: :model do
     end
   end
 
+  describe "#request_dates" do
+    let(:decorated) { data_request_area.decorate }
+
+    context "with multiple data_requests with only a from date" do
+      before do
+        create(:data_request, data_request_area:, date_from: Date.new(2022, 8, 20))
+        create(:data_request, data_request_area:, date_from: Date.new(2023, 7, 15))
+      end
+
+      it "returns string for all requests" do
+        expect(decorated.request_dates).to eq "from 20/08/2022 to date\nfrom 15/07/2023 to date"
+      end
+    end
+
+    context "with multiple data_requests with only a to date" do
+      before do
+        create(:data_request, data_request_area:, date_to: Date.new(2022, 12, 13))
+        create(:data_request, data_request_area:, date_to: Date.new(2023, 11, 10))
+      end
+
+      it "returns concatenated string for all requests" do
+        expect(decorated.request_dates).to eq "up to 13/12/2022\nup to 10/11/2023"
+      end
+    end
+
+    context "with multiple data_requests with both from and to dates" do
+      before do
+        create(:data_request, data_request_area:, date_from: Date.new(2022, 12, 13), date_to: Date.new(2022, 12, 13))
+        create(:data_request, data_request_area:, date_from: Date.new(2023, 12, 13), date_to: Date.new(2023, 12, 13))
+      end
+
+      it "returns concatenated string for all requests" do
+        expect(decorated.request_dates).to eq "from 13/12/2022 to 13/12/2022\nfrom 13/12/2023 to 13/12/2023"
+      end
+    end
+  end
+
   describe "#request_document" do
     let(:decorated) { data_request_area.decorate }
 
-    it 'returns a humanized version of the data_request_area_type with "records" appended' do
-      allow(data_request_area).to receive(:data_request_area_type).and_return("prison")
-      expect(decorated.request_document).to eq("Prison records")
+    before do
+      create :commissioning_document, data_request_area:
+    end
+
+    it "displays the current request document" do
+      # TODO: update during the chase work to use the relevant stage
+      expect(decorated.request_document).to eq("Day 1 commissioning")
     end
   end
 

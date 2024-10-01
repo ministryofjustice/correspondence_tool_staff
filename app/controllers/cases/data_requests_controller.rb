@@ -1,7 +1,5 @@
 module Cases
   class DataRequestsController < ApplicationController
-    NUM_NEW_DATA_REQUESTS = 3
-
     before_action :set_case
     before_action :set_data_request_area
     before_action :set_data_request, only: %i[show edit update destroy]
@@ -68,34 +66,7 @@ module Cases
       raise NotImplementedError, "Data request delete unavailable"
     end
 
-    def send_email
-      @recipient_emails = @data_request.recipient_emails
-
-      @no_email_present = @recipient_emails.empty?
-
-      if @commissioning_document.probation? && !handled_sending_to_branston_archives?
-        render :probation_send_email and return
-      end
-    end
-
   private
-
-    def handled_sending_to_branston_archives?
-      if request.get?
-        @email = ProbationCommissioningDocumentEmail.new
-        return false
-      end
-
-      @email = ProbationCommissioningDocumentEmail.new(email_params)
-      return false unless @email.valid?
-
-      if @email.email_branston_archives == "yes"
-        @data_request.update!(email_branston_archives: true)
-        @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
-      end
-
-      true
-    end
 
     def set_case
       @case = Case::Base.find(params[:case_id])
@@ -107,10 +78,6 @@ module Cases
 
     def set_data_request_area
       @data_request_area = @case.data_request_areas.find(params[:data_request_area_id]).decorate
-    end
-
-    def email_params
-      params.require(:probation_commissioning_document_email).permit(:email_branston_archives)
     end
 
     def create_params

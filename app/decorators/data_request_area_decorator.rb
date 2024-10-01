@@ -22,7 +22,13 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def request_document
-    "#{data_request_area_type.humanize} records"
+    commissioning_document.decorate.request_document
+  end
+
+  def request_dates
+    data_requests.map { |request|
+      request.decorate.request_dates
+    }.join("\n")
   end
 
   def data_request_area_status_tag(status)

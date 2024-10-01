@@ -91,9 +91,16 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       let(:data_request_area) { create :data_request_area, offender_sar_case: }
       let!(:data_request) { create :data_request, data_request_area:, offender_sar_case: } # rubocop:disable RSpec/LetSetup
 
+      before do
+        create :data_request_email, data_request_area:
+      end
+
       it "is not destroyed" do
-        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by 0
-        expect(flash[:notice]).to eq("Data request area cannot be destroyed because it has associated data requests.")
+        expect {
+          delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id }
+        }.to change(DataRequestArea.all, :size).by(0)
+        expect(flash[:notice]).to eq("Data request area cannot be destroyed because it has sent emails.")
+        expect(response).to redirect_to case_path(offender_sar_case)
       end
     end
 
@@ -101,9 +108,45 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       let!(:data_request_area) { create :data_request_area, offender_sar_case: }
 
       it "is destroyed" do
-        expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id } }.to change(DataRequestArea.all, :size).by(-1)
+        expect {
+          delete :destroy, params: { case_id: offender_sar_case.id, id: data_request_area.id }
+        }.to change(DataRequestArea.all, :size).by(-1)
         expect(flash[:notice]).to eq("Data request was successfully destroyed.")
         expect(response).to redirect_to case_path(offender_sar_case)
+      end
+    end
+  end
+
+  describe "#send_email" do
+    let(:data_request_area) do
+      create(
+        :data_request_area,
+        offender_sar_case:,
+        commissioning_document:,
+      )
+    end
+    let(:params) do
+      {
+        case_id: data_request_area.case_id,
+        id: data_request_area.id,
+      }
+    end
+    let(:commissioning_document) { create(:commissioning_document, template_name:) }
+    let(:template_name) { "standard" }
+
+    it "assigns value to recipient emails" do
+      allow_any_instance_of(DataRequestArea) # rubocop:disable RSpec/AnyInstance
+        .to receive(:recipient_emails).and_return("test@email.com")
+      get(:send_email, params:)
+      expect(assigns(:recipient_emails)).to eq("test@email.com")
+    end
+
+    context "with no associated email" do
+      it "returns no associated email present" do
+        allow_any_instance_of(DataRequestArea) # rubocop:disable RSpec/AnyInstance
+          .to receive(:recipient_emails).and_return([])
+        get(:send_email, params:)
+        expect(assigns(:no_email_present)).to eq(true)
       end
     end
   end

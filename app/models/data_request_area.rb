@@ -15,19 +15,23 @@ class DataRequestArea < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
-  has_many :data_requests
-  has_one :commissioning_document
+  has_many :data_requests, dependent: :destroy
+  has_one :commissioning_document, dependent: :destroy
   has_many :data_request_emails
+
+  validate :validate_location
 
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
 
-  validate :validate_location
-
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
+  after_create do
+    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
+    create_commissioning_document(template_name:)
+  end
 
   enum data_request_area_type: {
     prison: "prison",
@@ -41,10 +45,18 @@ class DataRequestArea < ApplicationRecord
     offender_sar_case
   end
 
+  def completed?
+    status == :completed
+  end
+
   def status
     return :not_started unless data_requests.exists?
 
     data_requests.map(&:status).all?(:completed) ? :completed : :in_progress
+  end
+
+  def recipient_emails
+    contact&.data_request_emails&.split(" ") || []
   end
 
 private

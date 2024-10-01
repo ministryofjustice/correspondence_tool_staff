@@ -18,6 +18,7 @@
 #  completed               :boolean          default(FALSE), not null
 #  contact_id              :bigint
 #  email_branston_archives :boolean          default(FALSE)
+#  data_request_area_id    :bigint
 #
 require "rails_helper"
 
@@ -435,47 +436,6 @@ RSpec.describe DataRequest, type: :model do
       subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
 
       it { expect(data_request.request_dates_absent?).to eq false }
-    end
-  end
-
-  describe "#recipient_emails" do
-    let(:email_1) { "a.smith@email.com" }
-    let(:email_2) { "b.jones@email.com" }
-    let(:email_3) { "c.evans@gmail.com" }
-
-    let(:contact_without_email) { build(:contact, data_request_emails: nil) }
-    let(:contact_with_one_email) { build(:contact, data_request_emails: email_1) }
-    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_1}\n#{email_2}") }
-    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_1}    #{email_2}") }
-
-    context "when there is a contact with no email" do
-      subject(:data_request) { build :data_request, contact: contact_without_email }
-
-      it { expect(data_request.recipient_emails).to eq [] }
-    end
-
-    context "when there is a contact with one email" do
-      subject(:data_request) { build :data_request, contact: contact_with_one_email }
-
-      it { expect(data_request.recipient_emails).to eq [email_1] }
-    end
-
-    context "when there is a contact with two emails" do
-      subject(:data_request) { build :data_request, contact: contact_with_two_emails }
-
-      it { expect(data_request.recipient_emails).to eq [email_1, email_2] }
-    end
-
-    context "when there is no contact" do
-      subject(:data_request) { build :data_request }
-
-      it { expect(data_request.recipient_emails).to eq [] }
-    end
-
-    context "when there is a contact with two emails, separated by many spaces" do
-      subject(:data_request) { build :data_request, contact: contact_with_two_emails_including_spaces }
-
-      it { expect(data_request.recipient_emails).to eq [email_1, email_2] }
     end
   end
 end

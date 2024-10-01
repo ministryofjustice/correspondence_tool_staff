@@ -4,7 +4,9 @@ class CommissioningDocumentDecorator < Draper::Decorator
   delegate_all
 
   def request_document
-    I18n.t("helpers.label.commissioning_document.template_name.#{template_name}")
+    I18n.t("helpers.label.commissioning_document.stage.day_1")
+    # TODO: dynamically choose stage value during chase work
+    # such as I18n.t("helpers.label.commissioning_document.stage.#{stage}")
   end
 
   def updated_at
@@ -12,14 +14,6 @@ class CommissioningDocumentDecorator < Draper::Decorator
   end
 
   def download_link
-    link_to("Download", h.download_case_data_request_area_data_request_commissioning_document_path(data_request.case_id, data_request.data_request_area_id, data_request, self))
-  end
-
-  def replace_link
-    link_to("Replace", h.replace_case_data_request_area_data_request_commissioning_document_path(data_request.case_id, data_request.data_request_area_id, data_request, self))
-  end
-
-  def change_link
-    link_to("Change", h.edit_case_data_request_area_data_request_commissioning_document_path(data_request.case_id, data_request.data_request_area_id, data_request, self))
+    link_to("Download", h.download_case_data_request_area_commissioning_documents_path(data_request_area.case_id, data_request_area, self))
   end
 end

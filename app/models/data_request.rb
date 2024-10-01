@@ -18,6 +18,7 @@
 #  completed               :boolean          default(FALSE), not null
 #  contact_id              :bigint
 #  email_branston_archives :boolean          default(FALSE)
+#  data_request_area_id    :bigint
 #
 class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
@@ -99,10 +100,6 @@ class DataRequest < ApplicationRecord
 
   def request_dates_absent?
     date_from.blank? && date_to.blank?
-  end
-
-  def recipient_emails
-    contact&.data_request_emails&.split(" ") || []
   end
 
   def data_request_types

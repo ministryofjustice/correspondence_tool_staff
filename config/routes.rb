@@ -217,19 +217,17 @@ Rails.application.routes.draw do
     resource :cover_page, only: [:show], path: "cover-page"
 
     resources :data_request_areas do
-      resources :data_requests do
-        member do
-          get :send_email
-          post :send_email
-        end
+      member do
+        get :send_email
+        post :send_email
+      end
 
-        resources :commissioning_documents, only: %i[new edit create update] do
-          member do
-            get :download
-            get :replace
-            patch :upload
-            post :send_email
-          end
+      resources :data_requests
+
+      resource :commissioning_documents, only: %i[new create] do
+        member do
+          get :download
+          post :send_email
         end
       end
     end

@@ -354,6 +354,8 @@ en:
           attributes:
             template_name:
               blank: is required
+            data_request_area:
+              blank: is required
         data_request:
           attributes:
             date_from:
@@ -401,8 +403,6 @@ en:
 
   activemodel:
     attributes:
-      probation_commissioning_document_email:
-        email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
       contact_type:
         contact_type_id: Select the contact type of the new address
       retention_schedule_form:
@@ -418,10 +418,6 @@ en:
             state:
               inclusion: is not a valid status
               forbidden: cannot be changed once case is anonymised
-        probation_commissioning_document_email:
-          attributes:
-            email_branston_archives:
-              blank: ""
         contact_type:
           attributes:
             contact_type_id:
@@ -540,14 +536,10 @@ en:
     next_page_assign: Create case
     request_amends: Request amends
     save_changes: Save changes
-    save_location: Save location
     search: Search
     edit: Edit
     delete: Delete
     update_partial_flags: Update partial case
-    select_document: Select Day 1 request document
-    download_document: Download Day 1 request document
-    generate_document: Generate Day 1 request document
     send_email: Send commissioning email
 
   helpers:
@@ -721,6 +713,7 @@ en:
         escalation_emails: Prison governor email
       data_request:
         location: Location
+        cached_num_pages: Number of pages received
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
@@ -750,9 +743,15 @@ en:
           branston: Branston
           branston_registry: Branston Registry
           mappa: MAPPA
+        headers:
+          data_request_area_type:
+            prison: prison
+            probation: probation
+            branston: Branston
+            branston_registry: Branston Registry
+            mappa: MAPPA
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
-        cached_num_pages: Number of pages received
         completed: "Yes, all data received"
         date_completed: Date completed
         send_email_note_text: "Email will be sent to the following recipients:"
@@ -761,15 +760,11 @@ en:
           commissioning_email: Day 1 commissioning email
       commissioning_document:
         template_name:
-          cat_a: CAT A
-          cctv: CCTV & BWCF
-          cross_border: Cross Borders
           mappa: MAPPA
-          pdp: PDP
-          prison: Prison records
-          probation: Probation records
-          security: Security records
-          telephone: Telephone recordings
+          standard: Standard
+        stage:
+          day_1: Day 1 commissioning
+          #TODO add in translations for later chase stages i.e chase_1 etc
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
@@ -1046,8 +1041,6 @@ en:
     case_cleared: "%{team} has been notified that the response is %{status}."
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
-    commissioning_document_uploaded: You have uploaded the document.
-    no_commissioning_document_uploaded: No changes were made.
     response_uploaded: You have uploaded the response for this case.
     request_uploaded: You have uploaded the request files for this case.
     no_request_uploaded: No changes were made.
@@ -1650,12 +1643,6 @@ en:
         heading: Data requested
         none: No data requests recorded
     commissioning_documents:
-      new:
-        heading: Select Day 1 request document
-      edit:
-        heading: Select Day 1 request document
-      replace:
-        heading: Upload document
       table_headings:
         request_document: Request document
         last_updated: Last updated

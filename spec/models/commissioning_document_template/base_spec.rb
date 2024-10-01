@@ -8,11 +8,11 @@ module CommissioningDocumentTemplate
   end
 end
 
-RSpec.xdescribe "CommissioningDocumentTemplate::TestClass" do
-  subject(:template) { CommissioningDocumentTemplate::TestClass.new(data_request:) }
+RSpec.describe "CommissioningDocumentTemplate::TestClass" do
+  subject(:template) { CommissioningDocumentTemplate::TestClass.new(data_request_area:) }
 
   let(:kase) { build_stubbed(:offender_sar_case) }
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
 
   describe "deadlines" do
     it "sets deadline to 5 days time", :aggregate_failures do
