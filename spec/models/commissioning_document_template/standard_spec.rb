@@ -103,10 +103,6 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
     end
 
     context "with multiple requests" do
-      let(:data_request) do
-        build_stubbed(:data_request,
-                      request_type: "all_prison_records")
-      end
       let(:data_request_2) do
         build_stubbed(:data_request,
                       request_type: "cat_a")
@@ -125,9 +121,9 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
           request_info: [
             {
               request_type: "All prison records",
-              request_type_note: nil,
-              date_from: nil,
-              date_to: nil,
+              request_type_note: "more info",
+              date_from: "01/01/2024",
+              date_to: "08/08/2024",
             },
             {
               request_type: "CAT A",
@@ -151,6 +147,109 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
         Timecop.freeze(Date.new(2022, 10, 21)) do
           expect(template.context).to eq expected_context
         end
+      end
+    end
+  end
+
+  describe "#request_info" do
+    it "returns the correct information" do
+      expected_request_info = [
+        {
+          request_type: "All prison records",
+          request_type_note: "more info",
+          date_from: "01/01/2024",
+          date_to: "08/08/2024",
+        },
+      ]
+
+      expect(template.request_info).to eq(expected_request_info)
+    end
+
+    context "with multiple requests" do
+      let(:data_request_2) do
+        build_stubbed(:data_request,
+                      request_type: "cat_a",
+                      request_type_note: "CAT A info",
+                      date_from: Date.new(2024, 5, 1),
+                      date_to: Date.new(2024, 6, 1))
+      end
+
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_requests: [data_request, data_request_2]) }
+
+      it "returns the correct information" do
+        expected_request_info = [
+          {
+            request_type: "All prison records",
+            request_type_note: "more info",
+            date_from: "01/01/2024",
+            date_to: "08/08/2024",
+          },
+          {
+            request_type: "CAT A",
+            request_type_note: "CAT A info",
+            date_from: "01/05/2024",
+            date_to: "01/06/2024",
+          },
+        ]
+
+        expect(template.request_info).to eq(expected_request_info)
+      end
+    end
+
+    context "with optional values omitted" do
+      let(:data_request) do
+        build_stubbed(:data_request,
+                      request_type: "all_prison_records",
+                      request_type_note: nil,
+                      date_from: nil,
+                      date_to: nil)
+      end
+
+      it "handles missing optional values" do
+        expected_request_info = [
+          {
+            request_type: "All prison records",
+            request_type_note: nil,
+            date_from: nil,
+            date_to: nil,
+          },
+        ]
+
+        expect(template.request_info).to eq(expected_request_info)
+      end
+    end
+  end
+
+  describe "#requests" do
+    it "returns the correct request types" do
+      expected_requests = [
+        {
+          request_type: "All prison records",
+        },
+      ]
+
+      expect(template.requests).to eq(expected_requests)
+    end
+
+    context "with multiple requests" do
+      let(:data_request_2) do
+        build_stubbed(:data_request,
+                      request_type: "cat_a")
+      end
+
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_requests: [data_request, data_request_2]) }
+
+      it "returns the correct request types" do
+        expected_requests = [
+          {
+            request_type: "All prison records",
+          },
+          {
+            request_type: "CAT A",
+          },
+        ]
+
+        expect(template.requests).to eq(expected_requests)
       end
     end
   end
