@@ -82,7 +82,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
           request_info: [
             {
               request_type: "All prison records",
-              request_type_note: nil,
+              request_type_note: "",
               date_from: nil,
               date_to: nil,
             },
@@ -127,7 +127,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
             },
             {
               request_type: "CAT A",
-              request_type_note: nil,
+              request_type_note: "",
               date_from: nil,
               date_to: nil,
             },
@@ -200,7 +200,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       let(:data_request) do
         build_stubbed(:data_request,
                       request_type: "all_prison_records",
-                      request_type_note: nil,
+                      request_type_note: "",
                       date_from: nil,
                       date_to: nil)
       end
@@ -209,7 +209,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
         expected_request_info = [
           {
             request_type: "All prison records",
-            request_type_note: nil,
+            request_type_note: "",
             date_from: nil,
             date_to: nil,
           },
