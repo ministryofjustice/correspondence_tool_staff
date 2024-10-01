@@ -14,7 +14,7 @@ module CommissioningDocumentTemplate
         pnc: kase.other_subject_ids,
         date_range: data_request_area.request_dates,
         deadline:,
-        )
+      )
     end
   end
 end
