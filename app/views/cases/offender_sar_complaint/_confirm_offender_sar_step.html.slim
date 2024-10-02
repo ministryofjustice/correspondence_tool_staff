@@ -1,16 +1,17 @@
 - content_for :heading, flush: true
   = t('cases.offender_sar_complaint.check_sar_details_heading')
 - linked_offender_sar_case = @case.original_case.decorate
+
 = render partial: 'layouts/header'
 
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-        
+
 section.case-info
   = render partial: "cases/offender_sar/case_details",
             locals: {case_details: linked_offender_sar_case, link_type: nil, allow_editing: false}
 section.case-info
-  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: linked_offender_sar_case, allow_editing: false }
+  = render partial: 'cases/offender_sar/data_request_areas', locals: { case_details: linked_offender_sar_case, allow_editing: false }
 
 = form_for @case, url: url, as: :offender_sar_complaint do |f|
 

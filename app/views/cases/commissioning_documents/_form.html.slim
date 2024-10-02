@@ -1,6 +1,0 @@
-= f.hidden_field :template_name, value: ""
-= f.radio_button_fieldset :template_name, choices: CommissioningDocument::TEMPLATE_TYPES.keys
-- if FeatureSet.email_commissioning_document.enabled?
-  = f.submit t('button.generate_document'), class: 'button', data: { disable_with: false }
-- else
-  = f.submit t('button.download_document'), class: 'button', data: { disable_with: false }

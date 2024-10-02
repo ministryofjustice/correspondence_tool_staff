@@ -17,7 +17,7 @@ module PageObjects
         element :cover_sheet_address, ".cover-sheet__address"
 
         section :data_requests,
-                PageObjects::Sections::Cases::DataRequestsSection, ".data-requests"
+                PageObjects::Sections::Cases::CoverDataRequestsSection, ".data-requests"
 
         element :final_deadline, ".heading--final-deadline"
       end

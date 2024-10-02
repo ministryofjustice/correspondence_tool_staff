@@ -130,7 +130,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     @data_request_email = DataRequestEmail.find_or_create_by!(
       email_address: recipient,
-      data_request: commissioning_document.data_request,
+      data_request_area: commissioning_document.data_request_area,
     )
 
     mail(to: recipient)

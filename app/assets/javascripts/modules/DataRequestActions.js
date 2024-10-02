@@ -21,30 +21,5 @@ moj.Modules.DataRequestActions = {
         $yyyy_field.val(year);
       }
     });
-
-    $('#new_data_request').submit(function() {
-      self.clearNoteField();
-    });
-
-    $('#edit_data_request').submit(function() {
-      self.clearNoteField();
-    });
-
   },
-
-  clearNoteField: function() {
-    if (!$('#data_request_request_type_bwcf').is(':checked')) {
-      $('#request_type_bwcf_panel').empty();
-    }
-    if (!$('#data_request_request_type_cctv').is(':checked')) {
-      $('#request_type_cctv_panel').empty();
-    }
-    if (!$('#data_request_request_type_other').is(':checked')) {
-      $('#request_type_other_panel').empty();
-    }
-    if (!$('#data_request_request_type_nomis_other').is(':checked')) {
-      $('#request_type_nomis_other_panel').empty();
-    }
-  }
-
 };
