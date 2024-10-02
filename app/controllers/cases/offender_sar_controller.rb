@@ -240,6 +240,7 @@ module Cases
         end
         render :accepted_date_received and return
       end
+
       case service.result
       when :ok
         flash[:notice] = t("cases.update.case_updated")
