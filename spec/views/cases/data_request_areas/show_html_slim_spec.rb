@@ -158,6 +158,10 @@ describe "cases/data_request_areas/show", type: :view do
         expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
       end
 
+      it "does not display add data request type button" do
+        expect(page).to have_no_link("Add data request type", href: new_case_data_request_area_data_request_path(data_request_area.kase, data_request_area))
+      end
+
       it "does not display delete button" do
         expect(page).to have_no_link("Delete", href: case_data_request_area_path(data_request_area.kase, data_request_area))
       end
@@ -185,6 +189,10 @@ describe "cases/data_request_areas/show", type: :view do
       it "displays send email button" do
         expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
         expect(page).to have_selector(".data_request_area_send_email")
+      end
+
+      it "displays add data request type button" do
+        expect(page).to have_link("Add data request type", href: new_case_data_request_area_data_request_path(data_request_area.kase, data_request_area))
       end
 
       it "displays delete button" do

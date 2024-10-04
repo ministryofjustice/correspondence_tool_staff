@@ -20,7 +20,7 @@ module Cases
       )
       service.send!
 
-      redirect_to case_data_request_area_path(@case, @data_request_area), flash: { notice: "Day 1 commissioning email sent" }
+      redirect_to case_path(@case), flash: { notice: "Day 1 commissioning email sent" }
     end
 
   private

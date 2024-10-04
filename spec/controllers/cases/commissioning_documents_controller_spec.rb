@@ -61,7 +61,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     end
 
     it "redirects to the case page" do
-      expect(response).to redirect_to(case_data_request_area_path(offender_sar_case, data_request_area))
+      expect(response).to redirect_to(case_path(offender_sar_case))
     end
   end
 end

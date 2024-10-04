@@ -42,7 +42,7 @@
             = render partial: 'shared/table_total_row', locals: { total: data_request_area.data_requests.sum(:cached_num_pages), label_span: '2', value_span: '5' }
     .button-holder
       - if policy(case_details).can_record_data_request? && allow_editing
-        = action_button_for(:record_data_request)
         - if data_request_area.data_request_emails.none?
+          = action_button_for(:record_data_request)
           = link_to t('button.delete'), case_data_request_area_path(case_id: @case.id, id: @data_request_area.id), type: 'button', class: 'govuk-button--warning', id: "action--delete-data-request-area", data: { confirm: t('common.case/offender_sar.delete_data_request_area') }, method: :delete
-      hr
+          hr
