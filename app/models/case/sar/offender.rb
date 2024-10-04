@@ -56,7 +56,6 @@ class Case::SAR::Offender < Case::Base
         subject_aliases: "B",
         third_party_company_name: "B",
         third_party_name: "B",
-        probation_area: "B",
       }
     end
 

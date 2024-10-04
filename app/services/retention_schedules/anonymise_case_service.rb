@@ -34,7 +34,6 @@ module RetentionSchedules
       postal_address: "Anon address",
       previous_case_numbers: "XXXXXXXX",
       prison_number: "123456",
-      probation_area: "Smallville",
       requester_reference: "XXXXXX",
       subject: "XXXX XXXX",
       subject_address: "Anon location",

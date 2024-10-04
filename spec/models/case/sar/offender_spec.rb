@@ -645,7 +645,6 @@ describe Case::SAR::Offender do
         postal_address: "B",
         previous_case_numbers: "B",
         prison_number: "B",
-        probation_area: "B",
         requester_reference: "B",
         subject: "B",
         subject_address: "B",
