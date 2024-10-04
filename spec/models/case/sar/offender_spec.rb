@@ -901,7 +901,7 @@ describe Case::SAR::Offender do
       let(:kase)  { create :offender_sar_case, probation_area: nil }
 
       it "returns an empty string" do
-        expect(kase.probation_area).to eq ""
+        expect(kase.probation_area).to be nil
       end
     end
 

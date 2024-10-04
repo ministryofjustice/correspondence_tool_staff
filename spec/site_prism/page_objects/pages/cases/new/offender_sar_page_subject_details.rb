@@ -17,7 +17,7 @@ module PageObjects
           element :previous_case_numbers, "#offender_sar_previous_case_numbers"
           element :other_subject_ids, "#offender_sar_other_subject_ids"
           element :case_reference_number, "#offender_sar_case_reference_number"
-          element :pobation_area, "#offender_sar_probation_area"
+          element :probation_area, "#offender_sar_probation_area"
           element :date_of_birth_dd, "#offender_sar_date_of_birth_dd"
           element :date_of_birth_mm, "#offender_sar_date_of_birth_mm"
           element :subject_address, "#offender_sar_subject_address"
