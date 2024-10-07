@@ -68,6 +68,7 @@ private
       third_party_company_name
       third_party_name
       postal_address
+      probation_area
       flag_as_high_profile
       date_of_birth
       email
