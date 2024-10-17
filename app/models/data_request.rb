@@ -66,11 +66,11 @@ class DataRequest < ApplicationRecord
     other: "other",
   }
 
-  BRANSTON_DATA_REQUEST_TYPES          = %w[dps nomis_contact_logs nomis_records dps_security hpa nomis_other].freeze
+  BRANSTON_DATA_REQUEST_TYPES          = %w[dps dps_security hpa nomis_contact_logs nomis_records nomis_other].freeze
   BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_borders pdp probation_archive].freeze
   MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
-  PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv security_records telephone_recordings education other].freeze
-  PROBATION_DATA_REQUEST_TYPES         = %w[ndelius probation_records oasys_arns other].freeze
+  PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv education security_records telephone_recordings other].freeze
+  PROBATION_DATA_REQUEST_TYPES         = %w[ndelius oasys_arns probation_records other].freeze
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
