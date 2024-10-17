@@ -733,6 +733,10 @@ en:
           cat_a: CAT A
           ndelius: nDelius contact lists
           dps: DPS
+          education: Education
+          oasys_arns: OASys / ARNS
+          dps_security: DPS security
+          hpa: Historical Prisoner Application (HPA)
           cctv: CCTV
           bwcf: BWCF
       data_request_area:
