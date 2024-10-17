@@ -109,6 +109,22 @@ RSpec.describe DataRequest, type: :model do
           expect(data_request.data_request_types).to eq(DataRequest::PROBATION_DATA_REQUEST_TYPES)
         end
       end
+
+      context "when data_request_area_type is 'security'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "securitty") }
+
+        it "returns the PROBATION_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::SECURITY_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'other_department'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "other_department") }
+
+        it "returns the PROBATION_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::OTHER_DEPARTMENT_DATA_REQUEST_TYPES)
+        end
+      end
     end
 
     describe "validation" do
@@ -240,6 +256,10 @@ RSpec.describe DataRequest, type: :model do
         expect(build_stubbed(:data_request, request_type: "cat_a")).to be_valid
         expect(build_stubbed(:data_request, request_type: "ndelius")).to be_valid
         expect(build_stubbed(:data_request, request_type: "dps")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "dps_security")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "g2_security")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "g3_security")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "other_security")).to be_valid
         expect(build_stubbed(:data_request, request_type: "other", request_type_note: "test")).to be_valid
       end
     end
