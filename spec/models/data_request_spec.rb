@@ -259,7 +259,7 @@ RSpec.describe DataRequest, type: :model do
         expect(build_stubbed(:data_request, request_type: "dps_security")).to be_valid
         expect(build_stubbed(:data_request, request_type: "g2_security")).to be_valid
         expect(build_stubbed(:data_request, request_type: "g3_security")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "other_security")).to be_valid
+        expect(build_stubbed(:data_request, request_type: "other_department")).to be_valid
         expect(build_stubbed(:data_request, request_type: "other", request_type_note: "test")).to be_valid
       end
     end
