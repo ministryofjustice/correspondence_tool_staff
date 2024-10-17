@@ -111,7 +111,7 @@ RSpec.describe DataRequest, type: :model do
       end
 
       context "when data_request_area_type is 'security'" do
-        let(:data_request_area) { create(:data_request_area, data_request_area_type: "securitty") }
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "security") }
 
         it "returns the SECURITY_DATA_REQUEST_TYPES" do
           expect(data_request.data_request_types).to eq(DataRequest::SECURITY_DATA_REQUEST_TYPES)
