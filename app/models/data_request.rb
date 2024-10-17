@@ -59,6 +59,10 @@ class DataRequest < ApplicationRecord
     dps: "dps",
     cctv: "cctv",
     bwcf: "bwcf",
+    g2_security: "g2_security",
+    g3_security: "g3_security",
+    dps_security: "dps_security",
+    other_department: "other_department",
     other: "other",
   }
 
@@ -67,6 +71,8 @@ class DataRequest < ApplicationRecord
   MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
   PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv security_records telephone_recordings other].freeze
   PROBATION_DATA_REQUEST_TYPES         = %w[ndelius probation_records other].freeze
+  SECURITY_DATA_REQUEST_TYPES          = %w[g2_security g3_security dps_security]
+  OTHER_DEPARTMENT_DATA_REQUEST_TYPES  = %w[other_department].freeze
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
@@ -114,6 +120,10 @@ class DataRequest < ApplicationRecord
       PRISON_DATA_REQUEST_TYPES
     when "probation"
       PROBATION_DATA_REQUEST_TYPES
+    when "security"
+      SECURITY_DATA_REQUEST_TYPES
+    when "other_department"
+      OTHER_DEPARTMENT_DATA_REQUEST_TYPES
     end
   end
 
