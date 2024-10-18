@@ -82,7 +82,11 @@ CREATE TYPE public.request_types AS ENUM (
     'cross_borders',
     'cat_a',
     'ndelius',
-    'dps'
+    'dps',
+    'education',
+    'oasys_arns',
+    'dps_security',
+    'hpa'
 );
 
 
@@ -2401,6 +2405,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241017140610'),
 ('20240924085350'),
 ('20240924085307'),
 ('20240912095501'),
