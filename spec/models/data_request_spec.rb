@@ -238,7 +238,7 @@ RSpec.describe DataRequest, type: :model do
   describe "#request_type" do
     context "with valid values" do
       it "does not error" do
-        described_class.request_types.keys.each do |request_type|
+        described_class.request_types.each_key do |request_type|
           if request_type == "other"
             expect(build_stubbed(:data_request, request_type:, request_type_note: "other note")).to be_valid
           else

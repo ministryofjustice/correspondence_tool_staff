@@ -126,7 +126,7 @@ class DataRequest < ApplicationRecord
     when "security"
      SECURITY_DATA_REQUEST_TYPES
     when "other_department"
-      OTHER_DEPARTMENT_DATA_REQUEST_TYPES
+     OTHER_DEPARTMENT_DATA_REQUEST_TYPES
     end
   end
 
