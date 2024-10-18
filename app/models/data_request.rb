@@ -124,9 +124,9 @@ class DataRequest < ApplicationRecord
     when "probation"
       PROBATION_DATA_REQUEST_TYPES
     when "security"
-     SECURITY_DATA_REQUEST_TYPES
+      SECURITY_DATA_REQUEST_TYPES
     when "other_department"
-     OTHER_DEPARTMENT_DATA_REQUEST_TYPES
+      OTHER_DEPARTMENT_DATA_REQUEST_TYPES
     end
   end
 
