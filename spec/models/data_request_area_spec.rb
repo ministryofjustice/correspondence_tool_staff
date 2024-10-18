@@ -68,6 +68,8 @@ RSpec.describe DataRequestArea, type: :model do
         expect(build_stubbed(:data_request_area, data_request_area_type: "branston")).to be_valid
         expect(build_stubbed(:data_request_area, data_request_area_type: "branston_registry")).to be_valid
         expect(build_stubbed(:data_request_area, data_request_area_type: "mappa")).to be_valid
+        expect(build_stubbed(:data_request_area, data_request_area_type: "security")).to be_valid
+        expect(build_stubbed(:data_request_area, data_request_area_type: "other_department")).to be_valid
       end
     end
 

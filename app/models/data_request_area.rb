@@ -39,6 +39,8 @@ class DataRequestArea < ApplicationRecord
     branston: "branston",
     branston_registry: "branston_registry",
     mappa: "mappa",
+    security: "security",
+    other_department: "other_department",
   }
 
   def kase
