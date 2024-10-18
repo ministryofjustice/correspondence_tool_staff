@@ -54,7 +54,9 @@ CREATE TYPE public.data_request_area_type AS ENUM (
     'probation',
     'branston',
     'branston_registry',
-    'mappa'
+    'mappa',
+    'security',
+    'other_department'
 );
 
 
@@ -86,7 +88,10 @@ CREATE TYPE public.request_types AS ENUM (
     'education',
     'oasys_arns',
     'dps_security',
-    'hpa'
+    'hpa',
+    'g2_security',
+    'g3_security',
+    'other_department'
 );
 
 
@@ -2405,6 +2410,8 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241018081532'),
+('20241018080810'),
 ('20241017140610'),
 ('20240924085350'),
 ('20240924085307'),

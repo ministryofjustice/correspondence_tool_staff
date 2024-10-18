@@ -109,6 +109,22 @@ RSpec.describe DataRequest, type: :model do
           expect(data_request.data_request_types).to eq(DataRequest::PROBATION_DATA_REQUEST_TYPES)
         end
       end
+
+      context "when data_request_area_type is 'security'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "security") }
+
+        it "returns the SECURITY_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::SECURITY_DATA_REQUEST_TYPES)
+        end
+      end
+
+      context "when data_request_area_type is 'other_department'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "other_department") }
+
+        it "returns the OTHER_DEPARTMENT_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::OTHER_DEPARTMENT_DATA_REQUEST_TYPES)
+        end
+      end
     end
 
     describe "validation" do
@@ -222,29 +238,13 @@ RSpec.describe DataRequest, type: :model do
   describe "#request_type" do
     context "with valid values" do
       it "does not error" do
-        expect(build_stubbed(:data_request, request_type: "all_prison_records")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "security_records")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "nomis_records")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "nomis_other")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "nomis_contact_logs")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "probation_records")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "cctv_and_bwcf")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "cctv")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "bwcf")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "telephone_recordings")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "probation_archive")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "mappa")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "pdp")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "court")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "cross_borders")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "cat_a")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "ndelius")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "dps")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "education")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "oasys_arns")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "dps_security")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "hpa")).to be_valid
-        expect(build_stubbed(:data_request, request_type: "other", request_type_note: "test")).to be_valid
+        described_class.request_types.each_key do |request_type|
+          if request_type == "other"
+            expect(build_stubbed(:data_request, request_type:, request_type_note: "other note")).to be_valid
+          else
+            expect(build_stubbed(:data_request, request_type:)).to be_valid
+          end
+        end
       end
     end
 
