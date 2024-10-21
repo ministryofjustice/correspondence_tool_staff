@@ -55,6 +55,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               request_type: "All prison records",
             },
           ],
+          request_additional_info: "",
         }
       end
 
@@ -92,6 +93,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               request_type: "All prison records",
             },
           ],
+          request_additional_info: "",
         }
       end
 
@@ -140,6 +142,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
               request_type: "CAT A",
             },
           ],
+          request_additional_info: "",
         }
       end
 
@@ -250,6 +253,66 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
         ]
 
         expect(template.requests).to eq(expected_requests)
+      end
+    end
+  end
+
+  describe "#request_additional_info" do
+    let(:data_request) do
+      build_stubbed(:data_request,
+                    request_type: "cctv")
+    end
+
+    it "returns the correct additional info for a request_type" do
+      expected_info = "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n"
+      expect(template.request_additional_info).to eq(expected_info)
+    end
+
+    context "with multiple requests" do
+      let(:data_request) do
+        build_stubbed(:data_request,
+                      request_type: "cctv")
+      end
+
+      let(:data_request_2) do
+        build_stubbed(:data_request,
+                      request_type: "telephone_recordings")
+      end
+
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_requests: [data_request, data_request_2]) }
+
+      it "returns the correct additional info for each request_type" do
+        expected_info = "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n\nIf you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n"
+        puts expected_info
+        puts template.request_additional_info
+        expect(template.request_additional_info).to eq(expected_info)
+      end
+    end
+
+    context "with request types that do not have additional info" do
+      let(:data_request) { build_stubbed(:data_request, request_type: "all_prison_records") }
+
+      it "returns an empty string" do
+        expect(template.request_additional_info).to eq ""
+      end
+    end
+
+    context "with multiple of the same request_type" do
+      let(:data_request) do
+        build_stubbed(:data_request,
+                      request_type: "cctv")
+      end
+
+      let(:data_request_2) do
+        build_stubbed(:data_request,
+                      request_type: "cctv")
+      end
+
+      let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_requests: [data_request, data_request_2]) }
+
+      it "returns only 1 instance of the additional info" do
+        expected_info = "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n"
+        expect(template.request_additional_info).to eq(expected_info)
       end
     end
   end
