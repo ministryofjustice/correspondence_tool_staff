@@ -37,10 +37,8 @@ module CommissioningDocumentTemplate
       }
 
       data_request_area.data_requests.map { |request|
-        {
-          additional_info: additional_info[request.request_type] || "",
-        }
-      }.uniq
+        additional_info[request.request_type] || ""
+      }.uniq.join("\n")
     end
 
     def context
