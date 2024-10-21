@@ -299,7 +299,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
         it "updates the data_request" do
           post(:send_email, params:)
-          expect(data_request.reload.email_branston_archives).to be_truthy
+          expect(data_request.reload.email_branston_archives).to be true
         end
       end
 
@@ -316,9 +316,12 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         end
 
         it "doesnt add the branston probation email to recipients" do
+          data_request.update!(email_branston_archives: true)
+
           post(:send_email, params:)
           expect(response).to render_template(:send_email)
           expect(assigns(:recipient_emails)).not_to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
+          expect(data_request.reload.email_branston_archives).to be false
         end
       end
 
