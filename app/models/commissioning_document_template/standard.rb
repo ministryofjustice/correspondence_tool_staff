@@ -33,16 +33,15 @@ module CommissioningDocumentTemplate
         "cctv" => "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
         "bwcf" => "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
         "pdp" => "All CAT A files and series 6 subs (Cross Border Transfer files).\n",
-        "telephone_recordings" => "If you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n"
+        "telephone_recordings" => "If you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n",
       }
 
-      data_request_area.data_requests.map do |request|
+      data_request_area.data_requests.map { |request|
         {
-          additional_info: additional_info[request.request_type] || ""
+          additional_info: additional_info[request.request_type] || "",
         }
-      end.uniq
+      }.uniq
     end
-
 
     def context
       super.merge(

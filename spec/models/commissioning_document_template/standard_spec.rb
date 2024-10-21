@@ -154,9 +154,6 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
             {
               additional_info: "",
             },
-            {
-              additional_info: "",
-            },
           ],
         }
       end
@@ -281,8 +278,8 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
     it "returns the correct additional info for a request_type" do
       expected_info = [
         {
-          additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n"
-        }
+          additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
+        },
       ]
 
       expect(template.request_additional_info).to eq(expected_info)
@@ -304,11 +301,11 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       it "returns the correct additional info for each request_type" do
         expected_info = [
           {
-            additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n"
+            additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
           },
           {
-            additional_info: "If you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n"
-          }
+            additional_info: "If you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n",
+          },
         ]
 
         expect(template.request_additional_info).to eq(expected_info)
@@ -321,8 +318,8 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       it "returns an empty string" do
         expected_info = [
           {
-            additional_info: ""
-          }
+            additional_info: "",
+          },
         ]
 
         expect(template.request_additional_info).to eq(expected_info)
@@ -345,8 +342,8 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       it "returns only 1 instance of the additional info" do
         expected_info = [
           {
-            additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n"
-          }
+            additional_info: "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
+          },
         ]
 
         expect(template.request_additional_info).to eq(expected_info)
