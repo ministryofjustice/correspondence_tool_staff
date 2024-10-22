@@ -5,7 +5,6 @@ moj.Modules.ValidationEvent = {
 
       if($('.error-message').size() > 0) {
         $('.error-message').each( function(_, obj) {
-          console.log(obj.textContent);
           window.dataLayer.push({
             event: "validation_error",
             fieldName: obj.getAttribute("id"),
