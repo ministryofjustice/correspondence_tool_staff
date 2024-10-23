@@ -51,6 +51,7 @@
                   after_transition: Workflows::Hooks#unassign_vetter
                 mark_as_second_vetting_in_progress:
                   transition_to: second_vetting_in_progress
+                  after_transition: Workflows::Hooks#assign_vetter
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
