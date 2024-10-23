@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+class MigrateDataRequestAreas < ActiveRecord::DataMigration
+  def data_request_area_type_for(request_type)
+    case request_type
+    when *DataRequest::BRANSTON_DATA_REQUEST_TYPES
+      "branston"
+    when *DataRequest::BRANSTON_REGISTRY_DATA_REQUEST_TYPES
+      "branston_registry"
+    when *DataRequest::MAPPA_DATA_REQUEST_TYPES
+      "mappa"
+    when *DataRequest::PRISON_DATA_REQUEST_TYPES
+      "prison"
+    when *DataRequest::PROBATION_DATA_REQUEST_TYPES
+      "probation"
+    else
+      nil
+    end
+  end
+
+  def up
+    # get DataRequests for only Offender and OffenderComplaint
+    data_requests = DataRequest.joins(:offender_sar_case)
+                               .where(offender_sar_case: { type: %w[Case::SAR::Offender Case::SAR::OffenderComplaint] })
+
+    # loop through the DataRequest records
+    data_requests.find_each do |request|
+      # Get the data_request_area_type for this request
+      data_request_area_type = data_request_area_type_for(request.request_type)
+
+      data_request_area = DataRequestArea.find_or_create_by!(
+        user_id: request.user_id,
+        case_id: request.case_id,
+        data_request_area_type: data_request_area_type,
+        contact_id: request.contact_id,
+        location: request.location || "default_location" # for testing purposes, validation errors will occur on local due to a data_request no longer having a location
+      )
+
+      # Update DataRequest with the correct data_request_area_id
+      request.update!(data_request_area_id: data_request_area.id)
+
+      # TEMP LOGGING INFO
+      puts "Updated DataRequest ##{request.id} - #{request.request_type}, with data_request_area_id: #{data_request_area.id} (area_type: #{data_request_area_type}, location: #{data_request_area.location}, contact_id: #{data_request_area.contact_id})"
+    end
+  end
+end
