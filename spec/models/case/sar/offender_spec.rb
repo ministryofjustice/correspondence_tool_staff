@@ -956,6 +956,18 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#assign_vetter" do
+    let(:responder) { find_or_create :responder }
+    let(:responding_team) { responder.teams.first }
+
+    it "sets responding user to expected" do
+      kase = create :offender_sar_case, :vetting_in_progress
+      expect {
+        kase.assign_vetter(responder)
+      }.to change(kase.responder_assignment, :user_id).to responder.id
+    end
+  end
+
   describe "#unassign_vetter" do
     let(:responder) { find_or_create :responder }
     let(:responding_team) { responder.teams.first }
