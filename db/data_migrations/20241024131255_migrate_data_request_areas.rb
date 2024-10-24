@@ -9,9 +9,9 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       "branston_registry"
     when *DataRequest::MAPPA_DATA_REQUEST_TYPES
       "mappa"
-    when *DataRequest::PRISON_DATA_REQUEST_TYPES + ["cctv_and_bwcf"]
+    when *DataRequest::PRISON_DATA_REQUEST_TYPES + %w[cctv_and_bwcf]
       "prison"
-    when *DataRequest::PROBATION_DATA_REQUEST_TYPES + ["court"]
+    when *DataRequest::PROBATION_DATA_REQUEST_TYPES + %w[court]
       "probation"
     when "other"
       "other_department"
