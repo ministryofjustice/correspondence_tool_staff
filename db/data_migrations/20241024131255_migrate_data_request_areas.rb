@@ -9,10 +9,12 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       "branston_registry"
     when *DataRequest::MAPPA_DATA_REQUEST_TYPES
       "mappa"
-    when *DataRequest::PRISON_DATA_REQUEST_TYPES
+    when *DataRequest::PRISON_DATA_REQUEST_TYPES + ["cctv_and_bwcf"]
       "prison"
-    when *DataRequest::PROBATION_DATA_REQUEST_TYPES
+    when *DataRequest::PROBATION_DATA_REQUEST_TYPES + ["court"]
       "probation"
+    when "other"
+      "other_department"
     end
   end
 
@@ -34,7 +36,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         data_request_area_type:,
         contact_id: request.contact_id,
         location: request.location.presence,
-      )
+        )
 
       # Update DataRequest with the correct data_request_area_id
       request.update!(data_request_area_id: data_request_area.id)
