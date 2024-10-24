@@ -44,4 +44,3 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
     end
   end
 end
-
