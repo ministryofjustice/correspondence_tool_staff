@@ -26,19 +26,22 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       # Get the data_request_area_type for this request
       data_request_area_type = data_request_area_type_for(request.request_type)
 
+      Rails.logger.debug "Finding DataRequestArea with user_id: #{request.user_id}, case_id: #{request.case_id}, contact_id: #{request.contact_id.presence}"
+
       data_request_area = DataRequestArea.find_or_create_by!(
         user_id: request.user_id,
         case_id: request.case_id,
         data_request_area_type:,
         contact_id: request.contact_id,
-        location: request.location || "default_location", # for testing purposes, validation errors will occur on local due to a data_request no longer having a location
-      )
+        location: request.location.presence,
+        )
 
       # Update DataRequest with the correct data_request_area_id
       request.update!(data_request_area_id: data_request_area.id)
 
       # TEMP LOGGING INFO
-      Rails.logger.debug "Updated DataRequest ##{request.id} - #{request.request_type}, with data_request_area_id: #{data_request_area.id} (area_type: #{data_request_area_type}, location: #{data_request_area.location}, contact_id: #{data_request_area.contact_id})"
+      Rails.logger.debug "Updated DataRequest ##{request.id} - #{request.request_type}, with data_request_area_id: #{data_request_area.id} (area_type: #{data_request_area_type}, contact_id: #{data_request_area.contact_id}, data_request_area.user_id: #{data_request_area.user_id}, data_request_area.case_id: #{data_request_area.case_id}"
     end
   end
 end
+
