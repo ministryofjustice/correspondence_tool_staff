@@ -36,7 +36,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         data_request_area_type:,
         contact_id: request.contact_id,
         location: request.location.presence,
-        )
+      )
 
       # Update DataRequest with the correct data_request_area_id
       request.update!(data_request_area_id: data_request_area.id)
