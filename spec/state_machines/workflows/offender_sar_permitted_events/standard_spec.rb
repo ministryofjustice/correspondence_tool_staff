@@ -37,6 +37,7 @@ TRANSITIONS = [
     specific_events: %i[
       move_to_team_member
       mark_as_ready_to_copy
+      mark_as_second_vetting_in_progress
       preview_cover_page
       move_case_back
       record_sent_to_sscl

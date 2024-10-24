@@ -55,6 +55,10 @@ class Workflows::Hooks
     ActionNotificationsMailer.ready_for_press_or_private_review(assignment)
   end
 
+  def assign_vetter
+    @kase.assign_vetter(@metadata[:acting_user])
+  end
+
   def unassign_vetter
     @kase.unassign_vetter
   end

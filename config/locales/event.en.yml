@@ -62,6 +62,8 @@ en:
     mark_as_ready_for_vetting_desc: Case is ready for vetting
     mark_as_vetting_in_progress: Mark as vetting in progress
     mark_as_vetting_in_progress_desc: Vetting is in progress
+    mark_as_second_vetting_in_progress: Second vetting required
+    mark_as_second_vetting_in_progress_desc: Second vetting is in progress
     mark_as_ready_to_copy: Mark as ready to copy
     mark_as_ready_to_copy_desc: Case is ready to copy
     mark_as_ready_to_dispatch: Mark as ready to dispatch

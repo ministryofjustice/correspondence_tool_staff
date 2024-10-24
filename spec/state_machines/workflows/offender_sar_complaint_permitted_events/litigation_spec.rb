@@ -56,6 +56,7 @@ TRANSITIONS_LITIGATION = [
     state: :vetting_in_progress,
     specific_events: %i[
       mark_as_ready_to_copy
+      mark_as_second_vetting_in_progress
       preview_cover_page
       add_data_received
       reset_to_initial_state
