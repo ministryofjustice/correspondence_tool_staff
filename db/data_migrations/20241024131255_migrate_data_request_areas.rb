@@ -30,7 +30,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
 
       Rails.logger.debug "Finding DataRequestArea with user_id: #{request.user_id}, case_id: #{request.case_id}, contact_id: #{request.contact_id.presence}"
 
-      data_request_area = DataRequestArea.find_or_create_by!(
+      data_request_area = DataRequestArea.create!(
         user_id: request.user_id,
         case_id: request.case_id,
         data_request_area_type:,
