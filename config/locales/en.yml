@@ -652,7 +652,7 @@ en:
         data_request_emails: Add multiple email addresses on separate lines
         escalation_name: Enter the name of the prison governor
         escalation_emails: Add multiple email addresses on separate lines
-      data_request:
+      data_request_area:
         location: Where is the data held?
       ico:
         original_case_number_html: |
