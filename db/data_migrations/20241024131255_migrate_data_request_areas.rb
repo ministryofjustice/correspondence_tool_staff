@@ -34,7 +34,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         user_id: request.user_id,
         case_id: request.case_id,
         data_request_area_type:,
-        contact_id: request.contact_id,
+        contact_id: request.contact_id.presence,
         location: request.location.presence,
       )
 
