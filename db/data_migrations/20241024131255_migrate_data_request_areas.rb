@@ -19,12 +19,8 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
   end
 
   def up
-    # get DataRequests for only Offender and OffenderComplaint
-    data_requests = DataRequest.joins(:offender_sar_case)
-                               .where(offender_sar_case: { type: %w[Case::SAR::Offender Case::SAR::OffenderComplaint] })
-
     # loop through the DataRequest records
-    data_requests.find_each do |request|
+    DataRequest.find_each do |request|
       # Get the data_request_area_type for this request
       data_request_area_type = data_request_area_type_for(request.request_type)
 
