@@ -169,8 +169,10 @@ class Case::SAR::Offender < Case::Base
   }
 
   enum request_method: {
-    post: "post",
     email: "email",
+    ico_web_portal: "ico web portal",
+    post: "post",
+    verbal_request: "verbal request",
     web_portal: "web portal",
     unknown: "unknown",
   }
