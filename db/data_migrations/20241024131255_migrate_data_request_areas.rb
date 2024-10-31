@@ -32,7 +32,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         data_request_area_type:,
         contact_id: request.contact_id,
         location: request.location.presence,
-        )
+      )
 
       # Prevents existing data request commissioning documents being overwritten during the migration
       if request.commissioning_document.present?
