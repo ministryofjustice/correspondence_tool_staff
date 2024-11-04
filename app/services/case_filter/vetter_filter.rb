@@ -1,6 +1,6 @@
 module CaseFilter
   class VetterFilter < CaseMultiChoicesFilterBase
-    VETTING_STATES = %w[ready_for_vetting vetting_in_progress].freeze
+    VETTING_STATES = %w[ready_for_vetting vetting_in_progress second_vetting_in_progress].freeze
 
     def self.identifier
       "filter_vetter"
