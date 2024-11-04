@@ -39,12 +39,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         data_request_area.commissioning_document = request.commissioning_document
       else
         template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-        data_request_area.build_commissioning_document(template_name: template_name)
-      end
-
-      # Ensure that any uploaded attachments are kept
-      if request.commissioning_document&.attachment
-        data_request_area.commissioning_document.attachment = request.commissioning_document.attachment
+        data_request_area.build_commissioning_document(template_name:)
       end
 
       data_request_area.save!
