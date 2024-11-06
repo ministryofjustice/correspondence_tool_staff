@@ -34,15 +34,15 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         location: request.location.presence,
       )
 
-      # Prevents existing data request commissioning documents being overwritten during the migration
-      if request.commissioning_document.present?
-        data_request_area.commissioning_document = request.commissioning_document
-      else
-        template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-        data_request_area.build_commissioning_document(template_name:)
-      end
-
+      # Disable the after_create callback
+      data_request_area.skip_callback = true
       data_request_area.save!
+      data_request_area.skip_callback = false
+
+      # Associate existing commissioning_document if present
+      if request.commissioning_document.present?
+        request.commissioning_document.update!(data_request_area_id: data_request_area.id)
+      end
 
       # Update DataRequest with the correct data_request_area_id
       request.update!(data_request_area_id: data_request_area.id)
