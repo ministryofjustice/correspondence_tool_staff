@@ -30,6 +30,7 @@ class DataRequestArea < ApplicationRecord
   before_validation :clean_attributes
 
   attr_accessor :skip_callback
+  
   after_create :conditionally_create_commissioning_document
 
   enum data_request_area_type: {
