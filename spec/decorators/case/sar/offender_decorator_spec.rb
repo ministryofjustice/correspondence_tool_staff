@@ -121,17 +121,17 @@ describe Case::SAR::OffenderDecorator do
 
   describe "#request_methods_sorted" do
     it "returns an ordered request methods list of options" do
-      expect(offender_sar_case.request_methods_sorted).to eq %w[email post unknown web_portal]
+      expect(offender_sar_case.request_methods_sorted).to eq %w[email ico_web_portal post unknown verbal_request web_portal]
     end
   end
 
   describe "#request_method_for_display" do
     it 'does not return the "unknown" request method' do
-      expect(offender_sar_case.request_methods_for_display).to match_array %w[email post web_portal]
+      expect(offender_sar_case.request_methods_for_display).to match_array %w[email ico_web_portal post verbal_request web_portal]
     end
 
     it "returns an ordered request methods list of options for display" do
-      expect(offender_sar_case.request_methods_for_display).to eq %w[email post web_portal]
+      expect(offender_sar_case.request_methods_for_display).to eq %w[email ico_web_portal post verbal_request web_portal]
     end
   end
 
