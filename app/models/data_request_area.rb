@@ -65,7 +65,7 @@ private
 
   def conditionally_create_commissioning_document
     return if skip_callback
-    
+
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
     create_commissioning_document(template_name:)
   end
