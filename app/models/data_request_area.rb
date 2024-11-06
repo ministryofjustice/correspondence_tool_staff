@@ -67,7 +67,7 @@ private
 
     unless commissioning_document
       template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-      create_commissioning_document(template_name: template_name)
+      create_commissioning_document(template_name:)
     end
   end
 
