@@ -49,6 +49,26 @@
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
                   after_transition: Workflows::Hooks#unassign_vetter
+                mark_as_second_vetting_in_progress:
+                  transition_to: second_vetting_in_progress
+                  after_transition: Workflows::Hooks#assign_vetter
+                add_data_received:
+                add_note_to_case:
+                send_day_1_email:
+                preview_cover_page:
+                edit_case:
+                move_case_back:
+                  transition_to: ready_for_vetting
+                  after_transition: Workflows::Hooks#unassign_vetter
+                move_to_team_member:
+                record_sent_to_sscl:
+                date_sent_to_sscl_removed:
+                start_complaint:
+                  if: Workflows::Predicates#can_start_complaint?
+              second_vetting_in_progress:
+                mark_as_ready_to_copy:
+                  transition_to: ready_to_copy
+                  after_transition: Workflows::Hooks#unassign_vetter
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:

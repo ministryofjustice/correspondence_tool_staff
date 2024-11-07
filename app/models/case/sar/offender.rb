@@ -493,6 +493,10 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def assign_vetter(user)
+    responder_assignment&.update(user:)
+  end
+
   def unassign_vetter
     responder_assignment&.update(user: nil)
   end
