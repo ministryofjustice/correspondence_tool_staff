@@ -147,6 +147,44 @@ spec:
                 name: environment-variables
             - secretRef:
                 name: app-secrets
+        - name: anonjobs
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
+          command: ["./config/docker/entrypoint-anonymizer-jobs.sh"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
+          env:
+            - name: MALLOC_ARENA_MAX
+              value: "2"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-replica-output
+                  key: url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-elasticache-redis-output
+                  key: url
+            - name: REDIS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-elasticache-redis-output
+                  key: auth_token
+            - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: bucket_name
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets
       initContainers:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
