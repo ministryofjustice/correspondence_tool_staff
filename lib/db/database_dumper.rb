@@ -66,7 +66,7 @@ private
       if @running_mode == "tasks"
         AnonymiserDbJob.perform_later(task[:task_function], task)
       else
-        AnonymiserDbJob.new.execute_task(task[:task_function], task)
+        DatabaseAnonymizerTasks.new.execute_task(task[:task_function], task)
       end
     end
   end
