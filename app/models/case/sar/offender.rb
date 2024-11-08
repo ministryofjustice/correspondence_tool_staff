@@ -139,7 +139,8 @@ class Case::SAR::Offender < Case::Base
                  further_actions_required: :string,
                  case_originally_rejected: :boolean,
                  other_rejected_reason: :string,
-                 rejected_reasons: [:string, { array: true, default: [] }]
+                 rejected_reasons: [:string, { array: true, default: [] }],
+                 probation_area: :string
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -168,8 +169,10 @@ class Case::SAR::Offender < Case::Base
   }
 
   enum request_method: {
-    post: "post",
     email: "email",
+    ico_web_portal: "ico web portal",
+    post: "post",
+    verbal_request: "verbal request",
     web_portal: "web portal",
     unknown: "unknown",
   }
@@ -489,6 +492,10 @@ class Case::SAR::Offender < Case::Base
       end
     end
     user_for_vetting
+  end
+
+  def assign_vetter(user)
+    responder_assignment&.update(user:)
   end
 
   def unassign_vetter

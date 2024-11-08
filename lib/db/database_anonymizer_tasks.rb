@@ -62,7 +62,7 @@ private
   # The actual function of processing different task
 
   def task_dump_schema_snapshot(_)
-    filename = "#{@tag}_database_schema_snapshot.snap"
+    filename = "tmp/#{@tag}_database_schema_snapshot.snap"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
     result = system command_line
     raise "Unable to execute pg_dump command" unless result == true
@@ -71,7 +71,7 @@ private
   end
 
   def task_dump_pre_data_tables(_)
-    filename = "#{@base_file_name}_00_pre_data.sql"
+    filename = "tmp/#{@base_file_name}_00_pre_data.sql"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -O --section=pre-data -f #{filename}"
     result = system command_line
     raise "Unable to execute pg_dump command" unless result == true
@@ -81,7 +81,7 @@ private
 
   def task_dump_post_data_tables(task_arguments)
     counter = task_arguments[:counter]
-    filename = "#{@base_file_name}_#{counter}_post_data.sql"
+    filename = "tmp/#{@base_file_name}_#{counter}_post_data.sql"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -O --section=post-data -f #{filename}"
     result = system command_line
     raise "Unable to execute pg_dump command" unless result == true
@@ -90,7 +90,7 @@ private
   end
 
   def task_dump_data_models_snapshot(_)
-    filename = "#{@tag}_activerecord_models_snapshot.json"
+    filename = "tmp/#{@tag}_activerecord_models_snapshot.json"
     activerecord_models = {}
     Rails.application.eager_load! unless Rails.configuration.cache_classes
     ActiveRecord::Base.descendants.each do |activerecord_model|
@@ -119,7 +119,7 @@ private
     number_of_groups = task_arguments[:number_of_groups]
     class_name = task_arguments[:class_name]
     model_class = class_name.constantize
-    base_filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
+    base_filename = "tmp/#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
     @anonymizer.anonymise_class_part(model_class, base_filename, number_of_groups, offset_counter)
   end
 
@@ -130,7 +130,7 @@ private
     end
 
     counter = task_arguments[:counter].to_i
-    filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
+    filename = "tmp/#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password --data-only --table=#{table_name} -f #{filename}.sql"
     result = system command_line
     raise "Unable to execute pg_dump command" unless result == true

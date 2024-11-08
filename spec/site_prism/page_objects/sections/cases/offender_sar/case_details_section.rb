@@ -65,6 +65,10 @@ module PageObjects
               element :data, "td"
             end
 
+            section :probation_area, "tr.probation-area" do
+              element :data, "td"
+            end
+
             section :subject_address, "tr.subject-address" do
               element :data, "td"
             end

@@ -16,6 +16,7 @@ module PageObjects
           element :subject_aliases, "#offender_sar_complaint_subject_aliases"
           element :previous_case_numbers, "#offender_sar_complaint_previous_case_numbers"
           element :other_subject_ids, "#offender_sar_complaint_other_subject_ids"
+          element :probation_area, "#offender_sar_complaint_probation_area"
           element :date_of_birth_dd, "#offender_sar_complaint_date_of_birth_dd"
           element :date_of_birth_mm, "#offender_sar_complaint_date_of_birth_mm"
           element :date_of_birth_yyyy, "#offender_sar_complaint_date_of_birth_yyyy"

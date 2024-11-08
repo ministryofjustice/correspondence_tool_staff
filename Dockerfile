@@ -36,7 +36,7 @@ RUN RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 \
     bundle exec rake assets:precompile assets:non_digested
 
 # Cleanup to save space in the production image
-RUN rm -rf node_modules log/* tmp/* /tmp && \
+RUN rm -rf log/* tmp/* /tmp && \
     rm -rf /usr/local/bundle/cache
 
 # Build runtime image

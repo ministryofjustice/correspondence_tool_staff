@@ -25,6 +25,7 @@ FactoryBot.define do
     sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }
     previous_case_numbers           { "54321" }
     prison_number                   { "123465" }
+    probation_area                  { "Smallville" }
     other_subject_ids               { "ABC 123 DEF" }
     case_reference_number           { "123 ABC 456" }
     subject_address                 { "22 Sample Address, Test Lane, Testingington, TE57ST" }

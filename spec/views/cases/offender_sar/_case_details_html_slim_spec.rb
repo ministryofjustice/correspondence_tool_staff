@@ -39,6 +39,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.previous_case_numbers.data.text).to eq "54321"
       expect(partial.other_subject_ids.data.text).to eq "ABC 123 DEF"
       expect(partial.case_reference_number.data.text).to eq "123 ABC 456"
+      expect(partial.probation_area.data.text).to eq "Smallville"
       expect(partial.subject_address.data.text).to eq "22 Sample Address, Test Lane, Testingington, TE57ST"
       expect(partial.requester_reference.data.text).to eq "456 ABC 123"
       expect(partial.request_dated.data.text).to eq "13 Jul 2010"

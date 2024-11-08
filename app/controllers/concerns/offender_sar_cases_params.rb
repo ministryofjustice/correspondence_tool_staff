@@ -19,6 +19,7 @@ module OffenderSARCasesParams
       :other_subject_ids,
       :postal_address,
       :prison_number,
+      :probation_area,
       :previous_case_numbers,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
