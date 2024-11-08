@@ -163,7 +163,7 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-replica-output
+                  name: track-a-query-rds-output
                   key: url
             - name: REDIS_URL
               valueFrom:
