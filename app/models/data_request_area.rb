@@ -28,10 +28,10 @@ class DataRequestArea < ApplicationRecord
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
-
-  attr_accessor :skip_callback
-
-  after_create :conditionally_create_commissioning_document
+  after_create do
+    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
+    create_commissioning_document(template_name:)
+  end
 
   enum data_request_area_type: {
     prison: "prison",
@@ -62,13 +62,6 @@ class DataRequestArea < ApplicationRecord
   end
 
 private
-
-  def conditionally_create_commissioning_document
-    return if skip_callback
-
-    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-    create_commissioning_document(template_name:)
-  end
 
   def validate_location
     if contact_id.present?

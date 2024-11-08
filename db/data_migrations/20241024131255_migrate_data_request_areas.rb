@@ -26,7 +26,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
 
       Rails.logger.debug "Finding DataRequestArea with user_id: #{request.user_id}, case_id: #{request.case_id}, contact_id: #{request.contact_id.presence}"
 
-      data_request_area = DataRequestArea.new(
+      data_request_area = DataRequestArea.create!(
         user_id: request.user_id,
         case_id: request.case_id,
         data_request_area_type:,
@@ -34,13 +34,9 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         location: request.location.presence,
       )
 
-      # Disable the after_create callback
-      data_request_area.skip_callback = true
-      data_request_area.save!
-      data_request_area.skip_callback = false
-
       # Associate existing commissioning_document if present
       if request.commissioning_document.present?
+        data_request_area.commissioning_document.destroy!
         request.commissioning_document.update!(data_request_area_id: data_request_area.id)
       end
 
