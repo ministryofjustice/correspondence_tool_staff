@@ -266,6 +266,7 @@ namespace :db do
 
         require File.expand_path("#{File.dirname(__FILE__)}/../../lib/db/database_loader")
 
+        env = ENV["ENV"] || "local"
         DatabaseLoader.new(env, dirname).run
 
         user_settings = UsersSettingsForAnonymizer.new
