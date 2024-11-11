@@ -214,7 +214,7 @@ namespace :db do
     task :copy_s3_dumps, %i[tag bucket] => :environment do |_task, args|
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
-      dir_name_base = "dumps_#{args[:tag]}_from_#{args[:bucket]}"
+      dir_name_base = "tmp/dumps_#{args[:tag]}_from_#{args[:bucket]}"
       dirname = Rails.root.join(dir_name_base)
       FileUtils.mkpath(dirname)
       DumperUtils.shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
@@ -239,9 +239,10 @@ namespace :db do
     end
 
     desc "Decompress downloaded files"
-    task :decompress, [:tag] => :environment do |_task, args|
+    task :decompress, %i[tag bucket] => :environment do |_task, args|
       args.with_defaults(tag: ENV["DB_ANON_TAG"] || "latest")
-      dirname = Rails.root.join("dumps_#{args[:tag]}")
+      dir_name_base = "tmp/dumps_#{args[:tag]}_from_#{args[:bucket]}"
+      dirname = Rails.root.join(dir_name_base)
       DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
         Dir.glob("#{dirname}/*.gz").sort.map do |local_filename|
           DumperUtils.decompress_file(local_filename)
@@ -257,15 +258,13 @@ namespace :db do
         puts "Cannot run this command on production environment!"
       else
         args.with_defaults(require_confirmation: "true")
-        args.with_defaults(dir: "dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
+        args.with_defaults(dir: "tmp/dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
         if args[:require_confirmation].to_s == "true"
           safeguard_restore
         end
         dirname = Rails.root.join(args[:dir])
 
         require File.expand_path("#{File.dirname(__FILE__)}/../../lib/db/database_loader")
-        env = ENV["ENV"] || "local"
-        raise "This task is not allowed on non-prod environment." unless env != "prod"
 
         DatabaseLoader.new(env, dirname).run
 
