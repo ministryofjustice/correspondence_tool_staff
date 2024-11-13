@@ -135,7 +135,7 @@ class Case::ICO::Base < Case::Base
     true
   end
 
-  delegate :subject, to: :original_case
+  delegate :subject, :name, to: :original_case
 
   def subject=(_new_subject)
     raise StandardError, "subject attribute is read-only for ICO cases"
