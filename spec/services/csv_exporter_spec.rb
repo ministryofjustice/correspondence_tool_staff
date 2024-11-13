@@ -295,7 +295,7 @@ describe CSVExporter do
           "Date responded" => nil,
           "Date compliant draft uploaded" => "2018-08-26",
           "Trigger" => "Yes",
-          "Name" => nil,
+          "Name" => "closed case name 1",
           "Requester type" => "Nothing",
           "Message" => "my FOI ICO message",
           "Info held" => nil,
