@@ -73,6 +73,8 @@ class Case::ICO::Base < Case::Base
     date_closed
   ]
 
+  delegate :subject, :name, to: :original_case
+
   enum ico_decision: {
     upheld: "upheld",
     overturned: "overturned",
@@ -134,8 +136,6 @@ class Case::ICO::Base < Case::Base
   def sent_by_email?
     true
   end
-
-  delegate :subject, :name, to: :original_case
 
   def subject=(_new_subject)
     raise StandardError, "subject attribute is read-only for ICO cases"
