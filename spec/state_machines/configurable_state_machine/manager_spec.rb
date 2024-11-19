@@ -8,7 +8,7 @@ module ConfigurableStateMachine
       it "is a private method" do
         expect {
           described_class.new
-        }.to raise_error NoMethodError, "private method `new' called for ConfigurableStateMachine::Manager:Class"
+        }.to raise_error NoMethodError, "private method `new' called for class ConfigurableStateMachine::Manager"
       end
     end
 
