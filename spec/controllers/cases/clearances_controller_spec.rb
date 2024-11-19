@@ -413,7 +413,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
           it "renders the view" do
             patch :unflag_for_clearance, params:, xhr: true
-            expect(response).to have_rendered(("unflag_for_clearance"))
+            expect(response).to have_rendered("unflag_for_clearance")
           end
 
           it "returns success" do

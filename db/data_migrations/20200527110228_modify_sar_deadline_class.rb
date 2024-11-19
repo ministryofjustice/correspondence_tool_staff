@@ -1,6 +1,6 @@
 class ModifySARDeadlineClass < ActiveRecord::DataMigration
   def up
-    CorrespondenceType.all.each do |ct|
+    CorrespondenceType.all.find_each do |ct|
       next unless ct.abbreviation == "SAR" || ct.abbreviation == "OFFENDER_SAR"
 
       ct.update!(
@@ -13,7 +13,7 @@ class ModifySARDeadlineClass < ActiveRecord::DataMigration
   end
 
   def down
-    CorrespondenceType.all.each do |ct|
+    CorrespondenceType.all.find_each do |ct|
       next unless ct.abbreviation == "SAR" || ct.abbreviation == "OFFENDER_SAR"
 
       ct.update!(

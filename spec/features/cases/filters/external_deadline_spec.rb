@@ -38,7 +38,7 @@ feature "filtering by external deadline" do
 
         # add a common search term to them all
         #
-        @setup.cases.each do |_kase_name, kase|
+        @setup.cases.each_value do |kase|
           kase.subject += " prison guards"
           kase.save!
         end

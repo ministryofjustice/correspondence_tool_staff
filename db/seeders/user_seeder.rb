@@ -127,7 +127,7 @@ private
     Rails.logger.debug ""
     Rails.logger.debug "Analysing business units to see if there are any without users:"
     teams = []
-    BusinessUnit.all.each { |bu| teams << bu.name if bu.users.none? }
+    BusinessUnit.all.find_each { |bu| teams << bu.name if bu.users.none? }
     Rails.logger.debug "There are #{teams.size} Business Units without any users:"
     teams.each do |t|
       Rails.logger.debug "  #{t}"

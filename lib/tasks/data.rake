@@ -79,7 +79,7 @@ namespace :data do
 
     desc "Sets internal deadline on all cases"
     task set_internal_deadline: :environment do
-      Case::Base.all.each do |kase|
+      Case::Base.all.find_each do |kase|
         kase.__send__(:set_internal_deadline) if kase.internal_deadline.nil?
       end
     end

@@ -18,7 +18,7 @@ namespace :kilo_map do
 
   desc "lists business units and what correspondence types they deal with"
   task audit_corr_types: :environment do
-    BusinessGroup.all.each do |bg|
+    BusinessGroup.all.find_each do |bg|
       bg.business_units.each do |bu|
         puts sprintf("%-4d %-40s %-60s %s", bu.id, bg.name, bu.name, bu.correspondence_types.map(&:abbreviation).join(", "))
       end
