@@ -2,13 +2,13 @@ module Stats
   module OffenderSARCalculations
     module Callbacks
       def self.calculate_total_columns(stats)
-        stats.stats.each do |_team_id, row|
+        stats.stats.each_value do |row|
           row[:overall_total] = Calculations.sum_all_received(:overall, row)
         end
       end
 
       def self.calculate_percentages(stats)
-        stats.stats.each do |_, row|
+        stats.stats.each_value do |row|
           row[:overall_performance] = OffenderSARCalculations.calculate_overall_performance(row)
         end
       end

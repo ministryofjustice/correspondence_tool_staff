@@ -211,7 +211,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
 
   describe "#process_cases" do
     it "accepts an ActiveRecord Query" do
-      expect { described_class.process_cases("bad param") }.to raise_error NoMethodError, /undefined method `in_batches' for "bad param"/
+      expect { described_class.process_cases("bad param") }.to raise_error NoMethodError, /undefined method `in_batches' for an instance of String/
     end
 
     it "returns the number of CaseReport (re)generated" do

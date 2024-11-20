@@ -14,7 +14,7 @@ class SARsLoader
     CSV.foreach(@filename) do |row|
       bg, bu, sars = row
 
-      next if bg == "Business group"   # header row
+      next if bg == "Business group" # header row
 
       if bg.present?
         process_business_group(bg)

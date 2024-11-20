@@ -266,7 +266,7 @@ module Warehouse
 
       def rejected_reasons_selection(kase)
         reasons_hash = Case::SAR::Offender::REJECTED_REASONS.dup
-        reasons_hash.each do |key, _|
+        reasons_hash.each_key do |key|
           reasons_hash[key] = if kase.rejected_reasons.include?(key)
                                 "Yes"
                               else

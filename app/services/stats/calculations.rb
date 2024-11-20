@@ -2,7 +2,7 @@ module Stats
   module Calculations
     module Callbacks
       def self.calculate_overall_columns(stats)
-        stats.stats.each do |_team_id, row|
+        stats.stats.each_value do |row|
           Calculations.calculate_overall_figure(row, :responded_in_time)
           Calculations.calculate_overall_figure(row, :responded_late)
           Calculations.calculate_overall_figure(row, :open_in_time)
@@ -11,7 +11,7 @@ module Stats
       end
 
       def self.calculate_total_columns(stats)
-        stats.stats.each do |_team_id, row|
+        stats.stats.each_value do |row|
           row[:non_trigger_total] = Calculations.sum_all_received(:non_trigger, row)
           row[:trigger_total] = Calculations.sum_all_received(:trigger, row)
           row[:overall_total] = Calculations.sum_all_received(:overall, row)
@@ -22,7 +22,7 @@ module Stats
       end
 
       def self.calculate_percentages(stats)
-        stats.stats.each do |_team_id, row|
+        stats.stats.each_value do |row|
           if row.key?(:business_group)
             Calculations.calculate_percentages_for_bu(row)
           else
@@ -142,7 +142,7 @@ module Stats
     # @stats variable  inside the stats collector to sum totals for directorates and business groups
     def self.roll_up_stats_callback(stats)
       overall_total_results = stats.stats[:total]
-      BusinessUnit.includes(:directorate, :business_group).all.each do |bu|
+      BusinessUnit.includes(:directorate, :business_group).all.find_each do |bu|
         bu_results = stats.stats[bu.id]
         directorate_results = stats.stats[bu.directorate.id]
         business_group_results = stats.stats[bu.business_group.id]
