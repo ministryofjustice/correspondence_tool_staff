@@ -6,7 +6,7 @@ module Stats
     before(:all) do
       create_report_type(abbr: :r002)
 
-      Team.all.each(&:destroy)
+      Team.all.find_each(&:destroy)
       Timecop.freeze Time.zone.local(2017, 6, 30, 12, 0, 0) do
         @bizgrp_ab = create :business_group, name: "BGAB"
         @dir_a     = create :directorate, name: "DRA", business_group: @bizgrp_ab

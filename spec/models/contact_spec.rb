@@ -113,7 +113,7 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.address).to match("123 test road\nlittle heath\nbakersville\nMercia\nFE2 9JK")
     end
 
-    it "will output correctly if optional address parts are missing" do
+    it "outputs correctly if optional address parts are missing" do
       expect(contact.inline_address).to match("123 test road, FE2 9JK")
       expect(contact.address).to match("123 test road\nFE2 9JK")
     end

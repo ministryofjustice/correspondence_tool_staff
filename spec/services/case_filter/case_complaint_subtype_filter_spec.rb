@@ -49,7 +49,7 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
   end
 
   describe "#call" do
-    Case::SAR::OffenderComplaint.complaint_subtypes.each do |complaint_subtype, _|
+    Case::SAR::OffenderComplaint.complaint_subtypes.each_key do |complaint_subtype|
       describe "filtering for standard complaint cases" do
         let(:search_query) do
           create :search_query,
