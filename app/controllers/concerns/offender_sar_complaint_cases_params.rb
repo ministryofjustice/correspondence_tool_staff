@@ -26,6 +26,7 @@ module OffenderSARComplaintCasesParams
       :priority,
       :prison_number,
       :previous_case_numbers,
+      :probation_area,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
       :requester_type,

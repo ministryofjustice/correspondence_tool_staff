@@ -893,6 +893,26 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#probation_area" do
+    let(:kase) { create :offender_sar_case }
+
+    context "when the area is nil" do
+      let(:kase)  { create :offender_sar_case, probation_area: nil }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to be nil
+      end
+    end
+
+    context "when the area is an empty string" do
+      let(:kase)  { create :offender_sar_case, probation_area: "" }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to eq ""
+      end
+    end
+  end
+
   describe "#number_of_days_for_vetting" do
     it "is nil if the vetting process has not started yet" do
       kase = create :offender_sar_case
@@ -933,6 +953,18 @@ describe Case::SAR::Offender do
     it "return user id" do
       kase = create :offender_sar_case, :vetting_in_progress
       expect(kase.user_dealing_with_vetting.id).to be kase.responding_team.users.first.id
+    end
+  end
+
+  describe "#assign_vetter" do
+    let(:responder) { find_or_create :responder }
+    let(:responding_team) { responder.teams.first }
+
+    it "sets responding user to expected" do
+      kase = create :offender_sar_case, :vetting_in_progress
+      expect {
+        kase.assign_vetter(responder)
+      }.to change(kase.responder_assignment, :user_id).to responder.id
     end
   end
 

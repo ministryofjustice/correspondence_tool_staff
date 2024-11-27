@@ -5,7 +5,7 @@
 
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-        
+
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
   = f.text_field :subject_full_name
 
@@ -18,6 +18,8 @@
   = f.text_field :other_subject_ids
 
   = f.text_field :case_reference_number
+
+  = f.text_field :probation_area
 
   = f.gov_uk_date_field :date_of_birth, { legend_text: t('cases.new.date_of_birth'),
     form_hint_text: t('helpers.hint.shared.date_example') }

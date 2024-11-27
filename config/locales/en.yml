@@ -881,6 +881,7 @@ en:
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
+        probation_area: Probation area
         received_date: "Received at MOJ"
         rejected_reason: Why are you rejecting this case?
         recipient:
@@ -906,10 +907,12 @@ en:
           offender: Offender
           probation_service_user: "Probation service user"
         request_method:
-           post: "Post"
-           email: "Email"
-           web_portal: "Web portal"
-           unknown: "Unknown"
+          email: Email
+          ico_web_portal: ICO web portal
+          post: Post
+          verbal_request: Verbal request
+          web_portal: Web portal
+          unknown: Unknown
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
@@ -1129,6 +1132,7 @@ en:
       postal_address: "Requester's postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
+      probation_area: Probation area
       progress_for_clearance: "Ready for Disclosure clearance"
       reason_for_refusal: Outcome
       outcome_reason: Reason for appeal outcome
@@ -1286,21 +1290,6 @@ en:
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
         Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
-      new:
-        create: Create
-        heading: New Case
-        sub_heading: Admin
-        ico:
-          headings:
-            only_for_closed_cases: ONLY for closed clases
-        sar:
-          headings:
-            about_data_subject: About the data subject
-            about_case: About the case
-            where_information_should_be_sent: Where the information should be sent
-      select_type:
-        heading: Choose correspondence type
-        sub_heading: Admin
 
     feedback:
       index:
@@ -1451,12 +1440,7 @@ en:
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
       heading: Add case details
-      created_at: Created at
-      created_at_copy: 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
       received_date: Date received at MOJ
-      received_date_short: Received date
-      received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
-      only_select_one: Please only select one.
       accepted_date_received_legend: When was the outstanding information received?
       case/ico:
         internal_deadline_copy: >-

@@ -5,7 +5,7 @@ class DatabaseLoader
     @env = env
     @db_connection_url = ENV["DATABASE_URL"] || "postgres://localhost/correspondence_platform_development"
     @folder_for_load = folder_for_load
-    raise "This task is not allowed on non-prod environment." unless @env != "prod"
+    raise "This task is not allowed on prod environment." unless @env != "prod"
   end
 
   def run
