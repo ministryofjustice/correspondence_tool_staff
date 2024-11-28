@@ -35,13 +35,11 @@ class LetterTemplate < ApplicationRecord
   end
 
   def telephone_number
-    return COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM if abbreviation == "complaint-acknowledgement"
-
     case template_type
     when "dispatch"
       DISPATCH_LETTER_TEL_NUM
     when "acknowledgement"
-      ACKNOWLEDGEMENT_LETTER_TEL_NUM
+      abbreviation == "complaint-acknowledgement" ? COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM : ACKNOWLEDGEMENT_LETTER_TEL_NUM
     end
   end
 end
