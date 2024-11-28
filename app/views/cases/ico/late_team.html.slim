@@ -23,5 +23,5 @@ div class="case-#{@case.type_abbreviation.downcase}"
 
     .grid-row
       .column-two-thirds
-        = f.submit t('common.case.respond')', {class: 'button'}
+        = f.submit t('common.case.respond'), {class: 'button'}
         = link_to "Return to case detail", case_path(@case.id), class: 'button-secondary button-left-spacing'
