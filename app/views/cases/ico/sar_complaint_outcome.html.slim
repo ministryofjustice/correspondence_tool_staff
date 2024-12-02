@@ -1,0 +1,27 @@
+- content_for :page_title do
+  = t('page_title.sar_complaint_outcome', case_number: @case.number)
+
+- content_for :heading
+  .grid-row
+    .column-two-thirds
+      = t('page_title.sar_complaint_outcome')
+
+- content_for :sub_heading
+span.visually-hidden
+  = t('common.case.header_case_number')
+= "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
+div class="case-#{@case.type_abbreviation.downcase}"
+  = form_for @case, as: "#{@case.type_abbreviation.downcase}", url: record_late_team_case_ico_path do |f|
+
+    = render partial: 'cases/shared/sar_complaint_outcome_options', locals: {kase: @case, f: f}
+
+    .grid-row
+      .column-two-thirds
+        = f.submit t('common.case.mark_as_responded'), {class: 'button'}
+        = link_to "Return to case detail", case_path(@case.id), class: 'button-secondary button-left-spacing'
