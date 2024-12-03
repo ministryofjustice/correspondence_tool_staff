@@ -30,7 +30,6 @@
 #  user_id                  :integer          default(-100), not null
 #  reason_for_lateness_id   :bigint
 #  reason_for_lateness_note :string
-#  sar_complaint_outcome    :string
 #
 
 class Case::ICO::SAR < Case::ICO::Base
@@ -50,13 +49,17 @@ class Case::ICO::SAR < Case::ICO::Base
 
   SAR_COMPLAINT_OUTCOMES = {
     "bau_ico_informed" => "Was originally treated as BAU, the ICO have been informed",
-    "bau_and__now_responded_as_sar" => "Was originally treated as BAU and we have now also responded as a SAR",
+    "bau_and_now_responded_as_sar" => "Was originally treated as BAU and we have now also responded as a SAR",
     "not_received_now_responded_as_sar" => "No evidence of ever receiving the SAR. We have now responded to the SAR",
     "sar_processed_but_overdue" => "SAR Timeliness breach - SAR processed correctly but is overdue",
     "sar_incorrectly_processed_now_responded_as_sar" => "SAR Timeliness breach - SAR was not processed correctly (e.g. logged as a SAR). We have now provided a SAR response",
     "responded_to_sar_and_ico_informed" => "We have already responded to the SAR, the ICO were informed",
-    "revised_sar_sent_exemptions_issue" => "Revised SAR response sent, as correct exemption(s) was not applied originally by the business area",
-    "revised_sar_sent_undisclosed_information" => "Revised SAR response sent, as some information should have been disclosed by the business area",
+    "revised_sar_sent-exemptions_issue" => "Revised SAR response sent, as correct exemption(s) was not applied originally by the business area",
+    "revised_sar_sent-undisclosed_information" => "Revised SAR response sent, as some information should have been disclosed by the business area",
     "other" => "Other (state why in notes section)",
   }.freeze
+
+  jsonb_accessor :properties,
+                 sar_complaint_outcome: [:string, { array: true, default: [] }]
+
 end
