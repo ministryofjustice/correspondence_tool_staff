@@ -41,7 +41,8 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       end
 
       # Update DataRequest with the correct data_request_area_id
-      request.update!(data_request_area_id: data_request_area.id)
+      request.update(data_request_area_id: data_request_area.id)
+      request.save!(validate: false)
 
       # TEMP LOGGING INFO
       Rails.logger.debug "Updated DataRequest ##{request.id} - #{request.request_type}, with data_request_area_id: #{data_request_area.id} (area_type: #{data_request_area_type}, contact_id: #{data_request_area.contact_id}, data_request_area.user_id: #{data_request_area.user_id}, data_request_area.case_id: #{data_request_area.case_id}, data_request_area.commissioning_document: #{data_request_area.commissioning_document})"
