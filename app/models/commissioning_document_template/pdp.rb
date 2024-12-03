@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Pdp < CommissioningDocumentTemplate::Base
     def request_type
-      "PDP"
+      :PDP
     end
 
     def deadline
@@ -11,7 +11,7 @@ module CommissioningDocumentTemplate
     def context
       super.merge(
         aliases: kase.subject_aliases,
-        date_range: data_request.request_dates,
+        date_range: data_request_area.request_dates,
       )
     end
   end
