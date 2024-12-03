@@ -41,7 +41,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       end
 
       # Update DataRequest with the correct data_request_area_id
-      request.update(data_request_area_id: data_request_area.id)
+      request.update(data_request_area_id: data_request_area.id) # rubocop:disable Rails/SaveBang
       request.save!(validate: false)
 
       # TEMP LOGGING INFO
