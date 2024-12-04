@@ -73,7 +73,7 @@ class Case::ICO::Base < Case::Base
     date_closed
   ]
 
-  delegate :subject, :name, to: :original_case
+  delegate :subject, :name, to: :original_case, allow_nil: true
 
   enum ico_decision: {
     upheld: "upheld",
