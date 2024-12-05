@@ -30,7 +30,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       # Get the data_request_area_type for this request
       data_request_area_type = data_request_area_type_for(request.request_type)
 
-      Rails.logger.debug "Finding DataRequestArea with user_id: #{request.user_id}, case_id: #{request.case_id}, contact_id: #{request.contact_id.presence}"
+      Rails.logger.debug "Finding DataRequestArea with user_id: #{request.user_id}, case_id: #{request.case_id}, contact_id: #{request.contact_id.presence}, location: #{request.location.presence}"
 
       data_request_area = DataRequestArea.create!(
         user_id: request.user_id,
