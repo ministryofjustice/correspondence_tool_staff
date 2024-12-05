@@ -28,7 +28,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
       end
 
       if request.contact_id.nil? && request.location.blank?
-        request.update!(location: "Unknown")
+        request.update!(location: "Unknown") # some older requests have no location or contact_id
       end
 
       # Get the data_request_area_type for this request
