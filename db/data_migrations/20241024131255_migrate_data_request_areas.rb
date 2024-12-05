@@ -54,8 +54,7 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         Rails.logger.debug "Updated DataRequest ##{request.id} - #{request.request_type}, with data_request_area_id: #{data_request_area.id} (area_type: #{data_request_area_type}, contact_id: #{data_request_area.contact_id}, data_request_area.user_id: #{data_request_area.user_id}, data_request_area.case_id: #{data_request_area.case_id}, data_request_area.commissioning_document: #{data_request_area.commissioning_document})"
       rescue StandardError => e
         # Log the error and continue
-        Rails.logger.error "Failed to process DataRequest ##{request.id}: #{e.message}"
-        Rails.logger.error e.backtrace.join("\n")
+        Rails.logger.error "\n>>>Failed to process DataRequest ##{request.id}: #{e.message}\n"
       end
     end
   end
