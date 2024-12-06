@@ -50,6 +50,12 @@ class MigrateDataRequestAreas < ActiveRecord::DataMigration
         request.commissioning_document.update!(data_request_area_id: data_request_area.id)
       end
 
+      # Associate existing data_request_emails if present
+      request.data_request_emails.each do |email|
+        email.update!(data_request_area_id: data_request_area.id)
+        Rails.logger.info "Updated DataRequestEmail ##{email.id} with DataRequestArea ##{data_request_area.id}"
+      end
+
       # Update DataRequest with the correct data_request_area_id
       request.update_attribute(:data_request_area_id, data_request_area.id) # rubocop:disable Rails/SkipsModelValidations
 
