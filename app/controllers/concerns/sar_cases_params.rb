@@ -19,7 +19,7 @@ module SARCasesParams
       :reply_method,
       :request_method,
       uploaded_request_files: [],
-      complaint_outcomes: []
+      :sar_complaint_outcome
     )
   end
 
@@ -39,7 +39,7 @@ module SARCasesParams
       :request_method,
       :email,
       :postal_address,
-      :complaint_outcome
+      :sar_complaint_outcome
     )
   end
 

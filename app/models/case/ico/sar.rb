@@ -47,7 +47,7 @@ class Case::ICO::SAR < Case::ICO::Base
     responder_assignment.update(state: "pending")
   end
 
-  COMPLAINT_OUTCOMES = {
+  SAR_COMPLAINT_OUTCOMES = {
     "bau_ico_informed" => "Was originally treated as BAU, the ICO have been informed",
     "bau_and_now_responded_as_sar" => "Was originally treated as BAU and we have now also responded as a SAR",
     "not_received_now_responded_as_sar" => "No evidence of ever receiving the SAR. We have now responded to the SAR",
@@ -60,6 +60,6 @@ class Case::ICO::SAR < Case::ICO::Base
   }.freeze
 
   jsonb_accessor :properties,
-                 complaint_outcomes: [:string, { array: true, default: [] }]
+                 sar_complaint_outcomes: [:string]
 
 end

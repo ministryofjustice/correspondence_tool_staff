@@ -17,24 +17,10 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
         ""
 
-  / div class="case-#{@case.type_abbreviation.downcase}"
-    = form_for @case, url: url, as: :sar_complaint do |f|
-      = f.label :complaint_outcome, :class => "form-label-bold"
-      = f.radio_button_fieldset :complaint_outcomes, choices: Case::ICO::SAR::COMPLAINT_OUTCOMES
-
   div class="case-#{@case.type_abbreviation.downcase}"
-    = form_for @data_request, as: :data_request, url: case_data_requests_path(@case), method: :post do |f|
-      = f.radio_button_fieldset :complaint_outcome,
-          choices: DataRequest::COMPLAINT_OUTCOMES.keys do |fieldset|
-        - fieldset.radio_input('bau_ico_informed')
-        - fieldset.radio_input('bau_and_now_responded_as_sar')
-        - fieldset.radio_input('sar_processed_but_overdue')
-        - fieldset.radio_input('sar_incorrectly_processed_now_responded_as_sar')
-        - fieldset.radio_input('responded_to_sar_and_ico_informed')
-        - fieldset.radio_input('revised_sar_sent-exemptions_issue')
-        - fieldset.radio_input('revised_sar_sent-undisclosed_information')
-        - fieldset.radio_input('other')
-          = f.text_area :other_outcome
+    = form_for @case, url: url, as: :sar_complaint do |f|
+      = f.label :sar_complaint_outcome, :class => "form-label-bold"
+      = f.radio_button_fieldset :sar_complaint_outcomes, choices: Case::ICO::SAR::SAR_COMPLAINT_OUTCOMES
 
     .grid-row
       .column-two-thirds
