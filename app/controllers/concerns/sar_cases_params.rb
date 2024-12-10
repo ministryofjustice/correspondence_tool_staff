@@ -18,7 +18,8 @@ module SARCasesParams
       :third_party_relationship,
       :reply_method,
       :request_method,
-      uploaded_request_files: []
+      uploaded_request_files: [],
+      :sar_complaint_outcome
     )
   end
 
@@ -37,7 +38,8 @@ module SARCasesParams
       :reply_method,
       :request_method,
       :email,
-      :postal_address
+      :postal_address,
+      :sar_complaint_outcome
     )
   end
 

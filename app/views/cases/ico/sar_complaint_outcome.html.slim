@@ -1,10 +1,10 @@
 - content_for :page_title do
-  = t('page_title.marking_response_as_sent', case_number: @case.number)
+  = t('page_title.sar_complaint_outcome', case_number: @case.number)
 
 - content_for :heading
   .grid-row
     .column-two-thirds
-      = 'Who was responsible for the late response?'
+      = t('page_title.sar_complaint_outcome')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -16,12 +16,13 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
         ""
-div class="case-#{@case.type_abbreviation.downcase}"
-  = form_for @case, as: "#{@case.type_abbreviation.downcase}", url: record_late_team_case_ico_path do |f|
 
-    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+  div class="case-#{@case.type_abbreviation.downcase}"
+    = form_for @case, url: url, as: :sar_complaint do |f|
+      = f.label :sar_complaint_outcome, :class => "form-label-bold"
+      = f.radio_button_fieldset :sar_complaint_outcomes, choices: Case::ICO::SAR::SAR_COMPLAINT_OUTCOMES
 
     .grid-row
       .column-two-thirds
-        = f.submit t('common.case.respond'), {class: 'button'}
+        = f.submit t('common.case.mark_as_responded'), {class: 'button'}
         = link_to "Return to case detail", case_path(@case.id), class: 'button-secondary button-left-spacing'

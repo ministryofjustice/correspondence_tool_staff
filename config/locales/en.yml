@@ -1169,6 +1169,7 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
+      mark_as_responded: Mark as responded
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
