@@ -31,6 +31,12 @@ class DataRequestAreaDecorator < Draper::Decorator
     }.join("\n")
   end
 
+  def data_required
+    data_requests.map { |request|
+      request.decorate.data_required
+    }.join("\n")
+  end
+
   def data_request_area_status_tag(status)
     case status
     when :completed

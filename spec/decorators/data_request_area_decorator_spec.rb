@@ -120,6 +120,21 @@ describe DataRequestAreaDecorator, type: :model do
     end
   end
 
+  describe "#data_required" do
+    let(:decorated) { data_request_area.decorate }
+
+    context "with multiple data_requests having request_type_note values" do
+      before do
+        create(:data_request, data_request_area:, request_type_note: "more info 1")
+        create(:data_request, data_request_area:, request_type_note: "more info 2")
+      end
+
+      it "returns concatenated string for all requests" do
+        expect(decorated.data_required).to eq "More info 1\nMore info 2"
+      end
+    end
+  end
+
   describe "#request_document" do
     let(:decorated) { data_request_area.decorate }
 
