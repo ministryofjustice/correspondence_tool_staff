@@ -32,9 +32,7 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def data_required
-    data_requests.map { |request|
-      request.decorate.data_required
-    }.join("\n")
+    data_requests.first.decorate.data_required.presence
   end
 
   def data_request_area_status_tag(status)
