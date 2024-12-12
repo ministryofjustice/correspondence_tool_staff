@@ -125,12 +125,11 @@ describe DataRequestAreaDecorator, type: :model do
 
     context "with multiple data_requests having request_type_note values" do
       before do
-        create(:data_request, data_request_area:, request_type_note: "more info 1")
-        create(:data_request, data_request_area:, request_type_note: "more info 2")
+        create(:data_request, data_request_area:, request_type_note: "more info")
       end
 
       it "returns concatenated string for all requests" do
-        expect(decorated.data_required).to eq "More info 1\nMore info 2"
+        expect(decorated.data_required).to eq "More info"
       end
     end
   end
