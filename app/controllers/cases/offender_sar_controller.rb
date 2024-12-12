@@ -320,12 +320,14 @@ module Cases
     def apply_date_workaround
       # an issue with the Gov UK Date Fields causes the fields to show up empty
       # on edit unless you assign to the :date_of_birth, and :request_dated fields before display
+      # rubocop:disable Lint/SelfAssignment
       @case.date_of_birth = @case.date_of_birth
       @case.request_dated = @case.request_dated
       @case.external_deadline = @case.external_deadline
       @case.external_deadline = @case.external_deadline
       @case.partial_case_letter_sent_dated = @case.partial_case_letter_sent_dated
       @case.sent_to_sscl_at = @case.sent_to_sscl_at
+      # rubocop:enable Lint/SelfAssignment
     end
 
     def params_for_transition
@@ -401,7 +403,7 @@ module Cases
     end
 
     def load_optional_flags_from_params
-      @creation_optional_flags.each do |key, _|
+      @creation_optional_flags.each_key do |key|
         @creation_optional_flags[key] = params[key]
       end
     end
