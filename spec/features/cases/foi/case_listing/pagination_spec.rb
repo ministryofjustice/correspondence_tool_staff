@@ -3,7 +3,7 @@ require "rails_helper"
 # rubocop:disable RSpec/BeforeAfterAll
 feature "pagination" do
   background :all do
-    @cases = 30.times.map { create :accepted_case }
+    @cases = create_list :accepted_case, 30
     @responder = find_or_create :foi_responder
   end
 

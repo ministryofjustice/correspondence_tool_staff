@@ -1,6 +1,6 @@
 class AddReportCategoryToCorrespondenceType < ActiveRecord::DataMigration
   def up
-    CorrespondenceType.all.each do |ct|
+    CorrespondenceType.all.find_each do |ct|
       ct.report_category_name = ""
       ct.save!
     end

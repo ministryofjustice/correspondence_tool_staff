@@ -62,13 +62,13 @@ feature "SAR Internal Review Case can be edited", js: true do
   end
 
   context "when a manager" do
-    it "will allow me to edit a SAR IR case details" do
+    it "allows me to edit a SAR IR case details" do
       when_a_manager_logs_in
       and_they_edit_the_case_details(sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
 
-    it "will allow me to edit the details of a case closure" do
+    it "allows me to edit the details of a case closure" do
       when_a_manager_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       and_they_edit_case_closure_details
@@ -77,13 +77,13 @@ feature "SAR Internal Review Case can be edited", js: true do
   end
 
   context "when an approver" do
-    it "will allow me to edit a SAR IR case details" do
+    it "allows me to edit a SAR IR case details" do
       when_an_approver_logs_in
       and_they_edit_the_case_details(approved_sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
 
-    it "will allow me to edit the details of a case closure" do
+    it "allows me to edit the details of a case closure" do
       when_an_approver_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       and_they_edit_case_closure_details
@@ -92,13 +92,13 @@ feature "SAR Internal Review Case can be edited", js: true do
   end
 
   context "when a responder" do
-    it "won't allow me to edit a SAR IR case details" do
+    it "does not allow me to edit a SAR IR case details" do
       when_a_responder_logs_in
       and_loads_the_case_show_page(responding_sar_ir)
       they_cannot_edit_the_case
     end
 
-    it "won't allow me to edit the details of a case closure" do
+    it "does not allow me to edit the details of a case closure" do
       when_a_responder_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       then_they_should_not_be_able_to_edit_the_case_closure_details

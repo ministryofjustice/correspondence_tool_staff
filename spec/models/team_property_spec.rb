@@ -33,7 +33,7 @@ describe TeamProperty do
 
     context "with uniqueness of lead key by team" do
       before do
-        described_class.where(team_id: 33).each(&:destroy)
+        described_class.where(team_id: 33).find_each(&:destroy)
       end
 
       it "does not error if one lead key created per team" do

@@ -341,7 +341,7 @@ feature "offender sar complaint case creation by a manager", js: true do
   end
 
   def when_i_navigate_to_offender_sar_subject_page_and_start_complaint(offender_sar_case: nil)
-    link_case = (offender_sar_case || offender_sar)
+    link_case = offender_sar_case || offender_sar
     click_on "Cases"
     open_cases_page.load
     if link_case.current_state == "closed"
@@ -436,7 +436,7 @@ feature "offender sar complaint case creation by a manager", js: true do
   end
 
   def then_basic_details_of_show_page_are_correct(offender_sar_case: nil)
-    linked_case = (offender_sar_case || offender_sar)
+    linked_case = offender_sar_case || offender_sar
     expect(cases_show_page).to be_displayed
     expect_the_case_to_be_assigned_to_me
     expect(cases_show_page).to have_content "Case created successfully"

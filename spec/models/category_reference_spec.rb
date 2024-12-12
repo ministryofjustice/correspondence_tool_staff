@@ -54,7 +54,7 @@ RSpec.describe CategoryReference, type: :model do
   end
 
   describe "#list_by_category" do
-    it "will return a hash of values for a category" do
+    it "returns a hash of values for a category" do
       expected = %w[apple bread rice potatoes other]
       expect(described_class.list_by_category(:food_types).size).to eq(5)
       expect(described_class.list_by_category(:food_types).pluck(:code)).to eq(expected)
