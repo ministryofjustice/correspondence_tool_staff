@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Probation do
-  subject(:template) { described_class.new(data_request_area: data_request) }
+  subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -12,7 +12,7 @@ RSpec.describe CommissioningDocumentTemplate::Probation do
                   other_subject_ids: "CD98765",
                   case_reference_number: "EF45678")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
 
   describe "#path" do
     it "matches to a file" do
