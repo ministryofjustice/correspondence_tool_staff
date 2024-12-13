@@ -22,7 +22,7 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def data_required
-    request_type_note
+    request_type_note if request_type == "other"
   end
 
   def display_request_type_note?
