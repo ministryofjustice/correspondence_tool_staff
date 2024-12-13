@@ -123,7 +123,7 @@ describe DataRequestAreaDecorator, type: :model do
   describe "#data_required" do
     let(:decorated) { data_request_area.decorate }
 
-    context "with multiple data_requests having request_type_note values" do
+    context "with a data_request having a request_type_note value" do
       before do
         create(:data_request, data_request_area:, request_type_note: "more info")
       end
