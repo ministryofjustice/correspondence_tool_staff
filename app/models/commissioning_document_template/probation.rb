@@ -19,7 +19,7 @@ module CommissioningDocumentTemplate
         crn: kase.case_reference_number,
         date_range: data_request_area.request_dates,
         deadline:,
-        data_required: data_request_area.data_request.decorate.data_required || default_data_required,
+        data_required: data_request_area.data_requests.first.decorate.data_required || default_data_required,
       )
     end
   end
