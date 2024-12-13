@@ -2,7 +2,7 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   def valid_attributes?(attributes)
-    attributes.each do |attribute, _value|
+    attributes.each_key do |attribute|
       self.class.validators_on(attribute).each do |validator|
         validator.validate_each(self, attribute, send(attribute))
       end

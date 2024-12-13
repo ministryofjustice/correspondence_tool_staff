@@ -54,6 +54,8 @@ class Case::OverturnedICO::Base < Case::Base
   delegate :date_ico_decision_received, to: :original_ico_appeal
   delegate :ico_decision_attachments, to: :original_ico_appeal
 
+  delegate :subject, :name, to: :original_case
+
   enum reply_method: {
     send_by_post: "send_by_post",
     send_by_email: "send_by_email",
@@ -79,10 +81,6 @@ class Case::OverturnedICO::Base < Case::Base
   has_one :original_ico_appeal,
           through: :original_ico_appeal_link,
           source: :linked_case
-
-  def subject
-    original_case&.subject
-  end
 
   def delivery_method
     self[:delivery_method].nil? ? original_case&.delivery_method : self[:delivery_method]

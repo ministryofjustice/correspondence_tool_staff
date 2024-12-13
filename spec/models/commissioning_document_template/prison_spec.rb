@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Prison do
-  subject(:template) { described_class.new(data_request_area: data_request) }
+  subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -11,7 +11,21 @@ RSpec.describe CommissioningDocumentTemplate::Prison do
                   subject_aliases: "Bad Bob",
                   prison_number: "AB12345")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+
+  let(:data_request) do
+    build_stubbed(:data_request,
+                  offender_sar_case: kase,
+                  date_from: Date.new(2024, 2, 15),
+                  date_to: Date.new(2024, 6, 30))
+  end
+
+  let(:data_request_area) do
+    build_stubbed(:data_request_area,
+                  offender_sar_case: kase,
+                  data_requests: [data_request],
+                  data_request_area_type: "prison",
+                  location: "HMP halifax")
+  end
 
   describe "#path" do
     it "matches to a file" do
@@ -29,7 +43,7 @@ RSpec.describe CommissioningDocumentTemplate::Prison do
         aliases: "Bad Bob",
         date: "21/10/2022",
         prison_numbers: "AB12345",
-        date_range: "",
+        date_range: "from 15/02/2024 to 30/06/2024",
         deadline: "26/10/2022",
         data_required: "All paper & electronic information including Security",
       }

@@ -100,7 +100,7 @@ describe Stats::Warehouse::CaseReportSync do
     end
 
     it "has settings per source class to allow affected Cases to be found" do
-      described_class::MAPPINGS.each do |_klass_name, settings|
+      described_class::MAPPINGS.each_value do |settings|
         # The fields in Warehouse::CaseReport that are sourced from klass_name
         expect(settings[:fields]).to be_a Array
 

@@ -62,7 +62,7 @@ describe MarkResponseAsSentService do
 
       context "and future date" do
         let(:response_date) { 10.days.from_now }
-        let(:params)  do
+        let(:params) do
           {
             date_responded_dd: response_date.day.to_s,
             date_responded_mm: response_date.month.to_s,
@@ -155,7 +155,7 @@ describe MarkResponseAsSentService do
 
       context "and future date" do
         let(:response_date) { 10.days.from_now }
-        let(:params)  do
+        let(:params) do
           {
             date_responded_dd: response_date.day.to_s,
             date_responded_mm: response_date.month.to_s,

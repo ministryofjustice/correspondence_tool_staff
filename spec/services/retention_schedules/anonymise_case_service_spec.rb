@@ -273,7 +273,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       )
     end
 
-    it "will raise an error if case is not closed" do
+    it "raises an error if case is not closed" do
       expect {
         service = described_class.new(
           kase: open_case,
@@ -282,7 +282,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       }.to raise_error RetentionSchedules::CaseNotClosedError
     end
 
-    it "will raise an error if case has no retention schedule" do
+    it "raises an error if case has no retention schedule" do
       expect {
         service = described_class.new(
           kase: no_rs_case,
@@ -291,7 +291,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       }.to raise_error RetentionSchedules::NoRetentionScheduleError
     end
 
-    it "will raise and error if a case is not an Offender SAR or an Offender SAR complaint" do
+    it "raises and error if a case is not an Offender SAR or an Offender SAR complaint" do
       expect {
         service = described_class.new(
           kase: wrong_case_type,
@@ -300,7 +300,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       }.to raise_error RetentionSchedules::WrongCaseTypeError
     end
 
-    it "will raise an error if the case retention schedule does not have a state of :to_be_anonymised" do
+    it "raises an error if the case retention schedule does not have a state of :to_be_anonymised" do
       expect {
         service = described_class.new(
           kase: wrong_rs_state,
