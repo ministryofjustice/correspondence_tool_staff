@@ -128,7 +128,7 @@ describe DataRequestAreaDecorator, type: :model do
         create(:data_request, data_request_area:, request_type_note: "more info")
       end
 
-      it "returns concatenated string for all requests" do
+      it "returns the string for the request" do
         expect(decorated.data_required).to eq "More info"
       end
     end
