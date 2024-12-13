@@ -52,7 +52,11 @@ module Cases
       params = record_late_team_params(@case.type_abbreviation)
       if @case.update(params)
         @case.respond(current_user)
-        redirect_to case_path
+        if case_type == Case::ICO::SAR
+          render "/cases/ico/record_sar_complaint_outcome"
+        else
+          redirect_to case_path
+        end
       else
         @team_collection = CaseTeamCollection.new(@case)
         render "/cases/ico/late_team"
