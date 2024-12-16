@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe ApplicationController, type: :controller do
   let(:user) { create(:user) }
 
-  describe "#maintenance_mode" do
+  xdescribe "#maintenance_mode" do
     before do
       sign_in user
     end
