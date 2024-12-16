@@ -26,7 +26,6 @@ RSpec.describe ApplicationController, type: :controller do
       end
 
       it "redirects other requests to the maintenance page" do
-        ENV["MAINTENANCE_MODE"] = "ON"
         @controller = Cases::FiltersController.new
         get :open
         expect(response).to redirect_to("/maintenance")
