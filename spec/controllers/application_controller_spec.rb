@@ -8,9 +8,12 @@ RSpec.describe ApplicationController, type: :controller do
       sign_in user
     end
 
+    after do
+      ENV["MAINTENANCE_MODE"] = "OFF"
+    end
+
     context "when maintenance mode is off" do
       it "redirects requests for the maintenance page to the homepage" do
-        ENV["MAINTENANCE_MODE"] = "OFF"
         get :maintenance_mode
         expect(response).to redirect_to("/")
       end
