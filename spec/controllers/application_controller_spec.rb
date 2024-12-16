@@ -3,13 +3,9 @@ require "rails_helper"
 RSpec.describe ApplicationController, type: :controller do
   let(:user) { create(:user) }
 
-  xdescribe "#maintenance_mode" do
+  describe "#maintenance_mode" do
     before do
       sign_in user
-    end
-
-    after do
-      ENV["MAINTENANCE_MODE"] = "OFF"
     end
 
     context "when maintenance mode is off" do
@@ -20,8 +16,11 @@ RSpec.describe ApplicationController, type: :controller do
     end
 
     context "when maintenance mode is on" do
+      before do
+        allow(controller).to receive(:maintenance_mode_on?).and_return true
+      end
+
       it "renders the maintenance page" do
-        ENV["MAINTENANCE_MODE"] = "ON"
         get :maintenance_mode
         expect(response).to render_template(:maintenance)
       end
