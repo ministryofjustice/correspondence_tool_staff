@@ -153,10 +153,6 @@ td {
   .form-group {
     margin-bottom: 2em;
   }
-
-  .govuk-tag {
-    font-size: 100%;
-  }
 }
 
 // End making font sizes adjustable
@@ -211,13 +207,7 @@ td {
   }
 }
 
-.data-requests .govuk-button--warning{
-  @include button($red);
-  margin-right: $gutter;
-  margin-top: $gutter;
-}
-
-.data-request #data_request_location:disabled, .data-request-area #data_request_area_location:disabled {
+.data-request #data_request_location:disabled {
   border-color: $grey-2;
 }
 

@@ -1,12 +1,11 @@
 class DataRequestCreateService
-  attr_reader :result, :case, :data_request, :data_request_area
+  attr_reader :result, :case, :data_request
 
-  def initialize(kase:, user:, data_request_params:, data_request_area:)
+  def initialize(kase:, user:, data_request_params:)
     @result = nil
     @user = user
     @case = kase
-    @data_request = build_data_request(data_request_params, data_request_area)
-    @data_request_area = data_request_area
+    @data_request = build_data_request(data_request_params)
   end
 
   def call
@@ -31,9 +30,9 @@ class DataRequestCreateService
 
 private
 
-  def build_data_request(data_request_params, data_request_area)
+  def build_data_request(data_request_params)
     return nil unless @case.respond_to? :data_requests
 
-    @case.data_requests.new(data_request_params.merge(user_id: @user.id, data_request_area_id: data_request_area.id))
+    @case.data_requests.new(data_request_params.merge(user_id: @user.id))
   end
 end

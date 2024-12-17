@@ -186,7 +186,6 @@ class Case::SAR::Offender < Case::Base
   ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
-  has_many :data_request_areas, dependent: :destroy, foreign_key: :case_id
 
   accepts_nested_attributes_for :data_requests
 

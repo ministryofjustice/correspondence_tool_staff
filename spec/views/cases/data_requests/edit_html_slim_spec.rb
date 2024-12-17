@@ -5,6 +5,7 @@ describe "cases/data_requests/edit", type: :view do
     let(:data_request) do
       create(
         :data_request,
+        location: "HMP Leicester",
         request_type: "all_prison_records",
         date_from: Date.new(2018, 8, 15),
         date_to: Date.new(2019, 8, 15),
@@ -14,12 +15,10 @@ describe "cases/data_requests/edit", type: :view do
       )
     end
     let(:page) { data_request_edit_page }
-    let(:data_request_area) { create :data_request_area }
 
     before do
       assign(:data_request, data_request)
-      assign(:data_request_area, data_request_area)
-      assign(:case, data_request_area.kase)
+      assign(:case, data_request.kase)
 
       render
       data_request_edit_page.load(rendered)
@@ -27,6 +26,7 @@ describe "cases/data_requests/edit", type: :view do
 
     it "has required content" do
       expect(page.page_heading.heading.text).to eq "Edit data request"
+      expect(page.location.text).to eq "HMP Leicester: All prison records"
       expect(page.form.date_from_day.value.to_i).to eq 15
       expect(page.form.date_from_month.value.to_i).to eq 8
       expect(page.form.date_from_year.value.to_i).to eq 2018

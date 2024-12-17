@@ -7,14 +7,17 @@ module PageObjects
         element :none, ".data-requests__none"
 
         sections :rows, "tbody tr" do
-          element :request_type, "td:nth-child(1)"
-          element :date_requested, "td:nth-child(2)"
-          element :pages, "td:nth-child(3)"
-          element :date_received, "td:nth-child(4)"
-          element :status, "td:nth-child(5)"
+          element :location, "td:nth-child(1)"
+          element :request_type, "td:nth-child(2)"
+          element :date_requested, "td:nth-child(3)"
+          element :date_requested_time, "td:nth-child(3) time"
+          element :pages, "td:nth-child(4)"
+          element :date_received, "td:nth-child(5)"
+          element :status, "td:nth-child(6)"
+          element :show, ".data-requests__show"
           element :edit, ".data-requests__edit"
-          element :total_label, ".total-label"
-          element :total_value, ".total-value"
+          element :total_label, "td:nth-child(1)"
+          element :total_value, "td:nth-child(2)"
         end
       end
     end

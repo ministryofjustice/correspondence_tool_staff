@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Cctv < CommissioningDocumentTemplate::Base
     def request_type
-      :CCTV
+      "CCTV"
     end
 
     def deadline
@@ -10,7 +10,7 @@ module CommissioningDocumentTemplate
 
     def context
       super.merge(
-        addressee_location: data_request_area.location,
+        addressee_location: data_request.location,
         aliases: kase.subject_aliases,
         deadline:,
       )

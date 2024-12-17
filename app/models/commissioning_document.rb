@@ -2,14 +2,13 @@
 #
 # Table name: commissioning_documents
 #
-#  id                   :bigint           not null, primary key
-#  data_request_id      :bigint
-#  template_name        :enum
-#  sent                 :boolean          default(FALSE)
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  attachment_id        :bigint
-#  data_request_area_id :bigint
+#  id              :bigint           not null, primary key
+#  data_request_id :bigint
+#  template_name   :enum
+#  sent            :boolean          default(FALSE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  attachment_id   :bigint
 #
 class CommissioningDocument < ApplicationRecord
   TEMPLATE_TYPES = {
@@ -22,7 +21,6 @@ class CommissioningDocument < ApplicationRecord
     probation: CommissioningDocumentTemplate::Probation,
     security: CommissioningDocumentTemplate::Security,
     telephone: CommissioningDocumentTemplate::Telephone,
-    standard: CommissioningDocumentTemplate::Standard,
   }.freeze
 
   enum template_name: {
@@ -35,15 +33,12 @@ class CommissioningDocument < ApplicationRecord
     probation: "probation",
     security: "security",
     telephone: "telephone",
-    standard: "standard",
   }
 
-  belongs_to :data_request_area
   belongs_to :data_request
   belongs_to :attachment, class_name: "CaseAttachment"
 
-  validates :data_request_area, presence: true
-  validates :data_request, presence: true, if: :has_no_request_area?
+  validates :data_request, presence: true
   validates :template_name, presence: true
 
   delegate :deadline, to: :template
@@ -64,7 +59,7 @@ class CommissioningDocument < ApplicationRecord
     if attachment.present?
       attachment.filename
     else
-      "Day1_#{data_request_area.data_request_area_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
+      "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
     end
   end
 
@@ -80,14 +75,14 @@ class CommissioningDocument < ApplicationRecord
     save!
   end
 
-  def has_no_request_area?
-    data_request_area.nil?
-  end
-
 private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request:)
+  end
+
+  def request_type
+    template.request_type
   end
 
   def timestamp
@@ -95,10 +90,10 @@ private
   end
 
   def subject_name
-    data_request_area.kase.subject_full_name.tr(" ", "-")
+    data_request.kase.subject_full_name.tr(" ", "-")
   end
 
   def case_number
-    data_request_area.kase.number
+    data_request.kase.number
   end
 end

@@ -36,26 +36,61 @@ describe DataRequestDecorator, type: :model do
   end
 
   describe "#location" do
-    let(:offender_sar_case) { create(:offender_sar_case) }
-    let(:data_request_area) { create(:data_request_area, offender_sar_case:, contact: nil, location: "Original Location") }
-    let(:data_request) { create(:data_request, offender_sar_case:, data_request_area:) }
-    let(:decorated) { data_request.decorate }
+    let(:data_request) { create(:data_request) }
 
-    context "without linked contact" do
-      it "falls back to data_request_area location string" do
-        expect(decorated.location).to eq "Original Location"
+    context "without linked organisation" do
+      let(:decorated) { data_request.decorate }
+
+      it "uses location string" do
+        expect(decorated.location).to eq data_request.location
       end
     end
 
-    context "with linked contact" do
-      let(:contact) { create(:contact, name: "Test Organisation") }
+    context "with linked organisation" do
+      let(:contact) { create(:contact) }
+      let(:decorated) { data_request.decorate }
 
       before do
-        data_request_area.update!(contact:)
+        data_request.update!(contact:)
       end
 
-      it "uses the name of the contact" do
-        expect(decorated.location).to eq "Test Organisation"
+      it "uses name of organisation" do
+        expect(decorated.location).to eq contact.name
+      end
+    end
+  end
+
+  describe "#data_request_name" do
+    let(:data_request) { create(:data_request) }
+
+    context "without linked organisation" do
+      let(:decorated) { data_request.decorate }
+
+      it "uses location string" do
+        expect(decorated.data_request_name).to eq data_request.location
+      end
+    end
+
+    context "with linked organisation" do
+      let(:contact) { create(:contact) }
+      let(:decorated) { data_request.decorate }
+      let(:example_name) { "Jim Smith Brixton Prison" }
+
+      before do
+        data_request.update!(contact:)
+      end
+
+      context "when contact has data_request_name" do
+        it "uses data_request_name of organisation" do
+          contact.update!(data_request_name: example_name)
+          expect(decorated.data_request_name).to eq example_name
+        end
+      end
+
+      context "when contact does not have data_request_name" do
+        it "uses name of organisation" do
+          expect(decorated.data_request_name).to eq contact.name
+        end
       end
     end
   end
@@ -81,34 +116,34 @@ describe DataRequestDecorator, type: :model do
   end
 
   describe "#display_request_type_note?" do
-    it "returns true when request_type_note is present" do
-      data_request = create(:data_request, request_type_note: "note")
+    it "returns true when request_type is 'other'" do
+      data_request = create(:data_request, request_type: "other", request_type_note: "details")
       expect(data_request.decorate).to be_display_request_type_note
     end
 
-    it "returns false when request_type_note is blank" do
-      data_request = create(:data_request, request_type_note: "")
+    it "returns true when request_type is 'nomis_other'" do
+      data_request = create(:data_request, request_type: "nomis_other", request_type_note: "nomis other details")
+      expect(data_request.decorate).to be_display_request_type_note
+    end
+
+    it "returns true when request_type is 'cctv'" do
+      data_request = create(:data_request, request_type: "cctv", request_type_note: "cctv details")
+      expect(data_request.decorate).to be_display_request_type_note
+    end
+
+    it "returns true when request_type is 'bwcf'" do
+      data_request = create(:data_request, request_type: "bwcf", request_type_note: "bwcf details")
+      expect(data_request.decorate).to be_display_request_type_note
+    end
+
+    it "returns false when request_type is not an other type" do
+      data_request = create(:data_request, request_type: "security_records")
       expect(data_request.decorate).not_to be_display_request_type_note
     end
-  end
 
-  describe "#data_request_status_tag" do
-    context "when status is :completed" do
-      let(:decorated) { create(:data_request, completed: true, cached_date_received: 1.day.ago).decorate }
-
-      it 'returns a green "Completed" tag' do
-        expect(decorated.data_request_status_tag)
-          .to eq("<strong class='govuk-tag govuk-tag--green'>Completed</strong>")
-      end
-    end
-
-    context "when status is :in_progress" do
-      let(:decorated) { create(:data_request).decorate }
-
-      it 'returns a yellow "In progress" tag' do
-        expect(decorated.data_request_status_tag)
-          .to eq("<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>")
-      end
+    it "returns false when request_type_note is blank" do
+      data_request = create(:data_request, request_type: "bwcf", request_type_note: "")
+      expect(data_request.decorate).not_to be_display_request_type_note
     end
   end
 end

@@ -1,36 +1,68 @@
-h3.page-heading--secondary.data-request__position
+    .data-request__single.js-data-request__form
+      h3.page-heading--secondary.data-request__position
 
-section.data-request__single
-  = f.radio_button_fieldset :request_type, choices: @data_request.data_request_types
-  = f.text_area :request_type_note
+      = f.text_field :location,
+          maxlength: 500,
+          class: 'contact_input',
+          disabled: true
 
-  = f.gov_uk_date_field :date_requested, { \
-    legend_text: 'Date requested',
-    form_hint_text: t('helpers.hint.shared.date_example'),
-    today_button: { class: '' } \
-  }
+      = f.hidden_field :contact_id, class: 'contact_id_input'
+      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
 
-section
-  = f.gov_uk_date_field :date_from, { \
-    legend_text: 'Date from (optional)',
-    form_hint_text: t('cases.data_requests.new.date_from_copy'),
-  }
+      = f.radio_button_fieldset :request_type,
+          choices: DataRequest::request_types.keys do |fieldset|
+        - fieldset.radio_input('all_prison_records')
+        - fieldset.radio_input('bwcf')
+          = f.text_area :request_type_note, id: 'data_request_request_type_note_for_bwcf'
+        - fieldset.radio_input('cat_a')
+        - fieldset.radio_input('cctv')
+          = f.text_area :request_type_note, id: 'data_request_request_type_note_for_cctv'
+        - fieldset.radio_input('cross_borders')
+        - fieldset.radio_input('dps')
+        - fieldset.radio_input('mappa')
+        - fieldset.radio_input('ndelius')
+        - fieldset.radio_input('nomis_contact_logs')
+        - fieldset.radio_input('nomis_records')
+        - fieldset.radio_input('nomis_other')
+          = f.text_area :request_type_note, id: 'data_request_request_type_note_for_nomis'
+        - fieldset.radio_input('pdp')
+        - fieldset.radio_input('probation_archive')
+        - fieldset.radio_input('probation_records')
+        - fieldset.radio_input('security_records')
+        - fieldset.radio_input('telephone_recordings')
+        - fieldset.radio_input('other')
+          = f.text_area :request_type_note
 
-section
-  = f.gov_uk_date_field :date_to, { \
-    legend_text: 'Date to (optional)',
-    form_hint_text: t('cases.data_requests.new.date_to_copy'),
-  }
+      = f.gov_uk_date_field :date_requested, { \
+        legend_text: 'Date requested',
+        form_hint_text: t('helpers.hint.shared.date_example'),
+        today_button: { class: '' } \
+      }
 
-section
-  - if @data_request.persisted?
-    = f.text_field :cached_num_pages, label_options: { value: t('helpers.label.data_request.cached_num_pages') }, class: 'form-control form-control-1-8'
-    = f.check_box_fieldset :completed, [:completed]
-    = f.gov_uk_date_field :cached_date_received, { \
-      legend_text: 'Date when data request is complete',
-      form_hint_text: t('helpers.hint.shared.date_example'),
-      today_button: { class: '' } \
-    }
+      br
+      hr
 
-section.button-holder
-  = f.submit t('.record_request'), { class: 'button', role: 'button' }
+      = f.gov_uk_date_field :date_from, { \
+        legend_text: 'Date from (optional)',
+        form_hint_text: t('cases.data_requests.new.date_from_copy'),
+      }
+
+      br
+
+      = f.gov_uk_date_field :date_to, { \
+        legend_text: 'Date to (optional)',
+        form_hint_text: t('cases.data_requests.new.date_to_copy'),
+      }
+
+      - if @data_request.persisted?
+        = f.text_field :cached_num_pages, class: 'form-control form-control-1-8'
+        = f.check_box_fieldset :completed, [:completed]
+
+        = f.gov_uk_date_field :cached_date_received, { \
+          legend_text: 'Date when data request is complete',
+          form_hint_text: t('helpers.hint.shared.date_example'),
+          today_button: { class: '' } \
+        }
+
+    .button-holder
+      = f.submit t('.record_request'), { class: 'button', role: 'button' }

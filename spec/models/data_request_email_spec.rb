@@ -2,15 +2,14 @@
 #
 # Table name: data_request_emails
 #
-#  id                   :bigint           not null, primary key
-#  data_request_id      :bigint
-#  email_type           :integer          default("commissioning_email")
-#  email_address        :string
-#  notify_id            :string
-#  status               :string
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  data_request_area_id :bigint
+#  id              :bigint           not null, primary key
+#  data_request_id :bigint
+#  email_type      :integer          default("commissioning_email")
+#  email_address   :string
+#  notify_id       :string
+#  status          :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 require "rails_helper"
 
