@@ -1,6 +1,8 @@
 require "sidekiq/api"
 
 class HeartbeatController < ApplicationController
+  skip_before_action :check_maintenance_mode
+
   respond_to :json
 
   def ping

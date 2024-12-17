@@ -111,8 +111,6 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl apply -f config/kubernetes/development/configmap.yaml -n ${KUBE_NAMESPACE}
-
           kubectl set image -f config/kubernetes/development/migrations.yaml \
             migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
 
@@ -213,8 +211,6 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl apply -f config/kubernetes/staging/configmap.yaml -n ${KUBE_NAMESPACE}
-
           kubectl set image -f config/kubernetes/staging/migrations.yaml \
             migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
 
@@ -315,8 +311,6 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl apply -f config/kubernetes/qa/configmap.yaml -n ${KUBE_NAMESPACE}
-
           kubectl set image -f config/kubernetes/qa/migrations.yaml \
             migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
 
@@ -418,8 +412,6 @@ jobs:
 
       - name: Rollout restart deployment
         run: |
-          kubectl apply -f config/kubernetes/production/configmap.yaml -n ${KUBE_NAMESPACE}
-
           kubectl set image -f config/kubernetes/production/migrations.yaml \
             migrations="${{ vars.ECR_URL }}:$SHA" --local --output yaml | kubectl apply -n ${KUBE_NAMESPACE} -f -
 

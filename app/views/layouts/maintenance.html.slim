@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = "Sorry, the service is unavailable – #{t('common.service_name')} – GOV.UK"
+
 - content_for :logo_link_title do
   = "Return to home page"
 
@@ -37,7 +40,8 @@
       main#content
         h1.page-heading style="border-bottom: 1px solid #000"
           = "Service down for planned maintenance"
-        p.lede  This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience.
+        p.lede This service is down for essential maintenance from 17:30 on Tuesday 17 December.<br>You will not have access from this time.<br>The site will resume service later in the evening of 17 December.
+        p.lede We apologies for any inconvenience this may cause.
 
 - content_for :body_end do
   = javascript_include_tag "application"
