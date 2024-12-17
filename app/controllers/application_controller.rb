@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def maintenance_mode
     redirect_to "/" and return unless maintenance_mode_on?
 
-    render layout: nil, file: "layouts/maintenance"
+    render "layouts/maintenance", layout: nil
   end
 
 private
@@ -43,7 +43,7 @@ private
   end
 
   def maintenance_mode_on?
-    File.exist? Rails.root.join("maintenance.txt")
+    ENV["MAINTENANCE_MODE"] == "ON"
   end
 
   def download_csv_request?
