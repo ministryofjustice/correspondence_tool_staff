@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_data_request_area_path(@case, @data_request_area), class: 'govuk-back-link')
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -18,5 +18,5 @@ span.visually-hidden
   "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 .form-group.data-request
-  = form_for @data_request, as: :data_request, url: case_data_request_area_data_requests_path(@case, @data_request_area), method: :post do |f|
+  = form_for @data_request, as: :data_request, url: case_data_requests_path(@case), method: :post do |f|
     = render 'form', f: f

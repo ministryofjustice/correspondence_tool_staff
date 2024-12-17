@@ -1,8 +1,8 @@
 module PageObjects
   module Pages
     module Cases
-      class DataRequestAreaPage < PageObjects::Pages::Base
-        set_url "/cases/{case_id}/data_request_areas{/new}"
+      class NewCommissioningDocumentPage < SitePrism::Page
+        set_url "/cases/{case_id}/data_requests/{id}/commissioning_documents/new"
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
@@ -10,13 +10,11 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-        section :form, "#new_data_request_area" do
-          element :location, 'input[name*="[location]"]'
-          element :data_request_area_type, :xpath,
-                  '//fieldset[contains(.,"What data is needed?")]'
+        section :form, "#new_commissioning_document" do
+          elements :template_name, 'input[name*="[template_name]"]'
 
-          def choose_area_request_type(request_type)
-            make_radio_button_choice("data_request_area_data_request_area_type_#{request_type}")
+          def choose_template_name(template_name)
+            make_radio_button_choice("commissioning_document_template_name_#{template_name}")
           end
 
           def make_radio_button_choice(choice_id)

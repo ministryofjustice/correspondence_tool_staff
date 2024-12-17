@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class CatA < CommissioningDocumentTemplate::Base
     def request_type
-      :CATA
+      "CATA"
     end
 
     def deadline
@@ -10,8 +10,8 @@ module CommissioningDocumentTemplate
 
     def context
       super.merge(
-        addressee_location: data_request_area.location,
-        date_range: data_request_area.request_dates.capitalize,
+        addressee_location: data_request.data_request_name,
+        date_range: data_request.request_dates.capitalize,
         deadline:,
       )
     end

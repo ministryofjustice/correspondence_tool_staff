@@ -1,11 +1,11 @@
 module CommissioningDocumentTemplate
   class Base
-    attr_reader :data_request_area
+    attr_reader :data_request
 
-    delegate :kase, to: :data_request_area
+    delegate :kase, to: :data_request
 
-    def initialize(data_request_area:)
-      @data_request_area = data_request_area.decorate
+    def initialize(data_request:)
+      @data_request = data_request.decorate
     end
 
     def path
@@ -37,7 +37,7 @@ module CommissioningDocumentTemplate
     end
 
     def date_format(date)
-      date&.strftime("%d/%m/%Y")
+      date.strftime("%d/%m/%Y")
     end
   end
 end

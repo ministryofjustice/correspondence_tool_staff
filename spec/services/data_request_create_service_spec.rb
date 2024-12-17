@@ -5,9 +5,9 @@ class FakeError < ArgumentError; end
 describe DataRequestCreateService do
   let(:user) { create :user }
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area) { create :data_request_area }
   let(:data_request_attributes) do
     {
+      location: "The Clinic",
       request_type: "all_prison_records",
       request_type_note: "Lorem ipsum",
       date_requested_dd: "15",
@@ -25,7 +25,6 @@ describe DataRequestCreateService do
     described_class.new(
       kase: offender_sar_case,
       user:,
-      data_request_area:,
       data_request_params: data_request_attributes,
     )
   end
@@ -34,14 +33,13 @@ describe DataRequestCreateService do
     it "requires a case and user" do
       expect(service.instance_variable_get(:@case)).to eq offender_sar_case
       expect(service.instance_variable_get(:@user)).to eq user
-      expect(service.instance_variable_get(:@data_request_area)).to eq data_request_area
     end
 
-    it "has no restriction on case type" do
+    # No restriction on case type as managed by model
+    it "ignores case type" do
       new_service = described_class.new(
         kase: create(:foi_case),
         user:,
-        data_request_area:,
         data_request_params: data_request_attributes,
       )
 
@@ -64,6 +62,7 @@ describe DataRequestCreateService do
       it "creates a data request with the attributes given" do
         service.call
         expect(service.data_request).to be_persisted
+        expect(service.data_request.location).to eq "The Clinic"
         expect(service.data_request.request_type).to eq "all_prison_records"
         expect(service.data_request.request_type_note).to eq "Lorem ipsum"
         expect(service.data_request.date_from).to eq Date.new(2018, 8, 15)
@@ -74,12 +73,11 @@ describe DataRequestCreateService do
     context "when on failure" do
       it "does not save DataRequest when validation errors" do
         params = data_request_attributes.clone
-        params.merge!({ request_type: "" })
+        params.merge!({ location: "", request_type: "all_prison_records" })
 
         service = described_class.new(
           kase: offender_sar_case,
           user:,
-          data_request_area:,
           data_request_params: params,
         )
 
@@ -92,7 +90,6 @@ describe DataRequestCreateService do
         service = described_class.new(
           kase: offender_sar_case,
           user:,
-          data_request_area:,
           data_request_params: {},
         )
 

@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class DataRequestPage < PageObjects::Pages::Base
-        set_url "/cases/{case_id}/data_request_areas/{data_request_areas_id}/data_requests{/new}"
+        set_url "/cases/{case_id}/data_requests{/new}"
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
@@ -11,10 +11,14 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, ".page-heading"
 
         section :form, "#new_data_request" do
+          element :location, 'input[name*="[location]"]'
           element :request_type, :xpath,
                   '//fieldset[contains(.,"What data is needed?")]'
 
           element :request_type_note, "#data_request_request_type_note"
+          element :request_type_note_for_nomis, "#data_request_request_type_note_for_nomis"
+          element :request_type_note_for_bwcf, "#data_request_request_type_note_for_bwcf"
+          element :request_type_note_for_cctv, "#data_request_request_type_note_for_cctv"
 
           element :date_requested_day, "#data_request_date_requested_dd"
           element :date_requested_month, "#data_request_date_requested_mm"

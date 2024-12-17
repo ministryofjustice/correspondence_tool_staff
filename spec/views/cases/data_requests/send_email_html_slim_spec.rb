@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "cases/data_request_areas/send_email", type: :view do
+describe "cases/data_requests/send_email", type: :view do
   describe "#send_email" do
     let(:kase) do
       create(
@@ -9,9 +9,9 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
       )
     end
 
-    let(:data_request_area) do
+    let(:data_request) do
       create(
-        :data_request_area,
+        :data_request,
         offender_sar_case: kase,
       )
     end
@@ -19,22 +19,22 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
     let(:commissioning_document) do
       create(
         :commissioning_document,
-        data_request_area:,
+        data_request:,
       )
     end
 
-    let(:page) { data_request_area_email_confirmation_page }
+    let(:page) { data_request_email_confirmation_page }
 
     context "with data request with contact without email address" do
       before do
-        assign(:data_request_area, data_request_area)
-        assign(:case, data_request_area.kase)
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
         assign(:commissioning_document, commissioning_document)
         assign(:recipient_emails, [])
         assign(:no_email_present, true)
 
         render
-        data_request_area_email_confirmation_page.load(rendered)
+        data_request_email_confirmation_page.load(rendered)
       end
 
       it "has required content" do
@@ -45,15 +45,33 @@ RSpec.describe "cases/data_request_areas/send_email", type: :view do
       end
     end
 
+    context "with data request contact with only the branston probation records email given" do
+      before do
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
+        assign(:commissioning_document, commissioning_document)
+        assign(:recipient_emails, [CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL])
+        assign(:no_email_present, true)
+
+        render
+        data_request_email_confirmation_page.load(rendered)
+      end
+
+      it "has required content" do
+        expect(page.page_banner.text).to include "The selected location does not have an email address. Please update or select another."
+        expect(page.button_send_email.disabled?).to eq true
+      end
+    end
+
     context "with data request with contact which has email address" do
       before do
-        assign(:data_request_area, data_request_area)
-        assign(:case, data_request_area.kase)
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
         assign(:commissioning_document, commissioning_document)
         assign(:recipient_emails, ["oscar@grouch.com"])
 
         render
-        data_request_area_email_confirmation_page.load(rendered)
+        data_request_email_confirmation_page.load(rendered)
       end
 
       it "has required content" do

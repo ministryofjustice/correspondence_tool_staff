@@ -46,21 +46,6 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 
 
 --
--- Name: data_request_area_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.data_request_area_type AS ENUM (
-    'prison',
-    'probation',
-    'branston',
-    'branston_registry',
-    'mappa',
-    'security',
-    'other_department'
-);
-
-
---
 -- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -84,14 +69,7 @@ CREATE TYPE public.request_types AS ENUM (
     'cross_borders',
     'cat_a',
     'ndelius',
-    'dps',
-    'education',
-    'oasys_arns',
-    'dps_security',
-    'hpa',
-    'g2_security',
-    'g3_security',
-    'other_department'
+    'dps'
 );
 
 
@@ -158,8 +136,7 @@ CREATE TYPE public.template_name AS ENUM (
     'prison',
     'probation',
     'security',
-    'telephone',
-    'standard'
+    'telephone'
 );
 
 
@@ -574,8 +551,7 @@ CREATE TABLE public.commissioning_documents (
     sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    attachment_id bigint,
-    data_request_area_id bigint
+    attachment_id bigint
 );
 
 
@@ -682,41 +658,6 @@ CREATE TABLE public.data_migrations (
 
 
 --
--- Name: data_request_areas; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.data_request_areas (
-    id bigint NOT NULL,
-    case_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    contact_id bigint,
-    data_request_area_type public.data_request_area_type NOT NULL,
-    location character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: data_request_areas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.data_request_areas_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: data_request_areas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.data_request_areas_id_seq OWNED BY public.data_request_areas.id;
-
-
---
 -- Name: data_request_emails; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -728,8 +669,7 @@ CREATE TABLE public.data_request_emails (
     notify_id character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    data_request_area_id bigint
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -772,8 +712,7 @@ CREATE TABLE public.data_requests (
     date_to date,
     completed boolean DEFAULT false NOT NULL,
     contact_id bigint,
-    email_branston_archives boolean DEFAULT false,
-    data_request_area_id bigint
+    email_branston_archives boolean DEFAULT false
 );
 
 
@@ -1513,13 +1452,6 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: data_request_areas id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_areas ALTER COLUMN id SET DEFAULT nextval('public.data_request_areas_id_seq'::regclass);
-
-
---
 -- Name: data_request_emails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1756,14 +1688,6 @@ ALTER TABLE ONLY public.correspondence_types
 
 ALTER TABLE ONLY public.data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
-
-
---
--- Name: data_request_areas data_request_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_areas
-    ADD CONSTRAINT data_request_areas_pkey PRIMARY KEY (id);
 
 
 --
@@ -2087,27 +2011,6 @@ CREATE INDEX index_contacts_on_contact_type_id ON public.contacts USING btree (c
 
 
 --
--- Name: index_data_request_areas_on_case_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_areas_on_case_id ON public.data_request_areas USING btree (case_id);
-
-
---
--- Name: index_data_request_areas_on_contact_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_areas_on_contact_id ON public.data_request_areas USING btree (contact_id);
-
-
---
--- Name: index_data_request_areas_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_request_areas_on_user_id ON public.data_request_areas USING btree (user_id);
-
-
---
 -- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2133,13 +2036,6 @@ CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests 
 --
 
 CREATE INDEX index_data_requests_on_contact_id ON public.data_requests USING btree (contact_id);
-
-
---
--- Name: index_data_requests_on_data_request_area_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_data_requests_on_data_request_area_id ON public.data_requests USING btree (data_request_area_id);
 
 
 --
@@ -2364,27 +2260,11 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
--- Name: data_request_areas fk_rails_990e98d18c; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_areas
-    ADD CONSTRAINT fk_rails_990e98d18c FOREIGN KEY (case_id) REFERENCES public.cases(id);
-
-
---
 -- Name: contacts fk_rails_b8815787ee; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT fk_rails_b8815787ee FOREIGN KEY (contact_type_id) REFERENCES public.category_references(id);
-
-
---
--- Name: data_requests fk_rails_c007c7e0da; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_requests
-    ADD CONSTRAINT fk_rails_c007c7e0da FOREIGN KEY (data_request_area_id) REFERENCES public.data_request_areas(id);
 
 
 --
@@ -2396,29 +2276,13 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
--- Name: data_request_areas fk_rails_f77cc65959; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.data_request_areas
-    ADD CONSTRAINT fk_rails_f77cc65959 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
-
-
---
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20241018081532'),
-('20241018080810'),
-('20241017140610'),
-('20240924085350'),
-('20240924085307'),
-('20240912095501'),
 ('20240829160849'),
-('20240731104518'),
-('20240729145714'),
 ('20240701203227'),
 ('20240521142846'),
 ('20240502125941'),
