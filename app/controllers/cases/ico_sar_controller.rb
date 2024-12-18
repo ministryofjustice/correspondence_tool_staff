@@ -12,5 +12,20 @@ module Cases
     def case_type
       Case::ICO::SAR
     end
+
+    def confirm_record_sar_complaint_outcome
+      authorize @case, :can_respond?
+      params = record_complaint_outcome_params
+      if @case.update(params)
+        redirect_to case_path(@case)
+      else
+        render "/cases/ico/record_sar_complaint_outcome"
+      end
+    end
+
+    def require_record_sar_complaint_outcome
+      authorize @case, :can_respond?
+      render "/cases/ico/record_sar_complaint_outcome"
+    end
   end
 end

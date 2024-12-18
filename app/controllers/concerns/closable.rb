@@ -72,7 +72,11 @@ module Closable
     case service.result
     when :ok
       flash[:notice] = t("cases.confirm_respond.success")
-      redirect_to case_path(@case)
+      if case_type == Case::ICO::SAR
+        render "/cases/ico/record_sar_complaint_outcome"
+      else
+        redirect_to case_path(@case)
+      end
     when :late
       @team_collection = CaseTeamCollection.new(@case)
       render "cases/ico/late_team"
@@ -152,7 +156,6 @@ module Closable
 
   def respond_and_close
     authorize @case
-
     @case.date_responded = nil
     set_permitted_events
     render "cases/closable/close"
