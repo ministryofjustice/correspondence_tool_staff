@@ -18,11 +18,13 @@
 #  completed               :boolean          default(FALSE), not null
 #  contact_id              :bigint
 #  email_branston_archives :boolean          default(FALSE)
+#  data_request_area_id    :bigint
 #
 class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
+  belongs_to :data_request_area
   has_one    :commissioning_document
   has_many   :data_request_emails
 
@@ -34,7 +36,6 @@ class DataRequest < ApplicationRecord
   validate :validate_request_type_note
   validate :validate_from_date_before_to_date
   validate :validate_cached_date_received
-  validate :validate_location
 
   before_validation :clean_attributes
 
@@ -60,8 +61,23 @@ class DataRequest < ApplicationRecord
     dps: "dps",
     cctv: "cctv",
     bwcf: "bwcf",
+    education: "education",
+    oasys_arns: "oasys_arns",
+    dps_security: "dps_security",
+    hpa: "hpa",
+    g2_security: "g2_security",
+    g3_security: "g3_security",
+    other_department: "other_department",
     other: "other",
   }
+
+  BRANSTON_DATA_REQUEST_TYPES          = %w[dps dps_security hpa nomis_contact_logs nomis_records nomis_other].freeze
+  BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_borders pdp probation_archive].freeze
+  MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
+  PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records bwcf cctv education security_records telephone_recordings other].freeze
+  PROBATION_DATA_REQUEST_TYPES         = %w[ndelius oasys_arns probation_records other].freeze
+  SECURITY_DATA_REQUEST_TYPES          = %w[g2_security g3_security].freeze
+  OTHER_DEPARTMENT_DATA_REQUEST_TYPES  = %w[other_department].freeze
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
@@ -70,7 +86,7 @@ class DataRequest < ApplicationRecord
   end
 
   def status
-    completed? ? "Completed" : "In progress"
+    completed? ? :completed : :in_progress
   end
 
   def other?
@@ -97,8 +113,23 @@ class DataRequest < ApplicationRecord
     date_from.blank? && date_to.blank?
   end
 
-  def recipient_emails
-    contact&.data_request_emails&.split(" ") || []
+  def data_request_types
+    case data_request_area.data_request_area_type
+    when "branston"
+      BRANSTON_DATA_REQUEST_TYPES
+    when "branston_registry"
+      BRANSTON_REGISTRY_DATA_REQUEST_TYPES
+    when "mappa"
+      MAPPA_DATA_REQUEST_TYPES
+    when "prison"
+      PRISON_DATA_REQUEST_TYPES
+    when "probation"
+      PROBATION_DATA_REQUEST_TYPES
+    when "security"
+      SECURITY_DATA_REQUEST_TYPES
+    when "other_department"
+      OTHER_DEPARTMENT_DATA_REQUEST_TYPES
+    end
   end
 
 private
@@ -145,20 +176,7 @@ private
     end
   end
 
-  def validate_location
-    if contact_id.present?
-      nil
-    elsif location.blank?
-      errors.add(
-        :location,
-        I18n.t("activerecord.errors.models.data_request.attributes.location.blank"),
-      )
-    end
-  end
-
   def clean_attributes
-    %i[location request_type_note]
-      .each { |f| send("#{f}=", send(f.to_s)&.strip) }
-      .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
+    self.request_type_note = request_type_note&.strip&.upcase_first
   end
 end
