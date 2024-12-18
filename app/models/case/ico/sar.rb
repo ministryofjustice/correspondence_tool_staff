@@ -61,5 +61,4 @@ class Case::ICO::SAR < Case::ICO::Base
 
   jsonb_accessor :properties,
                  sar_complaint_outcomes: [:string]
-
 end
