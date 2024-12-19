@@ -131,7 +131,6 @@ jobs:
           minimum_file_coverage: 100
 
   build-and-deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [linting, coverage]
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
