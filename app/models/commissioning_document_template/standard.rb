@@ -44,7 +44,9 @@ module CommissioningDocumentTemplate
     def context
       super.merge(
         addressee_location: data_request_area.location,
+        aliases: kase.subject_aliases,
         deadline:,
+        pnc: kase.other_subject_ids,
         request_info:,
         requests:,
         request_additional_info:,
