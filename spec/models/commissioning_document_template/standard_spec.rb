@@ -8,7 +8,9 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
                   number: "20062007",
                   subject_full_name: "Robert Badson",
                   date_of_birth: "2000-03-11",
-                  prison_number: "AB12345")
+                  prison_number: "AB12345",
+                  subject_aliases: "Mr Blobby",
+                  other_subject_ids: "XYZ98765")
   end
 
   let(:data_request) do
@@ -36,10 +38,12 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       let(:expected_context) do
         {
           addressee_location: "HMP halifax",
+          aliases: "Mr Blobby",
           dpa_reference: "20062007",
           offender_name: "Robert Badson",
           date_of_birth: "11/03/2000",
           date: "21/10/2022",
+          pnc: "XYZ98765",
           prison_numbers: "AB12345",
           deadline: "26/10/2022",
           request_info: [
@@ -74,10 +78,12 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       let(:expected_context) do
         {
           addressee_location: "HMP halifax",
+          aliases: "Mr Blobby",
           dpa_reference: "20062007",
           offender_name: "Robert Badson",
           date_of_birth: "11/03/2000",
           date: "21/10/2022",
+          pnc: "XYZ98765",
           prison_numbers: "AB12345",
           deadline: "26/10/2022",
           request_info: [
@@ -114,10 +120,12 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
       let(:expected_context) do
         {
           addressee_location: "HMP halifax",
+          aliases: "Mr Blobby",
           dpa_reference: "20062007",
           offender_name: "Robert Badson",
           date_of_birth: "11/03/2000",
           date: "21/10/2022",
+          pnc: "XYZ98765",
           prison_numbers: "AB12345",
           deadline: "26/10/2022",
           request_info: [
@@ -283,8 +291,6 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
 
       it "returns the correct additional info for each request_type" do
         expected_info = "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n\nIf you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n"
-        puts expected_info
-        puts template.request_additional_info
         expect(template.request_additional_info).to eq(expected_info)
       end
     end
