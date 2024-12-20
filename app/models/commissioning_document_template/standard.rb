@@ -50,6 +50,7 @@ module CommissioningDocumentTemplate
         request_info:,
         requests:,
         request_additional_info:,
+        crn: kase.case_reference_number,
       )
     end
   end
