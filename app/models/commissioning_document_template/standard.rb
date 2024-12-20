@@ -45,12 +45,12 @@ module CommissioningDocumentTemplate
       super.merge(
         addressee_location: data_request_area.location,
         aliases: kase.subject_aliases,
+        crn: kase.case_reference_number,
         deadline:,
         pnc: kase.other_subject_ids,
         request_info:,
         requests:,
         request_additional_info:,
-        crn: kase.case_reference_number,
       )
     end
   end

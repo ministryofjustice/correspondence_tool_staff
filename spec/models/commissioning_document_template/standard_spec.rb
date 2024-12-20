@@ -5,7 +5,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
-    case_reference_number: "CRN999",
+                  case_reference_number: "CRN999"
                   number: "20062007",
                   subject_full_name: "Robert Badson",
                   date_of_birth: "2000-03-11",
