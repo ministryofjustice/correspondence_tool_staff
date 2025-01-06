@@ -42,8 +42,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create folders
-        run: mkdir -p log tmp tmp/pids
+      - name: Allow tests to run
+        run: |
+          mkdir -p log tmp tmp/pids
+          export OPENSSL_CONF=/dev/null
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
