@@ -29,6 +29,9 @@ jobs:
       - name: Security audit application code
         run: bundle exec brakeman -q
 
+      - name: Javascript tests
+        run: bundle exec teaspoon
+
   test:
     runs-on: ubuntu-latest
     permissions:
