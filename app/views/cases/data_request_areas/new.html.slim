@@ -1,0 +1,36 @@
+- content_for :page_title do
+  = t('page_title.data_request_area_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @data_request_area,
+   "#{pluralize(@data_request_area.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @data_request_area, url: case_data_request_areas_path(@case) do |f|
+
+  = f.text_field :location,
+    maxlength: 500,
+    class: 'contact_input',
+    disabled: true
+
+  = f.hidden_field :contact_id, class: 'contact_id_input'
+  = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
+
+  = f.hidden_field :data_request_default_area
+  = f.radio_button_fieldset :data_request_area_type,
+    choices: DataRequestArea::data_request_area_types.keys
+
+  .button-holder
+    = f.submit 'Continue', class: 'button'
+    = link_to('Cancel', case_path(@case), class: 'acts-like-button moj-style-link')
