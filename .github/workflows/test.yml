@@ -34,9 +34,16 @@ jobs:
     permissions:
       checks: write
 
+    env:
+      RAILS_ENV: test
+      CI: true
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create folders
+        run: mkdir -p log tmp tmp/pids
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
