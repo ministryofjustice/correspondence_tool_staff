@@ -31,6 +31,8 @@ jobs:
 
   javascript_test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
 
     steps:
       - name: Checkout code
