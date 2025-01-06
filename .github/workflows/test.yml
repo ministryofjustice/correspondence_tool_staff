@@ -44,8 +44,8 @@ jobs:
 
       - name: Allow tests to run
         run: |
+          sudo apt-get install libssl-dev
           mkdir -p log tmp tmp/pids
-          export OPENSSL_CONF=/dev/null
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
