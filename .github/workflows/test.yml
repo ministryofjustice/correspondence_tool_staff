@@ -44,8 +44,8 @@ jobs:
 
       - name: Allow tests to run
         run: |
-          sudo apt-get install libssl-dev
           mkdir -p log tmp tmp/pids
+          sudo sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
