@@ -29,6 +29,21 @@ jobs:
       - name: Security audit application code
         run: bundle exec brakeman -q
 
+  javascript_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install packages
+        run: yarn install --pure-lockfile
+
       - name: Javascript tests
         run: bundle exec teaspoon
 
@@ -134,6 +149,6 @@ jobs:
           minimum_file_coverage: 100
 
   build-and-deploy:
-    needs: [linting, coverage]
+    needs: [linting, javascript_test, coverage]
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
