@@ -96,14 +96,14 @@ module Stats
       end
 
       describe "#report_details" do
-        let(:redis) { instance_double(Redis) }
+        let(:redis) { double("Redis") } # rubocop:disable RSpec/VerifiedDoubles
         let(:report) { create(:report) }
         let(:data) { "some data" }
 
         before do
-          allow(Redis).to receive(:new).and_return(redis)
-          allow(redis).to receive(:exists?).with(report.guid).and_return(exists)
-          allow(redis).to receive(:get).with(report.guid).and_return(data)
+          allow(Sidekiq).to receive(:redis).and_return(redis)
+          allow(Sidekiq.redis).to receive(:exists?).with(report.guid).and_return(exists)
+          allow(Sidekiq.redis).to receive(:get).with(report.guid).and_return(data)
         end
 
         context "when data is in redis" do

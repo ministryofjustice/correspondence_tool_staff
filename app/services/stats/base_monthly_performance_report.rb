@@ -66,8 +66,7 @@ module Stats
         .each { |kase| analyse_case(kase) }
 
       unless report_job_guid.nil?
-        redis = Redis.new
-        redis.set(report_job_guid, @stats.stats.to_json, ex: 7.days)
+        Sidekiq.redis.set(report_job_guid, @stats.stats.to_json, ex: 7.days)
       end
     end
 
@@ -102,11 +101,10 @@ module Stats
 
     # This function is only when the report is done via ETL (tasks)
     def report_details(report)
-      redis = Redis.new
       data_collector = []
       report.job_ids.each do |job_id|
-        if redis.exists?(job_id)
-          data_collector << redis.get(job_id)
+        if Sidekiq.redis.exists?(job_id)
+          data_collector << Sidekiq.redis.get(job_id)
         end
       end
 
