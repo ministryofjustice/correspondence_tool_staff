@@ -28,7 +28,9 @@ RSpec.describe HeartbeatController, type: :controller do
         allow(Sidekiq::ProcessSet).to receive(:new).and_return(process_set)
         dead_set = instance_double(Sidekiq::DeadSet, size: 1)
         allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
-        allow(Sidekiq).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
+        redis = double("Redis") # rubocop:disable RSpec/VerifiedDoubles
+        allow(Sidekiq).to receive(:redis).and_yield(redis)
+        allow(redis).to receive(:info).and_raise(Errno::ECONNREFUSED)
         allow(ActiveRecord::Base.connection)
           .to receive(:execute).and_raise(PG::ConnectionBad)
 
