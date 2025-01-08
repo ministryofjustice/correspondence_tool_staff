@@ -77,6 +77,33 @@ describe "cases/data_request_areas/show", type: :view do
       end
     end
 
+    context "when the case is an offender SAR Complaint" do
+      let(:kase_offender_sar_complaint) do
+        create(
+          :offender_sar_complaint,
+          :current_state => "to_be_assessed",
+          )
+      end
+
+      let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: kase_offender_sar_complaint }
+
+      before do
+        assign(:data_request, data_request)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
+        assign(:commissioning_document, data_request_area.commissioning_document.decorate)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "doesn't display the send 'commissioning email button'" do
+        request_count = data_request_area.data_requests.size
+        expect(request_count).to eq 1
+        expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
+      end
+    end
+
     context "when data request area does not have any data requests" do
       before do
         assign(:data_request_area, data_request_area.decorate)
