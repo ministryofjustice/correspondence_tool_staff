@@ -81,8 +81,8 @@ describe "cases/data_request_areas/show", type: :view do
       let(:kase_offender_sar_complaint) do
         create(
           :offender_sar_complaint,
-          :current_state => "to_be_assessed",
-          )
+          current_state: "to_be_assessed",
+        )
       end
 
       let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: kase_offender_sar_complaint }
