@@ -130,8 +130,8 @@ module Stats
         let(:redis) { double("Redis") } # rubocop:disable RSpec/VerifiedDoubles
 
         before do
-          allow(Sidekiq).to receive(:redis).and_return(redis)
-          allow(redis).to receive(:exists?).and_return(true)
+          allow(Sidekiq).to receive(:redis).and_yield(redis)
+          allow(redis).to receive(:exists).and_return(1)
         end
 
         describe "#process" do

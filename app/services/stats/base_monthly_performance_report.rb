@@ -66,7 +66,7 @@ module Stats
         .each { |kase| analyse_case(kase) }
 
       unless report_job_guid.nil?
-        Sidekiq.redis.set(report_job_guid, @stats.stats.to_json, ex: 7.days)
+        Sidekiq.redis { |r| r.set(report_job_guid, @stats.stats.to_json, ex: 7.days) }
       end
     end
 
@@ -103,8 +103,8 @@ module Stats
     def report_details(report)
       data_collector = []
       report.job_ids.each do |job_id|
-        if Sidekiq.redis.exists?(job_id)
-          data_collector << Sidekiq.redis.get(job_id)
+        if Sidekiq.redis { |r| r.exists(job_id).positive? }
+          data_collector << Sidekiq.redis { |r| r.get(job_id) }
         end
       end
 

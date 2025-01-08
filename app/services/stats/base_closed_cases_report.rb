@@ -32,7 +32,7 @@ module Stats
       # Put the generated report into Redis for consumption by web app
       data = nil
       File.open(etl_handler.results_filepath, "r") { |f| data = f.read }
-      Sidekiq.redis.set(report_guid, data, ex: 7.days)
+      Sidekiq.redis { |r| r.set(report_guid, data, ex: 7.days) }
 
       if report
         report.report_data = {
@@ -73,10 +73,10 @@ module Stats
     end
 
     def report_details(report)
-      if Sidekiq.redis.exists?(report.guid)
+      if Sidekiq.redis { |r| r.exists(report.guid).positive? }
         report.status = Stats::BaseReport::COMPLETE
         report.save!
-        Sidekiq.redis.get(report.guid)
+        Sidekiq.redis { |r| r.get(report.guid) }
       end
     end
   end
