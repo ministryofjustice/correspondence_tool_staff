@@ -137,7 +137,7 @@ module Stats
         describe "#process" do
           it "creates data in Redis with an expiry" do
             guid = SecureRandom.uuid
-            expect(redis).to receive(:set).with(guid, anything, ex: 7.days)
+            expect(redis).to receive(:set).with(guid, anything, ex: 7.days.to_i)
 
             new_report = DummyPerformanceReport.new(
               report_type_id: find_or_create(:report_type, :r205).id,

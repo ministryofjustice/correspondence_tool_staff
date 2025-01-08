@@ -66,7 +66,7 @@ module Stats
         .each { |kase| analyse_case(kase) }
 
       unless report_job_guid.nil?
-        Sidekiq.redis { |r| r.set(report_job_guid, @stats.stats.to_json, ex: 7.days) }
+        Sidekiq.redis { |r| r.set(report_job_guid, @stats.stats.to_json, ex: 7.days.to_i) }
       end
     end
 
