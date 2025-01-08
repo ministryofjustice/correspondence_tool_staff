@@ -26,7 +26,6 @@ class DatabaseAnonymizerTasks
   end
 
   def store_anonymise_status(task_arguments, tasks)
-    redis = Redis.new
     tasks_ids = tasks.map { |task| task[:task_id] }
     anonymizer_job_info = {
       "start_time": task_arguments[:timestamp],
@@ -35,7 +34,7 @@ class DatabaseAnonymizerTasks
       "tasks": tasks_ids,
     }
     anonymizer_job_id = "anonymizer_job_#{task_arguments[:tag]}_#{Time.zone.today.strftime('%Y%m%d')}"
-    redis.set(anonymizer_job_id, anonymizer_job_info.to_json, ex: 7.days)
+    Sidekiq.redis { |r| r.set(anonymizer_job_id, anonymizer_job_info.to_json, ex: 7.days.to_i) }
   end
 
 private
