@@ -17,6 +17,8 @@ RSpec.describe HeartbeatController, type: :controller do
   end
 
   describe "#healthcheck" do
+    let(:redis) { double("Redis") } # rubocop:disable RSpec/VerifiedDoubles
+
     before do
       retry_set = instance_double(Sidekiq::RetrySet, size: 0)
       allow(Sidekiq::RetrySet).to receive(:new).and_return(retry_set)
@@ -28,7 +30,6 @@ RSpec.describe HeartbeatController, type: :controller do
         allow(Sidekiq::ProcessSet).to receive(:new).and_return(process_set)
         dead_set = instance_double(Sidekiq::DeadSet, size: 1)
         allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
-        redis = double("Redis") # rubocop:disable RSpec/VerifiedDoubles
         allow(Sidekiq).to receive(:redis).and_yield(redis)
         allow(redis).to receive(:info).and_raise(Errno::ECONNREFUSED)
         allow(ActiveRecord::Base.connection)
@@ -57,7 +58,8 @@ RSpec.describe HeartbeatController, type: :controller do
         allow(Sidekiq::ProcessSet).to receive(:new).and_return(process_set)
         dead_set = instance_double(Sidekiq::DeadSet, size: 0)
         allow(Sidekiq::DeadSet).to receive(:new).and_return(dead_set)
-        allow(Sidekiq).to receive(:redis_info).and_return({})
+        allow(Sidekiq).to receive(:redis).and_yield(redis)
+        allow(redis).to receive(:info).and_return({})
 
         get :healthcheck
       end
