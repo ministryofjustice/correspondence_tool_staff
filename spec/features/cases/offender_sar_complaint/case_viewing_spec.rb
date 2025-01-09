@@ -21,7 +21,6 @@ feature "Viewing for cases", js: true do
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_complaint_type_link.click
 
-
     open_cases_page.filter_complaint_type_content.complaint_litigation_checkbox.click
     open_cases_page.case_filters.apply_filters_button.click
 
