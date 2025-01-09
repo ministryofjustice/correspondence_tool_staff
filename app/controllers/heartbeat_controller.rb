@@ -37,7 +37,7 @@ class HeartbeatController < ApplicationController
 private
 
   def redis_alive?
-    Sidekiq.redis_info
+    Sidekiq.redis(&:info)
     true
   rescue StandardError
     false
