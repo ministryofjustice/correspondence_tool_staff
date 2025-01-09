@@ -34,14 +34,14 @@ feature "Viewing for cases", js: true do
     create(:accepted_complaint_case)
     make_case_late(create(:accepted_complaint_case))
 
-    create(:accepted_complaint_case, complaint_type: "litigation")
-    create(:accepted_complaint_case, complaint_type: "litigation")
+    create(:accepted_complaint_case, complaint_type: "litigation_complaint")
+    create(:accepted_complaint_case, complaint_type: "litigation_complaint")
 
     3.times do
       make_case_late(
         create(
           :accepted_complaint_case,
-          complaint_type: "litigation",
+          complaint_type: "litigation_complaint",
         ),
       )
     end

@@ -67,7 +67,7 @@ describe Case::SAR::OffenderComplaintDecorator do
     end
 
     context "when litigation complaint" do
-      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "litigation", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
+      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "litigation_complaint", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
       it "returns Litigation" do
         expect(offender_sar_complaint.complaint_type).to eq "Litigation"
