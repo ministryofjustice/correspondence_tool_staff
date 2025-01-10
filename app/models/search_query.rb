@@ -87,7 +87,7 @@ class SearchQuery < ApplicationRecord
     search: "search",
     filter: "filter",
     list: "list",
-  }, _suffix: true
+  }, suffix: true
 
   # rubocop:disable Style/ClassVars
   # Add all those properties withn query jsonb fields
