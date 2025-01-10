@@ -75,5 +75,7 @@ module CorrespondencePlatform
     end
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.action_controller.raise_on_missing_callback_actions = false
   end
 end
