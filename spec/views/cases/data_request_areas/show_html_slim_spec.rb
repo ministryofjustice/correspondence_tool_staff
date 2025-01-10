@@ -36,9 +36,11 @@ describe "cases/data_request_areas/show", type: :view do
     end
 
     let(:can_record_data_request) { true }
+    let(:can_send_day_1_email) { true }
 
     before do
       allow(policy).to receive(:can_record_data_request?).and_return can_record_data_request
+      allow(policy).to receive(:can_send_day_1_email?).and_return can_send_day_1_email
     end
 
     context "when data request area has a data request" do
@@ -65,10 +67,12 @@ describe "cases/data_request_areas/show", type: :view do
         expect(row.edit.text).to eq "Edit"
       end
 
-      it "displays the send 'commissioning email button'" do
-        request_count = data_request_area.data_requests.size
-        expect(request_count).to eq 1
-        expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
+      context "when case is not an offender SAR Complaint" do
+        it "displays the send 'commissioning email button'" do
+          request_count = data_request_area.data_requests.size
+          expect(request_count).to eq 1
+          expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
+        end
       end
 
       it "translates the data_request_area_type using the relevant key" do
@@ -77,7 +81,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
     end
 
-    context "when the case is an offender SAR Complaint" do
+    context "when case is an offender SAR Complaint" do
       let(:kase_offender_sar_complaint) do
         create(
           :offender_sar_complaint,
@@ -86,6 +90,8 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: kase_offender_sar_complaint }
+
+      let(:can_send_day_1_email) { false }
 
       before do
         assign(:data_request, data_request)
