@@ -33,7 +33,7 @@ class CaseAttachment < ApplicationRecord
     response: "response",
     request: "request",
     ico_decision: "ico_decision",
-    commissioning_document: "commissioning_document"
+    commissioning_document: "commissioning_document",
   }
 
   def filename
