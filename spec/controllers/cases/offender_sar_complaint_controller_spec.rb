@@ -175,7 +175,7 @@ RSpec.describe Cases::OffenderSARComplaintController, type: :controller do
               let(:params) do
                 {
                   current_step: "complaint-type",
-                  offender_sar_complaint: offender_sar_base_params.merge(complaint_type: "litigation"),
+                  offender_sar_complaint: offender_sar_base_params.merge(complaint_type: "litigation_complaint"),
                 }
               end
 

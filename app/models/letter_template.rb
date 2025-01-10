@@ -18,6 +18,7 @@ class LetterTemplate < ApplicationRecord
 
   DISPATCH_LETTER_TEL_NUM = "01283 496 110".freeze
   ACKNOWLEDGEMENT_LETTER_TEL_NUM = "01283 496 136".freeze
+  COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM = "01283 496 110".freeze
 
   enum template_type: {
     dispatch: "dispatch",
@@ -38,7 +39,7 @@ class LetterTemplate < ApplicationRecord
     when "dispatch"
       DISPATCH_LETTER_TEL_NUM
     when "acknowledgement"
-      ACKNOWLEDGEMENT_LETTER_TEL_NUM
+      abbreviation == "complaint-acknowledgement" ? COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM : ACKNOWLEDGEMENT_LETTER_TEL_NUM
     end
   end
 end
