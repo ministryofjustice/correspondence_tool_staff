@@ -79,11 +79,6 @@
 Rails.application.config.active_record.sqlite3_adapter_strict_strings_by_default = true
 
 ###
-# Disable deprecated singular associations names.
-#++
-Rails.application.config.active_record.allow_deprecated_singular_associations_name = false
-
-###
 # Enable the Active Job `BigDecimal` argument serializer, which guarantees
 # roundtripping. Without this serializer, some queue adapters may serialize
 # `BigDecimal` arguments as simple (non-roundtrippable) strings.
@@ -215,11 +210,6 @@ Rails.application.config.active_record.default_column_serializer = nil
 # In previous versions of Rails, they ran in the inverse order.
 #++
 Rails.application.config.active_record.run_after_transaction_callbacks_in_order_defined = true
-
-###
-# Whether a `transaction` block is committed or rolled back when exited via `return`, `break` or `throw`.
-#++
-Rails.application.config.active_record.commit_transaction_on_non_local_return = true
 
 ###
 # Controls when to generate a value for <tt>has_secure_token</tt> declarations.
