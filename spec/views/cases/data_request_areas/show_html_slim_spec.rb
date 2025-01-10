@@ -43,7 +43,7 @@ describe "cases/data_request_areas/show", type: :view do
       allow(policy).to receive(:can_send_day_1_email?).and_return can_send_day_1_email
     end
 
-    context "when data request area has a data request" do
+    context "when Offender SAR Case data request area has a data request" do
       before do
         assign(:data_request, data_request)
         assign(:data_request_area, data_request_area.decorate)
@@ -67,12 +67,10 @@ describe "cases/data_request_areas/show", type: :view do
         expect(row.edit.text).to eq "Edit"
       end
 
-      context "when case is not an offender SAR Complaint" do
-        it "displays the send 'commissioning email button'" do
-          request_count = data_request_area.data_requests.size
-          expect(request_count).to eq 1
-          expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
-        end
+      it "displays the send 'commissioning email button'" do
+        request_count = data_request_area.data_requests.size
+        expect(request_count).to eq 1
+        expect(page.commissioning_document.button_send_email.text).to eq "Send commissioning email"
       end
 
       it "translates the data_request_area_type using the relevant key" do
@@ -81,7 +79,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
     end
 
-    context "when case is an offender SAR Complaint" do
+    context "when Offender SAR Complaint Case data request area has a data request" do
       let(:kase_offender_sar_complaint) do
         create(
           :offender_sar_complaint,
@@ -103,7 +101,7 @@ describe "cases/data_request_areas/show", type: :view do
         data_request_area_show_page.load(rendered)
       end
 
-      it "doesn't display the send 'commissioning email button'" do
+      it "without the send 'commissioning email button'" do
         request_count = data_request_area.data_requests.size
         expect(request_count).to eq 1
         expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)

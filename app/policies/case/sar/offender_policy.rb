@@ -45,7 +45,7 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_can_trigger_event(:add_data_received)
   end
 
-  def can_send_day_1_email
+  def can_send_day_1_email?
     clear_failed_checks
     check_can_trigger_event(:send_day_1_email)
   end
