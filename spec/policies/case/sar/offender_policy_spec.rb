@@ -10,7 +10,7 @@ describe Case::SAR::OffenderPolicy do
     it { is_expected.not_to permit(user, create(:sar_case)) }
   end
   permissions :can_send_day_1_email? do
-    it { is_expected.to permit(user, create(:offender_sar_complaint)) }
+    it { is_expected.to permit(user, create(:offender_sar)) }
     it { is_expected.not_to permit(user, create(:offender_sar_complaint)) }
   end
 end
