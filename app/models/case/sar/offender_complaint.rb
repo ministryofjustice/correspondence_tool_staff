@@ -70,7 +70,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   enum complaint_type: {
     standard_complaint: "standard_complaint",
     ico_complaint: "ico_complaint",
-    litigation_complaint: "litigation",
+    litigation_complaint: "litigation_complaint",
   }
 
   enum complaint_subtype: {
