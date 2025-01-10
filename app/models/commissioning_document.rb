@@ -25,7 +25,7 @@ class CommissioningDocument < ApplicationRecord
     standard: CommissioningDocumentTemplate::Standard,
   }.freeze
 
-  enum template_name: {
+  enum :template_name, {
     cat_a: "cat_a",
     cctv: "cctv",
     cross_border: "cross_border",

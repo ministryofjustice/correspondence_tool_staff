@@ -42,7 +42,7 @@ class DataRequest < ApplicationRecord
   scope :completed, -> { where(completed: true) }
   scope :in_progress, -> { where(completed: false) }
 
-  enum request_type: {
+  enum :request_type, {
     all_prison_records: "all_prison_records",
     security_records: "security_records",
     nomis_records: "nomis_records",
