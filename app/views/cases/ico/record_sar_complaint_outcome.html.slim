@@ -23,9 +23,9 @@ span.visually-hidden
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 .form-group
-  / = form_for @case, as: "#{@case.type_abbreviation.downcase}", url: record_sar_complaint_outcome_case_ico_path do |f|
-  = form_for @case, as: "#{@correspondence_type_key}", url: polymorphic_path(@case, action: :confirm_record_sar_complaint_outcome) do |f|
-    = f.radio_button_fieldset :sar_complaint_outcome, choices: Case::ICO::SAR::SAR_COMPLAINT_OUTCOMES.key do |fieldset|
+  = form_for @case, as: :ico,
+          url: record_sar_complaint_outcome_case_ico_path, method: :post do |f|
+    = f.radio_button_fieldset :sar_complaint_outcome do |fieldset|
       - fieldset.radio_input('bau_ico_informed')
       - fieldset.radio_input('bau_and_now_responded_as_sar')
       - fieldset.radio_input('not_received_now_responded_as_sar')
@@ -36,3 +36,9 @@ span.visually-hidden
       - fieldset.radio_input('revised_sar_sent-undisclosed_information')
       - fieldset.radio_input('other_outcome')
         / = f.text_area :other_outcome_note
+
+    .grid-row
+      .column-two-thirds
+        .button-holder
+          = f.submit t('common.case.respond'), { class: 'button' }
+          = link_to "Cancel", case_path(@case.id), class:'acts-like-button button-left-spacing'

@@ -73,7 +73,7 @@ module Closable
     when :ok
       flash[:notice] = t("cases.confirm_respond.success")
       if case_type == Case::ICO::SAR
-        render "/cases/ico/record_sar_complaint_outcome"
+        redirect_to record_sar_complaint_outcome_case_ico_path(@case)
       else
         redirect_to case_path(@case)
       end

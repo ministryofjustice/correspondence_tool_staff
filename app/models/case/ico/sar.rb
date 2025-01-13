@@ -60,5 +60,5 @@ class Case::ICO::SAR < Case::ICO::Base
   }.freeze
 
   jsonb_accessor :properties,
-                 sar_complaint_outcomes: [:string]
+                 sar_complaint_outcome: :string
 end
