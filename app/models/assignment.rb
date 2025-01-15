@@ -19,13 +19,13 @@ class Assignment < ApplicationRecord
   validate :approved_only_for_approvals
   validate :unique_pending_responder
 
-  enum state: {
+  enum :state, {
     pending: "pending",
     rejected: "rejected",
     accepted: "accepted",
     bypassed: "bypassed",
   }
-  enum role: {
+  enum :role, {
     managing: "managing",
     responding: "responding",
     approving: "approving",

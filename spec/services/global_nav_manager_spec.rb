@@ -1,10 +1,5 @@
 require "rails_helper"
 
-# Require these so that class GlobalNavManager is created before our
-# monkey-patch to define == below.
-require "global_nav_manager"
-require "global_nav_manager/page"
-
 describe GlobalNavManager do
   include Rails.application.routes.url_helpers
 

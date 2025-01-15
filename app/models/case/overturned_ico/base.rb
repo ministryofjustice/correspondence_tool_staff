@@ -56,7 +56,7 @@ class Case::OverturnedICO::Base < Case::Base
 
   delegate :subject, :name, to: :original_case
 
-  enum reply_method: {
+  enum :reply_method, {
     send_by_post: "send_by_post",
     send_by_email: "send_by_email",
   }

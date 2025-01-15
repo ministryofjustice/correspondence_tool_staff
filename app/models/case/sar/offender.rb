@@ -147,7 +147,7 @@ class Case::SAR::Offender < Case::Base
 
   attr_accessor :remove_sent_to_sscl_reason
 
-  enum subject_type: {
+  enum :subject_type, {
     offender: "offender",
     ex_offender: "ex_offender",
     detainee: "detainee",
@@ -156,19 +156,19 @@ class Case::SAR::Offender < Case::Base
     ex_probation_service_user: "ex_probation_service_user",
   }
 
-  enum recipient: {
+  enum :recipient, {
     subject_recipient: "subject_recipient",
     requester_recipient: "requester_recipient",
     third_party_recipient: "third_party_recipient",
   }
 
-  enum further_actions_required: {
+  enum :further_actions_required, {
     yes: "yes",
     no: "no",
     awaiting_response: "awaiting_response",
   }
 
-  enum request_method: {
+  enum :request_method, {
     email: "email",
     ico_web_portal: "ico web portal",
     post: "post",

@@ -16,9 +16,8 @@ describe "admin routes", type: :routing do
     context "when a non-admin" do
       it "raises an error" do
         login_as manager
-        expect {
-          get "/admin"
-        }.to raise_error ActionController::RoutingError
+        get "/admin"
+        expect(response).to be_not_found
       end
     end
   end
@@ -35,9 +34,8 @@ describe "admin routes", type: :routing do
     context "when a non-admin" do
       it "raises an error" do
         login_as manager
-        expect {
-          get "/admin/cases"
-        }.to raise_error ActionController::RoutingError
+        get "/admin/cases"
+        expect(response).to be_not_found
       end
     end
   end

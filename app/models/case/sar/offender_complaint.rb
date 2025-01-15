@@ -67,13 +67,13 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   belongs_to :appeal_outcome, class_name: "CaseClosure::OffenderComplaintAppealOutcome"
   belongs_to :outcome, class_name: "CaseClosure::OffenderComplaintOutcome"
 
-  enum complaint_type: {
+  enum :complaint_type, {
     standard_complaint: "standard_complaint",
     ico_complaint: "ico_complaint",
     litigation_complaint: "litigation_complaint",
   }
 
-  enum complaint_subtype: {
+  enum :complaint_subtype, {
     sscl_partial_case: "sscl_partial_case",
     covid_partial_response: "covid_partial_response",
     missing_data: "missing_data",
@@ -83,7 +83,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     not_applicable: "not_applicable",
   }
 
-  enum priority: {
+  enum :priority, {
     normal: "normal",
     high: "high",
   }

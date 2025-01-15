@@ -9,7 +9,7 @@
 #
 
 class TeamsUsersRole < ApplicationRecord
-  enum role: {
+  enum :role, {
     manager: "manager",
     responder: "responder",
     approver: "approver",

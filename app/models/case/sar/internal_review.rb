@@ -84,7 +84,7 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     end
   end
 
-  enum sar_ir_subtype: {
+  enum :sar_ir_subtype, {
     timeliness: "timeliness",
     compliance: "compliance",
   }

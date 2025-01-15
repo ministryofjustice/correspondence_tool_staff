@@ -18,7 +18,7 @@ class LinkedCase < ApplicationRecord
 
   belongs_to :linked_case, class_name: "Case::Base"
 
-  enum type: {
+  enum :type, {
     related: "related",
     original: "original",
     original_appeal: "original_appeal",
