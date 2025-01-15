@@ -35,7 +35,7 @@ span.visually-hidden
       - fieldset.radio_input('revised_sar_sent-exemptions_issue')
       - fieldset.radio_input('revised_sar_sent-undisclosed_information')
       - fieldset.radio_input('other_outcome')
-        = f.text_area :other_sar_complaint_outcome_note
+        = f.text_area :other_sar_complaint_outcome_note, { rows: 4 }
 
     .grid-row
       .column-two-thirds
