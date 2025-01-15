@@ -36,12 +36,14 @@ describe "cases/data_request_areas/show", type: :view do
     end
 
     let(:can_record_data_request) { true }
+    let(:can_send_day_1_email) { true }
 
     before do
       allow(policy).to receive(:can_record_data_request?).and_return can_record_data_request
+      allow(policy).to receive(:can_send_day_1_email?).and_return can_send_day_1_email
     end
 
-    context "when data request area has a data request" do
+    context "when Offender SAR Case data request area has a data request" do
       before do
         assign(:data_request, data_request)
         assign(:data_request_area, data_request_area.decorate)
@@ -74,6 +76,35 @@ describe "cases/data_request_areas/show", type: :view do
       it "translates the data_request_area_type using the relevant key" do
         translated_area_type = I18n.t("helpers.label.data_request_area.headers.data_request_area_type.#{data_request_area.data_request_area_type}")
         expect(page.page_heading.heading.text).to eq "View #{translated_area_type} data request area"
+      end
+    end
+
+    context "when Offender SAR Complaint Case data request area has a data request" do
+      let(:kase_offender_sar_complaint) do
+        create(
+          :offender_sar_complaint,
+          current_state: "to_be_assessed",
+        )
+      end
+
+      let(:data_request_area) { create :data_request_area, data_request_area_type: "prison", offender_sar_case: kase_offender_sar_complaint }
+
+      let(:can_send_day_1_email) { false }
+
+      before do
+        assign(:data_request, data_request)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
+        assign(:commissioning_document, data_request_area.commissioning_document.decorate)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "without the send 'commissioning email button'" do
+        request_count = data_request_area.data_requests.size
+        expect(request_count).to eq 1
+        expect { page.commissioning_document.button_send_email }.to raise_error(Capybara::ElementNotFound)
       end
     end
 
