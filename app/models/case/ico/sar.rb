@@ -60,5 +60,9 @@ class Case::ICO::SAR < Case::ICO::Base
   }.freeze
 
   jsonb_accessor :properties,
-                 sar_complaint_outcome: :string
+                 sar_complaint_outcome: :string,
+                 other_sar_complaint_outcome_note: :string
+
+  validates :sar_complaint_outcome, presence: true, if: -> { state == "closed" }
+  validates :other_sar_complaint_outcome_note, presence: true, if: -> { state == "closed" && sar_complaint_outcome == "other_outcome" }
 end

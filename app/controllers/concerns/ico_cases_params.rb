@@ -50,7 +50,10 @@ private
   end
 
   def record_complaint_outcome_params
-    params.require(:ico).permit(:sar_complaint_outcome)
+    params.require(:ico).permit(
+      :sar_complaint_outcome,
+      :other_sar_complaint_outcome_note,
+    )
   end
 
   def process_new_linked_cases_for_params
