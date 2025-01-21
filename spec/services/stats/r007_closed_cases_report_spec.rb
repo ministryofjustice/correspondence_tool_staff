@@ -96,18 +96,18 @@ module Stats
       end
 
       describe "#report_details" do
-        let(:redis) { instance_double(Redis) }
+        let(:redis) { double("redis") } # rubocop:disable RSpec/VerifiedDoubles
         let(:report) { create(:report) }
         let(:data) { "some data" }
 
         before do
-          allow(Redis).to receive(:new).and_return(redis)
-          allow(redis).to receive(:exists?).with(report.guid).and_return(exists)
+          allow(Sidekiq).to receive(:redis).and_yield(redis)
+          allow(redis).to receive(:exists).with(report.guid).and_return(exists)
           allow(redis).to receive(:get).with(report.guid).and_return(data)
         end
 
         context "when data is in redis" do
-          let(:exists) { true }
+          let(:exists) { 1 }
 
           it "sets the report as complete" do
             expect {
@@ -121,7 +121,7 @@ module Stats
         end
 
         context "when data is not in redis" do
-          let(:exists) { false }
+          let(:exists) { 0 }
 
           it "doesn't change the report status" do
             expect {

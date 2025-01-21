@@ -502,7 +502,7 @@ describe "cases/show.html.slim", type: :view do
 
         it { is_expected.not_to have_rendered "cases/_case_messages" }
         it { is_expected.to have_rendered "cases/offender_sar/_case_notes" }
-        it { is_expected.to have_rendered "cases/offender_sar/_data_requests" }
+        it { is_expected.to have_rendered "cases/offender_sar/_data_request_areas" }
       end
 
       context "when a case just created" do
@@ -526,7 +526,7 @@ describe "cases/show.html.slim", type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
-          expect(cases_show_page.data_requests.section_heading).to be_present
+          expect(cases_show_page.data_request_areas.section_heading).to be_present
         end
       end
 
@@ -577,7 +577,7 @@ describe "cases/show.html.slim", type: :view do
         it "shows record data request button" do
           render
           cases_show_page.load(rendered)
-          expect(cases_show_page.data_request_actions.record_data_request["class"]).to match(/button-tertiary/)
+          expect(cases_show_page.data_request_area_actions.record_data_request_area["class"]).to match(/button-tertiary/)
         end
       end
 
@@ -590,18 +590,17 @@ describe "cases/show.html.slim", type: :view do
           assign(:case, offender_sar_case)
           render
           cases_show_page.load(rendered)
-          expect(cases_show_page.data_requests.none.text).to eq "No data requests recorded"
+
+          expect(cases_show_page.data_request_areas.none.text).to eq "No data requests recorded"
         end
 
         it "shows data requests as table rows" do
           new_offender_sar_case = create(:offender_sar_case).decorate
 
           2.times do
-            new_offender_sar_case.data_requests.create(
+            new_offender_sar_case.data_request_areas.create(
               location: "The Location",
-              request_type: "all_prison_records",
-              date_requested: Date.new(2020, 8, 15),
-              date_from: Date.new(2007, 7, 2),
+              data_request_area_type: "prison",
               user: manager,
             )
           end
@@ -609,16 +608,13 @@ describe "cases/show.html.slim", type: :view do
           assign(:case, new_offender_sar_case)
           render
           cases_show_page.load(rendered)
-          data_requests = cases_show_page.data_requests.rows
+          data_request_areas = cases_show_page.data_request_areas.rows
 
-          expect(data_requests.size).to eq 3
-          expect(data_requests.first.location.text).to eq "The Location"
-          expect(data_requests.first.request_type.text).to eq "All prison records 2 Jul 2007 onwards"
-          expect(data_requests.first.date_requested.text).to eq "15 Aug 2020"
-          expect(data_requests.first.date_requested_time["datetime"]).to eq "2020-08-15"
-          expect(data_requests.first.pages.text).to eq "0"
-          expect(data_requests.first.show.text).to eq "View"
-          expect(data_requests.first.edit.text).to eq "Edit"
+          expect(data_request_areas.size).to eq 3
+          expect(data_request_areas.first.location.text).to eq "The Location"
+          expect(data_request_areas.first.data_area.text).to eq "Prison"
+          expect(data_request_areas.first.pages.text).to eq "0"
+          expect(data_request_areas.first.show.text).to eq "View"
         end
       end
     end
@@ -653,7 +649,7 @@ describe "cases/show.html.slim", type: :view do
 
         it { is_expected.not_to have_rendered "cases/_case_messages" }
         it { is_expected.to have_rendered "cases/offender_sar/_case_notes" }
-        it { is_expected.to have_rendered "cases/offender_sar/_data_requests" }
+        it { is_expected.to have_rendered "cases/offender_sar/_data_request_areas" }
       end
 
       context "when a case just created" do
@@ -677,7 +673,7 @@ describe "cases/show.html.slim", type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
-          expect(cases_show_page.data_requests.section_heading).to be_present
+          expect(cases_show_page.data_request_areas.section_heading).to be_present
         end
       end
 
@@ -728,7 +724,8 @@ describe "cases/show.html.slim", type: :view do
         it "shows record data request button" do
           render
           cases_show_page.load(rendered)
-          expect(cases_show_page.data_request_actions.record_data_request["class"]).to match(/button-tertiary/)
+
+          expect(cases_show_page.data_request_area_actions.record_data_request_area["class"]).to match(/button-tertiary/)
         end
       end
 
@@ -741,18 +738,16 @@ describe "cases/show.html.slim", type: :view do
           assign(:case, offender_sar_complaint)
           render
           cases_show_page.load(rendered)
-          expect(cases_show_page.data_requests.none.text).to eq "No data requests recorded"
+          expect(cases_show_page.data_request_areas.none.text).to eq "No data requests recorded"
         end
 
         it "shows data requests as table rows" do
           new_offender_sar_complaint = create(:offender_sar_complaint).decorate
 
           2.times do
-            new_offender_sar_complaint.data_requests.create(
+            new_offender_sar_complaint.data_request_areas.create(
               location: "The Location",
-              request_type: "all_prison_records",
-              date_requested: Date.new(2020, 8, 15),
-              date_from: Date.new(2007, 7, 2),
+              data_request_area_type: "prison",
               user: manager,
             )
           end
@@ -760,14 +755,12 @@ describe "cases/show.html.slim", type: :view do
           assign(:case, new_offender_sar_complaint)
           render
           cases_show_page.load(rendered)
-          data_requests = cases_show_page.data_requests.rows
+          data_request_areas = cases_show_page.data_request_areas.rows
 
-          expect(data_requests.size).to eq 3
-          expect(data_requests.first.location.text).to eq "The Location"
-          expect(data_requests.first.request_type.text).to eq "All prison records 2 Jul 2007 onwards"
-          expect(data_requests.first.date_requested.text).to eq "15 Aug 2020"
-          expect(data_requests.first.date_requested_time["datetime"]).to eq "2020-08-15"
-          expect(data_requests.first.pages.text).to eq "0"
+          expect(data_request_areas.size).to eq 3
+          expect(data_request_areas.first.location.text).to eq "The Location"
+          expect(data_request_areas.first.data_area.text).to eq "Prison"
+          expect(data_request_areas.first.pages.text).to eq "0"
         end
       end
     end

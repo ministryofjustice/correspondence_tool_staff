@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Cctv do
-  subject(:template) { described_class.new(data_request:) }
+  subject(:template) { described_class.new(data_request_area:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -11,7 +11,7 @@ RSpec.describe CommissioningDocumentTemplate::Cctv do
                   subject_aliases: "Bad Bob",
                   prison_number: "AB12345")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase, location: "HMP Brixton") }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
 
   describe "#path" do
     it "matches to a file" do
@@ -22,7 +22,7 @@ RSpec.describe CommissioningDocumentTemplate::Cctv do
   describe "#context" do
     let(:expected_context) do
       {
-        addressee_location: "HMP Brixton",
+        addressee_location: "HMP halifax",
         dpa_reference: "20062007",
         offender_name: "Robert Badson",
         date_of_birth: "11/03/2000",

@@ -1,6 +1,8 @@
 require "sidekiq/api"
 
 class HeartbeatController < ApplicationController
+  skip_before_action :check_maintenance_mode
+
   respond_to :json
 
   def ping
@@ -35,7 +37,7 @@ class HeartbeatController < ApplicationController
 private
 
   def redis_alive?
-    Sidekiq.redis_info
+    Sidekiq.redis(&:info)
     true
   rescue StandardError
     false

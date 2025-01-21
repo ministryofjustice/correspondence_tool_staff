@@ -56,6 +56,14 @@ RSpec.describe LetterTemplate, type: :model do
   end
 
   describe "#telephone_number" do
+    context "when letter template is complaint acknowledgement letter" do
+      let(:letter_template) { create(:letter_template, template_type: "acknowledgement", abbreviation: "complaint-acknowledgement", name: "Letter to Recipient") }
+
+      it "returns telephone number for complaint acknowledgment letter" do
+        expect(letter_template.telephone_number).to eq(LetterTemplate::COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM)
+      end
+    end
+
     context "when letter template is dispatch letter" do
       let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
 
