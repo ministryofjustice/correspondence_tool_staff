@@ -408,7 +408,9 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
   end
 
   describe "commissioning_email" do
-    let(:commissioning_document) { create :commissioning_document }
+    let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Subject name") }
+    let(:data_request_area) { create(:data_request_area, offender_sar_case: ) }
+    let(:commissioning_document) { create(:commissioning_document, data_request_area:) }
     let(:email_address) { "test@test.com" }
     let(:kase_number) { "12345" }
     let(:mail) { described_class.commissioning_email(commissioning_document, kase_number, email_address) }
@@ -421,7 +423,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     it "personalises the email" do
       expect(mail.govuk_notify_personalisation[:email_address]).to eq email_address
       expect(mail.govuk_notify_personalisation[:deadline_text]).to eq I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
-      expect(mail.govuk_notify_personalisation[:email_subject]).to include "Subject Access Request"
+      expect(mail.govuk_notify_personalisation[:email_subject]).to include "Subject Access Request", "12345", "Day 1 commissioning", "Subject name"
     end
 
     it "sets the To address of the email using the provided user" do

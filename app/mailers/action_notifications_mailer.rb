@@ -121,8 +121,9 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     file = StringIO.new(commissioning_document.document)
 
+    subject_name = commissioning_document.data_request_area.offender_sar_case.subject_full_name
     set_personalisation(
-      email_subject: "Subject Access Request - #{kase_number} - #{commissioning_document.decorate.request_document}",
+      email_subject: "Subject Access Request - #{kase_number} - #{commissioning_document.decorate.request_document} - #{subject_name}",
       email_address: recipient,
       deadline_text:,
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
