@@ -434,7 +434,7 @@ GEM
     rdoc (6.10.0)
       psych (>= 4.0.0)
     recursive-open-struct (1.2.2)
-    redis-client (0.23.0)
+    redis-client (0.23.2)
       connection_pool
     regexp_parser (2.9.2)
     reline (0.6.0)
@@ -540,7 +540,8 @@ GEM
       colorize
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
-    sidekiq (7.3.7)
+    sidekiq (7.3.8)
+      base64
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)
