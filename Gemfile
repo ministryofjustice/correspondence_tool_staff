@@ -36,7 +36,7 @@ gem "httparty"
 gem "humanize_boolean"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.11"
-gem "jquery-rails", "~> 4.5"
+gem "jquery-rails", "~> 4.6"
 gem "jquery-ui-rails"
 gem "jsonb_accessor", "~> 1.4"
 gem "jwe"
@@ -55,7 +55,7 @@ gem "pg", "~> 1.3"
 gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 6.4"
-gem "pundit", "~>2.1"
+gem "pundit", "~>2.4"
 gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
