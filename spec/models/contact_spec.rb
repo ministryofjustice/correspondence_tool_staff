@@ -140,12 +140,12 @@ RSpec.describe Contact, type: :model do
 
   describe "class methods" do
     it "returns expected sql from #search_by_contact_name" do
-      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE '%LLP%') ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.search_by_contact_name("LLP").to_sql).to match(expected_sql)
     end
 
     it "returns expected sql from #filtered_search_by_contact_name" do
-      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE '%LLP%') ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.filtered_search_by_contact_name("probation,solicitor", "LLP").to_sql).to match(expected_sql)
     end
   end
