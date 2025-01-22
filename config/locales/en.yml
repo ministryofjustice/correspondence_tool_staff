@@ -456,6 +456,7 @@ en:
       <<: *case_policy
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+      can_set_outcome?: You are not authorised
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
@@ -814,6 +815,16 @@ en:
         original_case:
         received_date: Date received at MOJ
       ico:
+        sar_complaint_outcome:
+          bau_ico_informed: "Was originally treated as BAU, the ICO have been informed"
+          bau_and_now_responded_as_sar: "Was originally treated as BAU and we have now also responded as a SAR"
+          not_received_now_responded_as_sar: "No evidence of ever receiving the SAR. We have now responded to the SAR"
+          sar_processed_but_overdue: "SAR Timeliness breach - SAR processed correctly but is overdue"
+          sar_incorrectly_processed_now_responded_as_sar: "SAR Timeliness breach - SAR was not processed correctly (e.g. logged as a SAR). We have now provided a SAR response"
+          responded_to_sar_and_ico_informed: "We have already responded to the SAR, the ICO were informed"
+          revised_sar_sent_exemptions_issue: "Revised SAR response sent, as correct exemption(s) was not applied originally by the business area"
+          revised_sar_sent_undisclosed_information: "Revised SAR response sent, as some information should have been disclosed by the business area"
+          other_outcome: "Other (state why in notes section)"
         email: "Recipient email address"
         ico_decision:
           upheld: Upheld by ICO

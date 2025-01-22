@@ -23,18 +23,17 @@ span.visually-hidden
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 .form-group
-  = form_for @case, as: :ico,
-          url: record_sar_complaint_outcome_case_ico_path, method: :post do |f|
-    = f.radio_button_fieldset :sar_complaint_outcome do |fieldset|
-      - fieldset.radio_input('bau_ico_informed')
-      - fieldset.radio_input('bau_and_now_responded_as_sar')
-      - fieldset.radio_input('not_received_now_responded_as_sar')
-      - fieldset.radio_input('sar_processed_but_overdue')
-      - fieldset.radio_input('sar_incorrectly_processed_now_responded_as_sar')
-      - fieldset.radio_input('responded_to_sar_and_ico_informed')
-      - fieldset.radio_input('revised_sar_sent-exemptions_issue')
-      - fieldset.radio_input('revised_sar_sent-undisclosed_information')
-      - fieldset.radio_input('other_outcome')
+  = form_for @case, as: :ico, url: record_sar_complaint_outcome_case_ico_path do |f|
+    = f.radio_button_fieldset :sar_complaint_outcome, legend_options: { class: 'visually-hidden' } do |fieldset|
+      - fieldset.radio_input(:bau_ico_informed)
+      - fieldset.radio_input(:bau_and_now_responded_as_sar)
+      - fieldset.radio_input(:not_received_now_responded_as_sar)
+      - fieldset.radio_input(:sar_processed_but_overdue)
+      - fieldset.radio_input(:sar_incorrectly_processed_now_responded_as_sar)
+      - fieldset.radio_input(:responded_to_sar_and_ico_informed)
+      - fieldset.radio_input(:revised_sar_sent_exemptions_issue)
+      - fieldset.radio_input(:revised_sar_sent_undisclosed_information)
+      - fieldset.radio_input(:other_outcome)
         = f.text_area :other_sar_complaint_outcome_note, { rows: 4 }
 
     .grid-row

@@ -1,4 +1,7 @@
 class Case::ICO::BaseDecorator < Case::BaseDecorator
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context
+
   attr_accessor :related_case_number
 
   def formatted_date_ico_decision_received
@@ -6,11 +9,21 @@ class Case::ICO::BaseDecorator < Case::BaseDecorator
   end
 
   def pretty_ico_decision
+    decision = ""
+
     if object.ico_decision.present?
-      "#{object.ico_decision.capitalize} by ICO"
-    else
-      ""
+      decision += "#{object.ico_decision.capitalize} by ICO"
     end
+
+    if object.try(:sar_complaint_outcome).present?
+      decision += if object.sar_complaint_outcome == "other_outcome"
+                    content_tag(:div) { object.other_sar_complaint_outcome_note }
+                  else
+                    content_tag(:div) { I18n.t("helpers.label.ico.sar_complaint_outcome.#{object.sar_complaint_outcome}") }
+                  end
+    end
+
+    decision
   end
 
   def original_internal_deadline

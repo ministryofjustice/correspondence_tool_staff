@@ -49,12 +49,13 @@ module Cases
     def record_late_team
       authorize @case, :can_respond?
       @case.prepare_for_recording_late_team
+      @case = @case.decorate
       params = record_late_team_params(@case.type_abbreviation)
       if @case.update(params)
-        @case.respond(current_user)
-        if case_type == Case::ICO::SAR
+        if @case.is_a?(Case::ICO::SAR)
           render "/cases/ico/record_sar_complaint_outcome"
         else
+          @case.respond(current_user)
           redirect_to case_path
         end
       else

@@ -23,6 +23,8 @@ private
       @result = :error
     elsif @kase.responded_late?
       @result = :late
+    elsif @kase.is_a?(Case::ICO::SAR)
+      @result = :ok
     else
       @kase.respond(@user)
       @result = :ok
