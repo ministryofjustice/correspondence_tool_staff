@@ -24,7 +24,7 @@ jobs:
           bundler-cache: true
 
       - name: Lint Ruby files
-        run: bundle exec rubocop
+        run: bin/rubocop
 
       - name: Security audit application code
         run: bundle exec brakeman -q

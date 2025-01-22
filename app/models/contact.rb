@@ -48,8 +48,8 @@ class Contact < ApplicationRecord
   end
 
   def self.search_by_contact_name(search_term)
-    search_sql = "LOWER(name) LIKE CONCAT('%', ?, '%')"
-    where(search_sql, search_term).order(:name)
+    search_sql = "LOWER(name) LIKE ?"
+    where(search_sql, "%#{search_term}%").order(:name)
   end
 
   def self.filtered_search_by_contact_name(filters, search_term)

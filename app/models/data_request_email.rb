@@ -20,7 +20,7 @@ class DataRequestEmail < ApplicationRecord
   validates :email_address, presence: true
   validates :status, presence: true
 
-  enum email_type: { commissioning_email: 0 }
+  enum :email_type, { commissioning_email: 0 }
 
   attribute :status, default: "created"
 

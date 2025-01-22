@@ -33,7 +33,7 @@ class DataRequestArea < ApplicationRecord
     create_commissioning_document(template_name:)
   end
 
-  enum data_request_area_type: {
+  enum :data_request_area_type, {
     prison: "prison",
     probation: "probation",
     branston: "branston",
