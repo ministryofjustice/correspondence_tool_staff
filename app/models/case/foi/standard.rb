@@ -69,7 +69,7 @@ class Case::FOI::Standard < Case::Base
     subject
   ]
 
-  enum requester_type: {
+  enum :requester_type, {
     academic_business_charity: "academic_business_charity",
     journalist: "journalist",
     member_of_the_public: "member_of_the_public",
@@ -79,7 +79,7 @@ class Case::FOI::Standard < Case::Base
     what_do_they_know: "what_do_they_know",
   }
 
-  enum delivery_method: {
+  enum :delivery_method, {
     sent_by_post: "sent_by_post",
     sent_by_email: "sent_by_email",
   }
