@@ -11,9 +11,4 @@ class Case::ICO::BasePolicy < Case::BasePolicy
     clear_failed_checks
     check_can_trigger_event(:respond)
   end
-
-  def can_set_outcome?
-    clear_failed_checks
-    user.in?(self.case.approving_team_users)
-  end
 end
