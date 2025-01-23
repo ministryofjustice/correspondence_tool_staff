@@ -117,6 +117,16 @@ RSpec.describe Cases::ICOController, type: :controller do
             expect(patch(:confirm_respond, params:)).to redirect_to(case_path(approved_ico))
           end
         end
+
+        context "when the ICO is a SAR" do
+          let(:approved_ico) { create :approved_ico_sar_case }
+
+          before { sign_in approver }
+
+          it "redirects to the outcome page" do
+            expect(patch(:confirm_respond, params:)).to redirect_to(record_sar_complaint_outcome_case_ico_path(approved_ico))
+          end
+        end
       end
 
       describe "#update_closure" do
@@ -501,9 +511,12 @@ RSpec.describe Cases::ICOController, type: :controller do
   describe "#record_late_team" do
     before do
       sign_in approver
+      allow_any_instance_of(Case::ICO::SAR).to receive(:responded_late?).and_return(true) # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(Case::ICO::FOI).to receive(:responded_late?).and_return(true) # rubocop:disable RSpec/AnyInstance
     end
 
     let(:approved_ico)        { create :approved_ico_foi_case, :flagged_accepted }
+    let(:approved_sar_ico)    { create :approved_ico_sar_case }
     let(:approving_team)      { approved_ico.approving_teams.first }
     let(:approver)            { approving_team.users.first }
 
@@ -519,31 +532,89 @@ RSpec.describe Cases::ICOController, type: :controller do
       expect(assigns(:case)).to eq approved_ico
     end
 
-    it "redirects to case details page" do
-      patch :record_late_team, params: { id: approved_ico.id }
-      expect(response).to redirect_to(case_path(approved_ico))
-    end
+    context "with foi" do
+      it "redirects to case details page" do
+        patch :record_late_team, params: {
+          id: approved_ico.id,
+          ico: {
+            late_team_id: approving_team.id,
+          },
+        }
 
-    it "calls the state_machine method" do
-      patch :record_late_team, params: { id: approved_ico.id }
+        expect(response).to redirect_to(case_path(approved_ico))
+      end
 
-      stub_find_case(approved_ico.id) do |kase|
-        expect(kase.state_machine).to have_received(:respond!)
-          .with(acting_user: approver,
-                acting_team: approving_team)
+      it "calls the state_machine method" do
+        patch :record_late_team, params: {
+          id: approved_ico.id,
+          ico: {
+            late_team_id: approving_team.id,
+          },
+        }
+
+        stub_find_case(approved_ico.id) do |kase|
+          expect(kase.state_machine).to have_received(:respond!)
+            .with(acting_user: approver,
+                  acting_team: approving_team)
+        end
+      end
+
+      it "sets the late team" do
+        patch :record_late_team, params: {
+          id: approved_ico.id,
+          ico: {
+            late_team_id: approving_team.id,
+          },
+        }
+
+        approved_ico.reload
+        expect(approved_ico.late_team_id).to eq approving_team.id
+      end
+
+      context "without team" do
+        it "renders late team page" do
+          patch :record_late_team, params: {
+            id: approved_ico.id,
+          }
+
+          expect(response).to render_template(:late_team)
+        end
       end
     end
 
-    it "sets the late team" do
-      patch :record_late_team, params: {
-        id: approved_ico.id,
-        ico: {
-          late_team_id: approving_team.id,
-        },
-      }
+    context "with sar" do
+      it "sets the late team" do
+        patch :record_late_team, params: {
+          id: approved_sar_ico.id,
+          ico: {
+            late_team_id: approving_team.id,
+          },
+        }
 
-      approved_ico.reload
-      expect(approved_ico.late_team_id).to eq approving_team.id
+        approved_sar_ico.reload
+        expect(approved_sar_ico.late_team_id).to eq approving_team.id
+      end
+
+      it "redirects to sar complaint outcome page" do
+        patch :record_late_team, params: {
+          id: approved_sar_ico.id,
+          ico: {
+            late_team_id: approving_team.id,
+          },
+        }
+
+        expect(response).to redirect_to(record_sar_complaint_outcome_case_ico_path(approved_sar_ico))
+      end
+
+      context "without team" do
+        it "renders late team page" do
+          patch :record_late_team, params: {
+            id: approved_sar_ico.id,
+          }
+
+          expect(response).to render_template(:late_team)
+        end
+      end
     end
   end
 end

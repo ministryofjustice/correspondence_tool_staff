@@ -33,9 +33,28 @@
 #
 
 class Case::ICO::SAR < Case::ICO::Base
+  COMPLAINT_OUTCOMES = %w[
+    bau_ico_informed
+    bau_and_now_responded_as_sar
+    not_received_now_responded_as_sar
+    sar_processed_but_overdue
+    sar_incorrectly_processed_now_responded_as_sar
+    responded_to_sar_and_ico_informed
+    revised_sar_sent_exemptions_issue
+    revised_sar_sent_undisclosed_information
+    other_outcome
+  ].freeze
+
   def self.decorator_class
     Case::ICO::SARDecorator
   end
+
+  jsonb_accessor :properties,
+                 sar_complaint_outcome: :string,
+                 other_sar_complaint_outcome_note: :string
+
+  validates :sar_complaint_outcome, presence: true, inclusion: { in: COMPLAINT_OUTCOMES }, if: -> { prepared_for_recording_outcome? }
+  validates :other_sar_complaint_outcome_note, presence: true, if: -> { prepared_for_recording_outcome? && sar_complaint_outcome == "other_outcome" }
 
   def original_case_type = "SAR"
 
@@ -45,5 +64,13 @@ class Case::ICO::SAR < Case::ICO::Base
 
   def reset_responding_assignment_flag
     responder_assignment.update(state: "pending")
+  end
+
+  def prepare_for_recording_outcome
+    @preparing_for_recording_outcome = true
+  end
+
+  def prepared_for_recording_outcome?
+    @preparing_for_recording_outcome == true
   end
 end

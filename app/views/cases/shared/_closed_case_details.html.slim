@@ -65,4 +65,4 @@ tbody.response-details
   - if case_details.ico? && case_details.ico_decision.present?
     tr.outcome
       th = t('common.case.outcome')
-      td = case_details.pretty_ico_decision
+      td = raw case_details.pretty_ico_decision

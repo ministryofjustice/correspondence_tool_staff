@@ -82,4 +82,34 @@ describe Case::ICO::SAR do
       expect(ico_sar_case.responder_assignment.state).to eq "pending"
     end
   end
+
+  describe "complaint outcome validation" do
+    it "sar_complaint_outcome cannot be empty" do
+      kase.prepare_for_recording_outcome
+      kase.valid?
+      expect(kase.errors).to include(:sar_complaint_outcome)
+    end
+
+    it "sar_complaint_outcome must be in COMPLAINT_OUTCOMES" do
+      kase.prepare_for_recording_outcome
+      kase.sar_complaint_outcome = "invalid_value"
+      kase.valid?
+      expect(kase.errors).to include(:sar_complaint_outcome)
+
+      kase.sar_complaint_outcome = "sar_incorrectly_processed_now_responded_as_sar"
+      kase.valid?
+      expect(kase.errors).not_to include(:sar_complaint_outcome)
+    end
+
+    it "other_sar_complaint_outcome_note cannot empty when outcome is other" do
+      kase.prepare_for_recording_outcome
+      kase.sar_complaint_outcome = "other_outcome"
+      kase.valid?
+      expect(kase.errors).to include(:other_sar_complaint_outcome_note)
+
+      kase.other_sar_complaint_outcome_note = "a reason"
+      kase.valid?
+      expect(kase.errors).not_to include(:other_sar_complaint_outcome_note)
+    end
+  end
 end
