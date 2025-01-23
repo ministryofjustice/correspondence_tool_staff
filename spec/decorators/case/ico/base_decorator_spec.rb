@@ -41,6 +41,14 @@ describe Case::ICO::BaseDecorator do
       expect(closed_overturned_sar_case.pretty_ico_decision)
           .to eq "Overturned by ICO<div>Was originally treated as BAU, the ICO have been informed</div>"
     end
+
+    it "returns other sar_complaint_outcome when it exists" do
+      closed_overturned_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
+      closed_overturned_sar_case.sar_complaint_outcome = "other_outcome"
+      closed_overturned_sar_case.other_sar_complaint_outcome_note = "some other reason"
+      expect(closed_overturned_sar_case.pretty_ico_decision)
+          .to eq "Overturned by ICO<div>some other reason</div>"
+    end
   end
 
   describe "#original_internal_deadline" do
