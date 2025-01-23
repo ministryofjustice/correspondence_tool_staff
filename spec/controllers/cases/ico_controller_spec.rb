@@ -117,6 +117,16 @@ RSpec.describe Cases::ICOController, type: :controller do
             expect(patch(:confirm_respond, params:)).to redirect_to(case_path(approved_ico))
           end
         end
+
+        context "when the ICO is a SAR" do
+          let(:approved_ico) { create :approved_ico_sar_case }
+
+          before { sign_in approver }
+
+          it "redirects to the outcome page" do
+            expect(patch(:confirm_respond, params:)).to redirect_to(record_sar_complaint_outcome_case_ico_path(approved_ico))
+          end
+        end
       end
 
       describe "#update_closure" do

@@ -1,9 +1,13 @@
 require "rails_helper"
 
 describe Case::ICO::BaseDecorator do
-  let(:closed_ico_foi_case)        { (create :closed_ico_foi_case).decorate }
+  let(:closed_ico_foi_case) { (create :closed_ico_foi_case).decorate }
   let(:closed_overturned_foi_case) do
     (create :closed_ico_foi_case,
+            :overturned_by_ico).decorate
+  end
+  let(:closed_overturned_sar_case) do
+    (create :closed_ico_sar_case,
             :overturned_by_ico).decorate
   end
 
@@ -19,16 +23,23 @@ describe Case::ICO::BaseDecorator do
   end
 
   describe "#pretty_ico_decision" do
-    it "returns upheld descrption" do
+    it "returns upheld description" do
       closed_ico_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
       expect(closed_ico_foi_case.pretty_ico_decision)
           .to eq "Upheld by ICO"
     end
 
-    it "returns overturned descrption" do
+    it "returns overturned description" do
       closed_overturned_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
       expect(closed_overturned_foi_case.pretty_ico_decision)
           .to eq "Overturned by ICO"
+    end
+
+    it "returns sar_complaint_outcome when it exists" do
+      closed_overturned_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
+      closed_overturned_sar_case.sar_complaint_outcome = "bau_ico_informed"
+      expect(closed_overturned_sar_case.pretty_ico_decision)
+          .to eq "Overturned by ICO<div>Was originally treated as BAU, the ICO have been informed</div>"
     end
   end
 
