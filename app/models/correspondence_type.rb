@@ -30,7 +30,7 @@ class CorrespondenceType < ApplicationRecord
                  show_on_menu: [:boolean, { default: true }],
                  display_order: [:integer, { default: nil }]
 
-  enum deadline_calculator_class: {
+  enum :deadline_calculator_class, {
     "BusinessDays" => "BusinessDays",
     "CalendarDays" => "CalendarDays",
     "CalendarMonths" => "CalendarMonths",

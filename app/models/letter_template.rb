@@ -20,7 +20,7 @@ class LetterTemplate < ApplicationRecord
   ACKNOWLEDGEMENT_LETTER_TEL_NUM = "01283 496 136".freeze
   COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM = "01283 496 110".freeze
 
-  enum template_type: {
+  enum :template_type, {
     dispatch: "dispatch",
     acknowledgement: "acknowledgement",
   }
