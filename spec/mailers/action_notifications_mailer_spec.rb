@@ -409,7 +409,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
   describe "commissioning_email" do
     let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Subject name") }
-    let(:data_request_area) { create(:data_request_area, offender_sar_case: ) }
+    let(:data_request_area) { create(:data_request_area, offender_sar_case:) }
     let(:commissioning_document) { create(:commissioning_document, data_request_area:) }
     let(:email_address) { "test@test.com" }
     let(:kase_number) { "12345" }
