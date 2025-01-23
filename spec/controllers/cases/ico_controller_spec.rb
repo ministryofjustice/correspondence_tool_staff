@@ -585,7 +585,7 @@ RSpec.describe Cases::ICOController, type: :controller do
         expect(approved_sar_ico.late_team_id).to eq approving_team.id
       end
 
-      it "renders complaint outcome page" do
+      it "redirects to sar complaint outcome page" do
         patch :record_late_team, params: {
           id: approved_sar_ico.id,
           ico: {
@@ -593,7 +593,7 @@ RSpec.describe Cases::ICOController, type: :controller do
           },
         }
 
-        expect(response).to render_template(:record_sar_complaint_outcome)
+        expect(response).to redirect_to(record_sar_complaint_outcome_case_ico_path(approved_sar_ico))
       end
 
       context "without team" do
