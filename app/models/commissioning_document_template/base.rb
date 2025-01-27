@@ -4,8 +4,17 @@ module CommissioningDocumentTemplate
 
     delegate :kase, to: :data_request_area
 
-    def initialize(data_request_area:)
+    def initialize(data_request_area:, start: Date.current)
       @data_request_area = data_request_area.decorate
+      @start = start
+    end
+
+    def deadline_days
+      5
+    end
+
+    def deadline
+      date_format(@start + deadline_days.days)
     end
 
     def path
@@ -30,10 +39,6 @@ module CommissioningDocumentTemplate
 
     def today
       date_format(Date.current)
-    end
-
-    def calculate_deadline(count)
-      date_format(Date.current + count.days)
     end
 
     def date_format(date)

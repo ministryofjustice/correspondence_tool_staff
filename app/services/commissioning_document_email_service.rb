@@ -38,7 +38,7 @@ private
   end
 
   def email_sent
-    commissioning_document.update_attribute(:sent, true) # rubocop:disable Rails/SkipsModelValidations
+    commissioning_document.update_attribute(:sent_at, Time.current) # rubocop:disable Rails/SkipsModelValidations
     data_request_area.kase.state_machine.send_day_1_email!(
       acting_user: current_user,
       acting_team: BusinessUnit.dacu_branston,

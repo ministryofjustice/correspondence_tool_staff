@@ -4,10 +4,6 @@ module CommissioningDocumentTemplate
       :Standard
     end
 
-    def deadline
-      calculate_deadline(5)
-    end
-
     def request_info
       data_request_area.data_requests.map do |request|
         {

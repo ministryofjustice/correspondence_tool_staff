@@ -4,10 +4,6 @@ module CommissioningDocumentTemplate
       :TX
     end
 
-    def deadline
-      calculate_deadline(5)
-    end
-
     def context
       super.merge(
         aliases: kase.subject_aliases,

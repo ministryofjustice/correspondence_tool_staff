@@ -4,8 +4,8 @@ module CommissioningDocumentTemplate
       :MAPPA
     end
 
-    def deadline
-      calculate_deadline(20)
+    def deadline_days
+      20
     end
 
     def context

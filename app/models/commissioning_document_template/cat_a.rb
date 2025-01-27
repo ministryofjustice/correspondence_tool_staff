@@ -4,10 +4,6 @@ module CommissioningDocumentTemplate
       :CATA
     end
 
-    def deadline
-      calculate_deadline(5)
-    end
-
     def context
       super.merge(
         addressee_location: data_request_area.location,

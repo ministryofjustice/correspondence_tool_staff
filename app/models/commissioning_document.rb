@@ -46,7 +46,7 @@ class CommissioningDocument < ApplicationRecord
   validates :data_request, presence: true, if: :has_no_request_area?
   validates :template_name, presence: true
 
-  delegate :deadline, to: :template
+  delegate :deadline, :deadline_days, to: :template
 
   def document
     return unless valid?
@@ -87,7 +87,7 @@ class CommissioningDocument < ApplicationRecord
 private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:, start: sent_at)
   end
 
   def timestamp

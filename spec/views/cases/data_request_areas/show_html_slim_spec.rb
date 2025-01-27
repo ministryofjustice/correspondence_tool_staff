@@ -171,7 +171,6 @@ describe "cases/data_request_areas/show", type: :view do
 
       before do
         create(:data_request_email, data_request_area:, created_at: "2023-07-07 14:53", email_address:)
-        commissioning_document.sent = true
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request_area, data_request_area.decorate)
         assign(:data_request, data_request.decorate)
@@ -207,7 +206,6 @@ describe "cases/data_request_areas/show", type: :view do
 
     context "when commissioning email has not been sent" do
       before do
-        commissioning_document.update!(sent: false)
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request_area, data_request_area.decorate)
         assign(:data_request, data_request.decorate)

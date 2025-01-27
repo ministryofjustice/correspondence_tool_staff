@@ -3,7 +3,7 @@ require "rails_helper"
 module CommissioningDocumentTemplate
   class TestClass < CommissioningDocumentTemplate::Base
     def context
-      super.merge(deadline: calculate_deadline(5))
+      super.merge(deadline: date_format(Date.current + deadline_days.days))
     end
   end
 end
