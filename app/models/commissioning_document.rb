@@ -87,7 +87,8 @@ class CommissioningDocument < ApplicationRecord
 private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:, start: sent_at)
+    start = sent_at || Date.current
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:, start:)
   end
 
   def timestamp
