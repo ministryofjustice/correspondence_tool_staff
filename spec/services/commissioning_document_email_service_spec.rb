@@ -43,9 +43,9 @@ RSpec.describe CommissioningDocumentEmailService do
       )
     end
 
-    it "sets commissioning document as sent" do
+    it "sets commissioning document sent_at date" do
       service.send!
-      expect(commissioning_document.sent).to be_truthy
+      expect(commissioning_document.sent_at).to be_present
     end
 
     it "adds a case history entry" do
