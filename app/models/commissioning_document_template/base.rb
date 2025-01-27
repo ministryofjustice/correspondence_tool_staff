@@ -4,7 +4,7 @@ module CommissioningDocumentTemplate
 
     delegate :kase, to: :data_request_area
 
-    def initialize(data_request_area:, start:)
+    def initialize(data_request_area:, start: Date.current)
       @data_request_area = data_request_area.decorate
       @start = start
     end
