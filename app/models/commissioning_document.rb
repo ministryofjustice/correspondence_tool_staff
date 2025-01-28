@@ -46,6 +46,8 @@ class CommissioningDocument < ApplicationRecord
   validates :data_request, presence: true, if: :has_no_request_area?
   validates :template_name, presence: true
 
+  delegate :deadline, :deadline_days, to: :data_request_area
+
   def document
     return unless valid?
 

@@ -43,6 +43,8 @@ class DataRequestArea < ApplicationRecord
     other_department: "other_department",
   }
 
+  delegate :deadline, :deadline_days, to: :calculator
+
   def kase
     offender_sar_case
   end
@@ -59,6 +61,13 @@ class DataRequestArea < ApplicationRecord
 
   def recipient_emails
     contact&.data_request_emails&.split(" ") || []
+  end
+
+  def calculator
+    @calculator ||= begin
+      calculator = data_request_area_type == "mappa" ? DataRequestCalculator::Mappa : DataRequestCalculator::Standard
+      calculator.new(self, commissioning_document.sent_at || Date.current)
+    end
   end
 
 private
