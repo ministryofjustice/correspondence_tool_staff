@@ -30,7 +30,7 @@ RSpec.describe CommissioningDocumentTemplate::Pdp do
         date: "21/10/2022",
         prison_numbers: "AB12345",
         date_range: "",
-        deadline: nil
+        deadline: nil,
       }
     end
 
