@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Standard do
-  subject(:template) { described_class.new(data_request_area:) }
+  subject(:template) { described_class.new(data_request_area:, deadline:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -27,6 +27,7 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
                   offender_sar_case: kase,
                   data_requests: [data_request])
   end
+  let(:deadline) { Date.new(2022, 10, 26) }
 
   describe "#path" do
     it "matches to a file" do

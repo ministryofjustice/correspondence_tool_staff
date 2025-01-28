@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Pdp do
-  subject(:template) { described_class.new(data_request_area: data_request) }
+  subject(:template) { described_class.new(data_request_area:, deadline:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -11,7 +11,8 @@ RSpec.describe CommissioningDocumentTemplate::Pdp do
                   subject_aliases: "Bad Bob",
                   prison_number: "AB12345")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
+  let(:deadline) { nil }
 
   describe "#path" do
     it "matches to a file" do
@@ -29,6 +30,7 @@ RSpec.describe CommissioningDocumentTemplate::Pdp do
         date: "21/10/2022",
         prison_numbers: "AB12345",
         date_range: "",
+        deadline: nil
       }
     end
 

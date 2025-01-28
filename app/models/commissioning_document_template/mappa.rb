@@ -4,8 +4,8 @@ module CommissioningDocumentTemplate
       :MAPPA
     end
 
-    def deadline_days
-      20
+    def calculator
+      DataRequestCalculator::Mappa.new(@start)
     end
 
     def context
@@ -13,7 +13,6 @@ module CommissioningDocumentTemplate
         aliases: kase.subject_aliases,
         pnc: kase.other_subject_ids,
         date_range: data_request_area.request_dates,
-        deadline:,
       )
     end
   end
