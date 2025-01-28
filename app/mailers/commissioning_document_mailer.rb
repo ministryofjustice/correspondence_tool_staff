@@ -1,4 +1,4 @@
-class DayOneMailer < GovukNotifyRails::Mailer
+class CommissioningDocumentMailer < GovukNotifyRails::Mailer
   after_deliver :set_notify_id
 
   attr_reader :data_request_email
