@@ -43,7 +43,7 @@ class DataRequestArea < ApplicationRecord
     other_department: "other_department",
   }
 
-  delegate :deadline, :deadline_days, to: :calculator
+  delegate :deadline, :deadline_days, :next_chase_date, :next_chase_type, to: :calculator
 
   def kase
     offender_sar_case
