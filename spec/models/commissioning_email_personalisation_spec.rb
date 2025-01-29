@@ -11,7 +11,7 @@ describe CommissioningEmailPersonalisation do
       commissioning_document,
       kase.number,
       email_address,
-      )
+    )
   end
 
   describe "#initialize" do
@@ -29,7 +29,7 @@ describe CommissioningEmailPersonalisation do
                                         email_address: "test@test.com",
                                         deadline_text: "The information is required in Branston no later than #{commissioning_document.deadline}.",
                                         link_to_file: kind_of(Hash),
-                                      )
+                                        )
     end
   end
 end
