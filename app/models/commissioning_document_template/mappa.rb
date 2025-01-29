@@ -4,10 +4,6 @@ module CommissioningDocumentTemplate
       :MAPPA
     end
 
-    def calculator
-      DataRequestCalculator::Mappa.new(@start)
-    end
-
     def context
       super.merge(
         aliases: kase.subject_aliases,
