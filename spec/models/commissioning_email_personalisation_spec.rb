@@ -25,11 +25,11 @@ describe CommissioningEmailPersonalisation do
   describe "#personalise" do
     it "returns a hash with personalisation values" do
       expect(personalisation.personalise).to include(
-                                        email_subject: "Subject Access Request - 250129004 - Day 1 commissioning - Subject name",
-                                        email_address: "test@test.com",
-                                        deadline_text: "The information is required in Branston no later than #{commissioning_document.deadline}.",
-                                        link_to_file: kind_of(Hash),
-                                        )
+        email_subject: "Subject Access Request - 250129004 - Day 1 commissioning - Subject name",
+        email_address: "test@test.com",
+        deadline_text: "The information is required in Branston no later than #{commissioning_document.deadline}.",
+        link_to_file: kind_of(Hash),
+      )
     end
   end
 end
