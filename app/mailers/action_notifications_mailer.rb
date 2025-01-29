@@ -114,20 +114,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     find_template("Commissioning")
     find_reply_to("Commissioning")
 
-    deadline_text = ""
-    if commissioning_document.deadline.present?
-      deadline_text = I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
-    end
-
-    file = StringIO.new(commissioning_document.document)
-
-    subject_name = commissioning_document.data_request_area.offender_sar_case.subject_full_name
-    set_personalisation(
-      email_subject: "Subject Access Request - #{kase_number} - #{commissioning_document.decorate.request_document} - #{subject_name}",
-      email_address: recipient,
-      deadline_text:,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
-    )
+    personalisation = CommissioningEmailPersonalisation.new(commissioning_document, kase_number, recipient).personalise
+    set_personalisation(personalisation)
 
     @data_request_email = DataRequestEmail.find_or_create_by!(
       email_address: recipient,
@@ -170,13 +158,13 @@ private
     when "Message received"
       set_template(Settings.message_received_notify_template)
     when "Commissioning"
-      set_template(Settings.commissioning_notify_template)
+      set_template(Settings.commissioning_notify_template) #TODO this case can be removed and within test?
     when "RPI"
       set_template(Settings.rpi_template)
     end
   end
 
-  def find_reply_to(type)
+  def find_reply_to(type) #TODO whole method can be deleted if new service is created, and within test?
     case type
     when "Commissioning"
       set_email_reply_to(Settings.commissioning_notify_reply_to)
