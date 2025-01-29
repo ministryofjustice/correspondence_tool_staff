@@ -16,7 +16,6 @@ class CommissioningDocumentEmailService
   def send_chase!(type)
     upload_document
     send_chase_emails(type)
-    chase_email_sent(type)
   end
 
 private
