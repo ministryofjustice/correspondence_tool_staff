@@ -25,10 +25,10 @@ module DataRequestCalculator
     def next_chase_date
       return nil if data_request_area.kase.closed?
 
-      if last_email.present? && last_email >= first_chase
-        last_email + CHASE_INTERVAL.days
+      if last_email_date.present? && last_email_date >= first_chase_date
+        last_email_date + CHASE_INTERVAL.days
       else
-        [Date.current, first_chase].max
+        [Date.current, first_chase_date].max
       end
     end
 
@@ -37,7 +37,7 @@ module DataRequestCalculator
 
       if next_chase_date > data_request_area.kase.external_deadline
         OVERDUE_CHASE
-      elsif next_chase_date >= first_escalation
+      elsif next_chase_date >= first_escalation_date
         ESCALATION_CHASE
       else
         STANDARD_CHASE
@@ -46,15 +46,15 @@ module DataRequestCalculator
 
   private
 
-    def first_chase
+    def first_chase_date
       deadline + 1.day
     end
 
-    def first_escalation
-      first_chase + (ESCALATION_AFTER * CHASE_INTERVAL)
+    def first_escalation_date
+      first_chase_date + (ESCALATION_AFTER * CHASE_INTERVAL)
     end
 
-    def last_email
+    def last_email_date
       data_request_area.data_request_emails.maximum(:created_at)&.to_date
     end
   end
