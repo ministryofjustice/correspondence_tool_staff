@@ -14,13 +14,18 @@ class CommissioningDocumentEmailService
   end
 
   def send_chase!(type)
-    upload_document
+    upload_document(replace: true)
     send_chase_emails(type)
   end
 
 private
 
-  def upload_document
+  def upload_document(replace: false)
+    if replace
+      commissioning_document.attachment&.destroy!
+      commissioning_document.reload
+    end
+
     return if commissioning_document.attachment.present?
 
     file = Tempfile.new
