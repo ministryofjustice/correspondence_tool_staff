@@ -18,12 +18,13 @@ RSpec.describe DataRequestArea, type: :model do
     let(:in_progress_with_email) { create(:data_request_area, :in_progress) }
 
     before do
-      in_progress_without_email = create(:data_request_area, :in_progress)
+      # create 3 data requests that shouldn't be returned by method
+      create(:data_request_area, :in_progress)
+      create(:data_request_area, :completed)
       completed_with_email = create(:data_request_area, :completed)
-      completed_without_email = create(:data_request_area, :completed)
 
-      in_progress_with_email.commissioning_document.update(sent_at: Date.current)
-      completed_with_email.commissioning_document.update(sent_at: Date.current)
+      in_progress_with_email.commissioning_document.update!(sent_at: Date.current)
+      completed_with_email.commissioning_document.update!(sent_at: Date.current)
     end
 
     it "returns ids of in progress sent data request areas" do
