@@ -24,7 +24,7 @@ private
   end
 
   def deadline_text
-    return "" unless commissioning_document.deadline.present?
+    return "" if commissioning_document.deadline.blank?
 
     I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
   end
