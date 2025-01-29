@@ -11,8 +11,8 @@ class CommissioningEmailPersonalisation
     {
       email_subject: subject,
       email_address: recipient,
-      deadline_text: deadline_text,
-      link_to_file: link_to_file
+      deadline_text:,
+      link_to_file:,
     }
   end
 

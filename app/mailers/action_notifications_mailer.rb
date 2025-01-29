@@ -158,13 +158,13 @@ private
     when "Message received"
       set_template(Settings.message_received_notify_template)
     when "Commissioning"
-      set_template(Settings.commissioning_notify_template) #TODO this case can be removed and within test?
+      set_template(Settings.commissioning_notify_template)
     when "RPI"
       set_template(Settings.rpi_template)
     end
   end
 
-  def find_reply_to(type) #TODO whole method can be deleted if new service is created, and within test?
+  def find_reply_to(type)
     case type
     when "Commissioning"
       set_email_reply_to(Settings.commissioning_notify_reply_to)
