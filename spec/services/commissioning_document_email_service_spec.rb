@@ -30,7 +30,7 @@ RSpec.describe CommissioningDocumentEmailService do
     end
 
     it "sends an email for every contact email address" do
-      expect(ActionNotificationsMailer).to receive(:commissioning_email).twice.and_return(mailer)
+      expect(CommissioningDocumentMailer).to receive(:commissioning_email).twice.and_return(mailer)
       expect(mailer).to receive(:deliver_later!).twice
       service.send!
     end
