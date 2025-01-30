@@ -14,6 +14,24 @@
 require "rails_helper"
 
 RSpec.describe DataRequestArea, type: :model do
+  describe ".sent_and_in_progress_ids" do
+    let(:in_progress_with_email) { create(:data_request_area, :in_progress) }
+
+    before do
+      # create 3 data requests that shouldn't be returned by method
+      create(:data_request_area, :in_progress)
+      create(:data_request_area, :completed)
+      completed_with_email = create(:data_request_area, :completed)
+
+      in_progress_with_email.commissioning_document.update!(sent_at: Date.current)
+      completed_with_email.commissioning_document.update!(sent_at: Date.current)
+    end
+
+    it "returns ids of in progress sent data request areas" do
+      expect(described_class.sent_and_in_progress_ids).to eq [in_progress_with_email.id]
+    end
+  end
+
   describe "#create" do
     context "with valid params" do
       subject(:data_request_area) do

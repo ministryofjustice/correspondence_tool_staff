@@ -55,4 +55,39 @@ RSpec.describe CommissioningDocumentEmailService do
       expect(transistion.metadata["message"]).to eq "Prison requested from #{contact.name}"
     end
   end
+
+  describe "#send_chase!" do
+    let(:existing_attachment) { create(:commissioning_document_attachment) }
+    let(:chase_type) { :chase_email }
+
+    before do
+      commissioning_document.update!(attachment: existing_attachment)
+    end
+
+    it "removes the existing file from the commissioning document" do
+      expect(existing_attachment).to receive(:destroy!)
+      service.send_chase!(chase_type)
+    end
+
+    it "adds the file to the commissioning document" do
+      service.send_chase!(chase_type)
+      commissioning_document.reload
+      expect(commissioning_document.attachment).to be_present
+      expect(commissioning_document.attachment.id).not_to eq existing_attachment.id
+    end
+
+    it "sends an email for every contact email address" do
+      expect(CommissioningDocumentMailer).to receive(chase_type).twice.and_return(mailer)
+      expect(mailer).to receive(:deliver_later!).twice
+      service.send_chase!(chase_type)
+    end
+
+    it "uses the expected queue" do
+      expect {
+        service.send_chase!(chase_type)
+      }.to(
+        have_enqueued_job.on_queue("correspondence_tool_staff_mailers").at_least(2).times,
+      )
+    end
+  end
 end

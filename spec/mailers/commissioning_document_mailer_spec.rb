@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe DayOneMailer, type: :mailer do
+RSpec.describe CommissioningDocumentMailer, type: :mailer do
   describe "chase_email" do
     let(:kase) { create(:offender_sar_case) }
     let(:commissioning_document) { create(:commissioning_document) }

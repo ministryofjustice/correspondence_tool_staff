@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Mappa do
-  subject(:template) { described_class.new(data_request_area:) }
+  subject(:template) { described_class.new(data_request_area:, deadline:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -19,6 +19,7 @@ RSpec.describe CommissioningDocumentTemplate::Mappa do
                   date_from: Date.new(2024, 9, 1),
                   date_to: Date.new(2024, 9, 10)).decorate
   end
+  let(:deadline) { Date.new(2022, 11, 10) }
 
   let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase, data_request_area_type: "mappa", data_requests: [data_request]) }
 

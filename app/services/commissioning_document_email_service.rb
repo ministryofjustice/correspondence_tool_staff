@@ -13,9 +13,19 @@ class CommissioningDocumentEmailService
     email_sent
   end
 
+  def send_chase!(type)
+    upload_document(replace: true)
+    send_chase_emails(type)
+  end
+
 private
 
-  def upload_document
+  def upload_document(replace: false)
+    if replace
+      commissioning_document.attachment&.destroy!
+      commissioning_document.reload
+    end
+
     return if commissioning_document.attachment.present?
 
     file = Tempfile.new
@@ -44,5 +54,15 @@ private
       acting_team: BusinessUnit.dacu_branston,
       message: I18n.t("helpers.label.data_request_area.data_request_area_type.#{data_request_area.data_request_area_type}") + " requested from #{data_request_area.location}",
     )
+  end
+
+  def send_chase_emails(chase_type)
+    emails = data_request_area.recipient_emails
+    emails.map do |email|
+      CommissioningDocumentMailer.send(chase_type,
+                                       data_request_area.offender_sar_case,
+                                       commissioning_document,
+                                       email).deliver_later! # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
+    end
   end
 end
