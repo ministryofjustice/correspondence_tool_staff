@@ -259,6 +259,9 @@ jobs:
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
 
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
   notify-qa:
     needs: [build, deploy-qa]
     uses: ./.github/workflows/notification.yml
@@ -331,6 +334,9 @@ jobs:
             jobs="${{ vars.ECR_URL }}:$SHA"
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/email-status \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
             jobs="${{ vars.ECR_URL }}:$SHA"
 
   notify-production:
