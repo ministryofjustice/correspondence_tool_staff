@@ -156,14 +156,14 @@ RSpec.describe DataRequestArea, type: :model do
   end
 
   describe "#recipient_emails" do
-    let(:email_1) { "a.smith@email.com" }
-    let(:email_2) { "b.jones@email.com" }
-    let(:email_3) { "c.evans@gmail.com" }
+    let(:email_a) { "a.smith@email.com" }
+    let(:email_b) { "b.jones@email.com" }
+    let(:email_c) { "c.evans@gmail.com" }
 
     let(:contact_without_email) { build(:contact, data_request_emails: nil) }
-    let(:contact_with_one_email) { build(:contact, data_request_emails: email_1) }
-    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_1}\n#{email_2}") }
-    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_1}    #{email_2}") }
+    let(:contact_with_one_email) { build(:contact, data_request_emails: email_a) }
+    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_a}\n#{email_b}") }
+    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_a}    #{email_b}") }
 
     context "when there is a contact with no email" do
       subject(:data_request_area) { build :data_request_area, contact: contact_without_email }
@@ -174,13 +174,13 @@ RSpec.describe DataRequestArea, type: :model do
     context "when there is a contact with one email" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_one_email }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a] }
     end
 
     context "when there is a contact with two emails" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
     end
 
     context "when there is no contact" do
@@ -192,7 +192,53 @@ RSpec.describe DataRequestArea, type: :model do
     context "when there is a contact with two emails, separated by many spaces" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails_including_spaces }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
+    end
+
+    context "when the request is esclated" do
+      context "when not prison request" do
+        subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
+
+        it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
+      end
+
+      context "when prison request" do
+        let(:contact_without_email_and_with_escalation_email) { build(:contact, data_request_emails: nil, escalation_emails: email_a) }
+        let(:contact_without_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: nil) }
+        let(:contact_with_one_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: email_b) }
+        let(:contact_with_two_escalation_emails) { build(:contact, data_request_emails: email_a, escalation_emails: "#{email_b}\n#{email_c}") }
+        let(:contact_with_two_escalation_emails_including_spaces) { build(:contact, data_request_emails: email_a, escalation_emails: " #{email_b}    #{email_c}") }
+
+        context "when contact has no normal email and one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_without_email_and_with_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
+        end
+
+        context "when contact has no escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_without_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
+        end
+
+        context "when contact has one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_one_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b] }
+        end
+
+        context "when contact has two escalation emails" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
+        end
+
+        context "when there is a contact with two escalation emails, separated by many spaces" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails_including_spaces }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
+        end
+      end
     end
   end
 
