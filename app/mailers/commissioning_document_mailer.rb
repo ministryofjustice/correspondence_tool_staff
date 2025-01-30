@@ -8,7 +8,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     set_template(Settings.commissioning_notify_template)
 
     set_personalisation(
-      CommissioningEmailPersonalisation.new(commissioning_document, kase_number, recipient).personalise
+      CommissioningEmailPersonalisation.new(commissioning_document, kase_number, recipient).personalise,
     )
 
     @data_request_email = DataRequestEmail.find_or_create_by!(

@@ -5,36 +5,36 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
 
   let(:kase) do
     create(:offender_sar_case,
-            case_reference_number: "CRN999",
-            subject_full_name: "Robert Badson",
-            date_of_birth: "2000-03-11",
-            prison_number: "AB12345",
-            subject_aliases: "Mr Blobby",
-            other_subject_ids: "XYZ98765")
+           case_reference_number: "CRN999",
+           subject_full_name: "Robert Badson",
+           date_of_birth: "2000-03-11",
+           prison_number: "AB12345",
+           subject_aliases: "Mr Blobby",
+           other_subject_ids: "XYZ98765")
   end
 
   let(:data_request) do
     create(:data_request,
-            request_type: "all_prison_records",
-            request_type_note: "More info",
-            date_from: Date.new(2024, 1, 1),
-            date_to: Date.new(2024, 8, 8))
+           request_type: "all_prison_records",
+           request_type_note: "More info",
+           date_from: Date.new(2024, 1, 1),
+           date_to: Date.new(2024, 8, 8))
   end
 
   let(:completed_data_request) do
     create(:data_request,
-            completed: true,
-            cached_date_received: Date.current,
-            request_type: "security_records",
-            request_type_note: "security info",
-            date_from: Date.new(2024, 1, 1),
-            date_to: Date.new(2024, 8, 8))
+           completed: true,
+           cached_date_received: Date.current,
+           request_type: "security_records",
+           request_type_note: "security info",
+           date_from: Date.new(2024, 1, 1),
+           date_to: Date.new(2024, 8, 8))
   end
 
   let(:data_request_area) do
     create(:data_request_area,
-            offender_sar_case: kase,
-            data_requests: [data_request, completed_data_request])
+           offender_sar_case: kase,
+           data_requests: [data_request, completed_data_request])
   end
   let(:deadline) { Date.new(2022, 10, 26) }
 
@@ -188,10 +188,10 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
     context "with multiple requests" do
       let(:data_request_two) do
         create(:data_request,
-                request_type: "cat_a",
-                request_type_note: "CAT A info",
-                date_from: Date.new(2024, 5, 1),
-                date_to: Date.new(2024, 6, 1))
+               request_type: "cat_a",
+               request_type_note: "CAT A info",
+               date_from: Date.new(2024, 5, 1),
+               date_to: Date.new(2024, 6, 1))
       end
 
       let(:data_request_area) { create(:data_request_area, offender_sar_case: kase, data_requests: [data_request, data_request_two, completed_data_request]) }
@@ -219,10 +219,10 @@ RSpec.describe CommissioningDocumentTemplate::Standard do
     context "with optional values omitted" do
       let(:data_request) do
         create(:data_request,
-                request_type: "all_prison_records",
-                request_type_note: "",
-                date_from: nil,
-                date_to: nil)
+               request_type: "all_prison_records",
+               request_type_note: "",
+               date_from: nil,
+               date_to: nil)
       end
 
       it "handles missing optional values" do
