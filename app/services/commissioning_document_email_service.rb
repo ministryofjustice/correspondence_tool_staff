@@ -39,7 +39,7 @@ private
     emails = data_request_area.recipient_emails
 
     emails.map do |email|
-      ActionNotificationsMailer.commissioning_email(
+      CommissioningDocumentMailer.commissioning_email(
         commissioning_document,
         data_request_area.offender_sar_case.number,
         email,

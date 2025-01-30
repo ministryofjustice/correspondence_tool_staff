@@ -1,9 +1,23 @@
 class CommissioningDocumentMailer < GovukNotifyRails::Mailer
-  after_deliver :set_notify_id
-
   attr_reader :data_request_email
 
   before_action :setup
+  after_deliver :set_notify_id
+
+  def commissioning_email(commissioning_document, kase_number, recipient)
+    set_template(Settings.commissioning_notify_template)
+
+    set_personalisation(
+      CommissioningEmailPersonalisation.new(commissioning_document, kase_number, recipient).personalise
+    )
+
+    @data_request_email = DataRequestEmail.find_or_create_by!(
+      email_address: recipient,
+      data_request_area: commissioning_document.data_request_area,
+    )
+
+    mail(to: recipient)
+  end
 
   def chase_email(kase, commissioning_document, recipient)
     set_template(Settings.commissioning_chase_template)
