@@ -1417,7 +1417,8 @@ CREATE TABLE public.warehouse_case_reports (
     case_originally_rejected character varying,
     other_rejected_reason character varying,
     rejected_reasons json,
-    user_made_valid character varying
+    user_made_valid character varying,
+    cached_num_pages integer
 );
 
 
@@ -2410,6 +2411,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250131102914'),
 ('20241018081532'),
 ('20241018080810'),
 ('20241017140610'),
