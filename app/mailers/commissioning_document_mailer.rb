@@ -19,7 +19,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     mail(to: recipient)
   end
 
-  def chase_email(kase, commissioning_document, recipient)
+  def chase_email(kase, commissioning_document, recipient, chase_number)
     set_template(Settings.commissioning_chase_template)
 
     file = StringIO.new(commissioning_document.document)
@@ -36,12 +36,13 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       email_address: recipient,
       data_request_area: commissioning_document.data_request_area,
       email_type: "chase",
+      chase_number:,
     )
 
     mail(to: recipient)
   end
 
-  def chase_escalation_email(kase, commissioning_document, recipient)
+  def chase_escalation_email(kase, commissioning_document, recipient, chase_number)
     set_template(Settings.commissioning_chase_escalation_template)
 
     file = StringIO.new(commissioning_document.document)
@@ -58,12 +59,13 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       email_address: recipient,
       data_request_area: commissioning_document.data_request_area,
       email_type: "chase_escalation",
+      chase_number:,
     )
 
     mail(to: recipient)
   end
 
-  def chase_overdue_email(kase, commissioning_document, recipient)
+  def chase_overdue_email(kase, commissioning_document, recipient, chase_number)
     set_template(Settings.commissioning_chase_overdue_template)
 
     file = StringIO.new(commissioning_document.document)
@@ -80,6 +82,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       email_address: recipient,
       data_request_area: commissioning_document.data_request_area,
       email_type: "chase_overdue",
+      chase_number:,
     )
 
     mail(to: recipient)

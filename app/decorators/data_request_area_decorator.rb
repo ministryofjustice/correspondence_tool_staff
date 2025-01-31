@@ -41,4 +41,16 @@ class DataRequestAreaDecorator < Draper::Decorator
       "<strong class='govuk-tag govuk-tag--red'>Not started</strong>".html_safe
     end
   end
+
+  def next_chase_description
+    type = {
+      DataRequestChase::ESCALATION_CHASE => "escalated ",
+      DataRequestChase::OVERDUE_CHASE => "overdue ",
+      DataRequestChase::STANDARD_CHASE => "",
+    }[next_chase_type]
+
+    chase_date = I18n.l(next_chase_date.to_date, format: :default)
+
+    "Chase #{next_chase_number} #{type}will be sent on #{chase_date}"
+  end
 end
