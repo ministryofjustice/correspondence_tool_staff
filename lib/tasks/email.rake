@@ -7,13 +7,7 @@ namespace :email do
   end
 
   desc "Send daily data request chase emails"
-<<<<<<< HEAD
   task send_data_request_chase_emails: :environment do
     DataRequestChaseService.call
-=======
-    task send_data_request_chase_emails: :environment do
-      DataRequestChaseService.call
-    end
->>>>>>> 4cfe2ceb (Add cronjob task for sending chase emails)
   end
 end
