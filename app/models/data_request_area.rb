@@ -69,7 +69,7 @@ class DataRequestArea < ApplicationRecord
     if escalated && can_escalate?
       contact_emails.concat(contact_escalation_emails)
     else
-      data_request_emails
+      contact_emails
     end
   end
 

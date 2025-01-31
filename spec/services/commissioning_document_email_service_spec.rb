@@ -9,7 +9,7 @@ RSpec.describe CommissioningDocumentEmailService do
   let(:user) { kase.responder }
   let(:attachment) { create(:commissioning_document_attachment) }
   let(:uploader) { instance_double(S3Uploader, upload_file_to_case: attachment) }
-  let(:mailer) { double ActionNotificationsMailer } # rubocop:disable RSpec/VerifiedDoubles
+  let(:mailer) { double CommissioningDocumentMailer } # rubocop:disable RSpec/VerifiedDoubles
   let(:service) do
     described_class.new(
       data_request_area:,
