@@ -1418,7 +1418,7 @@ CREATE TABLE public.warehouse_case_reports (
     other_rejected_reason character varying,
     rejected_reasons json,
     user_made_valid character varying,
-    cached_num_pages integer
+    pages_received integer
 );
 
 
