@@ -79,6 +79,8 @@
 #  case_originally_rejected                    :string
 #  other_rejected_reason                       :string
 #  rejected_reasons                            :json
+#  user_made_valid                             :string
+#  pages_received                              :integer
 #
 module Warehouse
   class CaseReport < ApplicationRecord
