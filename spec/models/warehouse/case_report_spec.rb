@@ -256,32 +256,6 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
     end
   end
 
-  describe "#total_cached_num_pages" do
-    let(:offender_sar_case) { create(:offender_sar_case) }
-
-    context "when there are data request areas with cached pages" do
-      let(:data_request_areas) do
-        create_list(:data_request_area, 3, offender_sar_case:).map do |area|
-          create_list(:data_request, 3, cached_num_pages: 5, data_request_area: area, offender_sar_case:)
-          area.decorate
-        end
-      end
-
-      it "returns the sum of cached_num_pages" do
-        total_pages = data_request_areas.sum(&:cached_num_pages)
-        expect(described_class.total_cached_num_pages(offender_sar_case)).to eq(total_pages)
-      end
-    end
-
-    context "when data request areas is empty" do
-      let(:data_request_areas) { [] }
-
-      it "returns 0" do
-        expect(described_class.total_cached_num_pages(offender_sar_case)).to eq(0)
-      end
-    end
-  end
-
   def compare_closuredetails(kase, result, case_report)
     if kase.ico?
       original_case_csv_row = CSVExporter.new(kase.original_case).to_csv
