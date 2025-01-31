@@ -83,6 +83,11 @@ class DataRequestArea < ApplicationRecord
   def commissioning_email_sent?
     commissioning_document.sent_at.present?
   end
+
+  def next_chase_number
+    (data_request_emails.maximum(:chase_number) || 0) + 1
+  end
+
 private
 
   def can_escalate?
