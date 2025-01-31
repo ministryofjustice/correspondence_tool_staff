@@ -282,7 +282,6 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
     end
   end
 
-
   def compare_closuredetails(kase, result, case_report)
     if kase.ico?
       original_case_csv_row = CSVExporter.new(kase.original_case).to_csv
