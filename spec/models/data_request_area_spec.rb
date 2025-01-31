@@ -242,6 +242,25 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#commissioning_email_sent?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when commissioning_email sent" do
+      it "returns true" do
+        expect(data_request_area.commissioning_email_sent?).to be true
+      end
+    end
+
+    context "when commissioning_email not sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: Date.current)
+      end
+
+      it "returns false" do
+        expect(data_request_area.commissioning_email_sent?).to be false
+      end
+    end
+  end
   describe "#create_commissioning_document" do
     context "when a new data request area is created" do
       it "creates a standard commissioning document with the correct template" do

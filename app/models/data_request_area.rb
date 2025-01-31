@@ -80,6 +80,9 @@ class DataRequestArea < ApplicationRecord
     end
   end
 
+  def commissioning_email_sent?
+    commissioning_document.sent_at.present?
+  end
 private
 
   def can_escalate?
