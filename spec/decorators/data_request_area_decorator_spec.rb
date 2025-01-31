@@ -118,6 +118,17 @@ describe DataRequestAreaDecorator, type: :model do
         expect(decorated.request_dates).to eq "from 13/12/2022 to 13/12/2022\nfrom 13/12/2023 to 13/12/2023"
       end
     end
+
+    context "with completed data_requests" do
+      before do
+        create(:data_request, data_request_area:, date_from: Date.new(2022, 12, 13), date_to: Date.new(2022, 12, 13))
+        create(:data_request, :completed, data_request_area:, date_from: Date.new(2023, 12, 13), date_to: Date.new(2023, 12, 13))
+      end
+
+      it "only returns in progress data requests dates" do
+        expect(decorated.request_dates).to eq "from 13/12/2022 to 13/12/2022"
+      end
+    end
   end
 
   describe "#request_document" do

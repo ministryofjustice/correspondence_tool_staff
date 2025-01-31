@@ -26,7 +26,7 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def request_dates
-    data_requests.map { |request|
+    data_requests.in_progress.map { |request|
       request.decorate.request_dates
     }.join("\n")
   end

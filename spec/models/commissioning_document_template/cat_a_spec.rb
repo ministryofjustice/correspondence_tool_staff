@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::CatA do
-  subject(:template) { described_class.new(data_request_area:) }
+  subject(:template) { described_class.new(data_request_area:, deadline:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -11,6 +11,7 @@ RSpec.describe CommissioningDocumentTemplate::CatA do
                   prison_number: "AB12345")
   end
   let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
+  let(:deadline) { Date.new(2022, 10, 26) }
 
   describe "#path" do
     it "matches to a file" do
