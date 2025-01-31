@@ -5,10 +5,6 @@ module DataRequestCalculator
     CHASE_INTERVAL = 4
     ESCALATION_AFTER = 2
 
-    STANDARD_CHASE = :chase_email
-    ESCALATION_CHASE = :chase_escalation_email
-    OVERDUE_CHASE = :chase_overdue_email
-
     def initialize(data_request_area, start)
       @data_request_area = data_request_area
       @start = start
@@ -36,11 +32,11 @@ module DataRequestCalculator
       return nil if next_chase_date.nil?
 
       if next_chase_date > data_request_area.kase.external_deadline
-        OVERDUE_CHASE
+        DataRequestChase::OVERDUE_CHASE
       elsif next_chase_date >= first_escalation_date
-        ESCALATION_CHASE
+        DataRequestChase::ESCALATION_CHASE
       else
-        STANDARD_CHASE
+        DataRequestChase::STANDARD_CHASE
       end
     end
 

@@ -5,7 +5,7 @@ module CommissioningDocumentTemplate
     end
 
     def request_info
-      data_request_area.data_requests.map do |request|
+      data_request_area.data_requests.in_progress.map do |request|
         {
           request_type: I18n.t("helpers.label.data_request.request_type.#{request.request_type}"),
           request_type_note: request.request_type_note,
@@ -16,7 +16,7 @@ module CommissioningDocumentTemplate
     end
 
     def requests
-      data_request_area.data_requests.map do |request|
+      data_request_area.data_requests.in_progress.map do |request|
         {
           request_type: I18n.t("helpers.label.data_request.request_type.#{request.request_type}"),
         }
@@ -32,7 +32,7 @@ module CommissioningDocumentTemplate
         "telephone_recordings" => "If you have a transcript, please send this at the same time as the audio calls. If you do not have one we do not require you to create one.\n",
       }
 
-      data_request_area.data_requests.map { |request|
+      data_request_area.data_requests.in_progress.map { |request|
         additional_info[request.request_type] || ""
       }.uniq.join("\n")
     end

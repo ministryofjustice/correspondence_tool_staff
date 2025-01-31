@@ -1,8 +1,4 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
-  after_deliver :set_notify_id
-
-  attr_reader :data_request_email
-
   def new_assignment(assignment, recipient)
     SentryContextProvider.set_context
     @assignment = assignment
@@ -108,23 +104,6 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def commissioning_email(commissioning_document, kase_number, recipient)
-    SentryContextProvider.set_context
-
-    find_template("Commissioning")
-    find_reply_to("Commissioning")
-
-    personalisation = CommissioningEmailPersonalisation.new(commissioning_document, kase_number, recipient).personalise
-    set_personalisation(personalisation)
-
-    @data_request_email = DataRequestEmail.find_or_create_by!(
-      email_address: recipient,
-      data_request_area: commissioning_document.data_request_area,
-    )
-
-    mail(to: recipient)
-  end
-
   def rpi_email(rpi, target)
     SentryContextProvider.set_context
 
@@ -157,24 +136,8 @@ private
       set_template(Settings.case_ready_to_send_notify_template)
     when "Message received"
       set_template(Settings.message_received_notify_template)
-    when "Commissioning"
-      set_template(Settings.commissioning_notify_template)
     when "RPI"
       set_template(Settings.rpi_template)
     end
-  end
-
-  def find_reply_to(type)
-    case type
-    when "Commissioning"
-      set_email_reply_to(Settings.commissioning_notify_reply_to)
-    end
-  end
-
-  def set_notify_id
-    return if message.govuk_notify_response.nil?
-    return if data_request_email.nil?
-
-    data_request_email.update!(notify_id: message.govuk_notify_response.id)
   end
 end

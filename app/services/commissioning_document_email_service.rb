@@ -39,7 +39,7 @@ private
     emails = data_request_area.recipient_emails
 
     emails.map do |email|
-      ActionNotificationsMailer.commissioning_email(
+      CommissioningDocumentMailer.commissioning_email(
         commissioning_document,
         data_request_area.offender_sar_case.number,
         email,
@@ -57,7 +57,9 @@ private
   end
 
   def send_chase_emails(chase_type)
-    emails = data_request_area.recipient_emails
+    is_escalation_email = [DataRequestChase::OVERDUE_CHASE, DataRequestChase::ESCALATION_CHASE].include?(chase_type)
+    emails = data_request_area.recipient_emails(escalated: is_escalation_email)
+
     emails.map do |email|
       CommissioningDocumentMailer.send(chase_type,
                                        data_request_area.offender_sar_case,

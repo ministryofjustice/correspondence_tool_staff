@@ -65,8 +65,12 @@ class DataRequestArea < ApplicationRecord
     data_requests.map(&:status).all?(:completed) ? :completed : :in_progress
   end
 
-  def recipient_emails
-    contact&.data_request_emails&.split(" ") || []
+  def recipient_emails(escalated: false)
+    if escalated && can_escalate?
+      contact_emails.concat(contact_escalation_emails)
+    else
+      contact_emails
+    end
   end
 
   def calculator
@@ -77,6 +81,18 @@ class DataRequestArea < ApplicationRecord
   end
 
 private
+
+  def can_escalate?
+    data_request_area_type == "prison"
+  end
+
+  def contact_escalation_emails
+    contact.escalation_emails&.split(" ") || []
+  end
+
+  def contact_emails
+    contact&.data_request_emails&.split(" ") || []
+  end
 
   def validate_location
     if contact_id.present?
