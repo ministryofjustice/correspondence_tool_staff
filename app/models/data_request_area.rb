@@ -67,7 +67,7 @@ class DataRequestArea < ApplicationRecord
 
   def recipient_emails(escalated: false)
     if escalated && can_escalate?
-      data_request_emails.concat(escalation_emails)
+      contact_emails.concat(contact_escalation_emails)
     else
       data_request_emails
     end
@@ -86,11 +86,11 @@ private
     data_request_area_type == "prison"
   end
 
-  def escalation_emails
+  def contact_escalation_emails
     contact.escalation_emails&.split(" ") || []
   end
 
-  def data_request_emails
+  def contact_emails
     contact&.data_request_emails&.split(" ") || []
   end
 
