@@ -12,7 +12,7 @@ describe DataRequestEmailDecorator, type: :model do
       let(:data_request_email) { create(:data_request_email, email_type: :chase_escalation, chase_number: 8).decorate }
 
       it "includes the chase number" do
-         expect(data_request_email.email_type).to eq "Chase 8 escalated - Automated email"
+        expect(data_request_email.email_type).to eq "Chase 8 escalated - Automated email"
       end
     end
   end
