@@ -63,7 +63,7 @@ div class="case"
               th = t('cases.commissioning_documents.email_history_table_headings.date_sent')
               th = t('cases.commissioning_documents.email_history_table_headings.status')
           tbody.email_details
-            - @data_request_area.data_request_emails.map(&:decorate).each do |email|
+            - @sent_emails.each do |email|
               tr
                 td = email.email_type
                 td = email.email_address
