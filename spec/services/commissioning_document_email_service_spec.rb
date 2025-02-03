@@ -98,7 +98,7 @@ RSpec.describe CommissioningDocumentEmailService do
           email_address: "user@prison.gov.uk",
           data_request_area:,
           email_type: "chase",
-          )
+        )
 
         service.send_chase!(chase_type)
 
