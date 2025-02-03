@@ -91,6 +91,21 @@ RSpec.describe CommissioningDocumentEmailService do
           have_enqueued_job.on_queue("correspondence_tool_staff_mailers").at_least(2).times,
         )
       end
+
+      it "adds a case history entry" do
+        # email object needs to be created because we use a mocked mailer
+        email = DataRequestEmail.create!(
+          email_address: "user@prison.gov.uk",
+          data_request_area:,
+          email_type: "chase",
+          )
+
+        service.send_chase!(chase_type)
+
+        transistion = kase.transitions.last
+        expect(transistion.event).to eq "send_chase_email"
+        expect(transistion.metadata["message"]).to eq email.decorate.email_type
+      end
     end
 
     describe "when escalation chase" do

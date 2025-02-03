@@ -12,6 +12,7 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 start_complaint:
@@ -23,6 +24,7 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -35,6 +37,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -55,6 +58,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -72,6 +76,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -89,6 +94,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
+                send_chase_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -105,6 +111,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_day_1_email:
+                send_chase_email:
                 send_dispatch_letter:
                 preview_cover_page:
                 edit_case:
