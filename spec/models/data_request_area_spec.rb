@@ -266,7 +266,6 @@ RSpec.describe DataRequestArea, type: :model do
     let(:data_request_area) { create(:data_request_area) }
 
     context "when no chases have been sent" do
-
       it "returns 0" do
         expect(data_request_area.next_chase_number).to eq 1
       end
