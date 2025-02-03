@@ -64,7 +64,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     let(:kase) { create(:offender_sar_case) }
     let(:commissioning_document) { create(:commissioning_document) }
     let(:email_address) { "test@test.com" }
-    let(:mail) { described_class.chase_email(kase, commissioning_document, email_address) }
+    let(:mail) { described_class.chase_email(kase, commissioning_document, email_address, 1) }
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -90,7 +90,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
 
     context "when email is retried" do
       it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase")
+        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase", chase_number: 1)
 
         expect {
           mail.deliver
@@ -122,7 +122,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     let(:kase) { create(:offender_sar_case) }
     let(:commissioning_document) { create(:commissioning_document) }
     let(:email_address) { "test@test.com" }
-    let(:mail) { described_class.chase_escalation_email(kase, commissioning_document, email_address) }
+    let(:mail) { described_class.chase_escalation_email(kase, commissioning_document, email_address, 1) }
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -148,7 +148,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
 
     context "when email is retried" do
       it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_escalation")
+        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_escalation", chase_number: 1)
 
         expect {
           mail.deliver
@@ -161,7 +161,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     let(:kase) { create(:offender_sar_case) }
     let(:commissioning_document) { create(:commissioning_document) }
     let(:email_address) { "test@test.com" }
-    let(:mail) { described_class.chase_overdue_email(kase, commissioning_document, email_address) }
+    let(:mail) { described_class.chase_overdue_email(kase, commissioning_document, email_address, 1) }
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -187,7 +187,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
 
     context "when email is retried" do
       it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_overdue")
+        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_overdue", chase_number: 1)
 
         expect {
           mail.deliver

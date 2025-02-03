@@ -49,6 +49,7 @@ describe "cases/data_request_areas/show", type: :view do
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
         assign(:commissioning_document, data_request_area.commissioning_document.decorate)
+        assign(:sent_emails, [])
 
         render
         data_request_area_show_page.load(rendered)
@@ -170,14 +171,18 @@ describe "cases/data_request_areas/show", type: :view do
       let(:email_address) { "user@prison.gov.uk" }
 
       before do
-        create(:data_request_email, data_request_area:, created_at: "2023-07-07 14:53", email_address:)
-        assign(:commissioning_document, commissioning_document.decorate)
-        assign(:data_request_area, data_request_area.decorate)
-        assign(:data_request, data_request.decorate)
-        assign(:case, data_request_area.kase)
+        Timecop.freeze(Time.zone.local(2023, 7, 15)) do
+          commissioning_document.update!(sent_at: Date.new(2023, 7, 7))
+          create(:data_request_email, data_request_area:, created_at: "2023-07-07 14:53", email_address:)
+          assign(:commissioning_document, commissioning_document.decorate)
+          assign(:data_request_area, data_request_area.decorate)
+          assign(:data_request, data_request.decorate)
+          assign(:case, data_request_area.kase)
+          assign(:sent_emails, data_request_area.data_request_emails.order(created_at: :desc).map(&:decorate))
 
-        render
-        data_request_area_show_page.load(rendered)
+          render
+          data_request_area_show_page.load(rendered)
+        end
       end
 
       it "displays Download link" do
@@ -201,6 +206,12 @@ describe "cases/data_request_areas/show", type: :view do
         expect(page.commissioning_document.email_row.email_address.text).to eq email_address
         expect(page.commissioning_document.email_row.created_at.text).to eq "7 Jul 2023 14:53"
         expect(page.commissioning_document.email_row.status.text).to eq "Created"
+      end
+
+      it "displays next chase date" do
+        Timecop.freeze(Time.zone.local(2023, 7, 15)) do
+          expect(page.commissioning_document.next_chase_description.text).to eq "Chase 1 will be sent on 15 Jul 2023"
+        end
       end
     end
 

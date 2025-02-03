@@ -242,6 +242,52 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#commissioning_email_sent?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when commissioning_email sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: Date.current)
+      end
+
+      it "returns true" do
+        expect(data_request_area.commissioning_email_sent?).to be true
+      end
+    end
+
+    context "when commissioning_email not sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: nil)
+      end
+
+      it "returns false" do
+        expect(data_request_area.commissioning_email_sent?).to be false
+      end
+    end
+  end
+
+  describe "#next_chase_number" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when no chases have been sent" do
+      it "returns 0" do
+        expect(data_request_area.next_chase_number).to eq 1
+      end
+    end
+
+    context "when chase process has already started" do
+      let(:last_chase) { 1 }
+
+      before do
+        create(:data_request_email, data_request_area:, email_type: "chase", chase_number: last_chase)
+      end
+
+      it "increments current chase number" do
+        expect(data_request_area.next_chase_number).to eq last_chase + 1
+      end
+    end
+  end
+
   describe "#create_commissioning_document" do
     context "when a new data request area is created" do
       it "creates a standard commissioning document with the correct template" do

@@ -71,6 +71,17 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
       expect(assigns(:data_request_area).data_request_area_type).to eq "prison"
     end
 
+    context "with emails" do
+      let!(:day_one_email) { create :data_request_email, created_at: Date.current - 6.days, data_request_area: }
+      let!(:chase_email) { create :data_request_email, email_type: "chase", data_request_area: }
+
+      it "loads the decorated sent emails in reverse order" do
+        get(:show, params:)
+
+        expect(assigns(:sent_emails)).to eq [chase_email.decorate, day_one_email.decorate]
+      end
+    end
+
     context "when closed case" do
       let(:data_request_area) do
         create(

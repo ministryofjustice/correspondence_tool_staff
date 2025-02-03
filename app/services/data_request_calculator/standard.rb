@@ -47,7 +47,7 @@ module DataRequestCalculator
     end
 
     def first_escalation_date
-      first_chase_date + (ESCALATION_AFTER * CHASE_INTERVAL)
+      first_chase_date + (ESCALATION_AFTER * CHASE_INTERVAL).days
     end
 
     def last_email_date
