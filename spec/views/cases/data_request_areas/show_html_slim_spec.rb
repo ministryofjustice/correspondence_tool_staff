@@ -177,10 +177,10 @@ describe "cases/data_request_areas/show", type: :view do
           assign(:data_request_area, data_request_area.decorate)
           assign(:data_request, data_request.decorate)
           assign(:case, data_request_area.kase)
-        end
 
-        render
-        data_request_area_show_page.load(rendered)
+          render
+          data_request_area_show_page.load(rendered)
+        end
       end
 
       it "displays Download link" do
