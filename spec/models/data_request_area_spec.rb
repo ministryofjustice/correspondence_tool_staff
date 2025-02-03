@@ -246,6 +246,10 @@ RSpec.describe DataRequestArea, type: :model do
     let(:data_request_area) { create(:data_request_area) }
 
     context "when commissioning_email sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: Date.current)
+      end
+
       it "returns true" do
         expect(data_request_area.commissioning_email_sent?).to be true
       end
@@ -253,7 +257,7 @@ RSpec.describe DataRequestArea, type: :model do
 
     context "when commissioning_email not sent" do
       before do
-        data_request_area.commissioning_document.update(sent_at: Date.current)
+        data_request_area.commissioning_document.update(sent_at: nil)
       end
 
       it "returns false" do
