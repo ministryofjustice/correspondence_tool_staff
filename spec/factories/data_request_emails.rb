@@ -17,9 +17,17 @@ FactoryBot.define do
   factory :data_request_email do
     association :data_request_area
     email_address { "test@user.com" }
+
+    trait :chase do
+      email_type { "chase" }
+      chase_number { 1 }
+    end
+
+    factory :data_request_chase_email, traits: [:chase]
   end
 
   trait :sent_to_notify do
     notify_id { "35daaa7a-2859-4c39-a5f2-bfdb17a053f4" }
   end
+
 end

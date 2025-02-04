@@ -94,11 +94,7 @@ RSpec.describe CommissioningDocumentEmailService do
 
       it "adds a case history entry" do
         # email object needs to be created because we use a mocked mailer
-        email = DataRequestEmail.create!(
-          email_address: "user@prison.gov.uk",
-          data_request_area:,
-          email_type: "chase",
-        )
+        email = create(:data_request_chase_email, data_request_area:)
 
         service.send_chase!(chase_type)
 

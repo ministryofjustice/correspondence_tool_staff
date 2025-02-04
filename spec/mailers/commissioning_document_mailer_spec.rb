@@ -90,7 +90,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
 
     context "when email is retried" do
       it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase", chase_number: 1)
+        create(:data_request_chase_email, email_address:, data_request_area: commissioning_document.data_request_area)
 
         expect {
           mail.deliver
@@ -187,7 +187,7 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
 
     context "when email is retried" do
       it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_overdue", chase_number: 1)
+        create(:data_request_chase_email, email_address:, data_request_area: commissioning_document.data_request_area, email_type: "chase_overdue")
 
         expect {
           mail.deliver

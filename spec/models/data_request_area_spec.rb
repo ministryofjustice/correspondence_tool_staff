@@ -279,7 +279,7 @@ RSpec.describe DataRequestArea, type: :model do
       let(:last_chase) { 1 }
 
       before do
-        create(:data_request_email, data_request_area:, email_type: "chase", chase_number: last_chase)
+        create(:data_request_chase_email, data_request_area:, chase_number: last_chase)
       end
 
       it "increments current chase number" do
@@ -316,10 +316,10 @@ RSpec.describe DataRequestArea, type: :model do
     end
 
     context "when multiple chase emails" do
-      let!(:chase_email) { create(:data_request_email, data_request_area:, email_type: "chase", chase_number: 2) }
+      let!(:chase_email) { create(:data_request_chase_email, data_request_area:, chase_number: 2) }
 
       before do
-        create(:data_request_email, data_request_area:, email_type: "chase", chase_number: 1)
+        create(:data_request_chase_email, data_request_area:)
       end
 
       it "returns expected chase email" do
