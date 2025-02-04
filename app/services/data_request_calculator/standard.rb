@@ -7,7 +7,7 @@ module DataRequestCalculator
 
     def initialize(data_request_area, start)
       @data_request_area = data_request_area
-      @start = start
+      @start = start.to_date
     end
 
     def deadline_days
