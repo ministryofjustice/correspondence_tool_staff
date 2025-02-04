@@ -29,5 +29,4 @@ FactoryBot.define do
   trait :sent_to_notify do
     notify_id { "35daaa7a-2859-4c39-a5f2-bfdb17a053f4" }
   end
-
 end
