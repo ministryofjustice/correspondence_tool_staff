@@ -5,7 +5,7 @@ describe DataRequestCalculator::Standard do
 
   let(:kase) { create(:offender_sar_case) }
   let(:data_request_area) { create(:data_request_area, offender_sar_case: kase) }
-  let(:start) { Date.new(2025, 1, 20) }
+  let(:start) { Time.zone.local(2025, 1, 20, 12, 0, 0) }
   let(:chase_one) { start + 6.days }
   let(:after_chase_one) { chase_one + 1.day }
   let(:chase_two) { start + 10.days }
@@ -33,7 +33,11 @@ describe DataRequestCalculator::Standard do
 
   describe "#deadline" do
     it "is 5 days after the start date" do
-      expect(calculator.deadline).to eq start + 5.days
+      expect(calculator.deadline).to eq (start + 5.days).to_date
+    end
+
+    it "is a date" do
+      expect(calculator.deadline).to be_a_kind_of(Date)
     end
   end
 
@@ -51,7 +55,7 @@ describe DataRequestCalculator::Standard do
     context "when before first chase" do
       it "returns day after deadline" do
         Timecop.freeze(start) do
-          expect(calculator.next_chase_date).to eq chase_one
+          expect(calculator.next_chase_date).to eq chase_one.to_date
         end
       end
     end
@@ -73,7 +77,7 @@ describe DataRequestCalculator::Standard do
 
       it "returns 4 days after previous chase sent" do
         Timecop.freeze(after_chase_one) do
-          expect(calculator.next_chase_date).to eq last_chase_email + 4.days
+          expect(calculator.next_chase_date).to eq (last_chase_email + 4.days).to_date
         end
       end
     end
