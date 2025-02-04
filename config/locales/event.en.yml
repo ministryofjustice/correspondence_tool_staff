@@ -17,6 +17,7 @@ en:
     create: Case created
     date_sent_to_sscl_removed: SSCL date sent removed
     send_day_1_email: Day 1 commissioning email sent
+    send_chase_email: Chase email sent
     destroy_case: Case deleted
     destroy: Destroyed
     edit_case: Case details edited

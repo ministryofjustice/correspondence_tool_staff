@@ -11,6 +11,7 @@
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  data_request_area_id :bigint
+#  chase_number         :integer
 #
 class DataRequestEmail < ApplicationRecord
   belongs_to :data_request

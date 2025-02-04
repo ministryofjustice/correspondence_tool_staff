@@ -279,11 +279,51 @@ RSpec.describe DataRequestArea, type: :model do
       let(:last_chase) { 1 }
 
       before do
-        create(:data_request_email, data_request_area:, email_type: "chase", chase_number: last_chase)
+        create(:data_request_chase_email, data_request_area:, chase_number: last_chase)
       end
 
       it "increments current chase number" do
         expect(data_request_area.next_chase_number).to eq last_chase + 1
+      end
+    end
+  end
+
+  describe "#chase_due?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when next chase is today" do
+      it "returns true" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Time.current)
+        expect(data_request_area.chase_due?).to be true
+      end
+    end
+
+    context "when next chase is not today" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Date.current + 1.day)
+        expect(data_request_area.chase_due?).to be false
+      end
+    end
+  end
+
+  describe "#last_chase_email" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when no chase emails" do
+      it "returns nil" do
+        expect(data_request_area.last_chase_email).to be_nil
+      end
+    end
+
+    context "when multiple chase emails" do
+      let!(:chase_email) { create(:data_request_chase_email, data_request_area:, chase_number: 2) }
+
+      before do
+        create(:data_request_chase_email, data_request_area:)
+      end
+
+      it "returns expected chase email" do
+        expect(data_request_area.last_chase_email).to eq chase_email
       end
     end
   end
