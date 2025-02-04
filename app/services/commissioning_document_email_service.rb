@@ -71,7 +71,7 @@ private
   end
 
   def chase_email_sent
-    email = data_request_area.data_request_emails.last
+    email = data_request_area.last_chase_email
 
     data_request_area.kase.state_machine.send_chase_email!(
       acting_user: User.system_admin,

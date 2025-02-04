@@ -85,14 +85,22 @@ class DataRequestArea < ApplicationRecord
   end
 
   def next_chase_number
-    (data_request_emails.maximum(:chase_number) || 0) + 1
+    last_chase_number + 1
   end
 
   def chase_due?
     next_chase_date.to_date == Date.current
   end
 
+  def last_chase_email
+    data_request_emails.where(chase_number: last_chase_number).last
+  end
+
 private
+
+  def last_chase_number
+    data_request_emails.maximum(:chase_number) || 0
+  end
 
   def can_escalate?
     data_request_area_type == "prison"

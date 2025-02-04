@@ -306,6 +306,28 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#last_chase_email" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when no chase emails" do
+      it "returns nil" do
+        expect(data_request_area.last_chase_email).to be_nil
+      end
+    end
+
+    context "when multiple chase emails" do
+      let!(:chase_email) { create(:data_request_email, data_request_area:, email_type: "chase", chase_number: 2) }
+
+      before do
+        create(:data_request_email, data_request_area:, email_type: "chase", chase_number: 1)
+      end
+
+      it "returns expected chase email" do
+        expect(data_request_area.last_chase_email).to eq chase_email
+      end
+    end
+  end
+
   describe "#create_commissioning_document" do
     context "when a new data request area is created" do
       it "creates a standard commissioning document with the correct template" do
