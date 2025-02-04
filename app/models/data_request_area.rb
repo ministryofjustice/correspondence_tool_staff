@@ -88,6 +88,10 @@ class DataRequestArea < ApplicationRecord
     (data_request_emails.maximum(:chase_number) || 0) + 1
   end
 
+  def chase_due?
+    next_chase_date.to_date == Date.current
+  end
+
 private
 
   def can_escalate?

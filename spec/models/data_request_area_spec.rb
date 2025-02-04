@@ -288,6 +288,24 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#chase_due?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when next chase is today" do
+      it "returns true" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Time.current)
+        expect(data_request_area.chase_due?).to be true
+      end
+    end
+
+    context "when next chase is not today" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Date.current + 1.day)
+        expect(data_request_area.chase_due?).to be false
+      end
+    end
+  end
+
   describe "#create_commissioning_document" do
     context "when a new data request area is created" do
       it "creates a standard commissioning document with the correct template" do
