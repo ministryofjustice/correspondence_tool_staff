@@ -155,6 +155,68 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#in_progress?" do
+    let(:data_request_area) { create(:data_request_area) }
+    let(:in_progress_data_request) { create(:data_request)}
+    let(:completed_data_request) { create(:data_request, :completed)}
+
+    context "when case is open" do
+      context "with no data requests" do
+        before do
+          data_request_area.data_requests.delete_all
+        end
+
+        it "is false" do
+          expect(data_request_area).not_to be_in_progress
+        end
+      end
+
+      context "with only in progress data request" do
+        before do
+          data_request_area.data_requests << in_progress_data_request
+        end
+
+        it "is true" do
+          expect(data_request_area).to be_in_progress
+        end
+      end
+
+      context "with only completed data request" do
+        before do
+          data_request_area.data_requests << completed_data_request
+        end
+
+        it "is false" do
+          expect(data_request_area).not_to be_in_progress
+        end
+      end
+
+      context "with in progress and completed data requests" do
+        before do
+          data_request_area.data_requests << completed_data_request
+          data_request_area.data_requests << in_progress_data_request
+        end
+
+        it "is true" do
+          expect(data_request_area).to be_in_progress
+        end
+      end
+    end
+
+    context "when case is closed" do
+      before do
+        closed_case = create(:offender_sar_case, :closed)
+        data_request_area.update!(offender_sar_case: closed_case)
+        data_request_area.data_requests << in_progress_data_request
+        data_request_area.data_requests << completed_data_request
+      end
+
+      it "is false" do
+        expect(data_request_area).not_to be_in_progress
+      end
+    end
+  end
+
   describe "#recipient_emails" do
     let(:email_a) { "a.smith@email.com" }
     let(:email_b) { "b.jones@email.com" }

@@ -27,6 +27,8 @@ describe "cases/data_request_areas/show", type: :view do
       )
     end
 
+    let(:in_progress_data_request) { create(:data_request)}
+
     let(:page) { data_request_area_show_page }
 
     let(:policy) do
@@ -45,7 +47,7 @@ describe "cases/data_request_areas/show", type: :view do
 
     context "when Offender SAR Case data request area has a data request" do
       before do
-        assign(:data_request, data_request)
+        data_request_area.data_requests << data_request
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
         assign(:commissioning_document, data_request_area.commissioning_document.decorate)
@@ -93,7 +95,7 @@ describe "cases/data_request_areas/show", type: :view do
       let(:can_send_day_1_email) { false }
 
       before do
-        assign(:data_request, data_request)
+        data_request_area.data_requests << in_progress_data_request
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
         assign(:commissioning_document, data_request_area.commissioning_document.decorate)
@@ -146,7 +148,7 @@ describe "cases/data_request_areas/show", type: :view do
       end
 
       before do
-        assign(:data_request, data_request)
+        data_request_area.data_requests << data_request
         assign(:data_request_area, data_request_area.decorate)
         assign(:case, data_request_area.kase)
 
@@ -169,14 +171,15 @@ describe "cases/data_request_areas/show", type: :view do
 
     context "when commissioning email has been sent" do
       let(:email_address) { "user@prison.gov.uk" }
+      let(:current_data_request) { in_progress_data_request }
 
       before do
         Timecop.freeze(Time.zone.local(2023, 7, 15)) do
+          data_request_area.data_requests << current_data_request
           commissioning_document.update!(sent_at: Date.new(2023, 7, 7))
           create(:data_request_email, data_request_area:, created_at: "2023-07-07 14:53", email_address:)
           assign(:commissioning_document, commissioning_document.decorate)
           assign(:data_request_area, data_request_area.decorate)
-          assign(:data_request, data_request.decorate)
           assign(:case, data_request_area.kase)
           assign(:sent_emails, data_request_area.data_request_emails.order(created_at: :desc).map(&:decorate))
 
@@ -213,10 +216,19 @@ describe "cases/data_request_areas/show", type: :view do
           expect(page.commissioning_document.next_chase_description.text).to eq "Chase 1 will be sent on 15 Jul 2023"
         end
       end
+
+      context "when data requests are complete" do
+        let(:current_data_request) { data_request }
+
+        it "does not display next chase date" do
+          expect { page.commissioning_document.next_chase_description }.to raise_error(Capybara::ElementNotFound)
+        end
+      end
     end
 
     context "when commissioning email has not been sent" do
       before do
+        data_request_area.data_requests << in_progress_data_request
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request_area, data_request_area.decorate)
         assign(:data_request, data_request.decorate)

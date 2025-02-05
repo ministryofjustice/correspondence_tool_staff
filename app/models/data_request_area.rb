@@ -55,14 +55,14 @@ class DataRequestArea < ApplicationRecord
     offender_sar_case
   end
 
-  def completed?
-    status == :completed
-  end
-
   def status
     return :not_started unless data_requests.exists?
 
     data_requests.map(&:status).all?(:completed) ? :completed : :in_progress
+  end
+
+  def in_progress?
+    status == :in_progress && !kase.closed?
   end
 
   def recipient_emails(escalated: false)
