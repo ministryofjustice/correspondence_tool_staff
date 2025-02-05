@@ -76,7 +76,7 @@ private
     data_request_area.kase.state_machine.send_chase_email!(
       acting_user: User.system_admin,
       acting_team: BusinessUnit.dacu_branston,
-      message: email&.decorate&.email_type,
+      message: email&.decorate&.email_type_with_area,
     )
   end
 end

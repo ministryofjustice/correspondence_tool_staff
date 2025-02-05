@@ -100,7 +100,7 @@ RSpec.describe CommissioningDocumentEmailService do
 
         transistion = kase.transitions.last
         expect(transistion.event).to eq "send_chase_email"
-        expect(transistion.metadata["message"]).to eq email.decorate.email_type
+        expect(transistion.metadata["message"]).to eq email.decorate.email_type_with_area
       end
     end
 
