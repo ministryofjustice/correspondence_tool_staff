@@ -157,8 +157,8 @@ RSpec.describe DataRequestArea, type: :model do
 
   describe "#in_progress?" do
     let(:data_request_area) { create(:data_request_area) }
-    let(:in_progress_data_request) { create(:data_request)}
-    let(:completed_data_request) { create(:data_request, :completed)}
+    let(:in_progress_data_request) { create(:data_request) }
+    let(:completed_data_request) { create(:data_request, :completed) }
 
     context "when case is open" do
       context "with no data requests" do

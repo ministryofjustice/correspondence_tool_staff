@@ -27,7 +27,7 @@ describe "cases/data_request_areas/show", type: :view do
       )
     end
 
-    let(:in_progress_data_request) { create(:data_request)}
+    let(:in_progress_data_request) { create(:data_request) }
 
     let(:page) { data_request_area_show_page }
 
