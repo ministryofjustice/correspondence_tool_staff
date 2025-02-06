@@ -71,12 +71,12 @@ private
   end
 
   def chase_email_sent
-    email = data_request_area.last_chase_email
+    email = data_request_area.reload.last_chase_email
 
     data_request_area.kase.state_machine.send_chase_email!(
       acting_user: User.system_admin,
       acting_team: BusinessUnit.dacu_branston,
-      message: email&.decorate&.email_type_with_area,
+      message: email.decorate.email_type_with_area,
     )
   end
 end
