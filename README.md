@@ -72,6 +72,12 @@ Postgresql
 $ brew install postgresql
 ```
 
+Redis
+```
+$ brew install redis
+```
+
+
 #### Setup
 
 Use the following commands to install gems and javascript packages then create the database
@@ -105,6 +111,12 @@ $ bin/dev
 The site will be accessible at http://localhost:3000.
 You can login using one of the users created during the seeding process such as:
 `correspondence-staff-dev+brian.rix@digital.justice.gov.uk` or `correspondence-staff-dev+david.attenborough@digital.justice.gov.uk` with the password set as `DEV_PASSWORD`
+
+If you have any issues when running background jobs, start by checking that redis and postgresql are running with the below command:
+
+```
+$ brew services
+```
 
 ### Sidekiq
 
