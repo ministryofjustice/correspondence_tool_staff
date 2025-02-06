@@ -16,7 +16,9 @@ class CommissioningDocumentEmailService
   def send_chase!(chase_type)
     upload_document(replace: true)
     send_chase_emails(chase_type)
-    chase_email_sent
+    if email = data_request_area.reload.last_chase_email # rubocop:disable Lint/AssignmentInCondition
+      chase_email_sent(email)
+    end
   end
 
 private
@@ -70,9 +72,7 @@ private
     )
   end
 
-  def chase_email_sent
-    email = data_request_area.reload.last_chase_email
-
+  def chase_email_sent(email)
     data_request_area.kase.state_machine.send_chase_email!(
       acting_user: User.system_admin,
       acting_team: BusinessUnit.dacu_branston,
