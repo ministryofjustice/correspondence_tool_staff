@@ -93,14 +93,11 @@ RSpec.describe CommissioningDocumentEmailService do
       end
 
       it "adds a case history entry" do
-        # email object needs to be created because we use a mocked mailer
-        email = create(:data_request_chase_email, data_request_area:)
-
         service.send_chase!(chase_type)
 
         transistion = kase.transitions.last
         expect(transistion.event).to eq "send_chase_email"
-        expect(transistion.metadata["message"]).to eq email.decorate.email_type_with_area
+        expect(transistion.metadata["message"]).to eq "Prison requested from #{contact.name}"
       end
     end
 
