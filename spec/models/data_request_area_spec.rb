@@ -226,6 +226,7 @@ RSpec.describe DataRequestArea, type: :model do
     let(:contact_with_one_email) { build(:contact, data_request_emails: email_a) }
     let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_a}\n#{email_b}") }
     let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_a}    #{email_b}") }
+    let(:contact_with_two_emails_and_escalation_email) { build(:contact, data_request_emails: "#{email_a}\n#{email_b}", escalation_emails: email_c) }
 
     context "when there is a contact with no email" do
       subject(:data_request_area) { build :data_request_area, contact: contact_without_email }
@@ -257,46 +258,46 @@ RSpec.describe DataRequestArea, type: :model do
       it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
     end
 
-    context "when the request is esclated" do
-      context "when not prison request" do
-        subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
+    context "when the request is escalated" do
+      context "when request not for prison" do
+        subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails_and_escalation_email }
 
-        it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
+        it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b] }
       end
 
-      context "when prison request" do
-        let(:contact_without_email_and_with_escalation_email) { build(:contact, data_request_emails: nil, escalation_emails: email_a) }
-        let(:contact_without_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: nil) }
-        let(:contact_with_one_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: email_b) }
-        let(:contact_with_two_escalation_emails) { build(:contact, data_request_emails: email_a, escalation_emails: "#{email_b}\n#{email_c}") }
-        let(:contact_with_two_escalation_emails_including_spaces) { build(:contact, data_request_emails: email_a, escalation_emails: " #{email_b}    #{email_c}") }
+      context "when request for prison" do
+        let(:prison_without_email_and_with_escalation_email) { build(:prison, data_request_emails: nil, escalation_emails: email_a) }
+        let(:prison_without_escalation_email) { build(:prison, data_request_emails: email_a, escalation_emails: nil) }
+        let(:prison_with_one_escalation_email) { build(:prison, data_request_emails: email_a, escalation_emails: email_b) }
+        let(:prison_with_two_escalation_emails) { build(:prison, data_request_emails: email_a, escalation_emails: "#{email_b}\n#{email_c}") }
+        let(:prison_with_two_escalation_emails_including_spaces) { build(:prison, data_request_emails: email_a, escalation_emails: " #{email_b}    #{email_c}") }
 
-        context "when contact has no normal email and one escalation email" do
-          subject(:data_request_area) { build :data_request_area, contact: contact_without_email_and_with_escalation_email }
-
-          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
-        end
-
-        context "when contact has no escalation email" do
-          subject(:data_request_area) { build :data_request_area, contact: contact_without_escalation_email }
+        context "when prison has no normal email and one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: prison_without_email_and_with_escalation_email }
 
           it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
         end
 
-        context "when contact has one escalation email" do
-          subject(:data_request_area) { build :data_request_area, contact: contact_with_one_escalation_email }
+        context "when prison has no escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: prison_without_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
+        end
+
+        context "when prison has one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: prison_with_one_escalation_email }
 
           it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b] }
         end
 
-        context "when contact has two escalation emails" do
-          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails }
+        context "when prison has two escalation emails" do
+          subject(:data_request_area) { build :data_request_area, contact: prison_with_two_escalation_emails }
 
           it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
         end
 
-        context "when there is a contact with two escalation emails, separated by many spaces" do
-          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails_including_spaces }
+        context "when there is a prison with two escalation emails, separated by many spaces" do
+          subject(:data_request_area) { build :data_request_area, contact: prison_with_two_escalation_emails_including_spaces }
 
           it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
         end

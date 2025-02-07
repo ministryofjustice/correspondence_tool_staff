@@ -103,7 +103,7 @@ private
   end
 
   def can_escalate?
-    data_request_area_type == "prison"
+    contact.prison?
   end
 
   def contact_escalation_emails
