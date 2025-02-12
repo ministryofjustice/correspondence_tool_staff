@@ -109,9 +109,9 @@ describe DataRequestCalculator::Mappa do
         data_request_area.data_request_emails << create(:data_request_email, email_type: "chase", created_at: last_chase_email)
       end
 
-      it "returns standard chase" do
+      it "returns escalation chase" do
         Timecop.freeze(after_chase_one) do
-          expect(calculator.next_chase_type).to eq :chase_email
+          expect(calculator.next_chase_type).to eq :chase_escalation_email
         end
       end
     end

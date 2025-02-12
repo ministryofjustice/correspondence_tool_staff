@@ -3,7 +3,6 @@ module DataRequestCalculator
     attr_reader :data_request_area, :start
 
     CHASE_INTERVAL = 4
-    ESCALATION_AFTER = 2
 
     def initialize(data_request_area, start)
       @data_request_area = data_request_area
@@ -42,12 +41,16 @@ module DataRequestCalculator
 
   private
 
+    def escalation_after
+      2
+    end
+
     def first_chase_date
       deadline + 1.day
     end
 
     def first_escalation_date
-      first_chase_date + (ESCALATION_AFTER * CHASE_INTERVAL).days
+      first_chase_date + (escalation_after * CHASE_INTERVAL).days
     end
 
     def last_email_date
