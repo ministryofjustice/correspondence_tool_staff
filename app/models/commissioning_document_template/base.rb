@@ -1,11 +1,12 @@
 module CommissioningDocumentTemplate
   class Base
-    attr_reader :data_request_area
+    attr_reader :data_request_area, :deadline
 
     delegate :kase, to: :data_request_area
 
-    def initialize(data_request_area:)
+    def initialize(data_request_area:, deadline:)
       @data_request_area = data_request_area.decorate
+      @deadline = date_format(deadline)
     end
 
     def path
@@ -18,6 +19,7 @@ module CommissioningDocumentTemplate
         offender_name: kase.subject_full_name,
         date_of_birth: date_format(kase.date_of_birth),
         date: today,
+        deadline:,
         prison_numbers: kase.prison_number,
       }
     end
@@ -30,10 +32,6 @@ module CommissioningDocumentTemplate
 
     def today
       date_format(Date.current)
-    end
-
-    def calculate_deadline(count)
-      date_format(Date.current + count.days)
     end
 
     def date_format(date)

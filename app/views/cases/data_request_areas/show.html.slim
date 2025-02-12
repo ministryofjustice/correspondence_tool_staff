@@ -25,7 +25,7 @@ div class="case"
       = @data_request_area.location
 
   section.case-info
-    = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, data_request: @data_request, allow_editing: allow_editing }
+    = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, allow_editing: allow_editing }
 
   - if @data_request_area.data_requests.exists? && FeatureSet.email_commissioning_document.enabled?
     div.commissioning-document
@@ -44,11 +44,15 @@ div class="case"
             td
               span = @commissioning_document&.download_link
 
-      - if @data_request_area.data_request_emails.blank? && policy(@case).can_send_day_1_email?
+      - if !@data_request_area.commissioning_email_sent? && policy(@case).can_send_day_1_email?
         div.button-holder
           = link_to t('button.send_email'), send_email_case_data_request_area_path(@case, @data_request_area), class: 'button button-high data_request_area_send_email'
 
-      - if @data_request_area.data_request_emails.present?
+      - if @data_request_area.commissioning_email_sent? && @data_request_area.in_progress?
+        div.next-chase-description.govuk-inset-text = @data_request_area.next_chase_description
+        hr
+
+      - if @sent_emails.present?
         h2.heading-medium
           = t('.emails_history_header')
         table.report
@@ -59,7 +63,7 @@ div class="case"
               th = t('cases.commissioning_documents.email_history_table_headings.date_sent')
               th = t('cases.commissioning_documents.email_history_table_headings.status')
           tbody.email_details
-            - @data_request_area.data_request_emails.map(&:decorate).each do |email|
+            - @sent_emails.each do |email|
               tr
                 td = email.email_type
                 td = email.email_address

@@ -6,6 +6,14 @@ GIT
     bank_holiday (0.0.4)
       dish
 
+GIT
+  remote: https://github.com/notarize/rails-data-migrations.git
+  revision: 1ec8bf92275f5e31fd2820ea39025b25620db7ef
+  ref: 1ec8bf9
+  specs:
+    rails-data-migrations (1.3.0.4)
+      rails (>= 7.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -410,8 +418,6 @@ GEM
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
       activesupport (>= 5.0.1.rc1)
-    rails-data-migrations (1.3.0)
-      rails (>= 4.0.0)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -683,7 +689,7 @@ DEPENDENCIES
   pundit (~> 2.4)
   rails (~> 7.0)
   rails-controller-testing
-  rails-data-migrations
+  rails-data-migrations!
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails

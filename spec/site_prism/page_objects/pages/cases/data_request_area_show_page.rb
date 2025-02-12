@@ -24,6 +24,7 @@ module PageObjects
             element :actions, "td:nth-child(3)"
           end
           element :button_send_email, ".data_request_area_send_email"
+          element :next_chase_description, ".next-chase-description"
 
           section :email_row, "tbody.email_details tr" do
             element :email_type, "td:nth-child(1)"

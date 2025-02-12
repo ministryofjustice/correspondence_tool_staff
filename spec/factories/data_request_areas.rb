@@ -18,5 +18,13 @@ FactoryBot.define do
     association :contact
 
     data_request_area_type { "prison" }
+
+    trait :in_progress do
+      data_requests { [association(:data_request)] }
+    end
+
+    trait :completed do
+      data_requests { [association(:data_request, :completed)] }
+    end
   end
 end
