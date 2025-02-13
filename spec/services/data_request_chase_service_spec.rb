@@ -20,7 +20,7 @@ describe DataRequestChaseService do
         end
 
         it "doesn't send request to email service" do
-          expect(service).to_not receive(:send_chase!)
+          expect(service).not_to receive(:send_chase!)
           described_class.call
         end
 
