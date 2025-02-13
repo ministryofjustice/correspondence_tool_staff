@@ -13,21 +13,42 @@ describe DataRequestChaseService do
   end
 
   describe "#call" do
-    context "when chase is due" do
-      it "sends request to email service" do
-        allow_any_instance_of(DataRequestArea).to receive(:next_chase_date).and_return(Date.current) # rubocop:disable RSpec/AnyInstance
+    context "when dryrun" do
+      context "when chase is due" do
+        before do
+          allow_any_instance_of(DataRequestArea).to receive(:next_chase_date).and_return(Date.current) # rubocop:disable RSpec/AnyInstance
+        end
 
-        expect(service).to receive(:send_chase!)
-        described_class.call
+        it "doesn't send request to email service" do
+          expect(service).to_not receive(:send_chase!)
+          described_class.call
+        end
+
+        it "prints details of case and data request area" do
+          expect(Rails.logger).to receive(:info).with("Chases due:")
+          expect(Rails.logger).to receive(:info).with("Case ID: #{in_progress.case_id} Data Request Area ID: #{in_progress.id}")
+          described_class.call
+        end
       end
     end
 
-    context "when chase is not due" do
-      it "does not send request to email service" do
-        allow_any_instance_of(DataRequestArea).to receive(:next_chase_date).and_return(Date.current + 1.day) # rubocop:disable RSpec/AnyInstance
+    context "when not dryrun" do
+      context "when chase is due" do
+        it "sends request to email service" do
+          allow_any_instance_of(DataRequestArea).to receive(:next_chase_date).and_return(Date.current) # rubocop:disable RSpec/AnyInstance
 
-        expect(service).not_to receive(:send_chase!)
-        described_class.call
+          expect(service).to receive(:send_chase!)
+          described_class.call(dryrun: false)
+        end
+      end
+
+      context "when chase is not due" do
+        it "does not send request to email service" do
+          allow_any_instance_of(DataRequestArea).to receive(:next_chase_date).and_return(Date.current + 1.day) # rubocop:disable RSpec/AnyInstance
+
+          expect(service).not_to receive(:send_chase!)
+          described_class.call(dryrun: false)
+        end
       end
     end
   end
