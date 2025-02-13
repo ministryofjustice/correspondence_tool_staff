@@ -360,10 +360,17 @@ RSpec.describe DataRequestArea, type: :model do
       end
     end
 
-    context "when next chase is not today" do
+    context "when next chase is in the future" do
       it "returns false" do
         allow(data_request_area).to receive(:next_chase_date).and_return(Date.current + 1.day)
         expect(data_request_area.chase_due?).to be false
+      end
+    end
+
+    context "when next chase is in the past" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Date.current - 1.day)
+        expect(data_request_area.chase_due?).to be true
       end
     end
   end
