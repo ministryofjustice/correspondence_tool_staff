@@ -89,7 +89,7 @@ class DataRequestArea < ApplicationRecord
   end
 
   def chase_due?
-    next_chase_date.to_date == Date.current
+    next_chase_date.to_date <= Date.current
   end
 
   def last_chase_email

@@ -8,6 +8,6 @@ namespace :email do
 
   desc "Send daily data request chase emails"
   task send_data_request_chase_emails: :environment do
-    DataRequestChaseService.call
+    DataRequestChaseService.call(dryrun: false)
   end
 end
