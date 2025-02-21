@@ -115,6 +115,7 @@ class Case::SAR::Offender < Case::Base
                  flag_as_high_profile: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
+                 page_count: :integer,
                  previous_case_numbers: :string,
                  prison_number: :string,
                  recipient: :string,
