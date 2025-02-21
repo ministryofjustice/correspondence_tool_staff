@@ -163,7 +163,7 @@ td {
 
 // Open case list table scrollable to support large fonts
 .cases-table-container {
-  overflow: scroll;
+  overflow: auto;
 }
 
 // Fix mobile view issue on table long strings
