@@ -63,7 +63,7 @@ module Cases
       @rejected =
         @case.rejected? ||
         params["rejected"] == "true" ||
-        (action_name == "create" && create_params["current_state"])
+        (action_name == "create" && create_params["current_state"] == "invalid_submission")
     end
 
     def edit_params
