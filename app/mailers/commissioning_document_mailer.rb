@@ -25,7 +25,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
-      email_subject: email_subject(kase),
+      email_subject: email_subject(kase, chase_number),
       email_address: recipient,
       deadline: commissioning_document.deadline,
       deadline_days: commissioning_document.deadline_days,
@@ -48,7 +48,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
-      email_subject: email_subject(kase),
+      email_subject: email_subject(kase, chase_number),
       email_address: recipient,
       deadline: commissioning_document.deadline,
       deadline_days: commissioning_document.deadline_days,
@@ -71,7 +71,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
-      email_subject: email_subject(kase),
+      email_subject: email_subject(kase, chase_number),
       email_address: recipient,
       deadline: commissioning_document.deadline,
       external_deadline: kase.external_deadline.strftime("%d/%m/%Y"),
@@ -95,8 +95,8 @@ private
     set_email_reply_to(Settings.commissioning_notify_reply_to)
   end
 
-  def email_subject(kase)
-    "Subject Access Request - #{kase.number} - #{kase.subject_full_name}"
+  def email_subject(kase, chase_number)
+    "Subject Access Request - #{kase.number} - #{kase.subject_full_name} - Chase #{chase_number}"
   end
 
   def set_notify_id
