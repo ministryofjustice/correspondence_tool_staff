@@ -7,9 +7,9 @@
       = 'Who was responsible for the late response?'
 
 - content_for :sub_heading
-span.visually-hidden
-  = t('common.case.header_case_number')
-= "#{@case.number} - #{@case.pretty_type}"
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
 
 = render partial: 'layouts/header'
 
@@ -23,5 +23,6 @@ div class="case-#{@case.type_abbreviation.downcase}"
 
     .grid-row
       .column-two-thirds
-        = f.submit 'Mark as responded', {class: 'button'}
-        = link_to "Return to case detail", case_path(@case.id), class: 'button-secondary button-left-spacing'
+        .button-holder
+          = f.submit t('common.case.respond'), {class: 'button'}
+          = link_to "Cancel", case_path(@case.id), class:'acts-like-button button-left-spacing'
