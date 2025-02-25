@@ -743,6 +743,7 @@ en:
           other_department: Other department
           cctv: CCTV
           bwcf: BWCF
+          body_scans: Body scans
       data_request_area:
         location: Location
         data_request_area_type:
