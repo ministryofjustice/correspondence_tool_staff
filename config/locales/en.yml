@@ -583,6 +583,7 @@ en:
       ico:
         delivery_method: How and where should the information be sent?
         ico_decision: The original case has been
+        sar_complaint_outcome: What was the outcome of the SAR complaint?
         late_team_id_html: " "
         type: Original Case Type
       overturned_foi:

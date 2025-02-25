@@ -28,6 +28,19 @@ module PageObjects
           element :overturned, 'label[for="foi_appeal_outcome_name_overturned"]'
         end
 
+        section :ico_complaint_outcome, ".ico-complaint-outcome" do
+          element :bau_ico_informed, "input#ico_sar_complaint_outcome_bau_ico_informed", visible: false
+          element :bau_and_now_responded_as_sar, "input#ico_sar_complaint_outcome_bau_and_now_responded_as_sar", visible: false
+          element :not_received_now_responded_as_sar, "input#ico_sar_complaint_outcome_not_received_now_responded_as_sar", visible: false
+          element :sar_processed_but_overdue, "input#ico_sar_complaint_outcome_sar_processed_but_overdue", visible: false
+          element :sar_incorrectly_processed_now_responded_as_sar, "input#ico_sar_complaint_outcome_sar_incorrectly_processed_now_responded_as_sar", visible: false
+          element :responded_to_sar_and_ico_informed, "input#ico_sar_complaint_outcome_responded_to_sar_and_ico_informed", visible: false
+          element :revised_sar_sent_exemptions_issue, "input#ico_sar_complaint_outcome_revised_sar_sent_exemptions_issue", visible: false
+          element :revised_sar_sent_undisclosed_information, "input#ico_sar_complaint_outcome_revised_sar_sent_undisclosed_information", visible: false
+          element :other_outcome, "input#ico_sar_complaint_outcome_other_outcome", visible: false
+          element :other_outcome_text_area, "textarea#ico_other_sar_complaint_outcome_note", visible: false
+        end
+
         section :ico_decision, ".ico-decision" do
           element :upheld, "input#ico_ico_decision_upheld", visible: false
           element :overturned, "input#ico_ico_decision_overturned", visible: false
