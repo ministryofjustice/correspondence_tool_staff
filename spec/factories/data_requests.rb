@@ -49,6 +49,7 @@ FactoryBot.define do
 
     trait :completed do
       completed { true }
+      cached_date_received { Date.current }
     end
   end
 end

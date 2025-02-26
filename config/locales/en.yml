@@ -771,6 +771,9 @@ en:
       data_request_email:
         email_type:
           commissioning_email: Day 1 commissioning email
+          chase: Chase %{chase_number} - Automated email
+          chase_escalation: Chase %{chase_number} escalated - Automated email
+          chase_overdue: Chase %{chase_number} overdue - Automated email
       commissioning_document:
         template_name:
           mappa: MAPPA

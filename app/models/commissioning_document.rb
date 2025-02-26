@@ -5,7 +5,7 @@
 #  id                   :bigint           not null, primary key
 #  data_request_id      :bigint
 #  template_name        :enum
-#  sent                 :boolean          default(FALSE)
+#  sent_at              :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  attachment_id        :bigint
@@ -46,7 +46,7 @@ class CommissioningDocument < ApplicationRecord
   validates :data_request, presence: true, if: :has_no_request_area?
   validates :template_name, presence: true
 
-  delegate :deadline, to: :template
+  delegate :deadline, :deadline_days, to: :data_request_area
 
   def document
     return unless valid?
@@ -87,7 +87,7 @@ class CommissioningDocument < ApplicationRecord
 private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request_area:, deadline: data_request_area.deadline)
   end
 
   def timestamp

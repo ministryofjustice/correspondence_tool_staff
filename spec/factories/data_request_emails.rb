@@ -11,11 +11,19 @@
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  data_request_area_id :bigint
+#  chase_number         :integer
 #
 FactoryBot.define do
   factory :data_request_email do
     association :data_request_area
     email_address { "test@user.com" }
+
+    trait :chase do
+      email_type { "chase" }
+      chase_number { 1 }
+    end
+
+    factory :data_request_chase_email, traits: [:chase]
   end
 
   trait :sent_to_notify do

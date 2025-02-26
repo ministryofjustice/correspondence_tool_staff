@@ -572,11 +572,11 @@ CREATE TABLE public.commissioning_documents (
     id bigint NOT NULL,
     data_request_id bigint,
     template_name public.template_name,
-    sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     attachment_id bigint,
-    data_request_area_id bigint
+    data_request_area_id bigint,
+    sent_at timestamp(6) without time zone
 );
 
 
@@ -730,7 +730,8 @@ CREATE TABLE public.data_request_emails (
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    data_request_area_id bigint
+    data_request_area_id bigint,
+    chase_number integer
 );
 
 
@@ -2412,6 +2413,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20250220153650'),
+('20250131145353'),
+('20250127103329'),
 ('20241018081532'),
 ('20241018080810'),
 ('20241017140610'),

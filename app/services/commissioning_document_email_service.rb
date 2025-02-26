@@ -13,9 +13,20 @@ class CommissioningDocumentEmailService
     email_sent
   end
 
+  def send_chase!(chase_type)
+    upload_document(replace: true)
+    send_chase_emails(chase_type)
+    chase_email_sent
+  end
+
 private
 
-  def upload_document
+  def upload_document(replace: false)
+    if replace
+      commissioning_document.attachment&.destroy!
+      commissioning_document.reload
+    end
+
     return if commissioning_document.attachment.present?
 
     file = Tempfile.new
@@ -29,7 +40,7 @@ private
     emails = data_request_area.recipient_emails
 
     emails.map do |email|
-      ActionNotificationsMailer.commissioning_email(
+      CommissioningDocumentMailer.commissioning_email(
         commissioning_document,
         data_request_area.offender_sar_case.number,
         email,
@@ -37,12 +48,37 @@ private
     end
   end
 
+  def send_chase_emails(chase_type)
+    is_escalation_email = [DataRequestChase::OVERDUE_CHASE, DataRequestChase::ESCALATION_CHASE].include?(chase_type)
+    emails = data_request_area.recipient_emails(escalated: is_escalation_email)
+
+    emails.map do |email|
+      CommissioningDocumentMailer.send(chase_type,
+                                       data_request_area.offender_sar_case,
+                                       commissioning_document,
+                                       email,
+                                       data_request_area.next_chase_number).deliver_later! # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
+    end
+  end
+
   def email_sent
-    commissioning_document.update_attribute(:sent, true) # rubocop:disable Rails/SkipsModelValidations
+    commissioning_document.update_attribute(:sent_at, Time.current) # rubocop:disable Rails/SkipsModelValidations
     data_request_area.kase.state_machine.send_day_1_email!(
       acting_user: current_user,
       acting_team: BusinessUnit.dacu_branston,
-      message: I18n.t("helpers.label.data_request_area.data_request_area_type.#{data_request_area.data_request_area_type}") + " requested from #{data_request_area.location}",
+      message: email_sent_message,
     )
+  end
+
+  def chase_email_sent
+    data_request_area.kase.state_machine.send_chase_email!(
+      acting_user: User.system_admin,
+      acting_team: BusinessUnit.dacu_branston,
+      message: email_sent_message,
+    )
+  end
+
+  def email_sent_message
+    I18n.t("helpers.label.data_request_area.data_request_area_type.#{data_request_area.data_request_area_type}") + " requested from #{data_request_area.location}"
   end
 end

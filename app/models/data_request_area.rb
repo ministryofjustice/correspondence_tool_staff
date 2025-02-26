@@ -43,12 +43,16 @@ class DataRequestArea < ApplicationRecord
     other_department: "other_department",
   }
 
-  def kase
-    offender_sar_case
+  delegate :deadline, :deadline_days, :next_chase_date, :next_chase_type, to: :calculator
+
+  def self.sent_and_in_progress_ids
+    sent_data_request_areas = CommissioningDocument.where.not(sent_at: nil).pluck(:data_request_area_id)
+    in_progress_data_request_areas = DataRequest.in_progress.pluck(:data_request_area_id)
+    sent_data_request_areas.intersection(in_progress_data_request_areas)
   end
 
-  def completed?
-    status == :completed
+  def kase
+    offender_sar_case
   end
 
   def status
@@ -57,11 +61,58 @@ class DataRequestArea < ApplicationRecord
     data_requests.map(&:status).all?(:completed) ? :completed : :in_progress
   end
 
-  def recipient_emails
-    contact&.data_request_emails&.split(" ") || []
+  def in_progress?
+    status == :in_progress && !kase.closed?
+  end
+
+  def recipient_emails(escalated: false)
+    if escalated && can_escalate?
+      contact_emails.concat(contact_escalation_emails)
+    else
+      contact_emails
+    end
+  end
+
+  def calculator
+    @calculator ||= begin
+      calculator = data_request_area_type == "mappa" ? DataRequestCalculator::Mappa : DataRequestCalculator::Standard
+      calculator.new(self, commissioning_document.sent_at || Date.current)
+    end
+  end
+
+  def commissioning_email_sent?
+    commissioning_document.sent_at.present?
+  end
+
+  def next_chase_number
+    last_chase_number + 1
+  end
+
+  def chase_due?
+    next_chase_date.present? && next_chase_date.to_date <= Date.current
+  end
+
+  def last_chase_email
+    data_request_emails.where(chase_number: last_chase_number).last
   end
 
 private
+
+  def last_chase_number
+    data_request_emails.maximum(:chase_number) || 0
+  end
+
+  def can_escalate?
+    data_request_area_type == "prison"
+  end
+
+  def contact_escalation_emails
+    contact.escalation_emails&.split(" ") || []
+  end
+
+  def contact_emails
+    contact&.data_request_emails&.split(" ") || []
+  end
 
   def validate_location
     if contact_id.present?

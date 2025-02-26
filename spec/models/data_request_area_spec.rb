@@ -14,6 +14,24 @@
 require "rails_helper"
 
 RSpec.describe DataRequestArea, type: :model do
+  describe ".sent_and_in_progress_ids" do
+    let(:in_progress_with_email) { create(:data_request_area, :in_progress) }
+
+    before do
+      # create 3 data requests that shouldn't be returned by method
+      create(:data_request_area, :in_progress)
+      create(:data_request_area, :completed)
+      completed_with_email = create(:data_request_area, :completed)
+
+      in_progress_with_email.commissioning_document.update!(sent_at: Date.current)
+      completed_with_email.commissioning_document.update!(sent_at: Date.current)
+    end
+
+    it "returns ids of in progress sent data request areas" do
+      expect(described_class.sent_and_in_progress_ids).to eq [in_progress_with_email.id]
+    end
+  end
+
   describe "#create" do
     context "with valid params" do
       subject(:data_request_area) do
@@ -137,15 +155,77 @@ RSpec.describe DataRequestArea, type: :model do
     end
   end
 
+  describe "#in_progress?" do
+    let(:data_request_area) { create(:data_request_area) }
+    let(:in_progress_data_request) { create(:data_request) }
+    let(:completed_data_request) { create(:data_request, :completed) }
+
+    context "when case is open" do
+      context "with no data requests" do
+        before do
+          data_request_area.data_requests.delete_all
+        end
+
+        it "is false" do
+          expect(data_request_area).not_to be_in_progress
+        end
+      end
+
+      context "with only in progress data request" do
+        before do
+          data_request_area.data_requests << in_progress_data_request
+        end
+
+        it "is true" do
+          expect(data_request_area).to be_in_progress
+        end
+      end
+
+      context "with only completed data request" do
+        before do
+          data_request_area.data_requests << completed_data_request
+        end
+
+        it "is false" do
+          expect(data_request_area).not_to be_in_progress
+        end
+      end
+
+      context "with in progress and completed data requests" do
+        before do
+          data_request_area.data_requests << completed_data_request
+          data_request_area.data_requests << in_progress_data_request
+        end
+
+        it "is true" do
+          expect(data_request_area).to be_in_progress
+        end
+      end
+    end
+
+    context "when case is closed" do
+      before do
+        closed_case = create(:offender_sar_case, :closed)
+        data_request_area.update!(offender_sar_case: closed_case)
+        data_request_area.data_requests << in_progress_data_request
+        data_request_area.data_requests << completed_data_request
+      end
+
+      it "is false" do
+        expect(data_request_area).not_to be_in_progress
+      end
+    end
+  end
+
   describe "#recipient_emails" do
-    let(:email_1) { "a.smith@email.com" }
-    let(:email_2) { "b.jones@email.com" }
-    let(:email_3) { "c.evans@gmail.com" }
+    let(:email_a) { "a.smith@email.com" }
+    let(:email_b) { "b.jones@email.com" }
+    let(:email_c) { "c.evans@gmail.com" }
 
     let(:contact_without_email) { build(:contact, data_request_emails: nil) }
-    let(:contact_with_one_email) { build(:contact, data_request_emails: email_1) }
-    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_1}\n#{email_2}") }
-    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_1}    #{email_2}") }
+    let(:contact_with_one_email) { build(:contact, data_request_emails: email_a) }
+    let(:contact_with_two_emails) { build(:contact, data_request_emails: "#{email_a}\n#{email_b}") }
+    let(:contact_with_two_emails_including_spaces) { build(:contact, data_request_emails: " #{email_a}    #{email_b}") }
 
     context "when there is a contact with no email" do
       subject(:data_request_area) { build :data_request_area, contact: contact_without_email }
@@ -156,13 +236,13 @@ RSpec.describe DataRequestArea, type: :model do
     context "when there is a contact with one email" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_one_email }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a] }
     end
 
     context "when there is a contact with two emails" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
     end
 
     context "when there is no contact" do
@@ -174,7 +254,153 @@ RSpec.describe DataRequestArea, type: :model do
     context "when there is a contact with two emails, separated by many spaces" do
       subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails_including_spaces }
 
-      it { expect(data_request_area.recipient_emails).to eq [email_1, email_2] }
+      it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
+    end
+
+    context "when the request is esclated" do
+      context "when not prison request" do
+        subject(:data_request_area) { build :data_request_area, contact: contact_with_two_emails }
+
+        it { expect(data_request_area.recipient_emails).to eq [email_a, email_b] }
+      end
+
+      context "when prison request" do
+        let(:contact_without_email_and_with_escalation_email) { build(:contact, data_request_emails: nil, escalation_emails: email_a) }
+        let(:contact_without_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: nil) }
+        let(:contact_with_one_escalation_email) { build(:contact, data_request_emails: email_a, escalation_emails: email_b) }
+        let(:contact_with_two_escalation_emails) { build(:contact, data_request_emails: email_a, escalation_emails: "#{email_b}\n#{email_c}") }
+        let(:contact_with_two_escalation_emails_including_spaces) { build(:contact, data_request_emails: email_a, escalation_emails: " #{email_b}    #{email_c}") }
+
+        context "when contact has no normal email and one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_without_email_and_with_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
+        end
+
+        context "when contact has no escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_without_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a] }
+        end
+
+        context "when contact has one escalation email" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_one_escalation_email }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b] }
+        end
+
+        context "when contact has two escalation emails" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
+        end
+
+        context "when there is a contact with two escalation emails, separated by many spaces" do
+          subject(:data_request_area) { build :data_request_area, contact: contact_with_two_escalation_emails_including_spaces }
+
+          it { expect(data_request_area.recipient_emails(escalated: true)).to eq [email_a, email_b, email_c] }
+        end
+      end
+    end
+  end
+
+  describe "#commissioning_email_sent?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when commissioning_email sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: Date.current)
+      end
+
+      it "returns true" do
+        expect(data_request_area.commissioning_email_sent?).to be true
+      end
+    end
+
+    context "when commissioning_email not sent" do
+      before do
+        data_request_area.commissioning_document.update(sent_at: nil)
+      end
+
+      it "returns false" do
+        expect(data_request_area.commissioning_email_sent?).to be false
+      end
+    end
+  end
+
+  describe "#next_chase_number" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when no chases have been sent" do
+      it "returns 0" do
+        expect(data_request_area.next_chase_number).to eq 1
+      end
+    end
+
+    context "when chase process has already started" do
+      let(:last_chase) { 1 }
+
+      before do
+        create(:data_request_chase_email, data_request_area:, chase_number: last_chase)
+      end
+
+      it "increments current chase number" do
+        expect(data_request_area.next_chase_number).to eq last_chase + 1
+      end
+    end
+  end
+
+  describe "#chase_due?" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when there is no next chase date" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(nil)
+        expect(data_request_area.chase_due?).to be false
+      end
+    end
+
+    context "when next chase is today" do
+      it "returns true" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Time.current)
+        expect(data_request_area.chase_due?).to be true
+      end
+    end
+
+    context "when next chase is in the future" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Date.current + 1.day)
+        expect(data_request_area.chase_due?).to be false
+      end
+    end
+
+    context "when next chase is in the past" do
+      it "returns false" do
+        allow(data_request_area).to receive(:next_chase_date).and_return(Date.current - 1.day)
+        expect(data_request_area.chase_due?).to be true
+      end
+    end
+  end
+
+  describe "#last_chase_email" do
+    let(:data_request_area) { create(:data_request_area) }
+
+    context "when no chase emails" do
+      it "returns nil" do
+        expect(data_request_area.last_chase_email).to be_nil
+      end
+    end
+
+    context "when multiple chase emails" do
+      let!(:chase_email) { create(:data_request_chase_email, data_request_area:, chase_number: 2) }
+
+      before do
+        create(:data_request_chase_email, data_request_area:)
+      end
+
+      it "returns expected chase email" do
+        expect(data_request_area.last_chase_email).to eq chase_email
+      end
     end
   end
 
