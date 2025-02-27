@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class UpdateRejectedReasonsData < ActiveRecord::DataMigration
-  disable_ddl_transaction!
-
   def up
     cases = Case::Base.offender_sar.where("properties -> 'rejected_reasons' @> ?", %w[cctv_bwcv].to_json)
 
