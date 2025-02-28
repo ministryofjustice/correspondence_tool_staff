@@ -1,6 +1,10 @@
 class CaseTransitionDecorator < Draper::Decorator
   delegate_all
 
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+
   def action_date
     object.created_at.strftime("%d %b %Y<br>%H:%M").html_safe
   end
