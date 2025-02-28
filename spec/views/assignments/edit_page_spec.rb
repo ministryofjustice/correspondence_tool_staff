@@ -16,7 +16,7 @@ describe "assignments/edit.html.slim", type: :view do
 
   it "displays the edit assignment page" do
     assign(:case, awaiting_responder_case)
-    assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+    assign(:case_transitions, awaiting_responder_case.transitions.case_history.page(1).decorate)
     assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
     assign(:assignment, assignment)
 
@@ -75,7 +75,7 @@ describe "assignments/edit.html.slim", type: :view do
 
     it "displays page and sections for ICO cases" do
       assign(:case, awaiting_responder_case)
-      assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+      assign(:case_transitions, awaiting_responder_case.transitions.case_history.page(1).decorate)
       assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
       assign(:assignment, assignment_for_ico)
 
@@ -138,7 +138,7 @@ describe "assignments/edit.html.slim", type: :view do
 
     it "displays page and sections for ICO cases" do
       assign(:case, awaiting_responder_case)
-      assign(:case_transitions, awaiting_responder_case.transitions.decorate)
+      assign(:case_transitions, awaiting_responder_case.transitions.case_history.page(1).decorate)
       assign(:correspondence_type_key, awaiting_responder_case.type_abbreviation.downcase)
       assign(:assignment, assignment_for_overturned)
 
@@ -201,7 +201,7 @@ describe "assignments/edit.html.slim", type: :view do
 
     it "displays page and sections for ICO cases" do
       assign(:case, ovt_foi_case)
-      assign(:case_transitions, ovt_foi_case.transitions.decorate)
+      assign(:case_transitions, ovt_foi_case.transitions.case_history.page(1).decorate)
       assign(:correspondence_type_key, ovt_foi_case.type_abbreviation.downcase)
       assign(:assignment, assignment)
 

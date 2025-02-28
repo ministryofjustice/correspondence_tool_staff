@@ -75,7 +75,7 @@ RSpec.describe CasesController, type: :controller do
     end
 
     it "decorates the collection of case transitions" do
-      expect(assigns(:case_transitions)).to be_an_instance_of(Draper::CollectionDecorator)
+      expect(assigns(:case_transitions)).to be_an_instance_of(PaginatingDecorator)
       expect(assigns(:case_transitions).map(&:class)).to eq [CaseTransitionDecorator, CaseTransitionDecorator]
     end
   end
