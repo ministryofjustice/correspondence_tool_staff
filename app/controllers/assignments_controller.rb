@@ -330,7 +330,7 @@ private
     @case = Case::Base
               .find(params[:case_id])
               .decorate
-    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.order(id: :desc).decorate
+    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.page(params[:page]).order(id: :desc).decorate
   end
 
   def set_assignment
