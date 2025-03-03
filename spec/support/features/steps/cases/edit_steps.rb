@@ -196,7 +196,7 @@ def edit_sar_case_closure_step(kase:, date_responded: Time.zone.today, tmm: fals
   end
 end
 
-def edit_ico_case_closure_step(kase:, decision_received_date: Time.zone.today, ico_decision: "upheld")
+def edit_ico_case_closure_step(kase:, decision_received_date: Time.zone.today, ico_decision: "upheld", ico_complaint_outcome: nil)
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
@@ -221,6 +221,28 @@ def edit_ico_case_closure_step(kase:, decision_received_date: Time.zone.today, i
 
   cases_edit_closure_page.fill_in_ico_date_responded(decision_received_date)
 
+  case ico_complaint_outcome
+  when "bau_ico_informed"
+    cases_edit_closure_page.ico_complaint_outcome.bau_ico_informed.click
+  when "bau_and_now_responded_as_sar"
+    cases_edit_closure_page.ico_complaint_outcome.bau_and_now_responded_as_sar.click
+  when "not_received_now_responded_as_sar"
+    cases_edit_closure_page.ico_complaint_outcome.not_received_now_responded_as_sar.click
+  when "sar_processed_but_overdue"
+    cases_edit_closure_page.ico_complaint_outcome.sar_processed_but_overdue.click
+  when "sar_incorrectly_processed_now_responded_as_sar"
+    cases_edit_closure_page.ico_complaint_outcome.sar_incorrectly_processed_now_responded_as_sar.click
+  when "responded_to_sar_and_ico_informed"
+    cases_edit_closure_page.ico_complaint_outcome.responded_to_sar_and_ico_informed.click
+  when "revised_sar_sent_exemptions_issue"
+    cases_edit_closure_page.ico_complaint_outcome.revised_sar_sent_exemptions_issue.click
+  when "revised_sar_sent_undisclosed_information"
+    cases_edit_closure_page.ico_complaint_outcome.revised_sar_sent_undisclosed_information.click
+  when "other_outcome"
+    cases_edit_closure_page.ico_complaint_outcome.other_outcome.click
+    cases_edit_closure_page.ico_complaint_outcome.other_outcome_text_area.set "Other outcome"
+  end
+
   case ico_decision
   when "upheld"
     cases_edit_closure_page.ico_decision.upheld.click
@@ -235,10 +257,19 @@ def edit_ico_case_closure_step(kase:, decision_received_date: Time.zone.today, i
   case ico_decision
   when "upheld"
     expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
-      .to eq "Upheld by ICO"
+      .to have_content "Upheld by ICO"
   when "overturned"
     expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
-      .to eq "Overturned by ICO"
+      .to have_content "Overturned by ICO"
+  end
+
+  case ico_complaint_outcome
+  when "other_outcome"
+    expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
+      .to have_content "Other outcome"
+  when "sar_processed_but_overdue"
+    expect(cases_show_page.ico.case_details.response_details.outcome.data.text)
+      .to have_content "SAR Timeliness breach - SAR processed correctly but is overdue"
   end
   # Add this test once the date_ico_decision_received field is implemented
   # on the case_show_page

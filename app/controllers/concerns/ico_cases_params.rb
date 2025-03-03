@@ -72,6 +72,8 @@ private
 
   def process_ico_closure_params
     params.require(:ico).permit(
+      :sar_complaint_outcome,
+      :other_sar_complaint_outcome_note,
       :date_ico_decision_received_dd,
       :date_ico_decision_received_mm,
       :date_ico_decision_received_yyyy,

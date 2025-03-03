@@ -80,6 +80,9 @@ module Cases
     end
 
     def process_closure_params
+      if @case.is_a?(Case::ICO::SAR)
+        @case.prepare_for_recording_outcome
+      end
       process_ico_closure_params
     end
 
