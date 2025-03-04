@@ -85,7 +85,7 @@ class Case::SAR::Offender < Case::Base
   REJECTED_AUTO_CLOSURE_DEADLINE = 90
 
   REJECTED_REASONS = {
-    "cctv_bwcv" => "CCTV / BWCV request",
+    "cctv_bwcf" => "CCTV / BWCF request",
     "change_of_name_certificate" => "Change of name certificate",
     "court_data_request" => "Court data request",
     "data_previously_requested" => "Data previously provided",
