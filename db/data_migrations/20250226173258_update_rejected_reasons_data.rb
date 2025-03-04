@@ -10,7 +10,13 @@ class UpdateRejectedReasonsData < ActiveRecord::DataMigration
       end
 
       offender_sar_case.properties.merge!("rejected_reasons" => reasons)
-      offender_sar_case.save!
+      # rubocop:disable Rails/SaveBang
+      offender_sar_case.save(validate: false)
+      # rubocop:enable Rails/SaveBang
     end
+  end
+
+  def down
+    # enables rollback
   end
 end
