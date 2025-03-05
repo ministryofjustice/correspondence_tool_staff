@@ -115,9 +115,9 @@ describe Case::SAR::Offender do
       let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
 
       it "sets the other rejected reason to blank" do
-        case_rejected.update!(rejected_reasons: %w[cctv_bwcv])
+        case_rejected.update!(rejected_reasons: %w[cctv_bwcf])
 
-        expect(case_rejected.rejected_reasons).to eq(%w[cctv_bwcv])
+        expect(case_rejected.rejected_reasons).to eq(%w[cctv_bwcf])
         expect(case_rejected.other_rejected_reason).to eq("")
       end
     end
