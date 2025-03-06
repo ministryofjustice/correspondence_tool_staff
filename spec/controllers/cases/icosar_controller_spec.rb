@@ -55,10 +55,8 @@ RSpec.describe Cases::ICOSARController, type: :controller do
     end
 
     it "sets case as responded" do
-      stub_find_case(approved_sar_ico.id) do |kase|
-        expect(kase).to receive(:respond).with(approver)
-      end
-
+      stub_find_case(approved_sar_ico)
+      expect(approved_sar_ico).to receive(:respond).with(approver)
       patch(:confirm_record_complaint_outcome, params:)
     end
 

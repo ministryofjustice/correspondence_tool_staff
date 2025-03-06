@@ -1,11 +1,4 @@
-# Utility method to help us setup expectations on cases.
-#
-# Without this approach, it's messy to set expectations on @case in the
-# controller as stubbing out the return value from Case.find is frought
-# with yuckiness ... e.g. @case.transitions.order...
-def stub_find_case(id, &block)
-  allow(Case::Base).to receive(:find).with(id.to_s)
-                   .and_wrap_original do |original_method, *args|
-    original_method.call(*args).tap(&block)
-  end
+# Utility method to help us setup expectations on cases when the SetupCase.set_case method has been used
+def stub_find_case(kase)
+  allow(Case::Base).to receive_message_chain(:includes, :find).with(kase.id.to_s).and_return(kase) # rubocop:disable RSpec/MessageChain
 end

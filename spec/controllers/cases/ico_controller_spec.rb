@@ -107,9 +107,8 @@ RSpec.describe Cases::ICOController, type: :controller do
           before { sign_in approver }
 
           it 'transitions current_state to "responded"' do
-            stub_find_case(approved_ico.id) do |kase|
-              expect(kase).to receive(:respond).with(approver)
-            end
+            stub_find_case(approved_ico)
+            expect(approved_ico).to receive(:respond).with(approver)
             patch :confirm_respond, params:
           end
 
@@ -545,18 +544,18 @@ RSpec.describe Cases::ICOController, type: :controller do
       end
 
       it "calls the state_machine method" do
+        stub_find_case(approved_ico)
+        expect(approved_ico.state_machine).to receive(:respond!).with(
+          acting_user: approver,
+          acting_team: approving_team,
+        )
+
         patch :record_late_team, params: {
           id: approved_ico.id,
           ico: {
             late_team_id: approving_team.id,
           },
         }
-
-        stub_find_case(approved_ico.id) do |kase|
-          expect(kase.state_machine).to have_received(:respond!)
-            .with(acting_user: approver,
-                  acting_team: approving_team)
-        end
       end
 
       it "sets the late team" do

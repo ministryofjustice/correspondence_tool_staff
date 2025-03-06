@@ -202,16 +202,13 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
 
       it "calls the state_machine method" do
+        stub_find_case(accepted_sar)
+        expect(accepted_sar.state_machine).to receive(:progress_for_clearance!).with(
+          acting_user: responder,
+          acting_team: responding_team,
+          target_team: disclosure_team,
+        )
         patch(:progress_for_clearance, params:)
-
-        stub_find_case(accepted_sar.id) do |kase|
-          expect(kase.state_machine).to have_received(:progress_for_clearance!)
-            .with(
-              acting_user: responder,
-              acting_team: responding_team,
-              target_team: disclosure_team,
-            )
-        end
       end
     end
 
@@ -232,16 +229,15 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
 
       it "calls the state_machine method" do
-        patch(:progress_for_clearance, params:)
+        stub_find_case(accepted_sar)
 
-        stub_find_case(accepted_sar.id) do |kase|
-          expect(kase.state_machine)
-            .to have_received(:progress_for_clearance!).with(
-              acting_user: another_assigned_responder,
-              acting_team: responding_team,
-              target_team: disclosure_team,
-            )
-        end
+        expect(accepted_sar.state_machine).to receive(:progress_for_clearance!).with(
+          acting_user: another_assigned_responder,
+          acting_team: responding_team,
+          target_team: disclosure_team,
+        )
+
+        patch(:progress_for_clearance, params:)
       end
     end
   end
