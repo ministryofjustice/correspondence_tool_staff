@@ -31,5 +31,5 @@
           = render partial: 'cases/attachment_report',
             locals: { attachments: ug.collection,
               case_details: case_details }
-      - if policy(case_details).can_upload_request_attachment?
-        = action_button_for(:upload_request_files)
+    - if policy(case_details).can_upload_request_attachment?
+      = action_button_for(:upload_request_files)
