@@ -1,21 +1,21 @@
 require "rails_helper"
 
 RSpec.describe CasesController, type: :controller do
-  let(:responder)             { find_or_create :foi_responder }
-  let(:another_responder)     { create :responder }
-  let(:responding_team)       { responder.responding_teams.first }
-  let(:co_responder)          do
+  let(:responder) { find_or_create :foi_responder }
+  let(:another_responder) { create :responder }
+  let(:responding_team) { responder.responding_teams.first }
+  let(:co_responder) do
     create :responder,
            responding_teams: [responding_team]
   end
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
-  let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
-  let(:approver_responder)    do
+  let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+  let(:approver_responder) do
     create :approver_responder,
            responding_teams: [responding_team],
            approving_team: team_dacu_disclosure
   end
-  let(:assigned_case)         do
+  let(:assigned_case) do
     create :assigned_case,
            responding_team:
   end
