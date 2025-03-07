@@ -98,17 +98,8 @@ module PageObjects
             ico_reference_number.set kase.ico_reference_number
 
             case_details.set kase.message
-            kase.uploaded_request_files.each do |file|
-              drop_in_dropzone(file)
-            end
 
             kase
-          end
-
-          def drop_in_dropzone(file_path)
-            super file_path:,
-                  input_name: dropzone_container["data-file-input-name"],
-                  container_selector: "#uploaded-request-files-fields"
           end
         end
       end
