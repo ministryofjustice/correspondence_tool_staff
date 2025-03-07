@@ -165,9 +165,8 @@ RSpec.describe Cases::OverturnedICOFOIController, type: :controller do
         before { sign_in responder }
 
         it 'transitions current_state to "responded"' do
-          stub_find_case(ot_foi.id) do |kase|
-            expect(kase).to receive(:respond).with(responder)
-          end
+          stub_find_case(ot_foi)
+          expect(ot_foi).to receive(:respond).with(responder)
           patch :confirm_respond, params:
         end
 
