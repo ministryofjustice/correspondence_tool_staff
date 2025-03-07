@@ -70,6 +70,10 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_complaint
   end
 
+  def can_upload_request_attachment?
+    false
+  end
+
   check :user_can_manage_offender_complaint do
     user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar_complaint)
   end
