@@ -15,6 +15,7 @@ module PageObjects
         sections :attachments,
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  ".case-attachments-group"
+        element :upload_button, "a#action--upload-request-files"
       end
     end
   end
