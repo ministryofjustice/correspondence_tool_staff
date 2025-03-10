@@ -98,8 +98,10 @@ module PageObjects
             ico_reference_number.set kase.ico_reference_number
 
             case_details.set kase.message
-            kase.uploaded_request_files.each do |file|
-              drop_in_dropzone(file)
+            if kase.new_record?
+              kase.uploaded_request_files.each do |file|
+                drop_in_dropzone(file)
+              end
             end
 
             kase
