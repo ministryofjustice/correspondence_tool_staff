@@ -48,7 +48,7 @@ moj.Modules.CaseCreation = {
       event.preventDefault();
 
       var shouldHideFoiFlagFields = (event.target.id == 'foi_type_standard') ? false : true;
-      
+
       if (shouldHideFoiFlagFields) {
         $('#foi_flag_for_disclosure_specialists_yes').prop('checked', true);
         self.$flagForDisclosureSpecialists.hide();
@@ -58,7 +58,7 @@ moj.Modules.CaseCreation = {
       }
     });
   },
- 
+
   showHideDeliveryMethodFields: function () {
     if (this.$deliveryMethod.find(':radio').is(':checked')){
 
@@ -232,9 +232,8 @@ moj.Modules.CaseCreation = {
   },
 
   toggleFields: function (self) {
-
-    if (self.originalCaseReport.innerHTML === '') {
-
+    // Ignore comments which may appear locally when a partial is included
+    if (self.originalCaseReport.innerHTML.replace(/<!--[\s\S]*?-->/g, '').replace(/\n\s*/g, "") === '') {
       self.$relatedCaseFields.addClass('js-hidden');
       self.$originalCaseFields.removeClass('js-hidden');
 
