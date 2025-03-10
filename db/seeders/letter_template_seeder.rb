@@ -116,7 +116,7 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~BODY,
-      EO Custody Office
+      Business Hub
       <br><%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
     BODY
                )
