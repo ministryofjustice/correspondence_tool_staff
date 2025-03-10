@@ -14,7 +14,6 @@ feature "editing an ICO case" do
   end
 
   scenario "changing details", js: true do
-    request_attachment = Rails.root.join("spec/fixtures/new request.docx")
     cases_edit_ico_page.form.fill_in_case_details(
       received_date: Date.new(2018, 0o3, 0o4),
       external_deadline: Date.new(2018, 0o3, 24),
@@ -22,6 +21,7 @@ feature "editing an ICO case" do
       ico_reference_number: "IZEDITED",
       ico_officer_name: "Richie King",
       message: "Consider this case to be edited",
+      uploaded_request_files: [],
     )
     cases_edit_ico_page.form.original_case.linked_records.first.remove_link.click
     cases_edit_ico_page.form.add_original_case(new_original_case)
