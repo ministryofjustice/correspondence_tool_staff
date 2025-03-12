@@ -39,7 +39,7 @@ class DataRequestArea < ApplicationRecord
     branston: "branston",
     branston_registry: "branston_registry",
     mappa: "mappa",
-    security: "security",
+    dps_sensitive: "dps_sensitive",
     other_department: "other_department",
   }
 

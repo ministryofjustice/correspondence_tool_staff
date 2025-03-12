@@ -92,7 +92,8 @@ CREATE TYPE public.request_types AS ENUM (
     'g2_security',
     'g3_security',
     'other_department',
-    'body_scans'
+    'body_scans',
+    'g1_security'
 );
 
 
@@ -2412,6 +2413,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),
 ('20250127103329'),

@@ -739,8 +739,9 @@ en:
           oasys_arns: OASys / ARNS
           dps_security: DPS security
           hpa: Historical Prisoner Application (HPA)
-          g2_security: G2 security
-          g3_security: G3 security
+          g1_security: G1
+          g2_security: G2
+          g3_security: G3
           other_department: Other department
           cctv: CCTV
           bwcf: BWCF
@@ -751,19 +752,19 @@ en:
           prison: Prison
           probation: Probation
           branston: Branston
-          branston_registry: Branston Registry
+          branston_registry: Branston registry
           mappa: MAPPA
-          security: Security
+          dps_sensitive: DPS sensitive
           other_department: Other department
         headers:
           data_request_area_type:
             prison: prison
             probation: probation
-            branston: Branston
-            branston_registry: Branston Registry
+            branston: branston
+            branston_registry: branston Registry
             mappa: MAPPA
-            security: Security
-            other_department: Other department
+            dps_sensitive: DPS sensitive
+            other_department: other department
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         completed: "Yes, all data received"
