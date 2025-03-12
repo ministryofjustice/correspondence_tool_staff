@@ -56,7 +56,8 @@ CREATE TYPE public.data_request_area_type AS ENUM (
     'branston_registry',
     'mappa',
     'security',
-    'other_department'
+    'other_department',
+    'dps_sensitive'
 );
 
 
