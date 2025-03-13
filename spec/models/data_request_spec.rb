@@ -110,11 +110,11 @@ RSpec.describe DataRequest, type: :model do
         end
       end
 
-      context "when data_request_area_type is 'security'" do
-        let(:data_request_area) { create(:data_request_area, data_request_area_type: "security") }
+      context "when data_request_area_type is 'dps_sensitive'" do
+        let(:data_request_area) { create(:data_request_area, data_request_area_type: "dps_sensitive") }
 
-        it "returns the SECURITY_DATA_REQUEST_TYPES" do
-          expect(data_request.data_request_types).to eq(DataRequest::SECURITY_DATA_REQUEST_TYPES)
+        it "returns the DPS_SENSITIVE_DATA_REQUEST_TYPES" do
+          expect(data_request.data_request_types).to eq(DataRequest::DPS_SENSITIVE_DATA_REQUEST_TYPES)
         end
       end
 

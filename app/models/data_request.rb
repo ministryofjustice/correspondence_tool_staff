@@ -65,6 +65,7 @@ class DataRequest < ApplicationRecord
     oasys_arns: "oasys_arns",
     dps_security: "dps_security",
     hpa: "hpa",
+    g1_security: "g1_security",
     g2_security: "g2_security",
     g3_security: "g3_security",
     other_department: "other_department",
@@ -77,7 +78,7 @@ class DataRequest < ApplicationRecord
   MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
   PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records body_scans bwcf cctv education security_records telephone_recordings other].freeze
   PROBATION_DATA_REQUEST_TYPES         = %w[ndelius oasys_arns probation_records other].freeze
-  SECURITY_DATA_REQUEST_TYPES          = %w[g2_security g3_security].freeze
+  DPS_SENSITIVE_DATA_REQUEST_TYPES     = %w[g1_security g2_security g3_security].freeze
   OTHER_DEPARTMENT_DATA_REQUEST_TYPES  = %w[other_department].freeze
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
@@ -126,8 +127,8 @@ class DataRequest < ApplicationRecord
       PRISON_DATA_REQUEST_TYPES
     when "probation"
       PROBATION_DATA_REQUEST_TYPES
-    when "security"
-      SECURITY_DATA_REQUEST_TYPES
+    when "dps_sensitive"
+      DPS_SENSITIVE_DATA_REQUEST_TYPES
     when "other_department"
       OTHER_DEPARTMENT_DATA_REQUEST_TYPES
     end
