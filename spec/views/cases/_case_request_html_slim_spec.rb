@@ -37,8 +37,9 @@ describe "cases/case_request.html.slim", type: :view do
     let(:offender_sar_case) { create :offender_sar_case, message: "" }
 
     let(:partial) do
+      disallow_case_policies_in_view(offender_sar_case, :can_upload_request_attachment?)
       render partial: "cases/case_request",
-             locals: { case_details: offender_sar_case }
+             locals: { case_details: offender_sar_case.decorate }
 
       case_request_section(rendered)
     end
@@ -68,6 +69,7 @@ describe "cases/case_request.html.slim", type: :view do
     end
 
     let(:partial) do
+      disallow_case_policies_in_view(decorated_case, :can_upload_request_attachment?)
       render partial: "cases/case_request",
              locals: { case_details: decorated_case }
 
@@ -95,6 +97,7 @@ describe "cases/case_request.html.slim", type: :view do
     end
 
     let(:partial) do
+      disallow_case_policies_in_view(decorated_case, :can_upload_request_attachment?)
       render partial: "cases/case_request",
              locals: { case_details: decorated_case }
 
@@ -108,6 +111,39 @@ describe "cases/case_request.html.slim", type: :view do
       expect(partial).to have_show_more_link
       expect(partial).to have_preview
       expect(partial).to have_ellipsis
+    end
+  end
+
+  describe "displays button to upload attachments" do
+    let(:partial) do
+      allow_case_policies_in_view(decorated_case, :can_remove_attachment?, :can_upload_request_attachment?)
+      render partial: "cases/case_request",
+             locals: { case_details: decorated_case }
+
+      case_request_section(rendered)
+    end
+
+    before { assign :case, decorated_case }
+
+    context "when there are existing attachments" do
+      let(:sent_by_post) { create :case, :case_sent_by_post }
+      let(:decorated_case) do
+        sent_by_post.decorate.tap do |c|
+          allow(c).to receive(:message_extract).and_return([sent_by_post.message, ""])
+        end
+      end
+
+      it "displays an upload button" do
+        expect(partial).to have_upload_button
+      end
+    end
+
+    context "when there are no uploaded attachments" do
+      let(:decorated_case) { create(:case_being_drafted, message: long_message).decorate }
+
+      it "displays an upload button" do
+        expect(partial).to have_upload_button
+      end
     end
   end
 
