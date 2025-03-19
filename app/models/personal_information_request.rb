@@ -64,6 +64,8 @@ class PersonalInformationRequest < ApplicationRecord
                 :needed_for_court,
                 :needed_for_court_information
 
+  scope :ready_to_delete, -> { where("created_at < ?", 3.months.ago) }
+
   default_scope { where(deleted: false) }
 
   def self.build(payload)

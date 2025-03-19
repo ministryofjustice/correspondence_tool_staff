@@ -113,6 +113,17 @@ describe PersonalInformationRequest do
     end
   end
 
+  describe "ready_to_delete scope" do
+    it "returns undeleted objects created more than 3 months ago" do
+      _new_request = create(:personal_information_request)
+      _new_request_deleted = create(:personal_information_request, deleted: true)
+      _old_request_deleted = create(:personal_information_request, created_at: 4.months.ago, deleted: true)
+      old_request = create(:personal_information_request, created_at: 4.months.ago)
+
+      expect(described_class.ready_to_delete).to eq [old_request]
+    end
+  end
+
   describe ".build" do
     context "when V1 data" do
       it "creates object with data from payload" do
