@@ -170,6 +170,14 @@ class PersonalInformationRequest < ApplicationRecord
     "rpi/#{target}/#{submission_id}.zip"
   end
 
+  def soft_delete
+    # try deleting for both targets
+    [BRANSTON, DISCLOSURE].each do |target|
+      CASE_UPLOADS_S3_BUCKET.object(key(target))&.delete
+    end
+    update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
+  end
+
 private
 
   def request_builder

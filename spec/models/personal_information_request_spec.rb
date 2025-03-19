@@ -676,4 +676,41 @@ describe PersonalInformationRequest do
       end
     end
   end
+
+  describe "#soft_delete" do
+    let(:rpi) { build(:personal_information_request) }
+    let(:s3_object_branston) { instance_double(Aws::S3::Object) }
+    let(:s3_object_disclosure) { instance_double(Aws::S3::Object) }
+
+    before do
+      allow(s3_object_branston).to receive(:delete)
+      allow(s3_object_disclosure).to receive(:delete)
+    end
+
+    it "marks object as deleted" do
+      rpi.soft_delete
+      expect(rpi).to be_deleted
+    end
+
+    context "when has files for branston and disclosure" do
+      it "deletes the uploaded files" do
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key("branston")).and_return(s3_object_branston)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key("disclosure")).and_return(s3_object_disclosure)
+        expect(s3_object_branston).to receive(:delete)
+        expect(s3_object_disclosure).to receive(:delete)
+
+        rpi.soft_delete
+      end
+    end
+
+    context "when has files for only one type" do
+      it "deletes the uploaded files" do
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key("branston")).and_return(s3_object_branston)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(rpi.key("disclosure")).and_return(nil)
+        expect(s3_object_branston).to receive(:delete)
+
+        rpi.soft_delete
+      end
+    end
+  end
 end
