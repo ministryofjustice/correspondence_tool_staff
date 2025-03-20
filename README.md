@@ -118,11 +118,6 @@ If you have any issues when running background jobs, start by checking that redi
 $ brew services
 ```
 
-### Sidekiq
-
-When the server is running, you can view the sidekiq queues by going to http://localhost:3000/sidekiq.
-This path can also be used on the live site when you are logged in as an admin.
-
 ### Testing
 
 This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
@@ -187,7 +182,8 @@ If you have a `debugger`  in your tests the browser will stop at that point.
 #### Emails
 
 Emails are sent using
-the [GOVUK Notify service](https://www.notifications.service.gov.uk).
+the [GOVUK Notify service](https://www.notifications.service.gov.uk). Email requests are sent asynchronously via Sidekiq.
+
 Configuration relies on an API key which is not stored with the project, as even
 the test API key can be used to access account information. To do local testing
 you need to have an account that is attached to the "Track a query" service, and
@@ -376,3 +372,35 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 
 ## Exceptions
 Any exceptions raised in any deployed environment will be sent to [Sentry](https://ministryofjustice.sentry.io/projects/track-a-query).
+
+## Jobs
+
+There are a variety of jobs that run, either using Sidekiq and triggered in code, or via a cronjob.
+
+### Cronjobs
+
+These are configured to run in Kubernetes. Not all jobs run in all environments.
+
+| Name                                 | In Prod? | Details                                        | Frequency |
+| ------------------------------------ | -------- | ---------------------------------------------- | --------- |
+| email-status                         | Yes      | Checks and updates data request email status   | Hourly    |
+| close-expired-rejected-offender-sars | Yes      | Closes expired rejected Offender SARs          | Daily     |
+| send-chase-emails                    | Yes      | Sends Offender SAR data request chase emails   | Daily     |
+| rpi-delete                           | Yes      | Deletes RPI files                              | Weekly    |
+| db-anonymizer                        | No       | Dumps anonymised version of the database to S3 | N/A       |
+
+
+### Sidekiq
+
+When the server is running, you can view the sidekiq queues by going to http://localhost:3000/sidekiq.
+This path can also be used on the live site when you are logged in as an admin.
+
+| Name                          | Details                                 | Notes                                                              |
+| ------------------            | --------------------------------------- | ------------------------------------------------------------------ |
+| AnonymiserDbJob               | Anonymises database data for dumps      | Works with db-anonymizer cronjob                                   |
+| EmailStatusJob                | Gets status of data request email       | Used by email-status cronjob and also when email is initially sent |
+| PdfMakerJob                   | Creates PDF from case attachments       |                                                                    |
+| PerformanceReportJob          | Used when creating some reports         |                                                                    |
+| RequestPersonalInformationJob | Builds request from API and sends email |                                                                    |
+| SearchIndexUpdaterJob         | Updates search index when case changes  |                                                                    |
+| SearchIndexBuNameUpdaterJob   | Updater when Busines Unit name changes  | Calls the SearchIndexUpdaterJob for every case linked to the BU    |
