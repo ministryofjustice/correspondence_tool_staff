@@ -18,6 +18,7 @@ class PersonalInformationRequest < ApplicationRecord
   YES = "yes".freeze
   BRANSTON = :branston
   DISCLOSURE = :disclosure
+  DELETE_AFTER = 3.months
 
   attr_accessor :requesting_own_data,
                 :subject_full_name,
@@ -64,7 +65,7 @@ class PersonalInformationRequest < ApplicationRecord
                 :needed_for_court,
                 :needed_for_court_information
 
-  scope :ready_to_delete, -> { where("created_at < ?", 3.months.ago) }
+  scope :ready_to_delete, -> { where("created_at < ?", DELETE_AFTER.ago) }
 
   default_scope { where(deleted: false) }
 
