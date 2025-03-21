@@ -339,6 +339,9 @@ jobs:
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
             jobs="${{ vars.ECR_URL }}:$SHA"
 
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/rpi-delete \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
   notify-production:
     needs: [build, deploy-production]
     uses: ./.github/workflows/notification.yml
