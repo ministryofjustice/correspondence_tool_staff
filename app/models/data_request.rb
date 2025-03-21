@@ -63,7 +63,6 @@ class DataRequest < ApplicationRecord
     bwcf: "bwcf",
     education: "education",
     oasys_arns: "oasys_arns",
-    dps_security: "dps_security",
     hpa: "hpa",
     g1_security: "g1_security",
     g2_security: "g2_security",
@@ -73,7 +72,7 @@ class DataRequest < ApplicationRecord
     body_scans: "body_scans",
   }
 
-  BRANSTON_DATA_REQUEST_TYPES          = %w[dps dps_security hpa nomis_contact_logs nomis_records nomis_other].freeze
+  BRANSTON_DATA_REQUEST_TYPES          = %w[dps hpa nomis_contact_logs nomis_records nomis_other].freeze
   BRANSTON_REGISTRY_DATA_REQUEST_TYPES = %w[cat_a cross_borders pdp probation_archive].freeze
   MAPPA_DATA_REQUEST_TYPES             = %w[mappa].freeze
   PRISON_DATA_REQUEST_TYPES            = %w[all_prison_records body_scans bwcf cctv education security_records telephone_recordings other].freeze
