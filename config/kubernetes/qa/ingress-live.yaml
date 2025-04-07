@@ -11,7 +11,7 @@ metadata:
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=central-digital-product-team,tag:namespace=track-a-query-qa"
 spec:
-  ingressClassName: modsec
+  ingressClassName: modsec-non-prod
   tls:
     - hosts:
         - qa.track-a-query.service.justice.gov.uk
