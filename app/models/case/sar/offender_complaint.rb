@@ -76,7 +76,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   enum :complaint_subtype, {
     sscl_partial_case: "sscl_partial_case",
     covid_partial_response: "covid_partial_response",
-    missing_data: "missing_data",
+    dps_missing_data: "dps_missing_data",
     inaccurate_data: "inaccurate_data",
     redacted_data: "redacted_data",
     timeliness: "timeliness",
@@ -86,6 +86,11 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   enum :priority, {
     normal: "normal",
     high: "high",
+  }
+
+  enum :dps_missing_data, {
+    missing: "missing",
+    not_missing: "not_missing",
   }
 
   class << self
@@ -118,6 +123,17 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   def high_priority?
     high?
   end
+
+  def missing_dps_data?
+    missing_dps?
+  end
+
+  def no_missing_dps_data?
+    no_missing_dps?
+  end
+
+  def
+
 
   def validate_ico_contact_name
     if ico_complaint? && ico_contact_name.blank?
