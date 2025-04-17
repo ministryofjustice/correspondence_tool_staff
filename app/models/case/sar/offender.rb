@@ -113,6 +113,7 @@ class Case::SAR::Offender < Case::Base
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
+                 flag_as_dps_missing_data: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -190,8 +191,9 @@ class Case::SAR::Offender < Case::Base
 
   accepts_nested_attributes_for :data_requests
 
-  validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :third_party,               inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_high_profile,      inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_dps_missing_data,  inclusion: { in: [true, false], message: "cannot be blank" }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
