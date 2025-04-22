@@ -29,6 +29,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::InternalDeadlineFilter,
       CaseFilter::CaseHighProfileFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
