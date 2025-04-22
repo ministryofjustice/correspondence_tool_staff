@@ -10,8 +10,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
     let(:user) { find_or_create :disclosure_bmt_user }
     let(:search_query) { create :search_query }
 
-    it { is_expected.to include "dps-missing-data" => "Dps missing data" }
-    it { is_expected.to include "not-dps-missing-data" => "Not dps missing data" }
+    it { is_expected.to include "dps-missing-data" => 'Yes' }
+    it { is_expected.to include "not-dps-missing-data" => 'No' }
   end
 
   describe "#applied?" do
@@ -52,8 +52,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
                  filter_dps_missing_data: %w[dps-missing-data not-dps-missing-data]
         end
 
-        it 'uses "Dps missing data" for the crumb text' do
-          expect(case_dps_missing_data_filter.crumbs[0].first).to eq "Dps missing data + 1 more"
+        it 'uses "Yes" for the crumb text' do
+          expect(case_dps_missing_data_filter.crumbs[0].first).to eq "Yes + 1 more"
         end
       end
     end

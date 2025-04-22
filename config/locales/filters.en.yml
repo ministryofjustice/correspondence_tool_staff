@@ -66,7 +66,7 @@ en:
       filter_complaint_subtype: Filter by complaint sub type
       filter_complaint_priority: Filter by priority
       filter_high_profile: Filter by sensitivity
-      filter_dps_missing_data: Filter by dps missing data
+      filter_dps_missing_data: Filter by missing data
       filter_caseworker: Filter by complaint caseworker
       filter_vetter: Filter by vetting officer
       filter_retention_state: Filter by GDPR RRD status
@@ -98,8 +98,8 @@ en:
       high-profile: High profile
       not-high-profile: Not high profile
     filter_dps_missing_data:
-      dps-missing-data: Dps missing data
-      not-dps-missing-data: Not dps missing data
+      dps-missing-data: 'Yes'
+      not-dps-missing-data: 'No'
     filter_partial_case_flag:
       partial-case: Is partial case
       not-partial-case: Is not partial case

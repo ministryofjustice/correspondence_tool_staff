@@ -18,7 +18,7 @@ module CaseFilter
     end
 
     def is_permitted_for_user?
-      @user.permitted_correspondence_types.any? { |c_type| %w[OFFENDER_SAR OFFENDER_SAR_COMPLAINT].include? c_type.abbreviation }
+      @user.permitted_correspondence_types.any? { |c_type| %w[OFFENDER_SAR].include? c_type.abbreviation }
     end
 
     def call
