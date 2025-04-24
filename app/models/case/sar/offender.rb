@@ -563,7 +563,7 @@ private
 
   def set_number
     self.number = if invalid_submission?
-                    if flagged_for_dps_missing_data?
+                    if flag_as_dps_missing_data?
                     "DR#{next_number}"
                     else
                       "R#{next_number}"
