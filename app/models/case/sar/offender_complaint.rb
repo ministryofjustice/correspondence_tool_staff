@@ -76,7 +76,6 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   enum :complaint_subtype, {
     sscl_partial_case: "sscl_partial_case",
     covid_partial_response: "covid_partial_response",
-    missing_data: "missing_data",
     inaccurate_data: "inaccurate_data",
     redacted_data: "redacted_data",
     timeliness: "timeliness",
