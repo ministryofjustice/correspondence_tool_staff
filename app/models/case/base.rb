@@ -178,14 +178,14 @@ class Case::Base < ApplicationRecord
     where(
       "properties->>'flag_as_dps_missing_data'::text = ? ",
       true.to_s,
-      )
+    )
   }
 
   scope :not_dps_missing_data, lambda {
     where(
       "properties->>'flag_as_dps_missing_data'::text = ? ",
       false.to_s,
-      )
+    )
   }
   scope :partial_case, lambda {
     where(
