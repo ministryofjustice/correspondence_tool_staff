@@ -187,6 +187,7 @@ class Case::Base < ApplicationRecord
       false.to_s,
     )
   }
+
   scope :partial_case, lambda {
     where(
       "properties->>'is_partial_case'::text = ? ",
