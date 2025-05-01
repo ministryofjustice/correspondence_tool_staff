@@ -175,14 +175,14 @@ class Case::Base < ApplicationRecord
   }
 
   scope :dps_missing_data, lambda {
-    where (
+    where(
       "properties->>'flag_as_dps_missing_data'::text = ? ",
       true.to_s,
     )
   }
 
   scope :not_dps_missing_data, lambda {
-    where (
+    where(
       "properties->>'flag_as_dps_missing_data'::text = ? ",
       false.to_s,
     )
