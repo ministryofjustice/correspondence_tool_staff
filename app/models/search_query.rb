@@ -32,6 +32,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseworkerFilter,
       CaseFilter::VetterFilter,
     ],
@@ -44,6 +45,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CasePartialCaseFlagFilter,
     ],
     "my_cases" => [
@@ -51,6 +53,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
     ],
     "search_cases" => [
       CaseFilter::CaseStatusFilter,
@@ -65,6 +68,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
       CaseFilter::CasePartialCaseFlagFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
     ],
     "retention_pending_removal" => [
       CaseFilter::CaseRetentionDeadlineFilter,
