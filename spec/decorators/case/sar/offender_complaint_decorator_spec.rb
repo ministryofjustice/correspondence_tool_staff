@@ -91,16 +91,15 @@ describe Case::SAR::OffenderComplaintDecorator do
     end
   end
 
-  describe "#highlight_flag" do
-    it 'returns string of "High priority" in a badge' do
-      priority_case = create(:offender_sar_complaint, priority: "high").decorate
-      expect(priority_case.highlight_flag).to eq '<div class="offender_sar_complaint-priority_flag">' \
-        '<span class="visually-hidden">This is a </span>High priority<span class="visually-hidden"> case</span></div>'
+  describe "#dps_missing_data_flag" do
+    it 'returns "Yes"' do
+      dps_missing_data_case = create(:offender_sar_complaint, dps_missing_data: "Yes").decorate
+      expect(dps_missing_data_case).to eq 'Yes'
     end
 
-    it "returns blank string when priority is normal" do
-      priority_case = create(:offender_sar_complaint, priority: "normal").decorate
-      expect(priority_case.highlight_flag).to eq ""
+    it "returns string 'No'" do
+      dps_missing_data_case = create(:offender_sar_complaint, dps_missing_data: "No").decorate
+      expect(dps_missing_data_case).to eq "No"
     end
   end
 end
