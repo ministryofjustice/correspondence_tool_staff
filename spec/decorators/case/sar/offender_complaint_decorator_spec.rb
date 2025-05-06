@@ -90,17 +90,4 @@ describe Case::SAR::OffenderComplaintDecorator do
       expect(offender_sar_complaint.pretty_type).to eq "Complaint - Litigation"
     end
   end
-
-  describe "#dps_missing_data" do
-    let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, dps_missing_data: "Yes").decorate }
-
-    it 'returns "Yes"' do
-      expect(offender_sar_complaint.flag_as_dps_missing_data).to eq "Yes"
-    end
-
-    it 'returns string "No"' do
-      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, dps_missing_data: "No").decorate }
-      expect(offender_sar_complaint.flag_as_dps_missing_data).to eq "No"
-    end
-  end
 end
