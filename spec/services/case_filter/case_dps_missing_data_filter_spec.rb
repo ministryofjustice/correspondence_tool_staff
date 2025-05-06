@@ -35,8 +35,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
   describe "#call" do
     let!(:offender_sar_complaint_standard) { create :offender_sar_complaint }
     let!(:offender_sar_complaint_standard1) { create :offender_sar_complaint }
-    let!(:offender_sar_complaint_dps_missing_data1) { create :offender_sar_complaint, flag_as_dps_missing: true }
-    let!(:offender_sar_complaint_dps_missing_data2) { create :offender_sar_complaint, flag_as_dps_missing: true }
+    let!(:offender_sar_complaint_dps_missing_data1) { create :offender_sar_complaint, flag_as_dps_missing: "Yes" }
+    let!(:offender_sar_complaint_dps_missing_data2) { create :offender_sar_complaint, flag_as_dps_missing: "Yes" }
 
     describe "filtering for normal complaint cases" do
       let(:search_query) do
@@ -102,8 +102,7 @@ describe CaseFilter::CaseDpsMissingDataFilter do
 
         describe "params that will be submitted when clicking on the crumb" do
           it {
-            expect(case_dps_missing_data_filter.crumbs[0].second).to eq "filter_dps_missing_data" => [""],
-                                                                    "parent_id" => search_query.id
+            expect(case_dps_missing_data_filter.crumbs[0].second).to eq "filter_dps_missing_data" => [""], "parent_id" => search_query.id
           }
         end
       end
@@ -120,7 +119,6 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       end
     end
   end
-
 
   describe ".process_params!" do
     it "processes filter_dps_missing_data, sorting and removing blanks" do
