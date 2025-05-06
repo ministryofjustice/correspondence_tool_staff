@@ -91,15 +91,16 @@ describe Case::SAR::OffenderComplaintDecorator do
     end
   end
 
-  describe "#dps_missing_data_flag" do
+  describe "#dps_missing_data" do
+    let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, dps_missing_data: "Yes").decorate }
+
     it 'returns "Yes"' do
-      dps_missing_data_case = create(:offender_sar_complaint, dps_missing_data: "Yes").decorate
-      expect(dps_missing_data_case).to eq "Yes"
+      expect(offender_sar_complaint.flag_as_dps_missing_data).to eq "Yes"
     end
 
-    it "returns string 'No'" do
-      dps_missing_data_case = create(:offender_sar_complaint, dps_missing_data: "No").decorate
-      expect(dps_missing_data_case).to eq "No"
+    it 'returns string "No"' do
+      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, dps_missing_data: "No").decorate }
+      expect(offender_sar_complaint.flag_as_dps_missing_data).to eq "No"
     end
   end
 end
