@@ -1,5 +1,4 @@
 require "rails_helper"
-
 describe CaseFilter::CaseHighProfileFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_hgih_profile_filter) { described_class.new search_query, user, Case::Base }

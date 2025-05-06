@@ -9,8 +9,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
     let(:user) { find_or_create :disclosure_bmt_user }
     let(:search_query) { create :search_query }
 
-    it { is_expected.to include "dps-missing-data" => "Yes" }
-    it { is_expected.to include "not-dps-missing-data" => "No" }
+    it { is_expected.to include "dps-missing-data" => "Dps missing data" }
+    it { is_expected.to include "not-dps-missing-data" => "No dps missing data" }
   end
 
   describe "#applied?" do
@@ -35,8 +35,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
   describe "#call" do
     let!(:offender_sar_complaint_standard) { create :offender_sar_complaint }
     let!(:offender_sar_complaint_standard1) { create :offender_sar_complaint }
-    let!(:offender_sar_complaint_dps_missing_data1) { create :offender_sar_complaint, flag_as_dps_missing_case: true }
-    let!(:offender_sar_complaint_dps_missing_data2) { create :offender_sar_complaint, flag_as_dps_missing_case: true }
+    let!(:offender_sar_complaint_dps_missing_data1) { create :offender_sar_complaint, flag_as_dps_missing: true }
+    let!(:offender_sar_complaint_dps_missing_data2) { create :offender_sar_complaint, flag_as_dps_missing: true }
 
     describe "filtering for normal complaint cases" do
       let(:search_query) do
@@ -45,7 +45,7 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       end
 
       it "returns the correct list of cases" do
-        results = case_hgih_profile_filter.call
+        results = case_dps_missing_data_filter.call
         expect(results).to match_array [
                                          offender_sar_complaint_standard.original_case,
                                          offender_sar_complaint_standard,
@@ -86,18 +86,41 @@ describe CaseFilter::CaseDpsMissingDataFilter do
     end
 
     context "when filtering for cases based on flag of dps missing data" do
-      context "and filtering for no dps missing data and dps missing data cases" do
+      context "and filtering for normal complaint case" do
+        let(:search_query) do
+          create :search_query,
+                 filter_dps_missing_data: %w[not-dps-missing-data]
+        end
+
+        it "returns 1 crumb" do
+          expect(case_dps_missing_data_filter.crumbs).to have(1).item
+        end
+
+        it 'uses "Not dps missing" for the crumb text' do
+          expect(case_dps_missing_data_filter.crumbs[0].first).to eq "Not high profile"
+        end
+
+        describe "params that will be submitted when clicking on the crumb" do
+          it {
+            expect(case_dps_missing_data_filter.crumbs[0].second).to eq "filter_dps_missing_data" => [""],
+                                                                    "parent_id" => search_query.id
+          }
+        end
+      end
+
+      context "and filtering for normal and dps missing data cases" do
         let(:search_query) do
           create :search_query,
                  filter_dps_missing_data: %w[dps-missing-data not-dps-missing-data]
         end
 
-        it 'uses "Yes" for the crumb text' do
-          expect(case_dps_missing_data_filter.crumbs[0].first).to eq "Yes + 1 more"
+        it 'uses "Dps missing data" for the crumb text' do
+          expect(case_dps_missing_data_filter.crumbs[0].first).to eq "Dps missing data + 1 more"
         end
       end
     end
   end
+
 
   describe ".process_params!" do
     it "processes filter_dps_missing_data, sorting and removing blanks" do
