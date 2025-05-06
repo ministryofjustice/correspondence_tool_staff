@@ -94,7 +94,7 @@ describe Case::SAR::OffenderComplaintDecorator do
   describe "#dps_missing_data_flag" do
     it 'returns "Yes"' do
       dps_missing_data_case = create(:offender_sar_complaint, dps_missing_data: "Yes").decorate
-      expect(dps_missing_data_case).to eq 'Yes'
+      expect(dps_missing_data_case).to eq "Yes"
     end
 
     it "returns string 'No'" do
