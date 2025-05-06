@@ -61,7 +61,7 @@ describe CaseFilter::CaseDpsMissingDataFilter do
     describe "filtering for dps missing data complaint cases" do
       let(:search_query) do
         create :search_query,
-               filter_high_profile: %w[dps-missing-data]
+               filter_dps_missing_data: %w[dps-missing-data]
       end
 
       it "returns the correct list of cases" do
