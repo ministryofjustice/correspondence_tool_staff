@@ -144,6 +144,7 @@ feature "filters whittle down search results" do
       open_cases_page.filter_on("type", "foi_standard")
       open_cases_page.filter_on(:timeliness, "in_time")
       open_cases_page.filter_on("open_status", "responded")
+      open_cases_page.filter_on("dps_missing_data", "responded")
       open_cases_page.filter_on_deadline(from: Time.zone.today,
                                          to: 15.business_days.from_now)
       @deadline_filter_text = sprintf("Deadline %s - %s", Time.zone.today.strftime("%-d %b %Y"), 15.business_days.from_now.strftime("%-d %b %Y"))
