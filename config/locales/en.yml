@@ -890,8 +890,8 @@ en:
         case_reference_number: Case reference number (CRN)
         email: Email address (optional)
         external_reference: Requester reference (optional)
-        high_profile: High profile
-        dps_missing_data: Missing data
+        high_profile: High profile?
+        dps_missing_data: Missing data?
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
