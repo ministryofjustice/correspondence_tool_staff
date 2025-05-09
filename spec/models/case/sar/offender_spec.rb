@@ -137,8 +137,8 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_valid_case_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
-
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: false) }
+    let(:case_rejected_dps_missing) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
     it "does not create a non unique number and does remove the preceding 'R'" do
       expect(case_rejected.set_valid_case_number).not_to eq "240411001"
       expect(case_rejected.set_valid_case_number[0]).not_to eq "R"
@@ -149,8 +149,8 @@ describe Case::SAR::Offender do
     end
 
     it "adds the 'D' prefix to the number" do
-      expect(case_rejected.flag_as_dps_missing_data?).to eq true
-      expect(case_rejected.set_valid_case_number[0]).to eq "D"
+      expect(case_rejected_dps_missing.flag_as_dps_missing_data?).to eq true
+      expect(case_rejected_dps_missing.set_valid_case_number[0]).to eq "D"
     end
   end
 
