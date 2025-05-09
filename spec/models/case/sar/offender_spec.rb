@@ -45,7 +45,7 @@ describe Case::SAR::Offender do
 
   context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
-      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
+      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil, flag_as_dps_missing_data: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
@@ -124,7 +124,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected, :flag_as_dps_missing_data=>false) }
     let(:kase) { create(:offender_sar_case) }
 
     it "sets the prefix for rejected case" do
@@ -137,11 +137,16 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_valid_case_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024")) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data=>true)}
 
     it "does not create a non unique number and does remove the preceding 'R'" do
       expect(case_rejected.set_valid_case_number).not_to eq "240411001"
       expect(case_rejected.set_valid_case_number[0]).not_to eq "R"
+    end
+
+    it "does not remove the preceding 'D' for a dps missing data case" do
+      expect(case_rejected.flag_dps_missing_data).to eq true
+      expect(case_rejected.set_valid_case_number[0]).to eq "D"
     end
 
     it "creates a unique new number for the valid case" do
