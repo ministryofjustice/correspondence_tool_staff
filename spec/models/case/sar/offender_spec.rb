@@ -137,7 +137,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_valid_case_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024")) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
 
     it "does not create a non unique number and does remove the preceding 'R'" do
       expect(case_rejected.set_valid_case_number).not_to eq "240411001"
@@ -146,6 +146,11 @@ describe Case::SAR::Offender do
 
     it "creates a unique new number for the valid case" do
       expect(case_rejected.set_valid_case_number).to eq "240411002"
+    end
+
+    it "adds the 'D' prefix to the number" do
+      expect(case_rejected.flag_as_dps_missing_data?).to eq true
+      expect(case_rejected.set_valid_case_number[0]).to eq "D"
     end
   end
 

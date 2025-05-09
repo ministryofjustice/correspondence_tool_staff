@@ -225,7 +225,6 @@ module Cases
 
     def confirm_accepted_date_received
       authorize @case, :can_validate_rejected_case?
-
       service = CaseValidateRejectedOffenderSARService.new(
         user: current_user,
         kase: @case,
