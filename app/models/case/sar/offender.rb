@@ -576,7 +576,9 @@ private
 
   def set_deadlines
     super
-    if rejected?
+    if rejected? & flag_as_dps_missing_data?
+      self.external_deadline = @deadline_calculator.days_after(DPS_AUTO_CLOSURE_DEADLINE, received_date)
+    elsif rejected?
       self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
     end
   end
