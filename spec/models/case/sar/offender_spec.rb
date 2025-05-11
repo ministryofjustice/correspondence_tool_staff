@@ -100,7 +100,6 @@ describe Case::SAR::Offender do
     end
   end
 
-
   describe ".close_expired_rejected" do
     let(:rejected_expired) { create(:offender_sar_case, :rejected) }
     let(:system_user) { User.system_admin }
