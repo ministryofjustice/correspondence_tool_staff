@@ -529,7 +529,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def set_valid_case_number
-    flag_as_dps_missing_data ? self.number = "D #{next_number}": self.number = next_number
+    flag_as_dps_missing_data ? self.number = "D #{next_number}" : self.number = next_number
   end
 
 private
