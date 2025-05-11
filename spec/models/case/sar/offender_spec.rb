@@ -80,6 +80,14 @@ describe Case::SAR::Offender do
     let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected) }
 
     it "sets external deadline using a calculation of 90 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 90)
+    end
+  end
+
+  describe "#external_deadline for dps missing data rejected sar" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected, flag_as_dps_missing_data: true ) }
+
+    it "sets external deadline using a calculation of 60 days from received_date" do
       expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 60)
     end
   end

@@ -83,6 +83,7 @@ class Case::SAR::Offender < Case::Base
   ].freeze
 
   REJECTED_AUTO_CLOSURE_DEADLINE = 90
+  DPS_AUTO_CLOSURE_DEADLINE = 60
 
   REJECTED_REASONS = {
     "cctv_bwcf" => "CCTV / BWCF request",
