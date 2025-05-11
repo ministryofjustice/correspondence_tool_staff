@@ -43,7 +43,6 @@ module PageObjects
 
             choose("offender_sar_subject_type_offender", visible: false)
             choose("offender_sar_flag_as_high_profile_false", visible: false)
-            choose("offender_sar_flag_as_dps_missing_data_false", visible: false)
           end
 
           def set_date_of_birth(date_of_birth)
