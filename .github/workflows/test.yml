@@ -117,13 +117,13 @@ jobs:
           max_attempts: 3
           command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
-      - name: Remove image-bundled Chrome
+            - name: Remove image-bundled Chrome
         run: sudo apt-get purge google-chrome-stable
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1.7.3
         with:
-          chrome-version: 130
+          chrome-version: 128
           install-chromedriver: true
           install-dependencies: true
 
