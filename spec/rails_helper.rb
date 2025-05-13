@@ -46,6 +46,7 @@ Capybara.register_driver :headless_chrome do |app|
     options.add_argument("--start-maximized")
     options.add_argument("--window-size=1980,2080")
     options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+    options.browser_version = "132"
   end
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
