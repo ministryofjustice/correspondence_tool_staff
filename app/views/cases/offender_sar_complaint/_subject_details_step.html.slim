@@ -33,6 +33,10 @@
     - fieldset.radio_input(true, text_method: :humanize)
     - fieldset.radio_input(false, text_method: :humanize)
 
+  = f.radio_button_fieldset(:flag_as_dps_missing_data) do |fieldset|
+    - fieldset.radio_input(true, text_method: :humanize)
+    - fieldset.radio_input(false, text_method: :humanize)
+
   input name="current_step" type="hidden" value=@case.current_step
   input name="flag_for_creation_from_sar_page" type="hidden" value= @creation_optional_flags[:flag_for_creation_from_sar_page]
 
