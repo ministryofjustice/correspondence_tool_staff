@@ -637,7 +637,8 @@ en:
         filter_complaint_subtype: Complaint sub type
         filter_status: Status
         filter_timeliness: Timeliness
-        filter_high_profile: Flag as high profile?
+        filter_high_profile: Flag as high profile
+        filter_dps_missing_data: Missing data
         filter_retention_state: Status
         filter_vetter: Vetting officer
       team:
@@ -890,6 +891,7 @@ en:
         email: Email address (optional)
         external_reference: Requester reference (optional)
         high_profile: High profile
+        dps_missing_data: Missing data
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
