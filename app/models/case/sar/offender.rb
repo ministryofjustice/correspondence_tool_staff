@@ -527,7 +527,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def set_valid_case_number
-    self.number = next_number
+    self.number = if flag_as_dps_missing_data?
+                    "D#{next_number}"
+                  else
+                    next_number
+                  end
   end
 
 private
