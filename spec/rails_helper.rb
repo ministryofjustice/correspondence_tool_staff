@@ -40,12 +40,12 @@ Capybara.register_driver :headless_chrome do |app|
   options.add_preference(:download, { prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s })
 
   unless ENV["CHROME_DEBUG"]
-    options.add_argument("--headless")
     options.add_argument("--disable-gpu")
+    options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--start-maximized")
     options.add_argument("--window-size=1980,2080")
-    options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
   end
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
