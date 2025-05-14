@@ -11,6 +11,7 @@ module OffenderSARCasesParams
       :email,
       :requester_reference,
       :flag_as_high_profile,
+      :flag_as_dps_missing_data,
       :message,
       :name,
       :number_final_pages,
