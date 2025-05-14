@@ -137,7 +137,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_valid_case_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024")let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: false) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: false) }
     let(:case_rejected_dps_missing) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
 
     it "does not create a non unique number and does remove the preceding 'R'" do
