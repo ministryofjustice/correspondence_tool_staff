@@ -76,6 +76,7 @@ describe SearchQuery do
         filter_status
         filter_timeliness
         filter_high_profile
+        filter_dps_missing_data
         filter_complaint_type
         filter_complaint_priority
         filter_complaint_subtype
@@ -239,6 +240,7 @@ describe SearchQuery do
         filter_status
         filter_timeliness
         filter_high_profile
+        filter_dps_missing_data
         filter_complaint_type
         filter_complaint_priority
         filter_complaint_subtype
@@ -626,6 +628,7 @@ describe SearchQuery do
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
@@ -641,6 +644,7 @@ describe SearchQuery do
           CaseFilter::DateRespondedFilter,
           CaseFilter::CaseTypeFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
@@ -684,6 +688,7 @@ describe SearchQuery do
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
