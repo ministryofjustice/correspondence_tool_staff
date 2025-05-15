@@ -1,4 +1,5 @@
 require "rails_helper"
+
 describe CaseFilter::CaseDpsMissingDataFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_dps_missing_data_filter) { described_class.new search_query, user, Case::Base }
@@ -47,13 +48,13 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       it "returns the correct list of cases" do
         results = case_dps_missing_data_filter.call
         expect(results).to match_array [
-                                         offender_sar_complaint_standard.original_case,
-                                         offender_sar_complaint_standard,
-                                         offender_sar_complaint_standard1.original_case,
-                                         offender_sar_complaint_standard1,
-                                         offender_sar_complaint_dps_missing_data1.original_case,
-                                         offender_sar_complaint_dps_missing_data2.original_case,
-                                       ]
+          offender_sar_complaint_standard.original_case,
+          offender_sar_complaint_standard,
+          offender_sar_complaint_standard1.original_case,
+          offender_sar_complaint_standard1,
+          offender_sar_complaint_dps_missing_data1.original_case,
+          offender_sar_complaint_dps_missing_data2.original_case,
+        ]
       end
     end
 
@@ -66,9 +67,9 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       it "returns the correct list of cases" do
         results = case_dps_missing_data_filter.call
         expect(results).to match_array [
-                                         offender_sar_complaint_dps_missing_data1,
-                                         offender_sar_complaint_dps_missing_data2,
-                                       ]
+          offender_sar_complaint_dps_missing_data1,
+          offender_sar_complaint_dps_missing_data2,
+        ]
       end
     end
   end

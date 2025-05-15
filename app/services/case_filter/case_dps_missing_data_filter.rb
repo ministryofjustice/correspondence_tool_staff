@@ -26,7 +26,7 @@ module CaseFilter
       filter_dps_missing_data(records)
     end
 
-    private
+  private
 
     def is_dps_missing_data?
       "dps-missing-data".in? @query.filter_dps_missing_data
