@@ -137,6 +137,7 @@ RSpec.describe Cases::OffenderSARController, type: :controller do
           expect(errors[:date_of_birth]).to eq ["cannot be blank"]
           expect(errors[:subject_type]).to eq ["cannot be blank"]
           expect(errors[:flag_as_high_profile]).to eq ["cannot be blank"]
+          expect(errors[:flag_as_dps_missing_data]).to eq ["cannot be blank"]
         end
       end
 

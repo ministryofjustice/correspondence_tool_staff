@@ -83,6 +83,7 @@ class Case::SAR::Offender < Case::Base
   ].freeze
 
   REJECTED_AUTO_CLOSURE_DEADLINE = 90
+  DPS_AUTO_CLOSURE_DEADLINE = 60
 
   REJECTED_REASONS = {
     "cctv_bwcf" => "CCTV / BWCF request",
@@ -113,6 +114,7 @@ class Case::SAR::Offender < Case::Base
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
+                 flag_as_dps_missing_data: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -192,6 +194,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_dps_missing_data, inclusion: { in: [true, false], message: "cannot be blank" }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
@@ -527,7 +530,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def set_valid_case_number
-    self.number = next_number
+    self.number = if flag_as_dps_missing_data?
+                    "D#{next_number}"
+                  else
+                    next_number
+                  end
   end
 
 private
@@ -561,7 +568,11 @@ private
 
   def set_number
     self.number = if invalid_submission?
-                    "R#{next_number}"
+                    if flag_as_dps_missing_data?
+                      "DR#{next_number}"
+                    else
+                      "R#{next_number}"
+                    end
                   else
                     next_number
                   end
@@ -569,7 +580,9 @@ private
 
   def set_deadlines
     super
-    if rejected?
+    if rejected? & flag_as_dps_missing_data?
+      self.external_deadline = @deadline_calculator.days_after(DPS_AUTO_CLOSURE_DEADLINE, received_date)
+    elsif rejected?
       self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
     end
   end
