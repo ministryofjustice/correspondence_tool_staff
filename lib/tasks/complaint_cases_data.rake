@@ -50,8 +50,7 @@ namespace :complaints do
                 "subject_address",
                 "prison_number",
                 "other_subject_ids",
-                "flag_as_high_profile",
-                "flag_as_dps_missing_data"]
+                "flag_as_high_profile"]
         CSV.foreach(args[:file], headers: true) do |row|
           puts "Checking #{row['DPARefNo']}"
           offender = locate_offender_sar_case(row["DPARefNo"])
@@ -67,8 +66,7 @@ namespace :complaints do
                   (offender.present? ? offender.subject_address : ""),
                   (offender.present? ? offender.prison_number : ""),
                   (offender.present? ? (offender.other_subject_ids || "") : ""),
-                  (offender.present? ? offender.flag_as_high_profile : ""),
-                  (offender.present? ? offender.flag_as_dps_missing_data : "")]
+                  (offender.present? ? offender.flag_as_high_profile : "")]
           counter += 1 if offender.blank?
         end
       end

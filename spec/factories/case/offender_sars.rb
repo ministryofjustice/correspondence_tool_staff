@@ -59,6 +59,7 @@ FactoryBot.define do
   trait :rejected do
     current_state { "invalid_submission" }
     rejected_reasons { %w[further_identification court_data_request] }
+    flag_as_dps_missing_data { false }
   end
 
   trait :invalid_submission do

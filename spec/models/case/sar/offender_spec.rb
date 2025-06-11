@@ -45,7 +45,7 @@ describe Case::SAR::Offender do
 
   context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
-      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil, flag_as_dps_missing_data: nil
+      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])

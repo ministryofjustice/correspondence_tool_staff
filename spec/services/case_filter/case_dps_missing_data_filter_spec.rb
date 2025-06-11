@@ -34,12 +34,12 @@ describe CaseFilter::CaseDpsMissingDataFilter do
   end
 
   describe "#call" do
-    let!(:offender_sar_complaint_standard) { create :offender_sar_complaint }
-    let!(:offender_sar_complaint_standard1) { create :offender_sar_complaint }
-    let!(:offender_sar_complaint_dps_missing_data1) { create :offender_sar_complaint, flag_as_dps_missing_data: true }
-    let!(:offender_sar_complaint_dps_missing_data2) { create :offender_sar_complaint, flag_as_dps_missing_data: true }
+    let!(:offender_sar_standard_one) { create :offender_sar_case }
+    let!(:offender_sar_standard_two) { create :offender_sar_case }
+    let!(:offender_sar_dps_missing_data_one) { create :offender_sar_case, flag_as_dps_missing_data: true }
+    let!(:offender_sar_dps_missing_data_two) { create :offender_sar_case, flag_as_dps_missing_data: true }
 
-    describe "filtering for normal complaint cases" do
+    describe "filtering for normal cases" do
       let(:search_query) do
         create :search_query,
                filter_dps_missing_data: %w[not-dps-missing-data]
@@ -48,17 +48,13 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       it "returns the correct list of cases" do
         results = case_dps_missing_data_filter.call
         expect(results).to match_array [
-          offender_sar_complaint_standard.original_case,
-          offender_sar_complaint_standard,
-          offender_sar_complaint_standard1.original_case,
-          offender_sar_complaint_standard1,
-          offender_sar_complaint_dps_missing_data1.original_case,
-          offender_sar_complaint_dps_missing_data2.original_case,
+          offender_sar_standard_one,
+          offender_sar_standard_two,
         ]
       end
     end
 
-    describe "filtering for dps missing data complaint cases" do
+    describe "filtering for dps missing data cases" do
       let(:search_query) do
         create :search_query,
                filter_dps_missing_data: %w[dps-missing-data]
@@ -67,8 +63,8 @@ describe CaseFilter::CaseDpsMissingDataFilter do
       it "returns the correct list of cases" do
         results = case_dps_missing_data_filter.call
         expect(results).to match_array [
-          offender_sar_complaint_dps_missing_data1,
-          offender_sar_complaint_dps_missing_data2,
+          offender_sar_dps_missing_data_one,
+          offender_sar_dps_missing_data_two,
         ]
       end
     end
@@ -87,7 +83,7 @@ describe CaseFilter::CaseDpsMissingDataFilter do
     end
 
     context "when filtering for cases based on flag of dps missing data" do
-      context "and filtering for normal complaint case" do
+      context "and filtering for normal case" do
         let(:search_query) do
           create :search_query,
                  filter_dps_missing_data: %w[not-dps-missing-data]

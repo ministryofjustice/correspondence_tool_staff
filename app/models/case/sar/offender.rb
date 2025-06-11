@@ -194,7 +194,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :flag_as_dps_missing_data, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_dps_missing_data, inclusion: { in: [true, false], message: "cannot be blank" }, if: -> { invalid_submission? }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
