@@ -3,7 +3,7 @@ require "json"
 
 namespace :links do
   desc "Generate a list of offender SAR cases with their data requests."
-  task :generate, [:file] => :environment do |_task, args|
+  task :generate, [:file] => :environment do |_task, _args|
     query = <<-SQL
       SELECT cases.*, data_requests.*
       FROM cases
