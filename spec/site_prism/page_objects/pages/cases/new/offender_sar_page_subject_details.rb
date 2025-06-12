@@ -43,8 +43,7 @@ module PageObjects
 
             choose("offender_sar_subject_type_offender", visible: false)
             choose("offender_sar_flag_as_high_profile_false", visible: false)
-            if params.present? && params["rejected"] == "true"
-              # maybe target with something else on the page
+            if dps_missing_data_relevant?
               choose("offender_sar_flag_as_dps_missing_data_false", visible: false)
             end
           end
@@ -53,6 +52,10 @@ module PageObjects
             date_of_birth_dd.set(date_of_birth.day)
             date_of_birth_mm.set(date_of_birth.month)
             date_of_birth_yyyy.set(date_of_birth.year)
+          end
+
+          def dps_missing_data_relevant?
+            page.html.include?("Create rejected Offender SAR case")
           end
         end
       end
