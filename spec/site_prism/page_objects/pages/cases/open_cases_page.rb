@@ -41,6 +41,9 @@ module PageObjects
         section :filter_sensitivity_content,
                 PageObjects::Sections::Cases::TriggerFlagFilterPanelSection,
                 "#filter_sensitivity_content"
+        section :filter_missing_data_content,
+                PageObjects::Sections::Cases::TriggerFlagFilterPanelSection,
+                "#filter_missing_data_content"
         section :filter_timeliness_content,
                 PageObjects::Sections::Cases::TimelinessFilterPanelSection,
                 "#filter_timeliness_content"

@@ -101,6 +101,10 @@ module PageObjects
               element :data, "td:nth-child(2)"
             end
 
+            section :dps_flag, "tr.subject-missing-data" do
+              element :data, "td"
+            end
+
             section :response_address, "tr.response-address" do
               element :data, "td"
             end
