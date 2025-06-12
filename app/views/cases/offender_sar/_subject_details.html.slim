@@ -38,6 +38,6 @@ tr.subject-high-priority
   th = t('helpers.label.offender_sar.high_profile')
   td = case_details.flag_as_high_profile.humanize
 tr.subject-missing-data
-- value = case_details.flag_as_dps_missing_data.humanize
+  - value = case_details.flag_as_dps_missing_data.humanize
   th = t('helpers.label.offender_sar.dps_missing_data')
   td = value.include?("Nothing") ? "No" : value

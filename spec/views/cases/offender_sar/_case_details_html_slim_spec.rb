@@ -74,8 +74,8 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       }
 
       partial = offender_sar_case_details_section(rendered).sar_basic_details
-
       expect(partial.rejected_reason.data.text).to eq "Further identification"
+      expect(partial.dps_flag.data.text).to eq "No"
     end
 
     it "removes the rejected reason details 'change' link when the case is no longer rejected" do
