@@ -14,7 +14,7 @@ namespace :links do
     SQL
 
     records_array = ActiveRecord::Base.connection.execute(query)
-    result_file = "offender_sar_cases_with_data_requests.csv"
+    result_file = "/tmp/offender_sar_cases_with_data_requests.csv"
     counter = 0
 
     CSV.open(result_file, "wb") do |csv|
