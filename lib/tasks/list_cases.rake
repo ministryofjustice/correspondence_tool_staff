@@ -16,6 +16,9 @@ query = <<-SQL
          data_requests.completed
   FROM cases
   LEFT JOIN data_requests ON cases.id = data_requests.case_id
+  WHERE cases.type = 'Case::SAR::Offender'
+    AND cases.received_date >= '2018-01-01'
+    AND cases.received_date <= '2024-09-30'
 SQL
 
 namespace :dps do
