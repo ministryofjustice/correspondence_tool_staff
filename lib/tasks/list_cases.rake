@@ -20,35 +20,35 @@ SQL
 
 namespace :dps do
   desc "List DPS cases with data requests"
-  task :list_cases => :environment do |_task|
+  task list_cases: :environment do |_task|
     result_file = "/tmp/offender_sar_cases_with_data_requests.csv"
     records_array = ActiveRecord::Base.connection.execute(query)
     counter = 0
 
     CSV.open(result_file, "wb") do |csv|
       # Define headers
-      csv << [
-        "case_id",
-        "received_date",
-        "type",
-        "subject_full_name",
-        "subject_aliases",
-        "subject_address",
-        "date_of_birth",
-        "prison_number",
-        "other_subject_ids",
-        "previous_case_numbers",
-        "subject_type",
-        "recipient",
-        "third_party_company_name",
-        "location",
-        "request_type",
-        "request_type_note",
-        "date_requested",
-        "date_from",
-        "date_to",
-        "cached_num_pages",
-        "completed"
+      csv << %w[
+        case_id
+        received_date
+        type
+        subject_full_name
+        subject_aliases
+        subject_address
+        date_of_birth
+        prison_number
+        other_subject_ids
+        previous_case_numbers
+        subject_type
+        recipient
+        third_party_company_name
+        location
+        request_type
+        request_type_note
+        date_requested
+        date_from
+        date_to
+        cached_num_pages
+        completed
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -56,7 +56,11 @@ namespace :dps do
 
       records_array.each do |record|
         # Parse JSON properties
-        json_data = JSON.parse(record["properties"]) rescue {}
+        json_data = begin
+                      JSON.parse(record["properties"])
+        rescue StandardError
+                      {}
+        end
 
         # Remove new lines and carriage returns from all string values in json_data
         json_data.each do |key, value|
@@ -88,7 +92,7 @@ namespace :dps do
           record["date_from"],
           record["date_to"],
           record["cached_num_pages"],
-          record["completed"]
+          record["completed"],
         ]
         counter += 1
       end
