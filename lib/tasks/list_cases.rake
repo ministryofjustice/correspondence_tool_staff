@@ -57,9 +57,9 @@ namespace :dps do
       records_array.each do |record|
         # Parse JSON properties
         json_data = begin
-                      JSON.parse(record["properties"])
+          JSON.parse(record["properties"])
         rescue StandardError
-                      {}
+          {}
         end
 
         # Remove new lines and carriage returns from all string values in json_data
