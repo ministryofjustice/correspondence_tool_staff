@@ -24,7 +24,7 @@ SQL
 namespace :dps do
   desc "List DPS cases with data requests"
   task list_cases: :environment do |_task|
-    result_file = "/tmp/offender_sar_cases_with_data_requests.csv"
+    result_file = "tmp/offender_sar_cases_with_data_requests.csv"
     records_array = ActiveRecord::Base.connection.execute(query)
     counter = 0
 
