@@ -37,7 +37,7 @@
     - fieldset.radio_input(true, text_method: :humanize)
     - fieldset.radio_input(false, text_method: :humanize)
 
-  - if @case.rejected?
+  - if @case.number.blank? && @case.rejected?
     = f.radio_button_fieldset(:flag_as_dps_missing_data) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
       - fieldset.radio_input(false, text_method: :humanize)
