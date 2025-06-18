@@ -36,14 +36,16 @@ namespace :dps do
         type
         subject_full_name
         subject_aliases
-        subject_address
         date_of_birth
         prison_number
         other_subject_ids
         previous_case_numbers
+        case_reference_number
         subject_type
         recipient
         third_party_company_name
+        third_party_name
+        third_party_address
         location
         request_type
         request_type_note
@@ -52,6 +54,7 @@ namespace :dps do
         date_to
         cached_num_pages
         completed
+        date_responded
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -70,9 +73,6 @@ namespace :dps do
           json_data[key] = value.is_a?(String) ? value.gsub(/[\n\r]/, " ") : value
         end
 
-        # Remove new lines and carriage returns from subject_address
-        subject_address = json_data["subject_address"].is_a?(String) ? json_data["subject_address"].gsub(/[\n\r]/, " ") : json_data["subject_address"]
-
         # Write data to CSV
         csv << [
           record["id"],
@@ -80,14 +80,16 @@ namespace :dps do
           record["type"],
           json_data["subject_full_name"],
           json_data["subject_aliases"],
-          subject_address, # Processed subject_address
           json_data["date_of_birth"],
           json_data["prison_number"],
           json_data["other_subject_ids"],
           json_data["previous_case_numbers"],
+          json_data["case_reference_number"],
           json_data["subject_type"],
           json_data["recipient"],
           json_data["third_party_company_name"],
+          json_data["third_party_name"],
+          json_data["third_party_address"],
           record["location"],
           record["request_type"],
           record["request_type_note"],
@@ -96,6 +98,7 @@ namespace :dps do
           record["date_to"],
           record["cached_num_pages"],
           record["completed"],
+          record["date_responded"],
         ]
         counter += 1
       end
