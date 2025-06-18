@@ -562,6 +562,7 @@ en:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
+        flag_as_dps_missing_data: Flag as DPS missing data
         info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
