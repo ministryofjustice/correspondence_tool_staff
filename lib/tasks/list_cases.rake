@@ -56,7 +56,7 @@ namespace :dps do
         date_requested
         date_from
         date_to
-        number_final_pages,
+        number_final_pages
         cached_date_received
       ]
 
