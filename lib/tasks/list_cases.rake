@@ -3,11 +3,12 @@ require "json"
 
 query = <<-SQL
   SELECT cases.properties->>'case_reference_number' AS case_reference_number,
+         cases.number AS case_number,
          data_request_areas.data_request_area_type,
          cases.received_date,
          cases.type,
          cases.properties,
-         data_requests.location,
+         data_request_areas.location,
          data_requests.request_type,
          data_requests.request_type_note,
          data_requests.date_requested,
@@ -35,21 +36,21 @@ namespace :dps do
       # Define headers
       csv << %w[
         case_reference_number
-        data_request_area
+        case_number
         received_date
         type
-        subject_full_name
+        requester_subject_full_name
         subject_aliases
         date_of_birth
         prison_number
         other_subject_ids
         previous_case_numbers
         subject_type
-        requester_name
         third_party_company_name
-        third_party_name
+        requester_third_party_name
         third_party_address
-        location
+        data_request_area_location
+        data_request_area_type
         request_type
         request_type_note
         date_requested
@@ -78,7 +79,7 @@ namespace :dps do
         # Write data to CSV
         csv << [
           json_data["case_reference_number"],
-          record["data_request_area.data_request_area_type"],
+          record["case_number"],
           record["received_date"],
           record["type"],
           json_data["subject_full_name"],
@@ -88,11 +89,11 @@ namespace :dps do
           json_data["other_subject_ids"],
           json_data["previous_case_numbers"],
           json_data["subject_type"],
-          json_data["requester_name"],
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["location"],
+          record["data_request_area_location"],
+          record["data_request_area.data_request_area_type"],
           record["request_type"],
           record["request_type_note"],
           record["date_requested"],
