@@ -34,7 +34,7 @@ describe CaseFilter::CaseDpsMissingDataFilter do
   end
 
   describe "#call" do
-    let!(:offender_sar_standard_one) { create :offender_sar_case }
+    let!(:offender_sar_standard_one) { create :offender_sar_case, flag_as_dps_missing_data: nil }
     let!(:offender_sar_standard_two) { create :offender_sar_case }
     let!(:offender_sar_dps_missing_data_one) { create :offender_sar_case, flag_as_dps_missing_data: true }
     let!(:offender_sar_dps_missing_data_two) { create :offender_sar_case, flag_as_dps_missing_data: true }
