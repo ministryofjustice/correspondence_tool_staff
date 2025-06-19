@@ -2,7 +2,8 @@ require "csv"
 require "json"
 
 query = <<-SQL
-  SELECT cases.id,
+  SELECT cases.properties->>'case_reference_number' AS case_reference_number,
+         data_request_areas.data_request_area_type,
          cases.received_date,
          cases.type,
          cases.properties,
@@ -13,12 +14,14 @@ query = <<-SQL
          data_requests.date_from,
          data_requests.date_to,
          data_requests.cached_num_pages,
-         data_requests.completed
+         data_requests.cached_date_received
   FROM cases
   LEFT JOIN data_requests ON cases.id = data_requests.case_id
+  LEFT JOIN data_request_areas ON data_requests.data_request_area_id = data_request_areas.id
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
+  ORDER BY (properties->>'case_reference_number')::text
 SQL
 
 namespace :dps do
@@ -31,7 +34,8 @@ namespace :dps do
     CSV.open(result_file, "wb") do |csv|
       # Define headers
       csv << %w[
-        case_id
+        case_reference_number
+        data_request_area
         received_date
         type
         subject_full_name
@@ -40,9 +44,8 @@ namespace :dps do
         prison_number
         other_subject_ids
         previous_case_numbers
-        case_reference_number
         subject_type
-        recipient
+        requester_name
         third_party_company_name
         third_party_name
         third_party_address
@@ -52,9 +55,8 @@ namespace :dps do
         date_requested
         date_from
         date_to
-        cached_num_pages
-        completed
-        date_responded
+        number_final_pages,
+        cached_date_received
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -75,7 +77,8 @@ namespace :dps do
 
         # Write data to CSV
         csv << [
-          record["id"],
+          json_data["case_reference_number"],
+          record["data_request_area.data_request_area_type"],
           record["received_date"],
           record["type"],
           json_data["subject_full_name"],
@@ -84,9 +87,8 @@ namespace :dps do
           json_data["prison_number"],
           json_data["other_subject_ids"],
           json_data["previous_case_numbers"],
-          json_data["case_reference_number"],
           json_data["subject_type"],
-          json_data["recipient"],
+          json_data["requester_name"],
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
@@ -97,8 +99,7 @@ namespace :dps do
           record["date_from"],
           record["date_to"],
           record["cached_num_pages"],
-          record["completed"],
-          record["date_responded"],
+          record["cached_date_received"],
         ]
         counter += 1
       end
