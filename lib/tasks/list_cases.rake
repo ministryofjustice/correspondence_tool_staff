@@ -4,22 +4,23 @@ require "json"
 query = <<-SQL
   SELECT cases.properties->>'case_reference_number' AS case_reference_number,
          cases.number AS case_number,
-         data_request_areas.data_request_area_type,
+         dra.data_request_area_type,
          cases.received_date,
          cases.type,
          cases.properties,
-         teams.name,
-         data_requests.request_type,
-         data_requests.request_type_note,
-         data_requests.date_requested,
-         data_requests.date_from,
-         data_requests.date_to,
-         data_requests.cached_num_pages,
-         data_requests.cached_date_received
+         r.responding_team_name,
+         r.responding_team,
+         dr.request_type,
+         dr.request_type_note,
+         dr.date_requested,
+         dr.date_from,
+         dr.date_to,
+         dr.cached_num_pages,
+         dr.cached_date_received
   FROM cases
-  LEFT JOIN data_requests ON cases.id = data_requests.case_id
-  LEFT JOIN data_request_areas ON data_requests.data_request_area_id = data_request_areas.id
-  LEFT JOIN teams ON cases.team_id = teams.id
+  LEFT JOIN data_requests dr ON cases.id = dr.case_id
+  LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
+  LEFT JOIN warehouse_case_reports r ON cases.id = r.case_id
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
@@ -50,6 +51,7 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
+        name
         location
         data_request_area_type
         request_type
@@ -93,7 +95,8 @@ namespace :dps do
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["teams.name"],
+          record["responding_team_name"],
+          record["responding_team"],
           record["data_request_area.data_request_area_type"],
           record["request_type"],
           record["request_type_note"],
