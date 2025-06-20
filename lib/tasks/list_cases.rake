@@ -8,7 +8,7 @@ query = <<-SQL
          cases.received_date,
          cases.type,
          cases.properties,
-         data_request_areas.location,
+         teams.name,
          data_requests.request_type,
          data_requests.request_type_note,
          data_requests.date_requested,
@@ -19,6 +19,7 @@ query = <<-SQL
   FROM cases
   LEFT JOIN data_requests ON cases.id = data_requests.case_id
   LEFT JOIN data_request_areas ON data_requests.data_request_area_id = data_request_areas.id
+  LEFT JOIN teams ON cases.team_id = teams.id
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
@@ -49,7 +50,7 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
-        data_request_area_location
+        location
         data_request_area_type
         request_type
         request_type_note
@@ -92,7 +93,7 @@ namespace :dps do
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["data_request_area_location"],
+          record["teams.name"],
           record["data_request_area.data_request_area_type"],
           record["request_type"],
           record["request_type_note"],
