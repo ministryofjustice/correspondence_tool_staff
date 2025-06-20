@@ -8,7 +8,7 @@ query = <<-SQL
          cases.received_date,
          cases.type,
          cases.properties,
-         r.responding_team_name,
+         r.responding_team_id,
          r.responding_team,
          dr.request_type,
          dr.request_type_note,
@@ -51,8 +51,8 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
-        name
-        location
+        responding_team_id
+        responding_team
         data_request_area_type
         request_type
         request_type_note
@@ -95,7 +95,7 @@ namespace :dps do
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["responding_team_name"],
+          record["responding_team_id"],
           record["responding_team"],
           record["data_request_area.data_request_area_type"],
           record["request_type"],
