@@ -20,7 +20,7 @@ query = <<-SQL
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id
   LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
-  LEFT JOIN contacts c ON dr.contact_id = c.id                             
+  LEFT JOIN contacts c ON dr.contact_id = c.id
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
@@ -51,9 +51,9 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
-        address_line_1,
-        town,
-        postcode,
+        address_line_1
+        town
+        postcode
         data_request_area_type
         request_type
         request_type_note
