@@ -8,8 +8,8 @@ query = <<-SQL
          cases.received_date,
          cases.type,
          cases.properties,
-         r.responding_team_id,
-         r.responding_team,
+         dr.id,
+         c.name,
          dr.request_type,
          dr.request_type_note,
          dr.date_requested,
@@ -20,7 +20,7 @@ query = <<-SQL
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id
   LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
-  LEFT JOIN warehouse_case_reports r ON cases.id = r.case_id
+  LEFT JOIN contacts c ON dr.contact_id = c.id                             
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
@@ -51,8 +51,9 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
-        responding_team_id
-        responding_team
+        address_line_1,
+        town,
+        postcode,
         data_request_area_type
         request_type
         request_type_note
@@ -95,8 +96,9 @@ namespace :dps do
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["responding_team_id"],
-          record["responding_team"],
+          record["address_line_1"],
+          record["town"],
+          record["postcode"],
           record["data_request_area.data_request_area_type"],
           record["request_type"],
           record["request_type_note"],
