@@ -2,21 +2,21 @@ require "csv"
 require "json"
 
 query = <<-SQL
-  SELECT cases.properties->>'case_reference_number' AS case_reference_number,
-         cases.number AS case_number,
-         dra.data_request_area_type,
-         cases.received_date,
-         cases.type,
-         cases.properties,
-         dr.id,
-         c.name,
-         dr.request_type,
-         dr.request_type_note,
-         dr.date_requested,
-         dr.date_from,
-         dr.date_to,
-         dr.cached_num_pages,
-         dr.cached_date_received
+  SELECT cases.properties->>'case_reference_number' AS "case reference number",
+         cases.number AS "case number",
+         cases.received_date AS "received date",
+         cases.type AS "case type",
+         cases.properties As "properties",
+         dr.id As "data request id",
+         dr.request_type As "data request type",
+         dr.request_type_note As "data request type note",
+         dr.date_requested As "data request date requested",
+         dr.date_from As "data request date from",
+         dr.date_to As "data request date to",
+         dr.cached_num_pages As "data request number of pages",
+         dr.cached_date_received As "data request date received",
+		     dr.contact_id As "data request contact id",
+		     c.name As "contact name"
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id
   LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
@@ -24,7 +24,7 @@ query = <<-SQL
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
-  ORDER BY (properties->>'case_reference_number')::text
+  ORDER BY (properties->>'case_reference_number')
 SQL
 
 namespace :dps do
@@ -62,6 +62,8 @@ namespace :dps do
         date_to
         number_final_pages
         cached_date_received
+        contact_id
+        contact_name
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -96,10 +98,6 @@ namespace :dps do
           json_data["third_party_company_name"],
           json_data["third_party_name"],
           json_data["third_party_address"],
-          record["address_line_1"],
-          record["town"],
-          record["postcode"],
-          record["data_request_area.data_request_area_type"],
           record["request_type"],
           record["request_type_note"],
           record["date_requested"],
@@ -107,6 +105,8 @@ namespace :dps do
           record["date_to"],
           record["cached_num_pages"],
           record["cached_date_received"],
+          record["contact_id"],
+          record["contact_name"],
         ]
         counter += 1
       end
