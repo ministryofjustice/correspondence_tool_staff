@@ -2,21 +2,21 @@ require "csv"
 require "json"
 
 query = <<-SQL
-  SELECT cases.properties->>'case_reference_number' AS "case_reference_number",
-         cases.number AS "case_number",
-         cases.received_date AS "received_date",
-         cases.type AS "case_type",
-         cases.properties As "properties",
-         dr.id As "data_request_id",
-         dr.request_type As "data_request_type",
-         dr.request_type_note As "data_request_type_note",
-         dr.date_requested As "data_request_date_requested",
-         dr.date_from As "data_request_date_from",
-         dr.date_to As "data_request_date_to",
-         dr.cached_num_pages As "data_request_number_of_pages",
-         dr.cached_date_received As "data_request_date_received",
-		     dr.contact_id As "data_request_contact_id",
-		     c.name As "contact_name"
+  SELECT cases.properties->>'case_reference_number',
+         cases.number,
+         cases.received_date,
+         cases.type,
+         cases.properties,
+         dr.id,
+         dr.request_type,
+         dr.request_type_note,
+         dr.date_requested,
+         dr.date_from,
+         dr.date_to,
+         dr.cached_num_pages,
+         dr.cached_date_received,
+		     dr.contact_id,
+		     c.name
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id
   LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
