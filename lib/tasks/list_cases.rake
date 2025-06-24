@@ -16,7 +16,8 @@ query = <<-SQL
          dr.cached_num_pages,
          dr.cached_date_received,
 		     dr.contact_id,
-		     c.name
+		     c.name,
+         dr.location
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id
   LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
@@ -51,10 +52,6 @@ namespace :dps do
         third_party_company_name
         requester_third_party_name
         third_party_address
-        address_line_1
-        town
-        postcode
-        data_request_area_type
         request_type
         request_type_note
         date_requested
@@ -64,6 +61,7 @@ namespace :dps do
         cached_date_received
         contact_id
         contact_name
+        location
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -107,6 +105,7 @@ namespace :dps do
           record["cached_date_received"],
           record["contact_id"],
           record["contact_name"],
+          record["location"]
         ]
         counter += 1
       end
