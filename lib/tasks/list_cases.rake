@@ -3,6 +3,7 @@ require "json"
 
 query = <<-SQL
   SELECT cases.properties->>'case_reference_number',
+         cases.id,
          cases.number,
          cases.received_date,
          cases.type,
@@ -25,7 +26,7 @@ query = <<-SQL
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
-  ORDER BY (properties->>'case_reference_number')::text
+  ORDER BY (properties->>'case_reference_number');
 SQL
 
 namespace :dps do
@@ -39,6 +40,7 @@ namespace :dps do
       # Define headers
       csv << %w[
         case_reference_number
+        id
         case_number
         received_date
         type
@@ -83,6 +85,7 @@ namespace :dps do
         # Write data to CSV
         csv << [
           json_data["case_reference_number"],
+          record["cases_id"],
           record["case_number"],
           record["received_date"],
           record["type"],
