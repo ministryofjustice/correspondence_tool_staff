@@ -84,6 +84,22 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#external_deadline for case flagged as dps missing data rejected sar" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected, flag_as_dps_missing_data: true) }
+
+    it "sets external deadline using a calculation of 60 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 60)
+    end
+  end
+
+  describe "#external_deadline for case not flagged as a dps missing data rejected sar" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected, flag_as_dps_missing_data: false) }
+
+    it "sets external deadline using a calculation of 90 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 90)
+    end
+  end
+
   describe ".close_expired_rejected" do
     let(:rejected_expired) { create(:offender_sar_case, :rejected) }
     let(:system_user) { User.system_admin }
@@ -137,7 +153,8 @@ describe Case::SAR::Offender do
   end
 
   describe "#set_valid_case_number" do
-    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024")) }
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: false) }
+    let(:case_rejected_dps_missing) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
 
     it "does not create a non unique number and does remove the preceding 'R'" do
       expect(case_rejected.set_valid_case_number).not_to eq "240411001"
@@ -146,6 +163,11 @@ describe Case::SAR::Offender do
 
     it "creates a unique new number for the valid case" do
       expect(case_rejected.set_valid_case_number).to eq "240411002"
+    end
+
+    it "adds the 'D' prefix to the number" do
+      expect(case_rejected_dps_missing.flag_as_dps_missing_data?).to eq true
+      expect(case_rejected_dps_missing.set_valid_case_number[0]).to eq "D"
     end
   end
 

@@ -174,6 +174,20 @@ class Case::Base < ApplicationRecord
     )
   }
 
+  scope :dps_missing_data, lambda {
+    where(
+      "properties->>'flag_as_dps_missing_data'::text = ? ",
+      true.to_s,
+    )
+  }
+
+  scope :not_dps_missing_data, lambda {
+    where(
+      "properties->>'flag_as_dps_missing_data'::text = ? or properties->>'flag_as_dps_missing_data'::text is null",
+      false.to_s,
+    )
+  }
+
   scope :partial_case, lambda {
     where(
       "properties->>'is_partial_case'::text = ? ",
