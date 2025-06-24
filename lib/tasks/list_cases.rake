@@ -105,7 +105,7 @@ namespace :dps do
           record["cached_date_received"],
           record["contact_id"],
           record["contact_name"],
-          record["location"]
+          record["location"],
         ]
         counter += 1
       end
