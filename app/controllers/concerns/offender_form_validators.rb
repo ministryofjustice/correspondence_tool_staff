@@ -7,6 +7,7 @@ private
     set_empty_value_if_unset(params, "subject_type")
     set_empty_value_if_unset_for_date(params, "date_of_birth")
     set_empty_value_if_unset(params, "flag_as_high_profile")
+    set_empty_value_if_unset(params, "flag_as_dps_missing_data")
     object.assign_attributes(params)
     object.validate_date_of_birth
     object.validate_email_format
