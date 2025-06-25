@@ -3,7 +3,6 @@ require "json"
 
 query = <<-SQL
   SELECT cases.properties->>'case_reference_number',
-         cases.id,
          cases.number,
          cases.received_date,
          cases.type,
@@ -40,7 +39,6 @@ namespace :dps do
       # Define headers
       csv << %w[
         case_reference_number
-        id
         case_number
         received_date
         type
@@ -53,7 +51,7 @@ namespace :dps do
         subject_type
         third_party_company_name
         requester_third_party_name
-        third_party_address
+        postal_address
         request_type
         request_type_note
         date_requested
@@ -85,7 +83,6 @@ namespace :dps do
         # Write data to CSV
         csv << [
           json_data["case_reference_number"],
-          record["cases_id"],
           record["case_number"],
           record["received_date"],
           record["type"],
@@ -98,7 +95,7 @@ namespace :dps do
           json_data["subject_type"],
           json_data["third_party_company_name"],
           json_data["third_party_name"],
-          json_data["third_party_address"],
+          json_data["postal_address"],
           record["request_type"],
           record["request_type_note"],
           record["date_requested"],
