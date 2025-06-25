@@ -7,6 +7,7 @@ query = <<-SQL
          cases.received_date,
          cases.type,
          cases.properties,
+         cases.postal_address,
          dr.id,
          dr.request_type,
          dr.request_type_note,
