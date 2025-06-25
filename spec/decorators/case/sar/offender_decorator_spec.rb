@@ -147,4 +147,16 @@ describe Case::SAR::OffenderDecorator do
       expect(high_profile_case.highlight_flag).to eq ""
     end
   end
+
+  describe "#dps_missing_data_flag" do
+    it "returns true if flag set to yes" do
+      dps_missing_data_case = create(:offender_sar_case, flag_as_dps_missing_data: true).decorate
+      expect(dps_missing_data_case.flag_as_dps_missing_data).to eq true
+    end
+
+    it "returns false if flag set to no" do
+      dps_missing_data_case = create(:offender_sar_case, flag_as_dps_missing_data: false).decorate
+      expect(dps_missing_data_case.flag_as_dps_missing_data).to eq false
+    end
+  end
 end
