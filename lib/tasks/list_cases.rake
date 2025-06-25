@@ -96,7 +96,7 @@ namespace :dps do
           json_data["subject_type"],
           json_data["third_party_company_name"],
           json_data["third_party_name"],
-          json_data["postal_address"],
+          record["postal_address"],
           record["request_type"],
           record["request_type_note"],
           record["date_requested"],
