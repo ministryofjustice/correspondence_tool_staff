@@ -66,7 +66,7 @@ You can access PGAdmin4 at http://localhost:5050 with the username `cts@pgadmin.
 > 9. Click "Finish" to complete the import process.
 > 10. When promoted, enter the password `postgres` to connect to the Postgres database.
 
-### Manual setup - without docker compose
+### Manual setup - using rbenv and Homebrew
 
 #### Latest Version of Ruby
 
