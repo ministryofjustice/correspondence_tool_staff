@@ -1067,7 +1067,7 @@ describe Case::SAR::Offender do
       it "adds an error to the model" do
         kase = create(:offender_sar_case, :rejected, flag_as_dps_missing_data: nil)
         kase.validate
-        expect(offender_sar_case.errors[:flag_as_dps_missing_data]).to include("Please choose yes or no")
+        expect(offender_sar_case.errors).to include("Flag as dps missing data can't be blank")
       end
     end
   end
