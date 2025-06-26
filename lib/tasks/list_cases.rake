@@ -16,8 +16,8 @@ query = <<-SQL
          dr.date_to,
          dr.cached_num_pages,
          dr.cached_date_received,
-		     dr.contact_id,
-		     c.name,
+         dr.contact_id,
+         c.name,
          dr.location
   FROM cases
   LEFT JOIN data_requests dr ON cases.id = dr.case_id

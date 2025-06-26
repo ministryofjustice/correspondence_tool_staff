@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -143,7 +144,8 @@ CREATE TYPE public.state AS ENUM (
 CREATE TYPE public.team_roles AS ENUM (
     'managing',
     'responding',
-    'approving'
+    'approving',
+    'administering'
 );
 
 
@@ -152,7 +154,6 @@ CREATE TYPE public.team_roles AS ENUM (
 --
 
 CREATE TYPE public.template_name AS ENUM (
-    'template_name',
     'cat_a',
     'cctv',
     'cross_border',

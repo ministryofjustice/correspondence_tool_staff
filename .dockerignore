@@ -1,7 +1,6 @@
 *.log
 *.dev
 .git*
-.local-dev
 log
 tmp
 coverage
