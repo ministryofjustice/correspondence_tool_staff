@@ -6,6 +6,8 @@ if ! bundle show puma 2>/dev/null; then
   exit 0
 fi
 
+mkdir -p tmp/pids
+
 # sync asset and view changes to the browser...
 # bundle exec rails generate browser_sync_rails:install
 # bundle exec rails browser_sync:start
