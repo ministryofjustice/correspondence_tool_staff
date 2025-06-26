@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::OffenderSarController, type: :controller do
+RSpec.describe Cases::OffenderSARController, type: :controller do
   let(:responder) { find_or_create :branston_user }
 
   let(:params) do
@@ -27,7 +27,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     include_examples "can_add_case policy spec", Case::SAR::Offender
   end
 
-  # Not using shared_examples/new_spec due to the way Offender Sar Controller
+  # Not using shared_examples/new_spec due to the way Offender SAR Controller
   # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
   describe "#new" do
     let(:case_types) { %w[Case::SAR::Offender] }
@@ -65,6 +65,25 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       expect(response).to render_template(:new)
       expect(assigns(:case)).to be_a OffenderSARCaseForm
       expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender]
+    end
+
+    context "when starting a rejected offender sar case" do
+      let(:params) do
+        {
+          rejected: true,
+          correspondence_type: "offender_sar",
+        }
+      end
+
+      it "renders the new template with is_rejected as true" do
+        get(:new, params:)
+        expect(response).to render_template(:new)
+      end
+
+      it "sets the current_state to 'invalid_submission'" do
+        get(:new, params:)
+        expect(assigns(:case).current_state).to eq("invalid_submission")
+      end
     end
   end
 
@@ -164,6 +183,43 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
+      describe "rejected offender sar" do
+        context "with step reason-rejected" do
+          context "when reason absent" do
+            let(:params) do
+              {
+                current_step: "reason-rejected",
+                offender_sar: {
+                  rejected_reasons: [""],
+                },
+              }
+            end
+
+            it "requires a reason-rejected option to be set" do
+              remains_on_step "reason-rejected"
+              expect(errors[:rejected_reasons]).to eq ["Reason for rejecting the case cannot be blank"]
+            end
+          end
+
+          context "when other option is chosen but no reason given" do
+            let(:params) do
+              {
+                current_step: "reason-rejected",
+                offender_sar: {
+                  rejected_reasons: %w[other],
+                  other_rejected_reason: "",
+                },
+              }
+            end
+
+            it "requires an other reason-rejected option to be given" do
+              remains_on_step "reason-rejected"
+              expect(errors[:other_rejected_reason]).to eq ["Other reason for rejecting the case cannot be blank"]
+            end
+          end
+        end
+      end
+
       context "with step recipient-details" do
         context "when recipient absent" do
           let(:params) do
@@ -247,6 +303,37 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
             remains_on_step "date-received"
             expect(errors[:received_date]).to eq ["cannot be in the future."]
           end
+        end
+      end
+    end
+
+    context "when rejected" do
+      context "when the case is rejected" do
+        let(:rejected_case) { create(:offender_sar_case, :rejected).decorate }
+
+        it "sets @rejected to true" do
+          allow(controller).to receive(:build_case_from_session).and_return(rejected_case)
+          post(:create, params:)
+          expect(assigns(:rejected)).to be(true)
+        end
+      end
+
+      context "when params include rejected: true" do
+        let(:rejected_params) { params.merge(rejected: true) }
+
+        it "sets @rejected to true" do
+          post(:create, params: rejected_params)
+          expect(assigns(:rejected)).to be(true)
+        end
+      end
+
+      context "when current_state is invalid_submission" do
+        let(:offender_sar_params) { params[:offender_sar].merge(current_state: "invalid_submission") }
+        let(:rejected_params) { params.merge(offender_sar: offender_sar_params) }
+
+        it "sets @rejected to true" do
+          post(:create, params: rejected_params)
+          expect(assigns(:rejected)).to be(true)
         end
       end
     end
@@ -385,6 +472,74 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
       it "redirects to the new case assignment page" do
         expect(response).to redirect_to(case_path(offender_sar_case))
+      end
+    end
+  end
+
+  describe "#accepted_date_received" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected).decorate }
+    let(:params) { { id: rejected_offender_sar_case.id } }
+
+    before do
+      sign_in responder
+    end
+
+    it "renders the accepted date received page" do
+      get(:accepted_date_received, params:)
+      expect(response).to render_template(:accepted_date_received)
+    end
+
+    it "sets received_date to nil" do
+      get(:accepted_date_received, params:)
+      expect(assigns(:case).received_date_dd).to eq ""
+      expect(assigns(:case).received_date_mm).to eq ""
+      expect(assigns(:case).received_date_yyyy).to eq ""
+    end
+  end
+
+  describe "#confirm_accepted_date_received" do
+    let(:rejected_offender_sar_case) { create :offender_sar_case, :rejected }
+    let(:params) do
+      {
+        id: rejected_offender_sar_case.id,
+        offender_sar: {
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+        },
+      }
+    end
+
+    before do
+      sign_in responder
+    end
+
+    context "with valid params" do
+      let(:new_date_params) do
+        {
+          id: rejected_offender_sar_case.id,
+          offender_sar: {
+            received_date_dd: "01",
+            received_date_mm: "02",
+            received_date_yyyy: "2023",
+          },
+        }
+      end
+
+      before do
+        patch(:confirm_accepted_date_received, params: new_date_params)
+      end
+
+      it "sets the flash" do
+        expect(flash[:notice]).to eq "Case updated"
+      end
+
+      it "redirects to the case details page" do
+        expect(response).to redirect_to(case_path(rejected_offender_sar_case))
+      end
+
+      it "changes the current_state to 'data to be requested'" do
+        expect(assigns(:case).current_state).to eq "data_to_be_requested"
       end
     end
   end

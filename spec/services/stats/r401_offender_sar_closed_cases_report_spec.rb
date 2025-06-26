@@ -2,7 +2,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/BeforeAfterAll
 module Stats
-  describe R401OffenderSarClosedCasesReport do
+  describe R401OffenderSARClosedCasesReport do
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Closed cases report"
@@ -19,7 +19,7 @@ module Stats
     describe ".etl_handler" do
       it "returns correct etl_handler" do
         expect(described_class.etl_handler)
-          .to eq Stats::ETL::OffenderSarClosedCases
+          .to eq Stats::ETL::OffenderSARClosedCases
       end
     end
 

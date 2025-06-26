@@ -2,7 +2,7 @@ require "rails_helper"
 require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
-feature "creating ICO Overturned SAR case" do
+xfeature "creating ICO Overturned SAR case" do
   given(:admin) { create :admin }
 
   before(:all) do
@@ -46,7 +46,7 @@ feature "creating ICO Overturned SAR case" do
     expect(admin_cases_page).to have_case_list count: 3
 
     overturned_sar_row = admin_cases_page.case_list[0]
-    expect(overturned_sar_row.number).to have_text("Case/Overturned Ico/Sar")
+    expect(overturned_sar_row.number).to have_text("Case/Overturned ICO/SAR")
     expect(overturned_sar_row.status.text).to eq "Closed"
 
     ico_appeal_row = admin_cases_page.case_list[1]

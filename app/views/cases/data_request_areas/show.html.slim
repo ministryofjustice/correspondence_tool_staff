@@ -1,0 +1,76 @@
+- content_for :page_title do
+  = t('page_title.data_request_area_show_page')
+- content_for :heading
+  = t('.heading', data_request_area_type: t("helpers.label.data_request_area.headers.data_request_area_type.#{@data_request_area.data_request_area_type}"))
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+- allow_editing = @case.editable?
+
+div class="case"
+  h2.bold-medium.data-request-area__number
+    = "#{@case.number} - #{@case.subject_full_name}"
+  .form-group
+    label.form-label
+      = t('helpers.label.data_request_area.location')
+    p.data_request_area_location
+      = @data_request_area.location
+
+  section
+    = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, data_request_area: @data_request_area, allow_editing: allow_editing }
+
+  - if @data_request_area.data_requests.exists? && FeatureSet.email_commissioning_document.enabled?
+    section
+      .grid-row
+        .column-full.commissioning-document
+          h2.heading-medium
+            = t('.emails_header')
+          table.report
+            thead
+              tr
+                th = t('cases.commissioning_documents.table_headings.request_document')
+                th = t('cases.commissioning_documents.table_headings.last_updated')
+                th = t('cases.commissioning_documents.table_headings.action')
+            tbody.document
+              tr
+                td = @data_request_area.request_document
+                td = @commissioning_document&.updated_at
+                td
+                  span = @commissioning_document&.download_link
+
+          - if !@data_request_area.commissioning_email_sent? && policy(@case).can_send_day_1_email?
+            div.button-holder
+              = link_to t('button.send_email'), send_email_case_data_request_area_path(@case, @data_request_area), class: 'button button-high data_request_area_send_email'
+
+          - if @data_request_area.commissioning_email_sent? && @data_request_area.in_progress?
+            div.next-chase-description.govuk-inset-text = @data_request_area.next_chase_description
+            hr
+
+          - if @sent_emails.present?
+            section
+              .grid-row
+                .column-full.email-history
+                  h2.heading-medium
+                    = t('.emails_history_header')
+                  table.report
+                    thead
+                      tr
+                        th = t('cases.commissioning_documents.email_history_table_headings.email_type')
+                        th = t('cases.commissioning_documents.email_history_table_headings.email_address')
+                        th = t('cases.commissioning_documents.email_history_table_headings.date_sent')
+                        th = t('cases.commissioning_documents.email_history_table_headings.status')
+                    tbody.email_details
+                      - @sent_emails.each do |email|
+                        tr
+                          td = email.email_type
+                          td = email.email_address
+                          td = email.created_at
+                          td = email.status

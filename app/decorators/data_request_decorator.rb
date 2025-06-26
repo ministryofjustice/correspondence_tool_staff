@@ -18,11 +18,7 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def location
-    contact&.name || super
-  end
-
-  def data_request_name
-    contact&.data_request_name || location
+    data_request_area.contact&.name || data_request_area&.location
   end
 
   def data_required
@@ -30,7 +26,16 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def display_request_type_note?
-    %w[other nomis_other].include?(request_type)
+    request_type_note.present?
+  end
+
+  def data_request_status_tag
+    case status
+    when :completed
+      "<strong class='govuk-tag govuk-tag--green'>Completed</strong>".html_safe
+    when :in_progress
+      "<strong class='govuk-tag govuk-tag--yellow'>In progress</strong>".html_safe
+    end
   end
 
 private

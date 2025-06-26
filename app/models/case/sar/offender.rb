@@ -1,3 +1,36 @@
+# == Schema Information
+#
+# Table name: cases
+#
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
+#
 class Case::SAR::Offender < Case::Base
   belongs_to :reason_for_lateness, class_name: "CategoryReference"
 
@@ -25,11 +58,18 @@ class Case::SAR::Offender < Case::Base
         third_party_name: "B",
       }
     end
+
+    def close_expired_rejected
+      Case::SAR::Offender.where(current_state: "invalid_submission").late.each do |kase|
+        CaseClosureService.new(kase, User.system_admin, {}).call
+      end
+    end
   end
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
   VETTING_IN_PROCESS_EVENT = "mark_as_vetting_in_progress".freeze
+  VALIDATE_REJECTED_CASE_EVENT = "validate_rejected_case".freeze
   READY_FOR_COPY_EVENT = "mark_as_ready_to_copy".freeze
 
   GOV_UK_DATE_FIELDS = %i[
@@ -42,6 +82,30 @@ class Case::SAR::Offender < Case::Base
     sent_to_sscl_at
   ].freeze
 
+  REJECTED_AUTO_CLOSURE_DEADLINE = 90
+  DPS_AUTO_CLOSURE_DEADLINE = 60
+
+  REJECTED_REASONS = {
+    "cctv_bwcf" => "CCTV / BWCF request",
+    "change_of_name_certificate" => "Change of name certificate",
+    "court_data_request" => "Court data request",
+    "data_previously_requested" => "Data previously provided",
+    "further_identification" => "Further identification",
+    "identification_for_ex_inmate_probation" => "Identification for ex-inmate / probation",
+    "illegible_handwriting_unreadable_content" => "Illegible handwriting / unreadable content",
+    "id_required" => "ID required",
+    "invalid_authority" => "Invalid authority",
+    "medical_data" => "Medical data",
+    "observation_book_entries" => "Observation book entries",
+    "police_data" => "Police data ",
+    "social_services_data" => "Social services data",
+    "telephone_recordings_logs" => "Telephone recordings / logs",
+    "telephone_transcripts" => "Telephone transcripts",
+    "third_party_identification" => "Third party identification",
+    "what_data_no_data_requested" => "What data / no data requested",
+    "other" => "Other",
+  }.freeze
+
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -50,6 +114,7 @@ class Case::SAR::Offender < Case::Base
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
+                 flag_as_dps_missing_data: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -66,20 +131,25 @@ class Case::SAR::Offender < Case::Base
                  third_party_relationship: :string,
                  third_party: :boolean,
                  third_party_company_name: :string,
+                 third_party_email: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
                  number_final_pages: :integer,
                  number_exempt_pages: :integer,
                  is_partial_case: :boolean,
                  partial_case_letter_sent_dated: :date,
-                 further_actions_required: :string
+                 further_actions_required: :string,
+                 case_originally_rejected: :boolean,
+                 other_rejected_reason: :string,
+                 rejected_reasons: [:string, { array: true, default: [] }],
+                 probation_area: :string
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
   attr_accessor :remove_sent_to_sscl_reason
 
-  enum subject_type: {
+  enum :subject_type, {
     offender: "offender",
     ex_offender: "ex_offender",
     detainee: "detainee",
@@ -88,21 +158,23 @@ class Case::SAR::Offender < Case::Base
     ex_probation_service_user: "ex_probation_service_user",
   }
 
-  enum recipient: {
+  enum :recipient, {
     subject_recipient: "subject_recipient",
     requester_recipient: "requester_recipient",
     third_party_recipient: "third_party_recipient",
   }
 
-  enum further_actions_required: {
+  enum :further_actions_required, {
     yes: "yes",
     no: "no",
     awaiting_response: "awaiting_response",
   }
 
-  enum request_method: {
-    post: "post",
+  enum :request_method, {
     email: "email",
+    ico_web_portal: "ico web portal",
+    post: "post",
+    verbal_request: "verbal request",
     web_portal: "web portal",
     unknown: "unknown",
   }
@@ -116,14 +188,14 @@ class Case::SAR::Offender < Case::Base
   ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
+  has_many :data_request_areas, dependent: :destroy, foreign_key: :case_id
+
   accepts_nested_attributes_for :data_requests
 
   validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :date_of_birth, presence: true
 
   validates :subject_address, presence: true
-
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :recipient, presence: true
@@ -134,6 +206,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
+  validate :validate_third_party_email_format
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
 
@@ -150,12 +223,16 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
+  validate :validate_rejected_reason, if: -> { invalid_submission? }
+  validate :validate_flag_as_dps_missing_data, if: -> { invalid_submission? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
+  before_save :set_case_originally_rejected, if: -> { invalid_submission? }
+  before_save :verify_other_rejected_reason, if: -> { invalid_submission? }
 
   def validate_third_party_states_consistent
     if third_party && recipient == "third_party_recipient"
@@ -171,7 +248,17 @@ class Case::SAR::Offender < Case::Base
     super
   end
 
+  def validate_flag_as_dps_missing_data
+    unless flag_as_dps_missing_data.in?([true, false])
+      errors.add(:flag_as_dps_missing_data, "cannot be blank")
+    end
+  end
+
   def validate_date_of_birth
+    if date_of_birth.nil?
+      errors.add(:date_of_birth, :blank)
+    end
+
     if date_of_birth.present? && date_of_birth > Time.zone.today
       errors.add(
         :date_of_birth,
@@ -188,7 +275,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.request_dated.not_in_future"),
       )
     end
-    errors[:request_dated].any?
   end
 
   def validate_third_party_names
@@ -202,7 +288,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_recipient
@@ -216,7 +301,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank"),
       )
     end
-    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_third_party_relationship
@@ -226,7 +310,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank"),
       )
     end
-    errors[:third_party_relationship].any?
   end
 
   def validate_third_party_address
@@ -236,7 +319,15 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank"),
       )
     end
-    errors[:third_party_relationship].any?
+  end
+
+  def validate_third_party_email_format
+    if third_party && (third_party_email.present? && third_party_email !~ /\A.+@.+\z/)
+      errors.add(
+        :third_party_email,
+        :invalid,
+      )
+    end
   end
 
   def validate_partial_flags
@@ -255,7 +346,6 @@ class Case::SAR::Offender < Case::Base
         I18n.t("activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future"),
       )
     end
-    errors[:partial_case_letter_sent_dated].any?
   end
 
   def validate_sent_to_sscl_at
@@ -272,6 +362,22 @@ class Case::SAR::Offender < Case::Base
       errors.add(
         :remove_sent_to_sscl_reason,
         I18n.t("activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank"),
+      )
+    end
+  end
+
+  def validate_rejected_reason
+    if rejected_reasons.all?(&:blank?)
+      errors.add(
+        :rejected_reasons,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.rejected_reasons.blank"),
+      )
+    end
+
+    if rejected_reasons.include?("other") && other_rejected_reason.empty?
+      errors.add(
+        :other_rejected_reason,
+        I18n.t("activerecord.errors.models.case/sar/offender.attributes.other_rejected_reason.blank"),
       )
     end
   end
@@ -397,6 +503,46 @@ class Case::SAR::Offender < Case::Base
     user_for_vetting
   end
 
+  def assign_vetter(user)
+    responder_assignment&.update(user:)
+  end
+
+  def unassign_vetter
+    responder_assignment&.update(user: nil)
+  end
+
+  def user_validated_rejected_case
+    user_for_validation = nil
+    transitions.each do |transition|
+      if transition.event == VALIDATE_REJECTED_CASE_EVENT
+        user_for_validation = transition.acting_user
+      end
+    end
+    user_for_validation
+  end
+
+  def rejected?
+    if persisted?
+      number[0] == "R"
+    else
+      current_state == "invalid_submission"
+    end
+  end
+
+  # Overwrites base method to allow case number to remove "R" when
+  # transitioning from 'invalid' to 'valid' offender SAR
+  def prevent_number_change
+    raise StandardError, "number is immutable" if current_state != "invalid_submission" && number_changed?
+  end
+
+  def set_valid_case_number
+    self.number = if flag_as_dps_missing_data?
+                    "D#{next_number}"
+                  else
+                    next_number
+                  end
+  end
+
 private
 
   def set_subject
@@ -405,6 +551,14 @@ private
 
   def use_subject_as_requester
     self.name = subject_full_name
+  end
+
+  def set_case_originally_rejected
+    self.case_originally_rejected = true
+  end
+
+  def verify_other_rejected_reason
+    self.other_rejected_reason = "" unless rejected_reasons.include?("other")
   end
 
   def ensure_third_party_states_consistent
@@ -417,5 +571,32 @@ private
       self.recipient = "requester_recipient"
     end
   end
+
+  def set_number
+    self.number = if invalid_submission?
+                    if flag_as_dps_missing_data?
+                      "DR#{next_number}"
+                    else
+                      "R#{next_number}"
+                    end
+                  else
+                    next_number
+                  end
+  end
+
+  def set_deadlines
+    super
+    if rejected? & flag_as_dps_missing_data?
+      self.external_deadline = @deadline_calculator.days_after(DPS_AUTO_CLOSURE_DEADLINE, received_date)
+    elsif rejected?
+      self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    end
+  end
+
+  def update_deadlines
+    super
+    if changed.include?("received_date") && rejected?
+      self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    end
+  end
 end
-# rubocop:enable Metrics/ClassLength

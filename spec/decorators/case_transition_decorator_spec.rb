@@ -5,6 +5,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   let(:dacu_user) { create :manager, managing_teams: [dacu], full_name: "David Attenborough" }
   let(:laa) { create :business_unit, name: "Legal Aid Agency" }
   let(:laa_user) { create :responder, responding_teams: [laa], full_name: "Larry Adler" }
+  let(:branston) { find_or_create :team_branston }
+  let(:branston_user) { create :branston_user, responding_teams: [branston], full_name: "Brian Rix" }
 
   let(:ct_assign_responder) do
     create(:case_transition_assign_responder,
@@ -200,6 +202,26 @@ RSpec.describe CaseTransitionDecorator, type: :model do
         ct = create(:case_remove_link_foi_case, case: accepted_case).decorate
         accepted_case.destroy!
         expect(ct.event_and_detail).to match(/Linked case removed.*Removed the link to case_id:.*#{accepted_case.id}/)
+      end
+    end
+
+    describe "#event_desc" do
+      context "when creating a rejected offender SAR" do
+        it "returns expected text" do
+          ct = create(:case_rejected_offender_creation,
+                      acting_team: branston).decorate
+          event = "Rejected case created"
+          expect(ct.event_desc).to match(event)
+        end
+      end
+
+      context "when creating a valid offender SAR" do
+        it "returns expected text" do
+          ct = create(:case_offender_creation,
+                      acting_team: branston).decorate
+          event = "Case created"
+          expect(ct.event_desc).to match(event)
+        end
       end
     end
 

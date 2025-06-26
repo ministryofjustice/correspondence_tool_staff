@@ -9,6 +9,9 @@ tr.prison-number
 tr.subject-aliases
   th = t('common.case.subject_aliases')
   td = case_details.subject_aliases
+tr.subject-email
+  th = t('common.case/offender_sar.email')
+  td = case_details.email
 tr.previous-case-numbers
   th = t('common.case.previous_case_numbers')
   td = case_details.previous_case_numbers
@@ -18,6 +21,9 @@ tr.other-subject-ids
 tr.case-reference-number
   th = t('common.case.crn_acronym_html')
   td = case_details.case_reference_number
+tr.probation-area
+  th = t('common.case.probation_area')
+  td = case_details.probation_area
 tr.date-of-birth
   th = t('common.case.date_of_birth')
   td = l case_details.date_of_birth, format: :default
@@ -31,3 +37,7 @@ tr.subject-address
 tr.subject-high-priority
   th = t('helpers.label.offender_sar.high_profile')
   td = case_details.flag_as_high_profile.humanize
+tr.subject-missing-data
+  - value = case_details.flag_as_dps_missing_data.humanize
+  th = t('helpers.label.offender_sar.dps_missing_data')
+  td = value.include?("Nothing") ? "No" : value

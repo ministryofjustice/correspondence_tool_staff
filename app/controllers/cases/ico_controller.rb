@@ -1,10 +1,10 @@
 module Cases
-  class IcoController < CasesController
+  class ICOController < CasesController
     include ICOCasesParams
     include NewCase
     include ReopenICOCase
 
-    before_action -> { set_case(params[:id]) }, only: [:record_late_team]
+    before_action -> { set_decorated_case(params[:id]) }, only: [:record_late_team]
 
     def initialize
       @correspondence_type = CorrespondenceType.ico
@@ -51,11 +51,15 @@ module Cases
       @case.prepare_for_recording_late_team
       params = record_late_team_params(@case.type_abbreviation)
       if @case.update(params)
-        @case.respond(current_user)
-        redirect_to case_path
+        if @case.is_a?(Case::ICO::SAR)
+          redirect_to record_sar_complaint_outcome_case_ico_path(@case)
+        else
+          @case.respond(current_user)
+          redirect_to case_path
+        end
       else
         @team_collection = CaseTeamCollection.new(@case)
-        render "/cases/ico/late_team"
+        render :late_team
       end
     end
 
@@ -76,6 +80,9 @@ module Cases
     end
 
     def process_closure_params
+      if @case.is_a?(Case::ICO::SAR)
+        @case.prepare_for_recording_outcome
+      end
       process_ico_closure_params
     end
 

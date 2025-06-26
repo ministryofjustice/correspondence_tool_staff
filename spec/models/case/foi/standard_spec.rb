@@ -2,30 +2,34 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 require "rails_helper"
@@ -140,41 +144,45 @@ describe Case::FOI::Standard do
         context "and in time" do
           context "and flagged" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).to be_flagged
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [7.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).to be_flagged
 
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be true
+                # then
+                expect(kase.business_unit_responded_in_time?).to be true
+              end
             end
           end
 
           context "and unflagged" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).not_to be_flagged
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [7.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).not_to be_flagged
 
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be true
+                # then
+                expect(kase.business_unit_responded_in_time?).to be true
+              end
             end
           end
         end
@@ -182,41 +190,45 @@ describe Case::FOI::Standard do
         context "and late" do
           context "and flagged" do
             it "returns false" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [14.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).to be_flagged
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [14.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).to be_flagged
 
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be false
+                # then
+                expect(kase.business_unit_responded_in_time?).to be false
+              end
             end
           end
 
           context "and unflagged" do
             it "returns false" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [15.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).not_to be_flagged
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [15.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).not_to be_flagged
 
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be false
+                # then
+                expect(kase.business_unit_responded_in_time?).to be false
+              end
             end
           end
         end
@@ -226,43 +238,47 @@ describe Case::FOI::Standard do
         context "and in time" do
           context "and flagged" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be true
+                # then
+                expect(kase.business_unit_responded_in_time?).to be true
+              end
             end
           end
 
           context "and unflagged" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be true
+                # then
+                expect(kase.business_unit_responded_in_time?).to be true
+              end
             end
           end
         end
@@ -270,43 +286,47 @@ describe Case::FOI::Standard do
         context "and late" do
           context "and flagged" do
             it "returns false" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [17.business_days.ago, 16.business_days.ago, 14.business_days.ago],
-                                 responded_time: 1.business_days.ago)
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [17.business_days.ago, 16.business_days.ago, 14.business_days.ago],
+                                   responded_time: 1.business_days.ago)
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 1.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 1.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be false
+                # then
+                expect(kase.business_unit_responded_in_time?).to be false
+              end
             end
           end
 
           context "and unflagged" do
             it "returns false" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [17.business_days.ago, 16.business_days.ago, 15.business_days.ago],
-                                 responded_time: 3.business_days.ago)
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [17.business_days.ago, 16.business_days.ago, 15.business_days.ago],
+                                   responded_time: 3.business_days.ago)
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
-              # then
-              expect(kase.business_unit_responded_in_time?).to be false
+                # then
+                expect(kase.business_unit_responded_in_time?).to be false
+              end
             end
           end
         end
@@ -371,37 +391,41 @@ describe Case::FOI::Standard do
         context "and late" do
           context "and non trigger cases" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [21.business_days.ago])
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [21.business_days.ago])
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses")).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be true
+                # then
+                expect(kase.business_unit_already_late?).to be true
+              end
             end
           end
 
           context "and trigger cases" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [11.business_days.ago])
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [11.business_days.ago])
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses")).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be true
+                # then
+                expect(kase.business_unit_already_late?).to be true
+              end
             end
           end
         end
@@ -457,41 +481,45 @@ describe Case::FOI::Standard do
         context "and late" do
           context "and non trigger cases" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 21.business_days.ago])
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 21.business_days.ago])
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses")).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be true
+                # then
+                expect(kase.business_unit_already_late?).to be true
+              end
             end
           end
 
           context "and trigger cases" do
             it "returns true" do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 11.business_days.ago])
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq "rejected"
-              expect(responder_assignments[1].state).to eq "rejected"
-              expect(responder_assignments[2].state).to eq "accepted"
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 11.business_days.ago])
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
-              expect(kase.transitions.where(event: "add_responses")).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be true
+                # then
+                expect(kase.business_unit_already_late?).to be true
+              end
             end
           end
         end

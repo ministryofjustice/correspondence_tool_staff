@@ -1,5 +1,16 @@
 unless ENV["COVERAGE"].nil?
   require "simplecov"
+  require "simplecov-json"
+
+  if ENV["CI"]
+    SimpleCov.formatter = SimpleCov::Formatter::SimpleFormatter
+  else
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::JSONFormatter,
+    ])
+  end
+
   SimpleCov.start "rails" do
     add_group "Services", "app/services"
     add_group "Policies", "app/policies"
@@ -9,6 +20,7 @@ unless ENV["COVERAGE"].nil?
     add_filter "/app/channels/"
     # all emails (including devise ones) get sent via gov.uk notify service
     add_filter "/app/mailers/application_mailer.rb"
+    add_filter "/lib/"
   end
 end
 
@@ -23,65 +35,26 @@ require "capybara/rspec"
 require "rails-controller-testing"
 require "paper_trail/frameworks/rspec"
 
-Capybara.default_max_wait_time = 4
-
-options = Selenium::WebDriver::Chrome::Options.new
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--start-maximized")
-options.add_argument("--window-size=1980,2080")
-options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
-
-# Add a configuration to connect to Chrome remotely through Selenium Grid
-Capybara.register_driver :remote_selenium do |app|
-  Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:3000"
-
-  # Set the host and port
-  Capybara.server_host = "0.0.0.0"
-  Capybara.server_port = "3000"
-
-  # and point capybara at our chromium docker container
-  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", options:)
-end
-
-Capybara.asset_host = "http://localhost:3000"
-
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
 Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
+  options.add_preference(:download, { prompt_for_download: false, default_directory: DownloadHelpers::PATH.to_s })
 
   unless ENV["CHROME_DEBUG"]
-    options.add_argument("--headless")
     options.add_argument("--disable-gpu")
+    options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--start-maximized")
     options.add_argument("--window-size=1980,2080")
-    options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
   end
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:)
 end
 
+Capybara.default_max_wait_time = 1
+Capybara.asset_host = "http://localhost:3000"
 Capybara.server = :puma, { Silent: true }
-
-Capybara.javascript_driver = ENV["CHROME_IS_REMOTE"] ? :remote_selenium : :headless_chrome
-
-# Set these env variables to push screenshots for failed tests to S3.
-# if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
-#    ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
-#   Capybara::Screenshot.s3_configuration = {
-#     s3_client_credentials: {
-#       access_key_id: ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'],
-#       secret_access_key: ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'],
-#       region: 'eu-west-2'
-#     },
-#     bucket_name: 'correspondence-staff-travis-test-failure-screenshots',
-#   }
-# end
+Capybara.javascript_driver = :headless_chrome
 
 # Force Timecop Thread Safety to prevent intermittent date related issues during
 # parallel tests. Ensure all Timecop usage in tests are in
@@ -117,7 +90,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = Rails.root.join("spec/fixtures")
+  config.fixture_paths = [Rails.root.join("spec/fixtures")]
   config.include FactoryBot::Syntax::Methods
   config.include PageObjects::Pages::Application
   config.include Rails.application.routes.url_helpers

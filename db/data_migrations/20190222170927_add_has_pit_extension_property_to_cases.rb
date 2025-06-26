@@ -1,7 +1,7 @@
-class AddHasPitExtensionPropertyToCases < ActiveRecord::DataMigration
+class AddHasPITExtensionPropertyToCases < ActiveRecord::DataMigration
   def up
     # only try to fix up non-deleted cases
-    Case::Base.all.each do |kase|
+    Case::Base.all.find_each do |kase|
       pit_transitions = kase.transitions
         .where(event: %w[extend_for_pit remove_pit_extension])
         .order(created_at: :desc)

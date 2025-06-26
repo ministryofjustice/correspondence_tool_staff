@@ -1,6 +1,8 @@
 require "rails_helper"
 
 describe Stats::Warehouse::CaseReportSync do
+  include ActiveJob::TestHelper
+
   describe "#initialize" do
     it "requires a warehousable ActiveRecord instance" do
       not_activerecord = String.new
@@ -12,7 +14,7 @@ describe Stats::Warehouse::CaseReportSync do
   end
 
   describe ".affected_cases" do
-    it "returns a list of cases affected by the record" do
+    it "returns the result of the execute function" do
       record = Object.new
       kase = create :foi_case
 
@@ -26,33 +28,35 @@ describe Stats::Warehouse::CaseReportSync do
   end
 
   describe ".sync" do
-    let(:case1) { create :foi_case }
-    let(:case2) { create :sar_case }
+    let(:kase) { create :foi_case }
 
-    it "accepts a single case" do
-      expect(described_class.sync(case1).size).to eq 1
+    context "with a Case::Base" do
+      it "calls generate" do
+        expect(::Warehouse::CaseReport).to receive(:generate).with(kase)
+        described_class.sync(kase)
+      end
     end
 
-    it "accepts an array of cases" do
-      expect(described_class.sync([case1, case2]).size).to eq 2
-    end
-
-    it "handles nil values" do
-      expect(described_class.sync(nil).size).to eq 0
-      expect(described_class.sync([nil]).size).to eq 0
+    context "with a different type of object" do
+      it "does nothing" do
+        expect(::Warehouse::CaseReport).not_to receive(:generate)
+        described_class.sync(Object.new)
+      end
     end
   end
 
   describe ".find_cases" do
-    it "returns an Array of Case::Base related to CaseReport" do
-      record = create :foi_case
-      ::Warehouse::CaseReport.generate(record)
+    it "creates a job for every case related to update object" do
+      user = create(:foi_responder)
+      records = create_list(:foi_case, 3, creator: user)
 
-      query = "case_id = :param" # NOTE: param placeholder
-      result = described_class.find_cases(record, query)
+      records.each do |record|
+        ::Warehouse::CaseReport.generate(record)
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("Case::Base", record.id)
+      end
 
-      expect(result).to respond_to :each
-      expect(result.size).to eq 1
+      query = "creator_id = :param"
+      described_class.find_cases(user, query)
     end
   end
 
@@ -96,7 +100,7 @@ describe Stats::Warehouse::CaseReportSync do
     end
 
     it "has settings per source class to allow affected Cases to be found" do
-      described_class::MAPPINGS.each do |_klass_name, settings|
+      described_class::MAPPINGS.each_value do |settings|
         # The fields in Warehouse::CaseReport that are sourced from klass_name
         expect(settings[:fields]).to be_a Array
 
@@ -113,7 +117,7 @@ describe Stats::Warehouse::CaseReportSync do
 
           function = described_class::MAPPINGS[:'Case::Base'][:execute]
           result = function.call(record, query)
-          expect(result).to eq [record]
+          expect(result).to eq record
         end
       end
     end
@@ -190,6 +194,8 @@ describe Stats::Warehouse::CaseReportSync do
           metdata.update!(name: new_name)
           described_class.new(metdata) # re-generate related CaseReports
         end
+
+        perform_enqueued_jobs
 
         all_cases.each(&:reload)
 
@@ -269,6 +275,9 @@ describe Stats::Warehouse::CaseReportSync do
 
           property.update!(value: new_name)
           described_class.new(property) # re-sync
+
+          perform_enqueued_jobs
+
           warehouse_case_report = kase.reload.warehouse_case_report
           expect(warehouse_case_report.send(case_report_field)).to eq new_name
         end
@@ -312,6 +321,9 @@ describe Stats::Warehouse::CaseReportSync do
 
           user.update!(full_name: new_name)
           described_class.new(user) # re-sync
+
+          perform_enqueued_jobs
+
           warehouse_case_report = kase.reload.warehouse_case_report
           expect(warehouse_case_report.send(case_report_field)).to eq new_name
         end

@@ -38,6 +38,7 @@ RSpec.describe User, type: :model do
   let(:approver)            { create :approver }
   let(:responder)           { create :responder }
   let(:manager)             { create :manager }
+  let(:system_admin)        { described_class.system_admin }
 
   it { is_expected.to have_many(:assignments) }
   it { is_expected.to have_many(:cases)       }
@@ -50,6 +51,52 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:managing_teams).through(:managing_team_roles) }
   it { is_expected.to have_many(:responding_teams).through(:responding_team_roles) }
   it { is_expected.to have_one(:approving_team).through(:approving_team_roles) }
+
+  describe ".system_admin" do
+    context "when system admin does not exist" do
+      it "creates a new user" do
+        expect {
+          described_class.system_admin
+        }.to change(described_class, :count).by 1
+      end
+    end
+
+    context "when system admin already exists" do
+      it "does not create a new user" do
+        described_class.system_admin
+
+        expect {
+          described_class.system_admin
+        }.not_to change(described_class, :count)
+      end
+    end
+
+    it "the returns a user with the expected name" do
+      expect(described_class.system_admin.full_name).to eq "System update"
+    end
+
+    it "the returns a user with the expected roles" do
+      expect(described_class.system_admin.roles).to eq %w[admin responder]
+    end
+  end
+
+  describe "#system_admin?" do
+    it "returns true for a system admin" do
+      expect(system_admin.system_admin?).to be true
+    end
+
+    it "returns false for a manager" do
+      expect(manager.system_admin?).to be false
+    end
+
+    it "returns false for a responder" do
+      expect(responder.system_admin?).to be false
+    end
+
+    it "returns false for an approver" do
+      expect(approver.system_admin?).to be false
+    end
+  end
 
   describe "#manager?" do
     it "returns true for a manager" do
@@ -161,10 +208,11 @@ RSpec.describe User, type: :model do
   end
 
   describe "#case_team" do
+    let(:kase) { create(:pending_dacu_clearance_case) }
+    let(:new_team) { create(:business_unit, correspondence_type_ids: [foi.id]) }
+
     context "when user is in one of the teams associated with the case" do
       it "returns the team link to user and case both" do
-        kase = create :pending_dacu_clearance_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = kase.responder
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: "approver")
         check_user.reload
@@ -174,12 +222,17 @@ RSpec.describe User, type: :model do
 
     context "when user is not in the teams associated with the case" do
       it "returns the team only link to the user " do
-        kase = create :pending_dacu_clearance_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = create(:user)
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: "approver")
         check_user.reload
         expect(check_user.case_team(kase)).to eq new_team
+      end
+    end
+
+    context "when user is the system admin" do
+      it "returns a team from the case" do
+        check_user = system_admin
+        expect(check_user.case_team(kase)).to be_in kase.teams
       end
     end
   end
@@ -382,6 +435,30 @@ RSpec.describe User, type: :model do
       team1_other_team_names = user.other_teams_names(team1)
       expect(team1_other_team_names).to include(team2.name, team3.name)
       expect(team1_other_team_names).not_to include(team1.name)
+    end
+  end
+
+  describe "warehousable" do
+    let(:user) { create(:user) }
+
+    before do
+      user.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        user.full_name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("User", user.id)
+        user.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        user.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        user.save!
+      end
     end
   end
 end

@@ -1,11 +1,32 @@
+# == Schema Information
+#
+# Table name: data_request_emails
+#
+#  id                   :bigint           not null, primary key
+#  data_request_id      :bigint
+#  email_type           :integer          default("commissioning_email")
+#  email_address        :string
+#  notify_id            :string
+#  status               :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  data_request_area_id :bigint
+#  chase_number         :integer
+#
 class DataRequestEmail < ApplicationRecord
   belongs_to :data_request
+  belongs_to :data_request_area
 
-  validates :data_request, presence: true
+  validates :data_request_area, presence: true
   validates :email_address, presence: true
   validates :status, presence: true
 
-  enum email_type: { commissioning_email: 0 }
+  enum :email_type, {
+    commissioning_email: 0,
+    chase: 1,
+    chase_escalation: 2,
+    chase_overdue: 3,
+  }
 
   attribute :status, default: "created"
 

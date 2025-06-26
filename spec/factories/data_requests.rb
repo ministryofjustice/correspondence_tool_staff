@@ -1,9 +1,31 @@
+# == Schema Information
+#
+# Table name: data_requests
+#
+#  id                      :integer          not null, primary key
+#  case_id                 :integer          not null
+#  user_id                 :integer          not null
+#  location                :string
+#  request_type            :enum             not null
+#  date_requested          :date             not null
+#  cached_date_received    :date
+#  cached_num_pages        :integer          default(0), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  request_type_note       :text             default(""), not null
+#  date_from               :date
+#  date_to                 :date
+#  completed               :boolean          default(FALSE), not null
+#  contact_id              :bigint
+#  email_branston_archives :boolean          default(FALSE)
+#  data_request_area_id    :bigint
+#
 FactoryBot.define do
   factory :data_request do
     association :offender_sar_case
     association :user
+    association :data_request_area
 
-    location        { Faker::Company.name }
     request_type    { "all_prison_records" }
     date_requested  { Date.current }
 
@@ -27,6 +49,7 @@ FactoryBot.define do
 
     trait :completed do
       completed { true }
+      cached_date_received { Date.current }
     end
   end
 end

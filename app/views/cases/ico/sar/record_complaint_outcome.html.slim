@@ -1,0 +1,33 @@
+- content_for :page_title do
+  = t('page_title.ico_sar.complaint_outcome', case_number: @case.number)
+
+- content_for :heading
+  .grid-row
+    .column-two-thirds
+      = t('page_title.ico_sar.complaint_outcome')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+.form-group
+  = form_for @case, as: :ico, url: record_sar_complaint_outcome_case_ico_path do |f|
+    = render partial: 'cases/ico/complaint_outcome_radios', locals: { form: f, legend_options: { class: 'visually-hidden' } }
+
+    .grid-row
+      .column-two-thirds
+        .button-holder
+          = f.submit t('common.case.respond'), { class: 'button' }
+          = link_to "Cancel", case_path(@case.id), class:'acts-like-button button-left-spacing'

@@ -1,8 +1,16 @@
-# Correspondence Tools - Staff
-[![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
-[![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
-[![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
+<div align="center">
 
+<a id="readme-top"></a>
+
+<br>
+
+<img alt="MoJ logo" src="https://moj-logos.s3.eu-west-2.amazonaws.com/moj-uk-logo.png" width="200">
+
+# Correspondence Tools - Staff
+
+[![repo standards badge](https://img.shields.io/endpoint?labelColor=231f20&color=005ea5&style=for-the-badge&label=MoJ%20Compliant&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fendpoint%2Fcorrespondence_tool_staff&logo=data:image/png;base64,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)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/correspondence_tool_staff)
+
+</div>
 
 An application to allow internal staff users to answer correspondence.
 
@@ -12,35 +20,12 @@ An application to allow internal staff users to answer correspondence.
 
 Work should be based off of, and PRed to, the main branch. We use the GitHub
 PR approval process so once your PR is ready you'll need to have one person
-approve it, and the CI tests passing, before it can be merged. Feel free to use
-the issue tags on your PR to indicate if it is a WIP or if it is ready for
-reviewing.
+approve it, and the CI tests passing, before it can be merged.
 
-Please consider using the provided Docker environment to develop this app over your core linux environment. There are [huge benefits using Docker](https://greatminds.consulting/insight/top-10-benefits-you-will-get-by-using-docker) in development including standardisation, increased productivity and CI efficiencies.
 
-### Basic setup using Docker
+### Basic Setup
 
-#### Requirements
-
-* [Docker](https://docs.docker.com/desktop/install/mac-install/)
-* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
-* [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
-
-Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync.
-
-Install Dory
-
-```
-brew install dory
-```
-
-Install Docker Sync
-
-```
-gem install docker-sync
-```
-
-### Getting started
+#### Cloning This Repository
 
 Clone this repository then `cd` into the new directory
 
@@ -49,133 +34,89 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-Environment settings for Docker reside in `.env.example`. When starting Docker the environment will be created for you.
+### Installing the app for development
 
+#### Latest Version of Ruby
 
-> When the service is up and running, an array of pseudo accounts will have been created.
-> The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
-
-### Installation
-
-The easiest way to get the app running is to execute Makefile commands.
-
->The `make` utility is commonly used as a compiler however we use it as a stage to combine, execute and compress
-more cumbersome commands.
-
-Running the following will get the application started. Please be patient, this process may take a good few minutes to
-complete and `dory up` will require root access to write to the host resolver - this is expected.
-
+If you don't have `rbenv` already installed, install it as follows:
 ```
-dory up
-make build
-```
-Once the installation process has completed, a Puma server will be running in your terminal.
-
-The application will be available at the following addresses:
-
-**Application:**
-```
-http://track-a-query.docker/users/sign_in
+$ brew install rbenv ruby-build
+$ rbenv init
 ```
 
-**DB Admin** (login details in `docker-compose.yml`):
-```
-http://pgadmin.track-a-query.docker:5050/
-```
+Follow the instructions printed out from the `rbenv init` command and update your `~/.bash_profile` or equivalent file accordingly, then start a new terminal and navigate to the repo directory.
 
-**Selenium Grid UI** (feature tests):
-```
-http://chrome.track-a-query.docker/ui
-```
-
-**BrowserSync:**
-```
-http://track-a-query.docker:3001/
-```
-
-**BrowserSync UI:**
-```
-http://track-a-query.docker:3002/
-```
-
-> During usual operation it is normal to `make down` and `make launch` to stop and start the application, respectively.
-
-### Working in the terminal
-
-Run the following in a separate terminal window.
+Use `rbenv` to install the latest version of ruby as defined in `.ruby-version` (make sure you are in the repo path):
 
 ```
-make shell
+$ rbenv install
 ```
 
-From this prompt, You can run `irb`, `rails c` and a host of other commands.
+#### Dependencies
 
-**IMPORTANT**; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
-
-```
-make rebuild
-```
-
-### The Testing Environment
-
-The `docker compose` environment comes packed with a dedicated testing environment that requires an initial setup.
-
-In a separate terminal window, execute:
+Node.js:
 
 ```
-make specs
+$ brew install node
 ```
 
-Once the interface has initialised, execute:
+Yarn
 
 ```
-make spec-setup
+$ brew install yarn
 ```
 
-Once set up has completed you won't have to run that again unless the volumes are removed.
+Postgresql
 
-------------
+```
+$ brew install postgresql
+```
 
-### Make commands
-
-There are several `make` commands configured in the `Makefile`. These are mostly just convenience wrappers for longer or more complicated commands.
-
-Nb. with exception to `make spec-setup`, all other `make` commands are run from the host machine, i.e. outside the containers.
-
-| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make docker-shell`                                                                                                                   | Generate an .env file (if not exist), run the app in the background and open an interactive shell.<br/>***Nb.*** does not launch servers for browser viewing, run `make build` instead. This command is for accessing a detached app container in order to execute administrative operations. You may like to run `make shell` to open a prompt in the container launched by `docker compose up`. From within you can run commands such as  `irb` and `rails c` |
-| `make`                                                                                                                                | Alias of `make docker-shell`.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `make build`                                                                                                                          | Build and run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                          |
-| `make launch`                                                                                                                         | Run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                                    |
-| `make rebuild`                                                                                                                        | Runs `make dc-clean` and then rebuilds the application from the ground up and brings it online.                                                                                                                                                                                                                                                                                                                                                                 |
+Redis
+```
+$ brew install redis
+```
 
 
-### Other helpers
-Whilst these can be used independently, they are generally used in the commands above to help overcome complex
-installation.
+#### Setup
 
-| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                           |
-|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make setup`                                                                                                                          | Jump into the app container and execute the `install.sh` script                                                                                                       |
-| `make sidekiq`                                                                                                                        | Launch Sidekiq in the background.                                                                                                                                     |
-| `make browser-sync`                                                                                                                   | Launch BrowserSync in the background.                                                                                                                                 |
-| `make server`                                                                                                                         | Launch Puma at the command prompt.                                                                                                                                    |
-| `make servers`                                                                                                                        | A helper to ensure app setup and asynchronously start all servers in this order; Sidekiq, BrowserSync and Puma.                                                       |
-| `make dc-clean`                                                                                                                       | Stop all CTS docker containers, delete all CTS images, volumes and network. Clean the application directory ready for a fresh installation. Nukes databases and Gems. |
-| `make dc-reset`                                                                                                                       | Clean and rebuild the app, displays stdout ***doesn't restart the servers***                                                                                          |
-| `make down`                                                                                                                           | Alias of `docker compose down`                                                                                                                                        |
-| `make up`                                                                                                                             | Alias of `docker compose up`                                                                                                                                          |
-| `make up-daemon`                                                                                                                      | Alias of `docker compose up -d app` - run docker compose in the background                                                                                            |
-| `make restart`                                                                                                                        | Stop docker compose (`down`), relaunch (`up`) and display an interactive shell on the app container                                                                   |
-| `make shell-app`                                                                                                                      | Open an interactive command prompt on the app container                                                                                                               |
-| `make test`                                                                                                                           | Run tests on the application.                                                                                                                                         |
-| `make docker-sync`                                                                                                                    | Starts a docker-sync container used to speed up development on the front end.                                                                                         |
+Use the following commands to install gems and javascript packages then create the database
 
+```
+$ bin/setup
+$ bin/yarn install
+```
 
----------------
+#### Seeds
+Seeds can be loaded into the database via a rake task. The user accounts password is set with the `DEV_PASSWORD` env var.
 
-> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.
+```
+$ DEV_PASSWORD=correspondence bin/rake db:seed:dev
+```
+
+#### Running locally:
+
+To just run the web server without any background jobs (usually sufficient):
+
+```
+$ bin/rails server
+```
+
+If you need any of the background jobs running then start with:
+
+```
+$ bin/dev
+```
+
+The site will be accessible at http://localhost:3000.
+You can login using one of the users created during the seeding process such as:
+`correspondence-staff-dev+brian.rix@digital.justice.gov.uk` or `correspondence-staff-dev+david.attenborough@digital.justice.gov.uk` with the password set as `DEV_PASSWORD`
+
+If you have any issues when running background jobs, start by checking that redis and postgresql are running with the below command:
+
+```
+$ brew services
+```
 
 ### Testing
 
@@ -231,88 +172,18 @@ It can be set to any value you like.
 
 Examples:
 ```
-$ CHROME_DEBUG=1 bundle exec rspec
+$ CHROME_DEBUG=1 bin/rspec
 ```
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
-taskbar/Docker. You can now click on chrome and watch it run through your tests.
+taskbar. You can now click on chrome and watch it run through your tests.
 If you have a `debugger`  in your tests the browser will stop at that point.
 
-### Additional Setup
-
-#### Libreoffice
-
-Libreoffice is used to convert documents to PDF's so that they can be viewed in a browser.
-In production environments, the installation of libreoffice is taken care of during the build
-of the docker container (see the Dockerfile).
-
-In localhost dev testing environments, libreoffice needs to be installed using homebrew, and then
-the following shell script needs to created with the name ```/usr/local/bin/soffice```:
-
-```
-cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
-```
-
-The above script is needed by the libreconv gem to do the conversion.
-
-#### BrowserSync Setup
-
-[BrowserSync](https://www.browsersync.io/) is setup and configured for local development
-using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails).
-BrowserSync helps us test across different browsers and devices and sync the
-various actions that take place.
-
-##### Dependencies
-
-Node.js:
-Install using `brew install node` and then check its installed using `node -v` and `npm -v`
-
-- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
-- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
-
-##### Installing and running:
-
-Bundle install as normal then
-After bundle install:
-
-```bash
-bundle exec rails generate browser_sync_rails:install
-```
-
-This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP))
-to install BrowserSync and this command is only required once. If you run into
-problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
-
-To run BrowserSync start your rails server as normal then in a separate terminal window
-run the following rake task:
-
-```bash
-bundle exec rails browser_sync:start
-```
-
-You should see the following output:
-```
-browser-sync start --proxy localhost:3000 --files 'app/assets, app/views'
-[Browsersync] Proxying: http://localhost:3000
-[Browsersync] Access URLs:
- ------------------------------------
-       Local: http://localhost:3001
-    External: http://xxx.xxx.xxx.x:3001
- ------------------------------------
-          UI: http://localhost:3002
- UI External: http://xxx.xxx.xxx.x:3002
- ------------------------------------
-[Browsersync] Watching files...
-```
-Open any number of browsers and use either the local or external address and your
-browser windows should be sync. If you make any changes to assets or views then all
-the browsers should automatically update and sync.
-
-The UI URL are there if you would like to tweak the BrowserSync server and configure it further
 
 #### Emails
 
 Emails are sent using
-the [GOVUK Notify service](https://www.notifications.service.gov.uk).
+the [GOVUK Notify service](https://www.notifications.service.gov.uk). Email requests are sent asynchronously via Sidekiq.
+
 Configuration relies on an API key which is not stored with the project, as even
 the test API key can be used to access account information. To do local testing
 you need to have an account that is attached to the "Track a query" service, and
@@ -320,12 +191,12 @@ a "Team and whitelist" API key generated from the GOVUK Notify service website.
 See the instructions in the `.env.example` file for how to setup the correct
 environment variable to override the `govuk_notify_api_key` setting.
 
-The urls generated in the mail use the `cts_email_host` and `cts_mail_port`
+The urls generated in the mail use the `cts_email_url` and `cts_email_port`
 configuration variables from the `settings.yml`. These can be overridden by
 setting the appropriate environment variables, e.g.
 
 ```
-$ export SETTINGS__CTS_EMAIL_HOST=localhost
+$ export SETTINGS__CTS_EMAIL_URL=localhost
 $ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
 
@@ -350,34 +221,7 @@ Responses and other case attachments are uploaded directly to S3 before being
 submitted to the application to be added to the case. Each deployed environment
 has the permissions is needs to access the uploads bucket for that environment.
 
-In local development, uploads are placed in https://<cloud-platform-generated-s3-bucket-address>/
-
-You'll need to provide access credentials to the aws-sdk gems to access
-it, there are two ways of doing this:
-
-#### Using credentials attached to your IAM account
-
-In order to perform certain actions, you need to have valid S3 credentials active
-You can configure the aws-sdk with your access and secret key by placing them in
- the `[default]` section in `.aws/credentials`:
-
-Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
-
-
-`kubectl -n track-a-query-production get secret track-a-query-ecr-credentials-output -o yaml`
-
-Decode the base64 encoded values for access_key_id and secret_access_key from the output returned e.g.
-
-`$ echo QUtHQTI3SEpTERJV1RBTFc= | base64 --decode; echo`
-
-Place them in `~/.aws/credentals` as the default block:
-
-```
-[default]
-aws_access_key_id = AKIA27HHJDDH3GHI
-aws_secret_access_key = lSlkajsd9asdlaksd73hLKSFAk
-
-```
+In local development, uploads are made to the local filesystem.
 
 #### Dumping the database
 
@@ -412,17 +256,13 @@ changed.  There are a couple of complexities in using this tool which are descri
 
 #### JSONB fields on the database
 The default serializer does not de-serialize the properties column correctly because internally it is
-held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CtsPapertrailSerializer```
+held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CTSPapertrailSerializer```
 takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
 examples of how to reify a previous version, or get a hash of field values for the previous version.
 
-### Continuous Integration
-
-Continuous integration is carried out by SemaphoreCI.
-
 ### Data Migrations
 
-The app uses the `rails-data-migrations` gem https://github.com/OffgridElectric/rails-data-migrations
+The app uses the `rails-data-migrations` gem https://github.com/anjlab/rails-data-migrations
 
 Data migrations work like regular migrations but for data; they're found in `db/data_migrations`.
 
@@ -456,23 +296,6 @@ Whenever any changes to the letter templates are required DO NOT EDIT THE DATABA
 
 This is required whenever any new template is added; should someone have edited the versions in the database directly, those changes will be overwritten the next time the seeder is run.
 
-### Smoke Tests
-
-The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
-It checks that sign in was successful and then randomly views one case in the case list view.
-
-To run the smoke test, set the following environment variables:
-
-```
-SETTINGS__SMOKE_TESTS__USERNAME    # the email address to use for smoke tests
-SETTINGS__SMOKE_TESTS__PASSWORD    # The password for the smoketest email account
-```
-
-and then run
-
-```
-bundle exec rails smoke
-```
 ### Site prism page manifest file
 
 The tests use the Site Prism gem to manage page objects which behave as an abstract description of the pages in the application; they're used in feature tests for finding elements, describing the URL path for a given page and for defining useful methods e.g. for completing particular form fields on the page in question.
@@ -517,74 +340,6 @@ $ i18n-tasks unused
 $
 ```
 
-### Deploying
-
-#### Dockerisation
-
-Docker images are built from a single `Dockerfile` which uses build arguments to
-control aspects of the build. The available build arguments are:
-
-- _*development_mode*_ enable by setting to a non-nil value/empty string to
-  install gems form the `test` and `development` groups in the `Gemfile`. Used
-  when building with `docker-compose` to build development versions of the
-  images for local development.
-- _*additional_packages*_ set to the list of additional packages to install with
-  `apt-get`. Used by the build system to add packages to the `uploads` container:
-
-  ```
-      clamav clamav-daemon clamav-freshclam libreoffice
-  ```
-
-  These are required to scan the uploaded files for viruses (clamav & Co.) and
-  to generate a PDF preview (libreoffice).
-
-
-  ```
-      nodejs
-  ```
-
-  Required to run Puma with ExecJS
-
-
-  ```
-      zip
-  ```
-
-  Required to run closed case reports
-
-  ```
-      postgresql-client-12.6-r0
-  ```
-
-  Required for debugging database by developers within the running container - app will work without this.
-
-#### ARM Mac Users
-
-If you are creating a local image for deploying to an environment, you will need to change the target platform by running:
-
-```
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
-```
-
-#### Generating Documentation
-
-You can generate documentation for the project with:
-
-```
-bundle exec yardoc
-```
-
-If you need to you can edit settings for Yard in `Rakefile`. The documentation
-is generated in the `doc` folder, to view it on OSX run:
-
-```
-open doc/index.html
-```
-
-#### Guide to our deploy process
-For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
-
-
 ## Keeping secrets and sensitive information secure
 
 There should be *absolutely no secure credentials* committed in this repo. Information about secret management can be found in the related confluence pages.
@@ -615,53 +370,37 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.7.x to Ruby 3.x on local environment
+## Exceptions
+Any exceptions raised in any deployed environment will be sent to [Sentry](https://ministryofjustice.sentry.io/projects/track-a-query).
 
-1. Install Ruby 3.x
+## Jobs
 
-```
-$ rbenv install
-```
-it should pick up the version defined in .ruby-version
+There are a variety of jobs that run, either using Sidekiq and triggered in code, or via a cronjob.
 
-If you get error somehow telling you not being able to find available stable release 3.x, you could try the following commands
+### Cronjobs
 
-```
-$ brew unlink ruby-build
-$ brew install --HEAD ruby-build
-```
+These are configured to run in Kubernetes. Not all jobs run in all environments.
 
-then run following command to check whether you can see 3.x in the list
-```
-$ rbenv install --list-all
-```
-once you confirm, you can re-run `rbenv install` comand to continue the process.
+| Name                                 | In Prod? | Details                                        | Frequency |
+| ------------------------------------ | -------- | ---------------------------------------------- | --------- |
+| email-status                         | Yes      | Checks and updates data request email status   | Hourly    |
+| close-expired-rejected-offender-sars | Yes      | Closes expired rejected Offender SARs          | Daily     |
+| send-chase-emails                    | Yes      | Sends Offender SAR data request chase emails   | Daily     |
+| rpi-delete                           | Yes      | Deletes RPI files                              | Weekly    |
+| db-anonymizer                        | No       | Dumps anonymised version of the database to S3 | N/A       |
 
-3. Update the gem system
-```
-$ gem update --system
-```
 
-4. Install bundle 2.4.19 and install those gems
-```
-$ gem install bundler -v 2.4.19
-$ bundler install
-```
+### Sidekiq
 
-5. run `rails s` check the app
+When the server is running, you can view the sidekiq queues by going to http://localhost:3000/sidekiq.
+This path can also be used on the live site when you are logged in as an admin.
 
-## Dependabot
-
-Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again).
-
-You can manually combine the changes into one PR and then push this and wait for the tests to run, but this is admin that can be automated so why bother?
-
-The app has a github action "Combine PRs" which automatically combines dependabot PRs that have passed the test suite into one PR which you can then merge.
-
-To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run workflows"
-
-See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
-
-## Addendum
-
-Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
+| Name                          | Details                                 | Notes                                                              |
+| ------------------            | --------------------------------------- | ------------------------------------------------------------------ |
+| AnonymiserDbJob               | Anonymises database data for dumps      | Works with db-anonymizer cronjob                                   |
+| EmailStatusJob                | Gets status of data request email       | Used by email-status cronjob and also when email is initially sent |
+| PdfMakerJob                   | Creates PDF from case attachments       |                                                                    |
+| PerformanceReportJob          | Used when creating some reports         |                                                                    |
+| RequestPersonalInformationJob | Builds request from API and sends email |                                                                    |
+| SearchIndexUpdaterJob         | Updates search index when case changes  |                                                                    |
+| SearchIndexBuNameUpdaterJob   | Updater when Busines Unit name changes  | Calls the SearchIndexUpdaterJob for every case linked to the BU    |

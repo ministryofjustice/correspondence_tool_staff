@@ -45,6 +45,11 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_can_trigger_event(:add_data_received)
   end
 
+  def can_send_day_1_email?
+    clear_failed_checks
+    check_can_trigger_event(:send_day_1_email)
+  end
+
   def can_send_acknowledgement_letter?
     clear_failed_checks
     check_user_can_manage_offender_sar
@@ -55,9 +60,18 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
+  def can_validate_rejected_case?
+    clear_failed_checks
+    edit_case? && check_can_trigger_event(:validate_rejected_case)
+  end
+
   def can_start_complaint?
     clear_failed_checks
     check_user_can_manage_offender_complaint
+  end
+
+  def can_upload_request_attachment?
+    false
   end
 
   check :user_can_manage_offender_complaint do

@@ -1,0 +1,20 @@
+- content_for :page_title do
+  = t('page_title.assign_to_vetter_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for [@case, @assignment], url: execute_assign_to_team_member_case_assignments_path(@case), method: :post do |f|
+  = f.radio_button_fieldset :user_id , choices: @team_users, value_method: :id, text_method: :full_name_with_optional_load_html
+
+  = f.submit t('.action'), class: 'button'

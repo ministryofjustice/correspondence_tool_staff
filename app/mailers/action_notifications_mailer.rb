@@ -104,33 +104,13 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def commissioning_email(commissioning_document, kase_number, recipient)
+  def rpi_email(rpi, target)
     SentryContextProvider.set_context
 
-    find_template("Commissioning")
-    find_reply_to("Commissioning")
+    find_template("RPI")
+    set_personalisation(content: rpi.attachment_url(target))
 
-    deadline_text = ""
-    if commissioning_document.deadline.present?
-      deadline_text = I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
-    end
-
-    file = StringIO.new(commissioning_document.document)
-
-    set_personalisation(
-      email_subject: "Subject Access Request - #{kase_number} - #{commissioning_document.decorate.request_document}",
-      email_address: recipient,
-      deadline_text:,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
-    )
-
-    data_request_email = DataRequestEmail.find_or_create_by!(
-      email_address: recipient,
-      data_request: commissioning_document.data_request,
-    )
-
-    # Sets dreid header with reference to record which can be used to update with Notify ID in MailDeliveryObserver
-    mail(to: recipient, dreid: data_request_email.id)
+    mail(to: PersonalInformationRequest.email_for_target(target))
   end
 
 private
@@ -156,15 +136,8 @@ private
       set_template(Settings.case_ready_to_send_notify_template)
     when "Message received"
       set_template(Settings.message_received_notify_template)
-    when "Commissioning"
-      set_template(Settings.commissioning_notify_template)
-    end
-  end
-
-  def find_reply_to(type)
-    case type
-    when "Commissioning"
-      set_email_reply_to(Settings.commissioning_notify_reply_to)
+    when "RPI"
+      set_template(Settings.rpi_template)
     end
   end
 end

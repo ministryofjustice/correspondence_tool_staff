@@ -1,4 +1,4 @@
-class ChangeClosedCasesReportTypeEtlFlag < ActiveRecord::DataMigration
+class ChangeClosedCasesReportTypeETLFlag < ActiveRecord::DataMigration
   def up
     closed_cases_report_type = ReportType.find_by(abbr: "R007")
     if closed_cases_report_type

@@ -76,10 +76,12 @@ describe SearchQuery do
         filter_status
         filter_timeliness
         filter_high_profile
+        filter_dps_missing_data
         filter_complaint_type
         filter_complaint_priority
         filter_complaint_subtype
         filter_caseworker
+        filter_vetter
         filter_partial_case_flag
         filter_retention_state
         date_responded_from
@@ -238,10 +240,12 @@ describe SearchQuery do
         filter_status
         filter_timeliness
         filter_high_profile
+        filter_dps_missing_data
         filter_complaint_type
         filter_complaint_priority
         filter_complaint_subtype
         filter_caseworker
+        filter_vetter
         filter_partial_case_flag
         filter_retention_state
         date_responded_from
@@ -332,20 +336,21 @@ describe SearchQuery do
       it "returns the result of searching for search_text" do
         search_query = create :search_query,
                               user_id: user.id,
-                              search_text: "std_draft_foi"
-        expect(search_query.results).to eq [@setup.std_draft_foi,
-                                            @setup.std_draft_foi_late,
-                                            @setup.std_draft_irt]
+                              search_text: "std_draft"
+        expect(search_query.results)
+          .to contain_exactly(@setup.std_draft_foi,
+                              @setup.std_draft_foi_late,
+                              @setup.std_draft_irt)
       end
 
-      it "returns the result of searching for search_text with newest case first" do
+      it "returns the result of searching for search_text with newest case first by received date" do
         search_query = create :search_query,
                               user_id: user.id,
-                              search_text: "std_draft_foi"
+                              search_text: "std_draft"
         expect(search_query.results(nil, "search_result_order_by_newest_first"))
-          .to eq [@setup.std_draft_foi,
-                  @setup.std_draft_foi_late,
-                  @setup.std_draft_irt]
+          .to eq [@setup.std_draft_irt,
+                  @setup.std_draft_foi,
+                  @setup.std_draft_foi_late]
       end
 
       it "returns the result of searching for search_text with oldest case first" do
@@ -623,10 +628,12 @@ describe SearchQuery do
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
           CaseFilter::CaseworkerFilter,
+          CaseFilter::VetterFilter,
         ]
       end
 
@@ -637,6 +644,7 @@ describe SearchQuery do
           CaseFilter::DateRespondedFilter,
           CaseFilter::CaseTypeFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
@@ -680,6 +688,7 @@ describe SearchQuery do
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
           CaseFilter::CaseHighProfileFilter,
+          CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe SarInternalReviewCaseForm do
+RSpec.describe SARInternalReviewCaseForm do
   let(:case_form) { create(:sar_internal_review).decorate }
 
   it "can be created" do

@@ -8,10 +8,10 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
   end
 
   context "when post-authorization processing" do
-    let(:service) { instance_double NewOverturnedIcoCaseService }
+    let(:service) { instance_double NewOverturnedICOCaseService }
 
     before do
-      allow(NewOverturnedIcoCaseService)
+      allow(NewOverturnedICOCaseService)
         .to receive(:new).with(kase.id.to_s).and_return(service)
       allow(service).to receive(:call)
       allow(service).to receive(:original_ico_appeal).and_return(kase)

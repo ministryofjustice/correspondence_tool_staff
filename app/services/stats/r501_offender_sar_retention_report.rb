@@ -1,5 +1,5 @@
 module Stats
-  class R501OffenderSarRetentionReport < BaseRetentionReport
+  class R501OffenderSARRetentionReport < BaseRetentionReport
     CSV_COLUMN_HEADINGS = [
       "Case Number (aka DPA number)",
       "Case Type",

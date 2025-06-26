@@ -47,7 +47,11 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     authorize Case::Base, :can_add_case?
 
-    render "cases/select_type"
+    if permitted_correspondence_types.any? { |h| h[:abbreviation] == "OFFENDER_SAR" }
+      render "cases/offender_sar_select_type"
+    else
+      render "cases/select_type"
+    end
   end
 
   def create
@@ -82,7 +86,6 @@ class CasesController < ApplicationController
 
     authorize @case
 
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     @s3_direct_post = S3Uploader.for(@case, "requests")
     @case = @case.decorate
     render "cases/edit"
@@ -114,7 +117,6 @@ class CasesController < ApplicationController
     end
 
     set_permitted_events
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     redirect_to case_path(@case)
   end
 

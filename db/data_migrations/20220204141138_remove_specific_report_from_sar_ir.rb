@@ -1,4 +1,4 @@
-class RemoveSpecificReportFromSarIr < ActiveRecord::DataMigration
+class RemoveSpecificReportFromSARIr < ActiveRecord::DataMigration
   def up
     ct = CorrespondenceType.find_by(abbreviation: "SAR_INTERNAL_REVIEW")
     if ct.present?

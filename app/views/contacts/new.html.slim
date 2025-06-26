@@ -1,13 +1,25 @@
 - content_for :page_title do
-  = t('page_title.add_an_address')
+  = t('page_title.add_an_address_contact_type')
 
 = link_to("Back", contacts_url, class: 'govuk-back-link')
+
 - content_for :heading
-  = t('common.contacts.add_new_address')
+  = t('common.contacts.contact_type')
 
 = render partial: 'layouts/header'
 
-= GovukElementsErrorsHelper.error_summary @contact,
-  "#{pluralize(@contact.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+= GovukElementsErrorsHelper.error_summary @contact_type,
+  "#{pluralize(@contact_type.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= render 'form'
+= form_for @contact_type, method: :post, url: new_details_contacts_path do |f|
+
+  = f.hidden_field :contact_type_default_id
+  = f.radio_button_fieldset :contact_type_id,
+    choices: @contact_types,
+    value_method: :id,
+    text_method: :value,
+    legend_options: { class: 'visually-hidden' }
+
+  .button-holder
+    = f.submit 'Continue', class: 'button'
+    = link_to('Cancel', contacts_url, class: 'acts-like-button moj-style-link')

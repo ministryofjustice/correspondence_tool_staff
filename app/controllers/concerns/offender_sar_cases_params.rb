@@ -8,15 +8,19 @@ module OffenderSARCasesParams
       :case_reference_number,
       :delivery_method,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
+      :email,
       :requester_reference,
       :flag_as_high_profile,
+      :flag_as_dps_missing_data,
       :message,
       :name,
       :number_final_pages,
       :number_exempt_pages,
+      :other_rejected_reason,
       :other_subject_ids,
       :postal_address,
       :prison_number,
+      :probation_area,
       :previous_case_numbers,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
@@ -30,12 +34,15 @@ module OffenderSARCasesParams
       :third_party_name,
       :third_party_relationship,
       :third_party_company_name,
+      :third_party_email,
       :date_responded_dd, :date_responded_mm, :date_responded_yyyy,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :request_method,
       :requester_reference,
-      uploaded_request_files: []
+      :current_state,
+      uploaded_request_files: [],
+      rejected_reasons: []
     )
   end
 

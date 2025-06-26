@@ -1,11 +1,24 @@
+# == Schema Information
+#
+# Table name: commissioning_documents
+#
+#  id                   :bigint           not null, primary key
+#  data_request_id      :bigint
+#  template_name        :enum
+#  sent_at              :datetime
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  attachment_id        :bigint
+#  data_request_area_id :bigint
+#
 require "rails_helper"
 
 RSpec.describe CommissioningDocument, type: :model do
-  subject(:commissioning_document) { described_class.new(data_request:) }
+  subject(:commissioning_document) { described_class.new(data_request_area:) }
 
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Robert Badson").decorate }
-  let(:data_request) { create(:data_request, offender_sar_case:) }
-  let(:template_type) { :prison }
+  let(:data_request_area) { create(:data_request_area, offender_sar_case:) }
+  let(:template_type) { :standard }
 
   it "can be created" do
     expect(commissioning_document).to be_present
@@ -45,6 +58,16 @@ RSpec.describe CommissioningDocument, type: :model do
     end
   end
 
+  describe "data request area validation" do
+    context "with no data_request_area" do
+      it "is not valid" do
+        commissioning_document = build(:commissioning_document, data_request_area: nil)
+        expect(commissioning_document).not_to be_valid
+        expect(commissioning_document.errors[:data_request_area]).to include("is required")
+      end
+    end
+  end
+
   describe "#document" do
     context "when invalid object" do
       it "returns nil" do
@@ -71,10 +94,10 @@ RSpec.describe CommissioningDocument, type: :model do
     context "when valid object" do
       it "sets the filename as expected" do
         Timecop.freeze(Time.zone.local(2022, 10, 31, 9, 20)) do
-          commissioning_document = described_class.new(data_request:)
+          commissioning_document = described_class.new(data_request_area:)
           commissioning_document.template_name = template_type
           number = offender_sar_case.number
-          expect(commissioning_document.filename).to eq "Day1_HMPS_#{number}_Robert-Badson_20221031T0920.docx"
+          expect(commissioning_document.filename).to eq "Day1_prison_#{number}_Robert-Badson_20221031T0920.docx"
         end
       end
     end
@@ -101,6 +124,22 @@ RSpec.describe CommissioningDocument, type: :model do
     it "destroys the attachment" do
       commissioning_document.remove_attachment
       expect { attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "#has_no_request_area?" do
+    context "when data_request_area is nil" do
+      let(:data_request_area) { nil }
+
+      it "returns true" do
+        expect(commissioning_document.has_no_request_area?).to be true
+      end
+    end
+
+    context "when data_request_area is present" do
+      it "returns false" do
+        expect(commissioning_document.has_no_request_area?).to be false
+      end
     end
   end
 end

@@ -1,5 +1,3 @@
-version: '3.8'
-
 volumes:
   postgres-data:
   redis:
@@ -21,7 +19,7 @@ services:
       args:
         development_mode: "true"
       context: .
-      dockerfile: .local-dev/Dockerfile
+      dockerfile: config/docker-dev/Dockerfile
       target: dev
     stdin_open: true
     tty: true
@@ -34,47 +32,12 @@ services:
       - log
     volumes:
       - .:/usr/src/app/
-      - ~/.aws:/root/.aws
       - gems:/usr/local/bundle
       - cts-app-sync:/usr/src/app/:nocopy
 
-  spec:
-    container_name: cts_spec
-    shm_size: '2g'
-    build:
-      args:
-        development_mode: "true"
-      context: .
-      dockerfile: .local-dev/Dockerfile
-      target: spec
-    tty: true
-    environment:
-      CHROME_IS_REMOTE: 1
-    ports:
-      - "3010:3010"
-    depends_on:
-      - db
-      - chrome
-    volumes:
-      - .:/usr/src/app/
-      - ~/.aws:/home/circleci/.aws
-      - spec-gems:/home/circleci/.rubygems
-
-  chrome:
-    container_name: cts_chrome
-    image: ${CHROME_CONTAINER_IMAGE}
-    environment:
-      VIRTUAL_HOST: "chrome.track-a-query.docker"
-      VIRTUAL_PORT: "4444"
-      VNC_NO_PASSWORD: 1
-    ports:
-      - '4444:4444'
-      - '7900:7900'
-      - '5900:5900'
-
   db:
     container_name: cts_postgres
-    image: postgres:12.5
+    image: postgres:17
     restart: unless-stopped
     shm_size: '2g'
     volumes:
@@ -109,7 +72,7 @@ services:
       args:
         development_mode: "true"
       context: .
-      dockerfile: .local-dev/Dockerfile
+      dockerfile: config/docker-dev/Dockerfile
       target: dev
     volumes:
       - .:/usr/src/app/

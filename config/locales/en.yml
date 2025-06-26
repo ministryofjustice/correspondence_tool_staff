@@ -54,6 +54,9 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+        rejected_reasons: ""
+        other_rejected_reason: ""
+        third_party_email: ""
       case/sar/offender_complaint:
         ico_contact_name: ICO contact name
         ico_contact_email: ICO contact email
@@ -270,6 +273,12 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+            email:
+              invalid: not in the correct format, like name@example.com
+            rejected_reasons:
+              blank: Reason for rejecting the case cannot be blank
+            other_rejected_reason:
+              blank: Other reason for rejecting the case cannot be blank
             recipient:
               third_party: cannot be third_party_recipient if third party requester
               blank: cannot be blank
@@ -281,6 +290,8 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
+            third_party_email:
+              invalid: Enter an email address in the correct format, like name@example.com
             is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
@@ -293,6 +304,7 @@ en:
               blank: cannot be blank
             date_of_birth:
               blank: cannot be blank
+            accepted_date_received: When was the outstanding information received?
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -342,6 +354,8 @@ en:
           attributes:
             template_name:
               blank: is required
+            data_request_area:
+              blank: is required
         data_request:
           attributes:
             date_from:
@@ -357,6 +371,10 @@ en:
               not_empty: should be blank if the request is not complete
             request_type:
               blank: cannot be blank
+        data_request_area:
+          attributes:
+            data_request_area_type:
+              blank: Select what data you are requesting
             location:
               blank: cannot be blank
         linked_case:
@@ -385,8 +403,8 @@ en:
 
   activemodel:
     attributes:
-      probation_commissioning_document_email:
-        email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
+      contact_type:
+        contact_type_id: Select the contact type of the new address
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
@@ -400,9 +418,9 @@ en:
             state:
               inclusion: is not a valid status
               forbidden: cannot be changed once case is anonymised
-        probation_commissioning_document_email:
+        contact_type:
           attributes:
-            email_branston_archives:
+            contact_type_id:
               blank: ""
 
   pundit:
@@ -428,7 +446,7 @@ en:
       update?: You are not authorised to edit this case.
       update_closure?: You are not authorised to edit this case.
       upload_responses?: You are not authorised to upload a response for this case.
-      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
+      can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
     case/ico/foi_policy:
       <<: *case_policy
@@ -438,6 +456,7 @@ en:
       <<: *case_policy
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+      can_set_outcome?: You are not authorised
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
@@ -458,6 +477,7 @@ en:
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
+      can_upload_request_attachment?: Request attachments cannot be uploaded.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -522,9 +542,6 @@ en:
     edit: Edit
     delete: Delete
     update_partial_flags: Update partial case
-    select_document: Select Day 1 request document
-    download_document: Download Day 1 request document
-    generate_document: Generate Day 1 request document
     send_email: Send commissioning email
 
   helpers:
@@ -539,14 +556,18 @@ en:
         date_from: Date from
         date_to: Date to
         date_requested: Date requested
+      data_request_area:
+        data_request_area_type: What data is needed?
       commissioning_document:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
+        flag_as_dps_missing_data: Flag as DPS missing data
         info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
         request_method: How was the request received by MOJ?
+        rejected_reasons: Select all that apply.
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -564,6 +585,7 @@ en:
       ico:
         delivery_method: How and where should the information be sent?
         ico_decision: The original case has been
+        sar_complaint_outcome: What was the outcome of the SAR complaint?
         late_team_id_html: " "
         type: Original Case Type
       overturned_foi:
@@ -610,13 +632,16 @@ en:
         filter_case_type: Type
         filter_open_case_status: Status
         filter_sensitivity: Sensitivity
+        filter_caseworker: Complaint caseworker
         filter_complaint_type: Complaint type
         filter_complaint_priority: Priority
         filter_complaint_subtype: Complaint sub type
         filter_status: Status
         filter_timeliness: Timeliness
-        filter_high_profile: Flag as high profile?
+        filter_high_profile: Flag as high profile
+        filter_dps_missing_data: DPS missing data
         filter_retention_state: Status
+        filter_vetter: Vetting officer
       team:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types
@@ -630,11 +655,10 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       contact:
         data_request_emails: Add multiple email addresses on separate lines
-      data_request:
+        escalation_name: Enter the name of the prison governor
+        escalation_emails: Add multiple email addresses on separate lines
+      data_request_area:
         location: Where is the data held?
-      feedback:
-        comment: |
-          Let us know what you were doing and what could be improved or fixed.
       ico:
         original_case_number_html: |
           Enter original case  reference number to link to.  For example 170131001.<br>
@@ -642,6 +666,7 @@ en:
         related_case_number:  Enter related case  reference number, for example 170131001.
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
+        email: Enter the email address of the data subject
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -688,8 +713,12 @@ en:
         add_to_conversation: Add to conversation
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
+      contact:
+        escalation_name: Prison governor
+        escalation_emails: Prison governor email
       data_request:
         location: Location
+        cached_num_pages: Number of pages received
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
@@ -705,29 +734,57 @@ en:
           probation_records: Probation records
           probation_archive: Probation archive
           other: Other
-          cross_borders: Cross Borders
+          cross_borders: Cross borders
           cat_a: CAT A
-          ndelius: Ndelius contact lists
+          ndelius: nDelius contact lists
+          dps: DPS
+          education: Education
+          oasys_arns: OASys / ARNS
+          hpa: Historical Prisoner Application (HPA)
+          g1_security: G1
+          g2_security: G2
+          g3_security: G3
+          other_department: Other department
+          cctv: CCTV
+          bwcf: BWCF
+          body_scans: Body scans
+      data_request_area:
+        location: Location
+        data_request_area_type:
+          prison: Prison
+          probation: Probation
+          branston: Branston
+          branston_registry: Branston registry
+          mappa: MAPPA
+          dps_sensitive: DPS sensitive
+          other_department: Other department
+        headers:
+          data_request_area_type:
+            prison: prison
+            probation: probation
+            branston: branston
+            branston_registry: branston Registry
+            mappa: MAPPA
+            dps_sensitive: DPS sensitive
+            other_department: other department
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
-        cached_num_pages: Number of pages received
         completed: "Yes, all data received"
         date_completed: Date completed
         send_email_note_text: "Email will be sent to the following recipients:"
       data_request_email:
         email_type:
           commissioning_email: Day 1 commissioning email
+          chase: Chase %{chase_number} - Automated email
+          chase_escalation: Chase %{chase_number} escalated - Automated email
+          chase_overdue: Chase %{chase_number} overdue - Automated email
       commissioning_document:
         template_name:
-          cat_a: CAT A
-          cctv: CCTV & BWCF
-          cross_border: Cross Borders
           mappa: MAPPA
-          pdp: PDP
-          prison: Prison records
-          probation: Probation records
-          security: Security records
-          telephone: Telephone recordings
+          standard: Standard
+        stage:
+          day_1: Day 1 commissioning
+          #TODO add in translations for later chase stages i.e chase_1 etc
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
@@ -766,6 +823,16 @@ en:
         original_case:
         received_date: Date received at MOJ
       ico:
+        sar_complaint_outcome:
+          bau_ico_informed: "Was originally treated as BAU, the ICO have been informed"
+          bau_and_now_responded_as_sar: "Was originally treated as BAU and we have now also responded as a SAR"
+          not_received_now_responded_as_sar: "No evidence of ever receiving the SAR. We have now responded to the SAR"
+          sar_processed_but_overdue: "SAR Timeliness breach - SAR processed correctly but is overdue"
+          sar_incorrectly_processed_now_responded_as_sar: "SAR Timeliness breach - SAR was not processed correctly (e.g. logged as a SAR). We have now provided a SAR response"
+          responded_to_sar_and_ico_informed: "We have already responded to the SAR, the ICO were informed"
+          revised_sar_sent_exemptions_issue: "Revised SAR response sent, as correct exemption(s) was not applied originally by the business area"
+          revised_sar_sent_undisclosed_information: "Revised SAR response sent, as some information should have been disclosed by the business area"
+          other_outcome: "Other (state why in notes section)"
         email: "Recipient email address"
         ico_decision:
           upheld: Upheld by ICO
@@ -822,16 +889,21 @@ en:
         request_method: How was the request received by MOJ?
       offender_sar:
         case_reference_number: Case reference number (CRN)
+        email: Email address (optional)
         external_reference: Requester reference (optional)
         high_profile: High profile
+        dps_missing_data: DPS missing data
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
+        other_rejected_reason: Give reason for rejecting this case
         other_subject_ids: "Police national computer number (PNC)"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
+        probation_area: Probation area
         received_date: "Received at MOJ"
+        rejected_reason: Why are you rejecting this case?
         recipient:
           requester_recipient: The person making the request
           subject_recipient: The data subject
@@ -855,14 +927,17 @@ en:
           offender: Offender
           probation_service_user: "Probation service user"
         request_method:
-           post: "Post"
-           email: "Email"
-           web_portal: "Web portal"
-           unknown: "Unknown"
+          email: Email
+          ico_web_portal: ICO web portal
+          post: Post
+          verbal_request: Verbal request
+          web_portal: Web portal
+          unknown: Unknown
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
+        third_party_email: Email address (optional)
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
         is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
@@ -929,7 +1004,7 @@ en:
           timeliness: Timeliness
           not_applicable: Not applicable
       feedback:
-        comment: Help make this service better
+        comment: Let us know what you were doing and what could be improved or fixed.
       search_query:
         business_unit_name_filter: Business unit
       business_group:
@@ -953,6 +1028,7 @@ en:
         value: "Add area"
       correspondence_types:
         offender_sar: Offender SAR
+        rejected_offender_sar: Rejected Offender SAR
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
@@ -961,6 +1037,10 @@ en:
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
+        status:
+          valid: Valid
+          rejected: Rejected
+          complaint: Complaint
       retention_schedule_form:
         state:
           <<: *retention_schedule_states
@@ -995,8 +1075,6 @@ en:
     case_cleared: "%{team} has been notified that the response is %{status}."
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
-    commissioning_document_uploaded: You have uploaded the document.
-    no_commissioning_document_uploaded: No changes were made.
     response_uploaded: You have uploaded the response for this case.
     request_uploaded: You have uploaded the request files for this case.
     no_request_uploaded: No changes were made.
@@ -1010,7 +1088,7 @@ en:
 
   common:
     accessibility: Accessibility
-    alert_banner_html: "This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
+    alert_banner_html: "This service will be down for essential maintenance from 17:30 on Tuesday 17 December. The site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
       answered_in_time: Answered in time
@@ -1040,7 +1118,7 @@ en:
       draft_timeliness: Draft timeliness
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
-      email: "Requester’s email"
+      email: "Requester's email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
@@ -1071,9 +1149,10 @@ en:
         status: Retention status
         anonymised_at: Anonymised on
       pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
-      postal_address: "Requester’s postal address"
+      postal_address: "Requester's postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
+      probation_area: Probation area
       progress_for_clearance: "Ready for Disclosure clearance"
       reason_for_refusal: Outcome
       outcome_reason: Reason for appeal outcome
@@ -1111,6 +1190,8 @@ en:
       third_party_company_name: Company name
       third_party_name: Representative name
       third_party_relationship: Relationship
+      third_party_email: Email address
+      rejected_reason: Rejected reason
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -1126,6 +1207,7 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
+      mark_as_responded: Mark as responded
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -1133,11 +1215,15 @@ en:
     case/ico_foi:
       record_further_action: Start further ICO request
     case/offender_sar:
+      email: "Subject's email"
+      assign: Allocate vetting team member
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
       record_reason_for_lateness: Record reason for lateness
+      delete_data_request_area: Are you sure you want to delete this data request?
     case/offender_sar_complaint:
+      assign: Assign to a responder
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
       add_complaint_appeal_outcome: Add outcome
@@ -1160,6 +1246,7 @@ en:
       address_page_heading: Organisation address book
       address_page_subheading: Private addresses should not be entered
       add_new_address: Add new address
+      contact_type: What is the contact type of the new address?
       delete_address_confirmation: Are you sure you want to delete this address?
       delete_error: Cannot delete an address that is in use
       find_address: Find an address
@@ -1224,25 +1311,16 @@ en:
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
         Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
-      new:
-        create: Create
-        heading: New Case
-        sub_heading: Admin
-        ico:
-          headings:
-            only_for_closed_cases: ONLY for closed clases
-        sar:
-          headings:
-            about_data_subject: About the data subject
-            about_case: About the case
-            where_information_should_be_sent: Where the information should be sent
-      select_type:
-        heading: Choose correspondence type
-        sub_heading: Admin
 
+    feedback:
+      index:
+        feedback_per_year: Feedback per year
+        year: Year
+        number: Count
     users:
       index:
         cases: Cases
+        deactivated: Deactivated
         email: Email
         full_name: Name
         heading: Users
@@ -1327,11 +1405,13 @@ en:
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
+      case/sar/offender:
+        sub_heading: Edit Offender SAR case
+        rejected: Edit rejected Offender SAR case
       offender_sar:
         number_final_pages: 'Update final page count'
         number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
-        sub_heading: Edit Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
       sar_internal_review:
@@ -1381,12 +1461,8 @@ en:
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
       heading: Add case details
-      created_at: Created at
-      created_at_copy: 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
       received_date: Date received at MOJ
-      received_date_short: Received date
-      received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
-      only_select_one: Please only select one.
+      accepted_date_received_legend: When was the outstanding information received?
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if
@@ -1401,8 +1477,9 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
-      offender_sar:
+      case/sar/offender:
         sub_heading: Create Offender SAR case
+        rejected: Create rejected Offender SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
@@ -1414,6 +1491,12 @@ en:
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
+    offender_sar_select_type:
+      heading: Choose correspondence type
+      sub_heading: Create case
+      valid_offender_sar: Offender SAR - Offender subject access request
+      rejected_offender_sar: Rejected Offender SAR - Offender subject access request
+      complaint_offender_sar: Offender SAR complaint - Offender subject access request complaint
     shared:
       date_responded_form:
         close_date:  Date response sent
@@ -1491,14 +1574,20 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      reason_rejected_heading: Reason Offender SAR case has been rejected
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
+      accepted_date_received_heading: When was the rejected case accepted?
       is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
       partial_case_letter_sent_dated_heading: Date letter sent from SSCL
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
       sent_to_sscl_heading: "Data sent to SSCL"
+      accepted_date_received:
+        case/sar/offender:
+          sub_heading: Create valid Offender SAR case
+          rejected: Create valid Offender SAR case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
@@ -1535,10 +1624,7 @@ en:
         success: Data request successfully recorded
       show:
         heading: View data request
-        link: View
         edit_link: Edit data request
-        emails_header: Commissioning emails
-        emails_history_header: Email history
       edit:
         heading: Edit data request
         link: Edit
@@ -1554,23 +1640,25 @@ en:
       onwards: "onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
-        log_pages: {
-          zero: pages,
-          one: page,
-          other: pages
-        }
         success: Data request updated
         unprocessed: No changes made
       upto: "Up to"
       send_email:
         no_email_address: The selected location does not have an email address. Please update or select another.
-    commissioning_documents:
+    data_request_areas:
       new:
-        heading: Select Day 1 request document
-      edit:
-        heading: Select Day 1 request document
-      replace:
-        heading: Upload document
+        heading: Record data request
+      show:
+        heading: "View %{data_request_area_type} data request area"
+        link: View
+        emails_header: Commissioning emails
+        emails_history_header: Email history
+      create:
+        success: Data request area successfully recorded
+      index:
+        heading: Data requested
+        none: No data requests recorded
+    commissioning_documents:
       table_headings:
         request_document: Request document
         last_updated: Last updated
@@ -1613,6 +1701,9 @@ en:
     assign_to_team_member:
       heading: Assign to a responder
       action: Assign responder
+    assign_to_vetter:
+      heading: Change Vetting Team member
+      action: Change team member
     select_team:
       heading: Select team
     take_case_on:

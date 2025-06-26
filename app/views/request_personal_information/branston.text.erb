@@ -1,0 +1,125 @@
+## Answers
+
+**Are you requesting your own information or on behalf of someone else?**
+<%= requesting_own_data %>
+
+**Subject name**
+<%= subject_full_name %>
+
+**Any other names subject information may be stored under?**
+<%= subject_other_name %>
+
+**Date of birth**
+<%= subject_dob %>
+
+<% unless requesting_own_data? %>
+  **What is your relationship to them?**
+  <%= requestor_relationship %>
+
+  **Requestor name**
+  <%= requestor_name %>
+
+  <% if request_by_legal_representative? %>
+    **Requestor organization name **
+    <%= requester_organisation_name %>
+  <% else %>
+    **Requestor photo ID**
+    <%= requestor_photo_id_file_name %>
+
+    **Requestor proof of address**
+    <%= requestor_proof_of_address_file_name %>
+  <% end %>
+
+  **Letter of consent**
+  <%= letter_of_consent_file_name %>
+<% end %>
+
+**Photo ID**
+<%= subject_photo_id_file_name %>
+
+**Proof of address**
+<%= subject_proof_of_address_file_name %>
+
+## Prison Service
+
+**Do you want personal information held by the Prison Service?**
+<%= prison_service_data %>
+
+<% if prison_service_data? %>
+  <% if requesting_own_data? %>
+    **What was your prison number?**
+    <%= subject_prison_number %>
+
+    **Which prison were you most recently in?**
+    <%= previous_prison %>
+  <% else %>
+    **Is the subject currently in prison?**
+    <%= currently_in_prison %>
+
+    <% if currently_in_prison? %>
+      **Which prison are they in?
+      <%= current_prison %>
+
+      **What is their prison number?**
+      <%= subject_prison_number %>
+    <% else %>
+      **Which prison were they most recently in?**
+      <%= previous_prison %>
+
+      **What was their prison number?**
+      <%= subject_prison_number %>
+    <% end %>
+  <% end %>
+
+  **What prison service information do you want?**
+  <%= prison_information %>
+
+  **What other prison service information do you want?**
+  <%= prison_information_other %>
+
+  **Date this information should start from**
+  <%= prison_data_from %>
+
+  **Date this information should go to**
+  <%= prison_data_to %>
+<% end %>
+
+## Probation Service
+
+**Do you want personal information held by the Probation Service?**
+<%= probation_service_data %>
+
+<% if probation_service_data? %>
+  **Where is the probation office or approved premises?**
+  <%= probation_office %>
+
+  **What Probation Service information do you want?**
+  <%= probation_information %>
+
+  ** What other information do you want?**
+  <%= probation_information_other %>
+
+  **Date this information should start from**
+  <%= probation_data_from %>
+
+  **Date this information should go to**
+  <%= probation_data_to %>
+<% end %>
+
+## Contact information
+
+**Where we'll send the information**
+<%= contact_address %>
+
+**Email address**
+<%= contact_email %>
+
+## Urgency
+
+**Do you need this information for an upcoming court case or hearing?**
+<%= needed_for_court %>
+
+<% if needed_for_court? %>
+  **Tell us more about your upcoming court case or hearing**
+  <%= needed_for_court_information %>
+<% end %>

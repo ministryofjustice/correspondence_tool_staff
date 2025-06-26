@@ -1,3 +1,36 @@
+# == Schema Information
+#
+# Table name: cases
+#
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
+#
 class Case::SAR::OffenderComplaint < Case::SAR::Offender
   include LinkableOriginalCase
 
@@ -34,13 +67,13 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   belongs_to :appeal_outcome, class_name: "CaseClosure::OffenderComplaintAppealOutcome"
   belongs_to :outcome, class_name: "CaseClosure::OffenderComplaintOutcome"
 
-  enum complaint_type: {
+  enum :complaint_type, {
     standard_complaint: "standard_complaint",
     ico_complaint: "ico_complaint",
-    litigation_complaint: "litigation",
+    litigation_complaint: "litigation_complaint",
   }
 
-  enum complaint_subtype: {
+  enum :complaint_subtype, {
     sscl_partial_case: "sscl_partial_case",
     covid_partial_response: "covid_partial_response",
     missing_data: "missing_data",
@@ -50,7 +83,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     not_applicable: "not_applicable",
   }
 
-  enum priority: {
+  enum :priority, {
     normal: "normal",
     high: "high",
   }

@@ -2,31 +2,34 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
-#  user_id              :integer          not null, default(-100), foreign key
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 class Case::Base < ApplicationRecord
@@ -167,6 +170,20 @@ class Case::Base < ApplicationRecord
   scope :not_high_profile, lambda {
     where(
       "properties->>'flag_as_high_profile'::text = ? ",
+      false.to_s,
+    )
+  }
+
+  scope :dps_missing_data, lambda {
+    where(
+      "properties->>'flag_as_dps_missing_data'::text = ? ",
+      true.to_s,
+    )
+  }
+
+  scope :not_dps_missing_data, lambda {
+    where(
+      "properties->>'flag_as_dps_missing_data'::text = ? or properties->>'flag_as_dps_missing_data'::text is null",
       false.to_s,
     )
   }
@@ -435,8 +452,8 @@ class Case::Base < ApplicationRecord
       to_workflow: workflow,
       sort_key: CaseTransition.next_sort_key(self),
       most_recent: true,
-      acting_user_id: creator.id,
-      acting_team_id: managing_team.id,
+      acting_user: creator,
+      acting_team: managing_team,
     }
     CaseTransition.create!(attrs)
   end
@@ -910,9 +927,19 @@ class Case::Base < ApplicationRecord
   def offender_sar_complaint? = false
   def sar_internal_review? = false
   def all_holidays? = false
+  def rejected? = false
 
   def default_managing_team
     BusinessUnit.dacu_bmt
+  end
+
+  def validate_email_format
+    if email.present? && email !~ /\A.+@.+\z/
+      errors.add(
+        :email,
+        :invalid,
+      )
+    end
   end
 
 private
@@ -962,15 +989,6 @@ private
       end
     end
     errors[:received_date].any?
-  end
-
-  def validate_email_format
-    if email.present? && email !~ /\A.+@.+\z/
-      errors.add(
-        :email,
-        :invalid,
-      )
-    end
   end
 
   def validate_date_draft_compliant

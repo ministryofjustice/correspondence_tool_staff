@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -27,129 +28,185 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 -- Name: attachment_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.attachment_type AS ENUM (
-    'response',
-    'request',
-    'ico_decision',
-    'commissioning_document'
-);
+DO $$ BEGIN
+    CREATE TYPE public.attachment_type AS ENUM (
+        'response',
+        'request',
+        'ico_decision',
+        'commissioning_document'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
 
 
 --
 -- Name: cases_delivery_methods; Type: TYPE; Schema: public; Owner: -
 --
+DO $$ BEGIN
+    CREATE TYPE public.cases_delivery_methods AS ENUM (
+        'sent_by_email',
+        'sent_by_post'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
-CREATE TYPE public.cases_delivery_methods AS ENUM (
-    'sent_by_email',
-    'sent_by_post'
-);
+--
+-- Name: data_request_area_type; Type: TYPE; Schema: public; Owner: -
+--
 
+DO $$ BEGIN
+    CREATE TYPE public.data_request_area_type AS ENUM (
+        'prison',
+        'probation',
+        'branston',
+        'branston_registry',
+        'mappa',
+        'security',
+        'other_department',
+        'dps_sensitive'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.request_types AS ENUM (
-    'all_prison_records',
-    'security_records',
-    'nomis_records',
-    'nomis_other',
-    'nomis_contact_logs',
-    'probation_records',
-    'cctv_and_bwcf',
-    'telephone_recordings',
-    'telephone_pin_logs',
-    'probation_archive',
-    'mappa',
-    'pdp',
-    'court',
-    'other',
-    'cross_borders',
-    'cat_a',
-    'ndelius'
-);
-
+DO $$ BEGIN
+    CREATE TYPE public.request_types AS ENUM (
+        'all_prison_records',
+        'security_records',
+        'nomis_records',
+        'nomis_other',
+        'nomis_contact_logs',
+        'probation_records',
+        'cctv_and_bwcf',
+        'cctv',
+        'bwcf',
+        'telephone_recordings',
+        'telephone_pin_logs',
+        'probation_archive',
+        'mappa',
+        'pdp',
+        'court',
+        'other',
+        'cross_borders',
+        'cat_a',
+        'ndelius',
+        'dps',
+        'education',
+        'oasys_arns',
+        'dps_security',
+        'hpa',
+        'g2_security',
+        'g3_security',
+        'other_department',
+        'body_scans',
+        'g1_security'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.requester_type AS ENUM (
-    'academic_business_charity',
-    'journalist',
-    'member_of_the_public',
-    'offender',
-    'solicitor',
-    'staff_judiciary',
-    'what_do_they_know'
-);
-
+DO $$ BEGIN
+    CREATE TYPE public.requester_type AS ENUM (
+        'academic_business_charity',
+        'journalist',
+        'member_of_the_public',
+        'offender',
+        'solicitor',
+        'staff_judiciary',
+        'what_do_they_know'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.search_query_type AS ENUM (
-    'search',
-    'filter',
-    'list'
-);
-
+DO $$ BEGIN
+    CREATE TYPE public.search_query_type AS ENUM (
+        'search',
+        'filter',
+        'list'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.state AS ENUM (
-    'pending',
-    'rejected',
-    'accepted',
-    'bypassed'
-);
+DO $$ BEGIN
+    CREATE TYPE public.state AS ENUM (
+        'pending',
+        'rejected',
+        'accepted',
+        'bypassed'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 
 --
 -- Name: team_roles; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.team_roles AS ENUM (
-    'managing',
-    'responding',
-    'approving'
-);
+DO $$ BEGIN
+    CREATE TYPE public.team_roles AS ENUM (
+        'managing',
+        'responding',
+        'approving',
+        'administering'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 
 --
 -- Name: template_name; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.template_name AS ENUM (
-    'template_name',
-    'cat_a',
-    'cctv',
-    'cross_border',
-    'mappa',
-    'pdp',
-    'prison',
-    'probation',
-    'security',
-    'telephone'
-);
-
+DO $$ BEGIN
+    CREATE TYPE public.template_name AS ENUM (
+        'cat_a',
+        'cctv',
+        'cross_border',
+        'mappa',
+        'pdp',
+        'prison',
+        'probation',
+        'security',
+        'telephone',
+        'standard'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 --
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
-
-CREATE TYPE public.user_role AS ENUM (
-    'creator',
-    'manager',
-    'responder',
-    'approver',
-    'admin',
-    'team_admin'
-);
-
+DO $$ BEGIN
+    CREATE TYPE public.user_role AS ENUM (
+        'creator',
+        'manager',
+        'responder',
+        'approver',
+        'admin',
+        'team_admin'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 SET default_tablespace = '';
 
@@ -545,10 +602,11 @@ CREATE TABLE public.commissioning_documents (
     id bigint NOT NULL,
     data_request_id bigint,
     template_name public.template_name,
-    sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    attachment_id bigint
+    attachment_id bigint,
+    data_request_area_id bigint,
+    sent_at timestamp(6) without time zone
 );
 
 
@@ -587,7 +645,9 @@ CREATE TABLE public.contacts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contact_type_id bigint,
-    data_request_name character varying
+    data_request_name character varying,
+    escalation_name character varying,
+    escalation_emails character varying
 );
 
 
@@ -653,6 +713,41 @@ CREATE TABLE public.data_migrations (
 
 
 --
+-- Name: data_request_areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_request_areas (
+    id bigint NOT NULL,
+    case_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    contact_id bigint,
+    data_request_area_type public.data_request_area_type NOT NULL,
+    location character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: data_request_areas_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_request_areas_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_request_areas_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_request_areas_id_seq OWNED BY public.data_request_areas.id;
+
+
+--
 -- Name: data_request_emails; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -664,7 +759,9 @@ CREATE TABLE public.data_request_emails (
     notify_id character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    data_request_area_id bigint,
+    chase_number integer
 );
 
 
@@ -707,7 +804,8 @@ CREATE TABLE public.data_requests (
     date_to date,
     completed boolean DEFAULT false NOT NULL,
     contact_id bigint,
-    email_branston_archives boolean DEFAULT false
+    email_branston_archives boolean DEFAULT false,
+    data_request_area_id bigint
 );
 
 
@@ -826,6 +924,40 @@ CREATE SEQUENCE public.linked_cases_id_seq
 --
 
 ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
+
+
+--
+-- Name: personal_information_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.personal_information_requests (
+    id bigint NOT NULL,
+    submission_id character varying,
+    last_accessed_by integer,
+    last_accessed_at timestamp without time zone,
+    deleted boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: personal_information_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.personal_information_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: personal_information_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.personal_information_requests_id_seq OWNED BY public.personal_information_requests.id;
 
 
 --
@@ -1312,7 +1444,12 @@ CREATE TABLE public.warehouse_case_reports (
     original_internal_deadline date,
     num_days_late_against_original_deadline integer,
     request_method character varying,
-    sent_to_sscl date
+    sent_to_sscl date,
+    rejected character varying DEFAULT 'No'::character varying,
+    case_originally_rejected character varying,
+    other_rejected_reason character varying,
+    rejected_reasons json,
+    user_made_valid character varying
 );
 
 
@@ -1408,6 +1545,13 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: data_request_areas id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas ALTER COLUMN id SET DEFAULT nextval('public.data_request_areas_id_seq'::regclass);
+
+
+--
 -- Name: data_request_emails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1440,6 +1584,13 @@ ALTER TABLE ONLY public.letter_templates ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public.linked_cases_id_seq'::regclass);
+
+
+--
+-- Name: personal_information_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.personal_information_requests ALTER COLUMN id SET DEFAULT nextval('public.personal_information_requests_id_seq'::regclass);
 
 
 --
@@ -1640,6 +1791,14 @@ ALTER TABLE ONLY public.data_migrations
 
 
 --
+-- Name: data_request_areas data_request_areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT data_request_areas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: data_request_emails data_request_emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1677,6 +1836,14 @@ ALTER TABLE ONLY public.letter_templates
 
 ALTER TABLE ONLY public.linked_cases
     ADD CONSTRAINT linked_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: personal_information_requests personal_information_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.personal_information_requests
+    ADD CONSTRAINT personal_information_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -1952,6 +2119,27 @@ CREATE INDEX index_contacts_on_contact_type_id ON public.contacts USING btree (c
 
 
 --
+-- Name: index_data_request_areas_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_case_id ON public.data_request_areas USING btree (case_id);
+
+
+--
+-- Name: index_data_request_areas_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_contact_id ON public.data_request_areas USING btree (contact_id);
+
+
+--
+-- Name: index_data_request_areas_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_areas_on_user_id ON public.data_request_areas USING btree (user_id);
+
+
+--
 -- Name: index_data_request_emails_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1977,6 +2165,13 @@ CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests 
 --
 
 CREATE INDEX index_data_requests_on_contact_id ON public.data_requests USING btree (contact_id);
+
+
+--
+-- Name: index_data_requests_on_data_request_area_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_data_request_area_id ON public.data_requests USING btree (data_request_area_id);
 
 
 --
@@ -2201,11 +2396,27 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
+-- Name: data_request_areas fk_rails_990e98d18c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT fk_rails_990e98d18c FOREIGN KEY (case_id) REFERENCES public.cases(id);
+
+
+--
 -- Name: contacts fk_rails_b8815787ee; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.contacts
     ADD CONSTRAINT fk_rails_b8815787ee FOREIGN KEY (contact_type_id) REFERENCES public.category_references(id);
+
+
+--
+-- Name: data_requests fk_rails_c007c7e0da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT fk_rails_c007c7e0da FOREIGN KEY (data_request_area_id) REFERENCES public.data_request_areas(id);
 
 
 --
@@ -2217,173 +2428,204 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
+-- Name: data_request_areas fk_rails_f77cc65959; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_areas
+    ADD CONSTRAINT fk_rails_f77cc65959 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20160722121207'),
-('20160802130203'),
-('20160802134012'),
-('20160803094147'),
-('20160804155742'),
-('20160811181245'),
-('20160811182008'),
-('20160811185359'),
-('20160815103852'),
-('20161017062721'),
-('20161017120533'),
-('20161031133532'),
-('20161103104520'),
-('20161114143107'),
-('20161116150744'),
-('20161116153411'),
-('20161125115930'),
-('20161130164018'),
-('20161209220224'),
-('20170111115617'),
-('20170111161049'),
-('20170116161424'),
-('20170118154824'),
-('20170118154954'),
-('20170128230814'),
-('20170208133053'),
-('20170222171317'),
-('20170223130158'),
-('20170303140119'),
-('20170306093700'),
-('20170307083809'),
-('20170309134800'),
-('20170309153815'),
-('20170315152035'),
-('20170320112822'),
-('20170320121845'),
-('20170406112015'),
-('20170407091658'),
-('20170420120713'),
-('20170420122223'),
-('20170424133127'),
-('20170523131602'),
-('20170609094110'),
-('20170626153411'),
-('20170627112545'),
-('20170713094438'),
-('20170727101532'),
-('20170727112001'),
-('20170727162325'),
-('20170728154625'),
-('20170731101430'),
-('20170816155918'),
-('20170818082409'),
-('20170830162157'),
-('20170831091142'),
-('20170906130950'),
-('20170908083205'),
-('20170908142318'),
-('20170913124313'),
-('20170925142730'),
-('20171003080427'),
-('20171003153752'),
-('20171013134445'),
-('20171023134233'),
-('20171023142558'),
-('20171025142614'),
-('20171027112328'),
-('20171101171629'),
-('20171114111458'),
-('20171116102127'),
-('20171123170106'),
-('20171205092729'),
-('20171205102155'),
-('20171215103720'),
-('20171220135129'),
-('20171227223627'),
-('20171228145707'),
-('20171230113732'),
-('20180106124709'),
-('20180119121951'),
-('20180123164057'),
-('20180125100559'),
-('20180125111431'),
-('20180126120726'),
-('20180202171348'),
-('20180205120050'),
-('20180206100800'),
-('20180208161547'),
-('20180214162943'),
-('20180214163355'),
-('20180222125345'),
-('20180228174550'),
-('20180321094200'),
-('20180322183946'),
-('20180406145035'),
-('20180410142138'),
-('20180410143714'),
-('20180419103640'),
-('20180419130340'),
-('20180420173415'),
-('20180424150445'),
-('20180508131152'),
-('20180517140929'),
-('20180522132456'),
-('20180524132031'),
-('20180613141421'),
-('20180620135756'),
-('20180621094208'),
-('20180622153909'),
-('20180705184513'),
-('20180711151118'),
-('20180716150951'),
-('20180717211105'),
-('20180806100827'),
-('20190228142249'),
-('20190312104101'),
-('20190325082640'),
-('20190326113949'),
-('20190609165906'),
-('20190609185907'),
-('20190730133328'),
-('20190731151806'),
-('20190817185027'),
-('20190912142741'),
-('20191002003615'),
-('20191028094210'),
-('20200705225914'),
-('20200811151902'),
-('20200811154406'),
-('20200811222853'),
-('20200812115318'),
-('20200812142406'),
-('20200819133514'),
-('20200819171428'),
-('20200824130200'),
-('20200914160132'),
-('20200925100514'),
-('20201113130611'),
-('20210115230915'),
-('20210518085422'),
-('20210625113911'),
-('20210723160533'),
-('20210727143427'),
-('20210914110858'),
-('20210914111215'),
-('20210917113753'),
-('20220117091139'),
-('20220319002602'),
-('20220401091216'),
-('20220506131034'),
-('20220511130149'),
-('20220928103707'),
-('20221205165722'),
-('20221212155458'),
-('20221214144147'),
-('20230123110812'),
-('20230126140604'),
-('20230127153614'),
-('20230203153008'),
-('20230207153942'),
-('20230601125430'),
-('20230706130822'),
+('20250312113935'),
+('20250220153650'),
+('20250131145353'),
+('20250127103329'),
+('20241018081532'),
+('20241018080810'),
+('20241017140610'),
+('20240924085350'),
+('20240924085307'),
+('20240912095501'),
+('20240829160849'),
+('20240731104518'),
+('20240729145714'),
+('20240701203227'),
+('20240521142846'),
+('20240502125941'),
+('20240501152558'),
+('20240422143916'),
+('20240422134737'),
+('20240322151613'),
+('20240315113554'),
+('20240215113816'),
+('20230727110142'),
 ('20230710161647'),
-('20230727110142');
+('20230706130822'),
+('20230601125430'),
+('20230207153942'),
+('20230203153008'),
+('20230127153614'),
+('20230126140604'),
+('20230123110812'),
+('20221214144147'),
+('20221212155458'),
+('20221205165722'),
+('20220928103707'),
+('20220511130149'),
+('20220506131034'),
+('20220401091216'),
+('20220319002602'),
+('20220117091139'),
+('20210917113753'),
+('20210914111215'),
+('20210914110858'),
+('20210727143427'),
+('20210723160533'),
+('20210625113911'),
+('20210518085422'),
+('20210115230915'),
+('20201113130611'),
+('20200925100514'),
+('20200914160132'),
+('20200824130200'),
+('20200819171428'),
+('20200819133514'),
+('20200812142406'),
+('20200812115318'),
+('20200811222853'),
+('20200811154406'),
+('20200811151902'),
+('20200705225914'),
+('20191028094210'),
+('20191002003615'),
+('20190912142741'),
+('20190817185027'),
+('20190731151806'),
+('20190730133328'),
+('20190609185907'),
+('20190609165906'),
+('20190326113949'),
+('20190325082640'),
+('20190312104101'),
+('20190228142249'),
+('20180806100827'),
+('20180717211105'),
+('20180716150951'),
+('20180711151118'),
+('20180705184513'),
+('20180622153909'),
+('20180621094208'),
+('20180620135756'),
+('20180613141421'),
+('20180524132031'),
+('20180522132456'),
+('20180517140929'),
+('20180508131152'),
+('20180424150445'),
+('20180420173415'),
+('20180419130340'),
+('20180419103640'),
+('20180410143714'),
+('20180410142138'),
+('20180406145035'),
+('20180322183946'),
+('20180321094200'),
+('20180228174550'),
+('20180222125345'),
+('20180214163355'),
+('20180214162943'),
+('20180208161547'),
+('20180206100800'),
+('20180205120050'),
+('20180202171348'),
+('20180126120726'),
+('20180125111431'),
+('20180125100559'),
+('20180123164057'),
+('20180119121951'),
+('20180106124709'),
+('20171230113732'),
+('20171228145707'),
+('20171227223627'),
+('20171220135129'),
+('20171215103720'),
+('20171205102155'),
+('20171205092729'),
+('20171123170106'),
+('20171116102127'),
+('20171114111458'),
+('20171101171629'),
+('20171027112328'),
+('20171025142614'),
+('20171023142558'),
+('20171023134233'),
+('20171013134445'),
+('20171003153752'),
+('20171003080427'),
+('20170925142730'),
+('20170913124313'),
+('20170908142318'),
+('20170908083205'),
+('20170906130950'),
+('20170831091142'),
+('20170830162157'),
+('20170818082409'),
+('20170816155918'),
+('20170731101430'),
+('20170728154625'),
+('20170727162325'),
+('20170727112001'),
+('20170727101532'),
+('20170713094438'),
+('20170627112545'),
+('20170626153411'),
+('20170609094110'),
+('20170523131602'),
+('20170424133127'),
+('20170420122223'),
+('20170420120713'),
+('20170407091658'),
+('20170406112015'),
+('20170320121845'),
+('20170320112822'),
+('20170315152035'),
+('20170309153815'),
+('20170309134800'),
+('20170307083809'),
+('20170306093700'),
+('20170303140119'),
+('20170223130158'),
+('20170222171317'),
+('20170208133053'),
+('20170128230814'),
+('20170118154954'),
+('20170118154824'),
+('20170116161424'),
+('20170111161049'),
+('20170111115617'),
+('20161209220224'),
+('20161130164018'),
+('20161125115930'),
+('20161116153411'),
+('20161116150744'),
+('20161114143107'),
+('20161103104520'),
+('20161031133532'),
+('20161017120533'),
+('20161017062721'),
+('20160815103852'),
+('20160811185359'),
+('20160811182008'),
+('20160811181245'),
+('20160804155742'),
+('20160803094147'),
+('20160802134012'),
+('20160802130203'),
+('20160722121207');
+

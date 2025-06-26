@@ -68,8 +68,10 @@ private
       third_party_company_name
       third_party_name
       postal_address
+      probation_area
       flag_as_high_profile
       date_of_birth
+      email
     ]
     fields_subject_details.each do |single_field|
       params[single_field] = object.original_case.send(single_field)

@@ -1,4 +1,4 @@
-class AddSarIrOutcomeReasons < ActiveRecord::DataMigration
+class AddSARIrOutcomeReasons < ActiveRecord::DataMigration
   def up
     CaseClosure::OutcomeReason.find_or_create_by!(
       name: "Proper searches not carried out/missing information",

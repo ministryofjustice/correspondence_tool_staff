@@ -4,7 +4,7 @@ module OverturnedCase
   def new_overturned_ico_for(overturned_case_class)
     authorize overturned_case_class
 
-    service = NewOverturnedIcoCaseService.new(params[:id])
+    service = NewOverturnedICOCaseService.new(params[:id])
     service.call
 
     if service.error?

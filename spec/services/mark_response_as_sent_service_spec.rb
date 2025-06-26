@@ -7,6 +7,12 @@ describe MarkResponseAsSentService do
                    internal_deadline: 15.days.ago,
                    external_deadline: 5.days.ago
   end
+  let(:sar_ico_kase) do
+    find_or_create :approved_ico_sar_case,
+                   received_date: 15.days.ago,
+                   internal_deadline: 15.days.ago,
+                   external_deadline: 5.days.ago
+  end
   let(:foi_kase) do
     find_or_create :ready_to_send_case,
                    received_date: 15.days.ago,
@@ -62,7 +68,7 @@ describe MarkResponseAsSentService do
 
       context "and future date" do
         let(:response_date) { 10.days.from_now }
-        let(:params)  do
+        let(:params) do
           {
             date_responded_dd: response_date.day.to_s,
             date_responded_mm: response_date.month.to_s,
@@ -109,7 +115,7 @@ describe MarkResponseAsSentService do
     end
   end
 
-  describe "ICO" do
+  describe "FOI ICO" do
     let(:service) { described_class.new(ico_kase, disclosure_specialist, params) }
 
     context "when invalid date" do
@@ -155,7 +161,7 @@ describe MarkResponseAsSentService do
 
       context "and future date" do
         let(:response_date) { 10.days.from_now }
-        let(:params)  do
+        let(:params) do
           {
             date_responded_dd: response_date.day.to_s,
             date_responded_mm: response_date.month.to_s,
@@ -228,6 +234,23 @@ describe MarkResponseAsSentService do
           expect(service.result).to eq :late
         end
       end
+    end
+  end
+
+  describe "SAR ICO" do
+    let(:service) { described_class.new(sar_ico_kase, disclosure_specialist, params) }
+    let(:response_date) { 5.days.ago }
+    let(:params) do
+      {
+        date_responded_dd: response_date.day.to_s,
+        date_responded_mm: response_date.month.to_s,
+        date_responded_yyyy: response_date.year.to_s,
+      }
+    end
+
+    it "doesn't call the state machine to respond" do
+      expect(foi_kase).not_to receive(:respond).with(responder)
+      service.call
     end
   end
 end

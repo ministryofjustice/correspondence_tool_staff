@@ -1,4 +1,4 @@
-class AddSarAppealsReport < ActiveRecord::DataMigration
+class AddSARAppealsReport < ActiveRecord::DataMigration
   def up
     ReportType.reset_column_information
 
@@ -7,7 +7,7 @@ class AddSarAppealsReport < ActiveRecord::DataMigration
     rt.update!(
       abbr: "R102",
       full_name: "Appeals performance report(SARs)",
-      class_name: "Stats::R102SarAppealsPerformanceReport",
+      class_name: "Stats::R102SARAppealsPerformanceReport",
       custom_report: true,
       foi: false,
       sar: true,

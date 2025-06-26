@@ -9,6 +9,8 @@
 #  report_data    :binary
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  guid           :string
+#  properties     :jsonb
 #
 
 FactoryBot.define do
@@ -18,6 +20,7 @@ FactoryBot.define do
     period_start { 10.business_days.ago }
     period_end { 1.business_days.ago }
     report_data { Faker::Hipster.paragraph }
+    guid { SecureRandom.uuid }
   end
 
   factory :r003_report, parent: :report do

@@ -1,4 +1,4 @@
-class NewOverturnedIcoCaseService
+class NewOverturnedICOCaseService
   attr_reader :original_ico_appeal, :overturned_ico_case
 
   def initialize(ico_appeal_id)

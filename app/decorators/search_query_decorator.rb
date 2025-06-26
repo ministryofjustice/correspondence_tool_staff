@@ -28,9 +28,10 @@ private
   end
 
   def find_from_id(key, value)
-    if key == "filter_assigned_to_ids"
+    case key
+    when "filter_assigned_to_ids"
       value.map { |id| Team.find(id).name.to_s }.join " "
-    elsif key == "exemption_ids"
+    when "exemption_ids"
       value.map { |id| CaseClosure::Metadatum.exemption_filter_abbreviation(id).to_s }.join ""
     else
       value.is_a?(Array) ? value.join(", ").humanize : value

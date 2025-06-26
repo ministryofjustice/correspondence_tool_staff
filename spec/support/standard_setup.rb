@@ -43,6 +43,7 @@ class StandardSetup
   #   * ppress      - pending_press_office_clearance
   #   * pprivate    - pending_private_office_clerance
   #   * responded   - responded
+  #   * rejected    - rejected
   #
   class << self
     extend FactoryBot::Syntax::Methods
@@ -302,7 +303,10 @@ class StandardSetup
                :flagged_accepted,
                { identifier: "sar_noff_trig_closed_accepted" }.merge(attributes))
       },
-
+      std_rejected_sar: lambda { |attributes = {}|
+        create(:offender_sar_case,
+               { identifier: "std_rejected_sar", current_state: "invalid_submission", rejected_reasons: %w[cctv_bwcf] }.merge(attributes))
+      },
       ot_ico_sar_noff_unassigned: lambda { |attributes = {}|
         create(:ot_ico_sar_noff_unassigned,
                { identifier: "ot_ico_sar_noff_unassigned" }.merge(attributes))

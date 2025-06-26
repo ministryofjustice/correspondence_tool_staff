@@ -20,6 +20,7 @@ feature "Viewing for cases", js: true do
 
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_complaint_type_link.click
+
     open_cases_page.filter_complaint_type_content.complaint_litigation_checkbox.click
     open_cases_page.case_filters.apply_filters_button.click
 
@@ -33,14 +34,14 @@ feature "Viewing for cases", js: true do
     create(:accepted_complaint_case)
     make_case_late(create(:accepted_complaint_case))
 
-    create(:accepted_complaint_case, complaint_type: "litigation")
-    create(:accepted_complaint_case, complaint_type: "litigation")
+    create(:accepted_complaint_case, complaint_type: "litigation_complaint")
+    create(:accepted_complaint_case, complaint_type: "litigation_complaint")
 
     3.times do
       make_case_late(
         create(
           :accepted_complaint_case,
-          complaint_type: "litigation",
+          complaint_type: "litigation_complaint",
         ),
       )
     end

@@ -1,7 +1,10 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  resources :contacts, except: :show
+  resources :contacts, except: :show do
+    get "/new_details", on: :collection, to: "contacts#new_details"
+    post "/new_details", on: :collection, to: "contacts#new_details"
+  end
 
   get "/contacts_search", to: "contacts#contacts_search"
 
@@ -91,6 +94,8 @@ Rails.application.routes.draw do
       patch "/move_case_back", on: :member, to: "offender_sar#confirm_move_case_back", as: "confirm_move_case_back"
       get "/record_reason_for_lateness", on: :member, to: "offender_sar#record_reason_for_lateness", as: "record_reason_for_lateness"
       patch "/record_reason_for_lateness", on: :member, to: "offender_sar#confirm_record_reason_for_lateness", as: "confirm_record_reason_for_lateness"
+      get "/accepted_date_received", on: :member, to: "offender_sar#accepted_date_received", as: "accepted_date_received"
+      patch "/accepted_date_received", on: :member, to: "offender_sar#confirm_accepted_date_received", as: "confirm_accepted_date_received"
       patch "/confirm_update_partial_flags", on: :member, to: "offender_sar#confirm_update_partial_flags", as: "confirm_update_partial_flags"
       patch "/confirm_sent_to_sscl", on: :member, to: "offender_sar#confirm_sent_to_sscl", as: "confirm_sent_to_sscl"
       member do
@@ -129,6 +134,8 @@ Rails.application.routes.draw do
       patch "record_further_action", on: :member, to: "ico#confirm_record_further_action"
       get "require_further_action", on: :member, to: "ico#require_further_action"
       patch "require_further_action", on: :member, to: "ico#confirm_require_further_action"
+      get "record_sar_complaint_outcome", on: :member, to: "ico_sar#record_complaint_outcome"
+      patch "record_sar_complaint_outcome", on: :member, to: "ico_sar#confirm_record_complaint_outcome"
     end
 
     resources :overturned_ico_fois, only: [:create], controller: "overturned_ico_foi", as: :case_overturned_ico_fois do
@@ -211,17 +218,17 @@ Rails.application.routes.draw do
 
     resource :cover_page, only: [:show], path: "cover-page"
 
-    resources :data_requests do
+    resources :data_request_areas do
       member do
         get :send_email
         post :send_email
       end
 
-      resources :commissioning_documents, only: %i[new edit create update] do
+      resources :data_requests
+
+      resource :commissioning_documents, only: %i[new create] do
         member do
           get :download
-          get :replace
-          patch :upload
           post :send_email
         end
       end
@@ -249,6 +256,7 @@ Rails.application.routes.draw do
         get :select_team
         get :assign_to_team_member
         get :assign_to_team, as: :assign_to_responder_team
+        get :assign_to_vetter
         post :execute_assign_to_team_member
       end
     end
@@ -288,16 +296,11 @@ Rails.application.routes.draw do
   authenticated :user, ->(u) { u.admin? } do
     namespace :admin do
       root to: redirect("/admin/cases")
-      resources :cases do
-        get ":correspondence_type",
-            action: :new,
-            on: :new,
-            as: "",
-            defaults: { correspondence_type: "" }
-      end
+      resources :cases, only: :index
       get "users" => "users#index"
       get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
+      get "/dashboard/feedback/:year" => "dashboard#feedback_year", as: :dashboard_feedback_year
       get "/dashboard/exception" => "dashboard#exception"
       get "/dashboard/search_queries" => "dashboard#search_queries"
       get "/dashboard/list_queries" => "dashboard#list_queries"
@@ -309,6 +312,17 @@ Rails.application.routes.draw do
     resources :users do
       resources :teams, only: :index
     end
+  end
+
+  namespace :api do
+    post "rpi" => "rpi#create"
+    post "rpi/v2" => "rpi_v2#create"
+  end
+
+  get "rpi/:target/:id" => "rpi#download", as: :rpi_file_download
+
+  if Rails.env.development?
+    post "dev_s3_uploader" => "dev_s3_uploader#create"
   end
 
   get "ping", to: "heartbeat#ping", format: :json

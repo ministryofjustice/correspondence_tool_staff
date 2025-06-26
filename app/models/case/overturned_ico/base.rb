@@ -2,30 +2,34 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 class Case::OverturnedICO::Base < Case::Base
@@ -50,7 +54,9 @@ class Case::OverturnedICO::Base < Case::Base
   delegate :date_ico_decision_received, to: :original_ico_appeal
   delegate :ico_decision_attachments, to: :original_ico_appeal
 
-  enum reply_method: {
+  delegate :subject, :name, to: :original_case
+
+  enum :reply_method, {
     send_by_post: "send_by_post",
     send_by_email: "send_by_email",
   }
@@ -75,10 +81,6 @@ class Case::OverturnedICO::Base < Case::Base
   has_one :original_ico_appeal,
           through: :original_ico_appeal_link,
           source: :linked_case
-
-  def subject
-    original_case&.subject
-  end
 
   def delivery_method
     self[:delivery_method].nil? ? original_case&.delivery_method : self[:delivery_method]

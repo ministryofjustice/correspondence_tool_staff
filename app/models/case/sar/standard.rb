@@ -2,30 +2,34 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 class Case::SAR::Standard < Case::Base
@@ -67,18 +71,18 @@ class Case::SAR::Standard < Case::Base
 
   attr_accessor :missing_info
 
-  enum subject_type: {
+  enum :subject_type, {
     offender: "offender",
     staff: "staff",
     member_of_the_public: "member_of_the_public",
   }
 
-  enum reply_method: {
+  enum :reply_method, {
     send_by_post: "send_by_post",
     send_by_email: "send_by_email",
   }
 
-  enum request_method: {
+  enum :request_method, {
     email: "email",
     verbal: "verbal",
     post: "post",

@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: letter_templates
+#
+#  id                     :integer          not null, primary key
+#  name                   :string
+#  abbreviation           :string
+#  body                   :string
+#  template_type          :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  letter_address         :string           default("")
+#  base_template_file_ref :string           default("ims001.docx")
+#
 require "rails_helper"
 
 RSpec.describe LetterTemplate, type: :model do
@@ -13,8 +27,8 @@ RSpec.describe LetterTemplate, type: :model do
 
   context "when validate uniqueness of abbreviation" do
     it "errors if not unique" do
-      create :letter_template, abbreviation: "abc"
-      t2 = build_stubbed :letter_template, abbreviation: "abc"
+      create(:letter_template, abbreviation: "abc")
+      t2 = build(:letter_template, abbreviation: "abc")
       expect(t2).not_to be_valid
       expect(t2.errors[:abbreviation]).to eq ["has already been taken"]
     end
@@ -42,6 +56,14 @@ RSpec.describe LetterTemplate, type: :model do
   end
 
   describe "#telephone_number" do
+    context "when letter template is complaint acknowledgement letter" do
+      let(:letter_template) { create(:letter_template, template_type: "acknowledgement", abbreviation: "complaint-acknowledgement", name: "Letter to Recipient") }
+
+      it "returns telephone number for complaint acknowledgment letter" do
+        expect(letter_template.telephone_number).to eq(LetterTemplate::COMPLAINT_ACKNOWLEDGEMENT_LETTER_TEL_NUM)
+      end
+    end
+
     context "when letter template is dispatch letter" do
       let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
 

@@ -5,4 +5,9 @@ namespace :email do
       email.update_status_with_delay(delay: 0.seconds)
     end
   end
+
+  desc "Send daily data request chase emails"
+  task send_data_request_chase_emails: :environment do
+    DataRequestChaseService.call(dryrun: false)
+  end
 end

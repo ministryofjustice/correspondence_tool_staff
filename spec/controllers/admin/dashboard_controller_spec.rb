@@ -6,6 +6,28 @@ describe Admin::DashboardController do
   let!(:search_query) { create :search_query }
   let!(:list_query)   { create :list_query }
 
+  describe "#feedback" do
+    before do
+      sign_in admin
+      get :feedback
+    end
+
+    it "renders the index view" do
+      expect(request.path).to eq("/admin/dashboard/feedback")
+    end
+  end
+
+  describe "#feedback_year" do
+    before do
+      sign_in admin
+      get :feedback_year, params: { year: 2023 }
+    end
+
+    it "renders the show view" do
+      expect(request.path).to eq("/admin/dashboard/feedback/2023")
+    end
+  end
+
   describe "#list_queries" do
     before do
       sign_in admin
@@ -49,7 +71,7 @@ describe Admin::DashboardController do
     it "has Git version SHA" do
       git_sha = assigns(:version)
       expect(git_sha).to be_present
-      expect(git_sha).to match(/^[0-9a-f]{40}$/)
+      expect(git_sha).to eq Settings.git_commit
     end
   end
 end

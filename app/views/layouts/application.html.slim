@@ -40,6 +40,7 @@
 
   = csrf_meta_tags
   = render partial: 'layouts/phase_banner'
+  = yield :alert_banner
 
   .grid-row
     .column-full
@@ -51,8 +52,8 @@
   = javascript_include_tag "application"
 
 - content_for :footer_support_links do
-  ul
-    li
+  ul.govuk-footer__inline-list
+    li.govuk-footer__inline-list-item
       a.govuk-footer__link href="/accessibility"
         = t('common.accessibility')
 

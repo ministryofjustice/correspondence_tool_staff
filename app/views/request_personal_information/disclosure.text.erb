@@ -1,0 +1,110 @@
+## Answers
+
+**Are you requesting your own information or on behalf of someone else?**
+<%= requesting_own_data %>
+
+**Subject name**
+<%= subject_full_name %>
+
+**Any other names subject information may be stored under?**
+<%= subject_other_name %>
+
+**Date of birth**
+<%= subject_dob %>
+
+<% unless requesting_own_data? %>
+  **What is your relationship to them?**
+  <%= requestor_relationship %>
+
+  **Requestor name**
+  <%= requestor_name %>
+
+  <% if request_by_legal_representative? %>
+    **Requestor organization name **
+    <%= requester_organisation_name %>
+  <% else %>
+    **Requestor photo ID**
+    <%= requestor_photo_id_file_name %>
+
+    **Requestor proof of address**
+    <%= requestor_proof_of_address_file_name %>
+  <% end %>
+
+  **Letter of consent**
+  <%= letter_of_consent_file_name %>
+<% end %>
+
+**Photo ID**
+<%= subject_photo_id_file_name %>
+
+**Proof of address**
+<%= subject_proof_of_address_file_name %>
+
+## LAA
+
+**Do you want personal information held by the Legal Aid Agency (LAA)?**
+<%= laa_data %>
+
+<% if laa_data? %>
+  **What information do you want from the Legal Aid Agency (LAA)?**
+  <%= laa_information %>
+
+  **Date this information should start from**
+  <%= laa_data_from %>
+
+  **Date this information should go to**
+  <%= laa_data_to %>
+<% end %>
+
+## OPG
+
+**Do you want personal information held by the Office of the Public Guardian (OPG)?**
+<%= opg_data %>
+
+<% if opg_data? %>
+  **What information do you want from the Office of the Public Guardian (OPG)?**
+  <%= opg_information %>
+
+  **Date this information should start from**
+  <%= opg_data_from %>
+
+  **Date this information should go to**
+  <%= opg_data_to %>
+<% end %>
+
+## MOJ
+
+**Do you want personal information held by another part of the Ministry of Justice?**
+<%= other_data %>
+
+<% if other_data? %>
+  **What information do you want from somewhere else in the Ministry of Justice?**
+  <%= other_information %>
+
+  **Date this information should start from**
+  <%= other_data_from %>
+
+  **Date this information should go to**
+  <%= other_data_to %>
+
+  **Where in the Ministry of Justice do you think this information is held?**
+  <%= other_where %>
+<% end %>
+
+## Contact information
+
+**Where we'll send the information**
+<%= contact_address %>
+
+**Email address**
+<%= contact_email %>
+
+## Urgency
+
+**Do you need this information for an upcoming court case or hearing?**
+<%= needed_for_court %>
+
+<% if needed_for_court? %>
+  **Tell us more about your upcoming court case or hearing**
+  <%= needed_for_court_information %>
+<% end %>

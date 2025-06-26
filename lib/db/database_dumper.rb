@@ -64,9 +64,9 @@ private
   def trigger_tasks
     @tasks.each do |task|
       if @running_mode == "tasks"
-        AnonymiserDBJob.perform_later(task[:task_function], task)
+        AnonymiserDbJob.perform_later(task[:task_function], task)
       else
-        AnonymiserDBJob.new.execute_task(task[:task_function], task)
+        DatabaseAnonymizerTasks.new.execute_task(task[:task_function], task)
       end
     end
   end

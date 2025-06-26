@@ -40,7 +40,11 @@ en:
         <<: *list_filter_type
       filter_high_profile:
         <<: *list_filter_type
+      filter_dps_missing_data:
+        <<: *list_filter_type
       filter_caseworker:
+        <<: *list_filter_type
+      filter_vetter:
         <<: *list_filter_type
       filter_partial_case_flag:
         <<: *list_filter_type
@@ -62,7 +66,9 @@ en:
       filter_complaint_subtype: Filter by complaint sub type
       filter_complaint_priority: Filter by priority
       filter_high_profile: Filter by sensitivity
+      filter_dps_missing_data: Filter by DPS missing data
       filter_caseworker: Filter by complaint caseworker
+      filter_vetter: Filter by vetting officer
       filter_retention_state: Filter by GDPR RRD status
       filter_planned_destruction_date: Filter by GDPR destruction deadline
       date_headings:
@@ -89,8 +95,11 @@ en:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'
     filter_high_profile:
-      high-profile: High profile 
-      not-high-profile: Not high profile 
+      high-profile: High profile
+      not-high-profile: Not high profile
+    filter_dps_missing_data:
+      dps-missing-data: 'Yes'
+      not-dps-missing-data: 'No'
     filter_partial_case_flag:
       partial-case: Is partial case
       not-partial-case: Is not partial case
@@ -101,4 +110,6 @@ en:
       in_time: 'In time'
       late: 'Late'
     filter_caseworker:
+      not_assigned: Not assigned yet
+    filter_vetter:
       not_assigned: Not assigned yet

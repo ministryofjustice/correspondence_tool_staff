@@ -2,16 +2,17 @@
 #
 # Table name: teams
 #
-#  id         :integer          not null, primary key
-#  name       :string           not null
-#  email      :citext
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  type       :string
-#  parent_id  :integer
-#  role       :string
-#  code       :string
-#  deleted_at :datetime
+#  id               :integer          not null, primary key
+#  name             :string           not null
+#  email            :citext
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  type             :string
+#  parent_id        :integer
+#  role             :string
+#  code             :string
+#  deleted_at       :datetime
+#  moved_to_unit_id :integer
 #
 
 require "rails_helper"
@@ -49,6 +50,30 @@ RSpec.describe Team, type: :model do
       t2 = build_stubbed :team, name: "abc"
       expect(t2).not_to be_valid
       expect(t2.errors[:name]).to eq ["has already been taken"]
+    end
+  end
+
+  describe "warehousable" do
+    let(:team) { create(:team) }
+
+    before do
+      team.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        team.name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("Team", team.id)
+        team.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        team.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        team.save!
+      end
     end
   end
 

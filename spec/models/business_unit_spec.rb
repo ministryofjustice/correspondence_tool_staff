@@ -2,16 +2,17 @@
 #
 # Table name: teams
 #
-#  id         :integer          not null, primary key
-#  name       :string           not null
-#  email      :citext
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  type       :string
-#  parent_id  :integer
-#  role       :string
-#  code       :string
-#  deleted_at :datetime
+#  id               :integer          not null, primary key
+#  name             :string           not null
+#  email            :citext
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  type             :string
+#  parent_id        :integer
+#  role             :string
+#  code             :string
+#  deleted_at       :datetime
+#  moved_to_unit_id :integer
 #
 
 require "rails_helper"
@@ -160,6 +161,30 @@ RSpec.describe BusinessUnit, type: :model do
           sar_responding_team,
           branston_team,
         ]
+      end
+    end
+  end
+
+  describe "warehousable" do
+    let(:bu) { create(:business_unit) }
+
+    before do
+      bu.reload
+    end
+
+    context "when updating team name" do
+      it "creates sync job" do
+        bu.name = "new name"
+        expect(::Warehouse::CaseSyncJob).to receive(:perform_later).with("BusinessUnit", bu.id)
+        bu.save!
+      end
+    end
+
+    context "when updating another attribute" do
+      it "doesn't create sync job" do
+        bu.email = "new@email.com"
+        expect(::Warehouse::CaseSyncJob).not_to receive(:perform_later)
+        bu.save!
       end
     end
   end

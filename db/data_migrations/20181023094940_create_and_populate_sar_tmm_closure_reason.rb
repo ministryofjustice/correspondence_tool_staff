@@ -1,4 +1,4 @@
-class CreateAndPopulateSarTmmClosureReason < ActiveRecord::DataMigration
+class CreateAndPopulateSARTmmClosureReason < ActiveRecord::DataMigration
   def up
     CaseClosure::RefusalReason.find_or_create_by!(subtype: nil, name: "SAR Clarification/Tell Me More", abbreviation: "sartmm", sequence_id: 105)
     tmm_sars = Case::SAR::Standard.where(refusal_reason: CaseClosure::RefusalReason.tmm)

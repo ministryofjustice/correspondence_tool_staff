@@ -17,6 +17,47 @@
     }
   }
 }
+
+#proposition-name{
+  font-family: "nta", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+#global-header.with-proposition .header-wrapper .header-proposition {
+  float: none;
+  width: unset;
+}
+
+#global-header .header-wrapper {
+  max-width: 960px;
+}
+
+.govuk-header__service-name{
+  font-size: 24px;
+}
+
+.govuk-header{
+  border-bottom: none;
+  font-size: 1.6rem;
+}
+
+.govuk-header__container{
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-top: 5px;
+}
+
+.govuk-header__logo {
+  width: unset;
+  padding-top: 5px;
+  margin-left: 10px;
+  margin-bottom: 5px
+}
+
 .form-label, .gov_uk_date legend {
   font-weight: bold;
 }
@@ -61,7 +102,7 @@ legend .heading-small{
 }
 
 // Make font sizes adjustable
-main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
+main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong, .govuk-footer {
   font-size: 100%;
 }
 
@@ -112,13 +153,17 @@ td {
   .form-group {
     margin-bottom: 2em;
   }
+
+  .govuk-tag {
+    font-size: 100%;
+  }
 }
 
 // End making font sizes adjustable
 
 // Open case list table scrollable to support large fonts
 .cases-table-container {
-  overflow: scroll;
+  overflow: auto;
 }
 
 // Fix mobile view issue on table long strings
@@ -166,7 +211,13 @@ td {
   }
 }
 
-.data-request #data_request_location:disabled {
+.data-requests .govuk-button--warning{
+  @include button($red);
+  margin-right: $gutter;
+  margin-top: $gutter;
+}
+
+.data-request #data_request_location:disabled, .data-request-area #data_request_area_location:disabled {
   border-color: $grey-2;
 }
 
@@ -176,4 +227,10 @@ td {
 
 .cost_settlement {
   width: 20%
+}
+
+.commissioning-document .govuk-inset-text {
+  margin: 0;
+  font-size: 1em;
+  font-weight: bold
 }

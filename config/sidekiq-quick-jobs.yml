@@ -1,11 +1,8 @@
 ---
-:concurrency: 5
-production:
-  :concurrency: 10
-staging:
-  :concurrency: 10
+:concurrency: 10
 :logfile: ./log/sidekiq-quick-jobs.log
 :queues:
   - correspondence_tool_staff_mailers
   - correspondence_tool_staff_search_index_updater
   - correspondence_tool_staff_email_status
+  - correspondence_tool_staff_rpi

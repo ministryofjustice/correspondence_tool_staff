@@ -3,20 +3,24 @@ class AssignmentsController < ApplicationController
     assign_to_team
     new
     assign_to_team_member
+    assign_to_vetter
     execute_assign_to_team_member
     select_team
     take_case_on
   ]
 
   before_action :set_case_and_assignment, only: %i[
-    accept
-    accept_or_reject
     assign_to_new_team
-    edit
     execute_assign_to_new_team
     execute_reassign_user
     reassign_user
     unaccept
+  ]
+
+  before_action :set_case_and_valid_assignment, only: %i[
+    accept
+    accept_or_reject
+    edit
   ]
 
   before_action :validate_response, only: :accept_or_reject
@@ -89,18 +93,23 @@ class AssignmentsController < ApplicationController
   end
 
   def accept_or_reject
-    authorize @case, :can_accept_or_reject_responder_assignment?
+    if @assignment
+      authorize @case, :can_accept_or_reject_responder_assignment?
 
-    if accept?
-      @assignment.accept current_user
-      redirect_to case_path @assignment.case, accepted_now: true
-    elsif valid_reject?
-      @assignment.reject current_user, assignment_params[:reasons_for_rejection]
-      flash[:notice] = "#{@case.number} has been rejected.".html_safe
-      redirect_user_to_specific_landing_page
+      if accept?
+        @assignment.accept current_user
+        redirect_to case_path @assignment.case, accepted_now: true
+      elsif valid_reject?
+        @assignment.reject current_user, assignment_params[:reasons_for_rejection]
+        flash[:notice] = "#{@case.number} has been rejected.".html_safe
+        redirect_user_to_specific_landing_page
+      else
+        @assignment.assign_and_validate_state(assignment_params[:state])
+        render :edit
+      end
     else
-      @assignment.assign_and_validate_state(assignment_params[:state])
-      render :edit
+      flash[:notice] = "Case assignment does not exist."
+      redirect_to case_path @case
     end
   end
 
@@ -203,14 +212,18 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def assign_to_vetter
+    assign_to_team_member
+  end
+
   def assign_to_team_member
-    authorize @case, :can_assign_to_team_member?
+    authorize @case, :can_move_to_team_member?
     @team_users = set_team_members.decorate
     @assignment = @case.assignments.new
   end
 
   def execute_assign_to_team_member
-    authorize @case, :can_assign_to_team_member?
+    authorize @case, :can_move_to_team_member?
     if assign_to_team_member_params.blank?
       flash[:alert] = "No changes were made"
       redirect_to case_path(@case)
@@ -292,10 +305,16 @@ private
     redirect_on_deleted_case! and return
 
     set_case
+    set_assignment
+  end
 
-    if Assignment.exists?(id: params[:id])
-      @assignment = @case.assignments.find(params[:id])
-    end
+  def set_case_and_valid_assignment
+    redirect_on_deleted_case! and return
+
+    set_case
+    set_assignment
+
+    @assignment = nil unless current_user.teams_for_case(@case).include?(@assignment.team)
   end
 
   def redirect_on_deleted_case!
@@ -309,10 +328,15 @@ private
 
   def set_case
     @case = Case::Base
-              .includes(transitions: %i[target_team acting_team acting_user])
               .find(params[:case_id])
               .decorate
-    @case_transitions = @case.transitions.decorate
+    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.page(params[:page]).order(id: :desc).decorate
+  end
+
+  def set_assignment
+    if Assignment.exists?(id: params[:id])
+      @assignment = @case.assignments.find(params[:id])
+    end
   end
 
   def set_team_users
@@ -320,6 +344,8 @@ private
   end
 
   def validate_response
+    return unless @assignment
+
     if assignment_params[:state].nil?
       @assignment.errors.add(:state, :blank)
     end

@@ -6,6 +6,7 @@ data:
   SENTRY_ENVIRONMENT: 'development'
   OMNIAUTH_AZURE_CLIENT_ID: e807f454-c5ce-45d4-a9a7-4656c0aff9db
   OMNIAUTH_AZURE_TENANT_ID: c6874728-71e6-41fe-a9e1-2e8c36776ad8
+  MAINTENANCE_MODE: 'OFF'
 kind: ConfigMap
 metadata:
   name: environment-variables

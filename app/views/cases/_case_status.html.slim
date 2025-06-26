@@ -9,14 +9,14 @@
       .case-status__data--large
         = case_details.status
 
-    - if case_details.current_state != 'closed' &&  !case_details.offender_sar?
+    - if case_details.current_state != 'closed'
       .case-status__group.who_its_with
         .case-status__heading
           = t('common.case.who_its_with')
         .case-status__data
           = case_details.who_its_with
 
-    - if case_details.type_of_offender_sar?
+    - if case_details.type_of_offender_sar? && !case_details.rejected?
       .case-status__group.page-counts
         .gridrow
           .column-one-third

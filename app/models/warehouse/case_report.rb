@@ -1,3 +1,85 @@
+# == Schema Information
+#
+# Table name: warehouse_case_reports
+#
+#  case_id                                     :integer          not null, primary key
+#  created_at                                  :datetime         not null
+#  updated_at                                  :datetime         not null
+#  creator_id                                  :integer
+#  responding_team_id                          :integer
+#  responder_id                                :integer
+#  casework_officer_user_id                    :integer
+#  business_group_id                           :integer
+#  directorate_id                              :integer
+#  director_general_name_property_id           :integer
+#  director_name_property_id                   :integer
+#  deputy_director_name_property_id            :integer
+#  number                                      :string
+#  case_type                                   :string
+#  current_state                               :string
+#  responding_team                             :string
+#  responder                                   :string
+#  date_received                               :date
+#  internal_deadline                           :date
+#  external_deadline                           :date
+#  date_responded                              :date
+#  date_compliant_draft_uploaded               :date
+#  trigger                                     :string
+#  name                                        :string
+#  requester_type                              :string
+#  message                                     :string
+#  info_held                                   :string
+#  outcome                                     :string
+#  refusal_reason                              :string
+#  exemptions                                  :string
+#  postal_address                              :string
+#  email                                       :string
+#  appeal_outcome                              :string
+#  third_party                                 :string
+#  reply_method                                :string
+#  sar_subject_type                            :string
+#  sar_subject_full_name                       :string
+#  business_unit_responsible_for_late_response :string
+#  extended                                    :string
+#  extension_count                             :integer
+#  deletion_reason                             :string
+#  casework_officer                            :string
+#  created_by                                  :string
+#  date_created                                :datetime
+#  business_group                              :string
+#  directorate_name                            :string
+#  director_general_name                       :string
+#  director_name                               :string
+#  deputy_director_name                        :string
+#  draft_in_time                               :string
+#  in_target                                   :string
+#  number_of_days_late                         :integer
+#  info_held_status_id                         :integer
+#  refusal_reason_id                           :integer
+#  outcome_id                                  :integer
+#  appeal_outcome_id                           :integer
+#  number_of_days_taken                        :integer
+#  number_of_exempt_pages                      :integer
+#  number_of_final_pages                       :integer
+#  third_party_company_name                    :string
+#  number_of_days_taken_after_extension        :integer
+#  complaint_subtype                           :string
+#  priority                                    :string
+#  total_cost                                  :decimal(10, 2)
+#  settlement_cost                             :decimal(10, 2)
+#  user_dealing_with_vetting                   :string
+#  user_id_dealing_with_vetting                :integer
+#  number_of_days_for_vetting                  :integer
+#  original_external_deadline                  :date
+#  original_internal_deadline                  :date
+#  num_days_late_against_original_deadline     :integer
+#  request_method                              :string
+#  sent_to_sscl                                :date
+#  rejected                                    :string           default("No")
+#  case_originally_rejected                    :string
+#  other_rejected_reason                       :string
+#  rejected_reasons                            :json
+#
 module Warehouse
   class CaseReport < ApplicationRecord
     self.table_name = "warehouse_case_reports"
@@ -46,6 +128,7 @@ module Warehouse
         case_report.number = kase.number
         case_report.case_type = kase.decorate.pretty_type
         case_report.current_state = kase.decorate.status
+        case_report.rejected = kase.rejected? ? "Yes" : "No"
         case_report.responding_team = kase.responding_team&.name
         case_report.responder = kase.responder&.full_name
         case_report.date_received = kase.received_date
@@ -181,6 +264,17 @@ module Warehouse
         boolean ? "Yes" : nil
       end
 
+      def rejected_reasons_selection(kase)
+        reasons_hash = Case::SAR::Offender::REJECTED_REASONS.dup
+        reasons_hash.each_key do |key|
+          reasons_hash[key] = if kase.rejected_reasons.include?(key)
+                                "Yes"
+                              else
+                                "No"
+                              end
+        end
+      end
+
       def process_class_related_process(kase, case_report)
         (CLASS_CASE_REPORT_DATA_PROCESSES[kase.class.name] || []).each do |process_function_name|
           send(process_function_name, kase, case_report)
@@ -194,6 +288,10 @@ module Warehouse
         case_report.number_of_days_for_vetting = kase.number_of_days_for_vetting
         case_report.user_dealing_with_vetting = kase.user_dealing_with_vetting&.full_name
         case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
+        case_report.case_originally_rejected = humanize_boolean(kase.case_originally_rejected)
+        case_report.rejected_reasons = rejected_reasons_selection(kase)
+        case_report.other_rejected_reason = kase.other_rejected_reason
+        case_report.user_made_valid = kase.user_validated_rejected_case&.full_name
       end
 
       def process_offender_sar_complaint(kase, case_report)

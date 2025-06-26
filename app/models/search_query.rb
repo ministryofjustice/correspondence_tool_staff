@@ -29,10 +29,12 @@ class SearchQuery < ApplicationRecord
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::InternalDeadlineFilter,
       CaseFilter::CaseHighProfileFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
       CaseFilter::CaseworkerFilter,
+      CaseFilter::VetterFilter,
     ],
     "closed" => [
       CaseFilter::ReceivedDateFilter,
@@ -40,6 +42,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTypeFilter,
       CaseFilter::ExemptionFilter,
       CaseFilter::CaseHighProfileFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
@@ -60,6 +63,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::ExemptionFilter,
       CaseFilter::CaseHighProfileFilter,
+      CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
@@ -82,11 +86,11 @@ class SearchQuery < ApplicationRecord
 
   validates :search_text, presence: { if: :search_query_type? }
 
-  enum query_type: {
+  enum :query_type, {
     search: "search",
     filter: "filter",
     list: "list",
-  }, _suffix: true
+  }, suffix: true
 
   # rubocop:disable Style/ClassVars
   # Add all those properties withn query jsonb fields

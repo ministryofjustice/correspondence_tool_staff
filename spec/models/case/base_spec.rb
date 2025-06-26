@@ -2,31 +2,34 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
-#  user_id              :integer          not null, default(-100), foreign key
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 require "rails_helper"
@@ -1238,8 +1241,8 @@ RSpec.describe Case::Base, type: :model do
         metadata: {},
         sort_key: kase.transitions.empty? ? 10 : kase.transitions.maximum(:sort_key) + 10,
         most_recent: false,
-        acting_user_id: acting_team.users.first.id,
-        acting_team_id: acting_team.id,
+        acting_user: acting_team.users.first,
+        acting_team:,
         target_user_id: target_user&.id,
         target_team_id: target_team&.id,
       )

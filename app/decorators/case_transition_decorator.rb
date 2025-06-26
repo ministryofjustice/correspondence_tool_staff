@@ -1,6 +1,10 @@
 class CaseTransitionDecorator < Draper::Decorator
   delegate_all
 
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+
   def action_date
     object.created_at.strftime("%d %b %Y<br>%H:%M").html_safe
   end
@@ -18,7 +22,7 @@ class CaseTransitionDecorator < Draper::Decorator
   end
 
   def event_desc
-    description_for_event || event_name
+    rejected_case_creation_event || description_for_event || event_name
   end
 
 private
@@ -33,6 +37,14 @@ private
     specific_key = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}"
     default_key = "event.#{object.event}"
     I18n.t(specific_key, default: I18n.t(default_key))
+  end
+
+  def rejected_case_creation_event
+    # This method prevents the case history changing from "rejected case created" to "case created"
+    # when a Case state is changed from "invalid_submission" to another state
+    if object.case.has_attribute?(:case_originally_rejected) && object.event == "create" && object.case.case_originally_rejected
+      I18n.t("event.case/#{object.case.type_abbreviation.downcase}.rejected.#{object.event}")
+    end
   end
 
   def event
@@ -57,10 +69,11 @@ private
          "request_amends",
          "upload_response_and_return_for_redraft",
          "upload_response_and_approve",
-         "upload_response_approve_and_bypass"
+         "upload_response_approve_and_bypass",
+         "validate_rejected_case"
       object.message
-    when "assign_to_team_member"
-      construct_message_for_assign_to_team_member
+    when "move_to_team_member"
+      construct_message_for_move_to_team_member
     when "reassign_user"
       construct_message_for_reassign_user
     else
@@ -68,7 +81,7 @@ private
     end
   end
 
-  def construct_message_for_assign_to_team_member
+  def construct_message_for_move_to_team_member
     target_user = User.find(object.target_user_id)
     acting_user = User.find(object.acting_user_id)
     if target_user == acting_user

@@ -16,7 +16,7 @@ def is_on_production?
 end
 
 namespace :retention_schedules do
-  desc "create a dummy Offender Sar with retention schedules case"
+  desc "create a dummy Offender SAR with retention schedules case"
   task create: :environment do
     if is_on_production?
       puts "Cannot run this command on production environment!"

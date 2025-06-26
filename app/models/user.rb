@@ -91,6 +91,24 @@ class User < ApplicationRecord
     "responder" => 300,
   }.freeze
 
+  warehousable_attributes :full_name
+
+  class << self
+    def system_admin
+      user = User.find_or_initialize_by(full_name: "System update")
+      if user.new_record?
+        user.team_roles << TeamsUsersRole.new(role: "admin")
+        user.team_roles << TeamsUsersRole.new(role: "responder")
+        user.save!(validate: false)
+      end
+      user
+    end
+  end
+
+  def system_admin?
+    self == User.system_admin
+  end
+
   def admin?
     team_roles.admin.any?
   end
@@ -140,7 +158,9 @@ class User < ApplicationRecord
     # try to execute the action with our lower authority (which might fail)
     # When designing the state flow,  the permission for each state and actions should follow the
     # hierarchy of roles which is manager - approver - responder
-    case_teams = if teams_for_case(kase).any?
+    case_teams = if system_admin?
+                   kase.teams
+                 elsif teams_for_case(kase).any?
                    teams_for_case(kase)
                  else
                    teams

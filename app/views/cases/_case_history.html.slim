@@ -8,9 +8,11 @@ table#case-history.report
       th Team
       th Action
   tbody
-    - @case_transitions.each do |ct|
+    - case_transitions.each do |ct|
       tr
         td = ct.action_date
         td = ct.user_name
         td = ct.user_team
         td = simple_format(ct.event_and_detail)
+
+= paginate case_transitions

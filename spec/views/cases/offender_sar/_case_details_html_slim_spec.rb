@@ -16,7 +16,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
   before { login_as branston_user }
 
   describe "basic_details" do
-    it "displays the initial case details (non third party case)" do
+    it "displays offender sars initial case details (non third party case)" do
       assign(:case, offender_sar_case)
       render partial: "cases/offender_sar/case_details",
              locals: { case_details: offender_sar_case,
@@ -39,6 +39,7 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.previous_case_numbers.data.text).to eq "54321"
       expect(partial.other_subject_ids.data.text).to eq "ABC 123 DEF"
       expect(partial.case_reference_number.data.text).to eq "123 ABC 456"
+      expect(partial.probation_area.data.text).to eq "Smallville"
       expect(partial.subject_address.data.text).to eq "22 Sample Address, Test Lane, Testingington, TE57ST"
       expect(partial.requester_reference.data.text).to eq "456 ABC 123"
       expect(partial.request_dated.data.text).to eq "13 Jul 2010"
@@ -60,6 +61,37 @@ describe "cases/offender_sar/case_details.html.slim", type: :view do
       expect(partial.third_party_name.data.text).to eq "Rick Westor"
       expect(partial.requester_reference.data.text).to eq "FOOG1234"
       expect(partial.third_party_company_name.data.text).to eq "Foogle and Sons Solicitors at Law"
+      expect(partial.third_party_email.data.text).to eq "foogle@solicitors.com"
+    end
+
+    it "displays rejected details if present" do
+      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: %w[further_identification]).decorate
+      assign(:case, rejected_case)
+      render partial: "cases/offender_sar/case_details", locals: {
+        case_details: rejected_case,
+        link_type: nil,
+        allow_editing: true,
+      }
+
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
+      expect(partial.rejected_reason.data.text).to eq "Further identification"
+      expect(partial.dps_flag.data.text).to eq "No"
+    end
+
+    it "removes the rejected reason details 'change' link when the case is no longer rejected" do
+      rejected_case = (create :offender_sar_case, :rejected, rejected_reasons: %w[further_identification]).decorate
+      rejected_case.close(branston_user)
+      assign(:case, rejected_case)
+
+      render partial: "cases/offender_sar/case_details", locals: {
+        case_details: rejected_case,
+        link_type: nil,
+        allow_editing: true,
+      }
+
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
+
+      expect(partial.rejected_reason.has_link?).to be false
     end
 
     it "does not display Business unit responsible for late response when case closed" do

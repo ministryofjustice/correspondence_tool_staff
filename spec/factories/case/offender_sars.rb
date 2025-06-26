@@ -25,6 +25,7 @@ FactoryBot.define do
     sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }
     previous_case_numbers           { "54321" }
     prison_number                   { "123465" }
+    probation_area                  { "Smallville" }
     other_subject_ids               { "ABC 123 DEF" }
     case_reference_number           { "123 ABC 456" }
     subject_address                 { "22 Sample Address, Test Lane, Testingington, TE57ST" }
@@ -35,6 +36,7 @@ FactoryBot.define do
     recipient                       { "subject_recipient" }
     third_party                     { false }
     flag_as_high_profile            { false }
+    flag_as_dps_missing_data        { false }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
     number_final_pages              { 5 }
@@ -51,6 +53,17 @@ FactoryBot.define do
     third_party_name { "Mr J. Smith" }
     postal_address { "22 High Street" }
     recipient { "requester_recipient" }
+    third_party_email { "foogle@solicitors.com" }
+  end
+
+  trait :rejected do
+    current_state { "invalid_submission" }
+    rejected_reasons { %w[further_identification court_data_request] }
+    flag_as_dps_missing_data { false }
+  end
+
+  trait :invalid_submission do
+    rejected
   end
 
   trait :data_to_be_requested do
@@ -89,6 +102,9 @@ FactoryBot.define do
       create :case_transition_waiting_for_data, case: kase
       create :case_transition_ready_for_vetting, case: kase
       create :case_transition_vetting_in_progress, case: kase
+      kase.assignments.create!(team: kase.responding_team, role: "responding")
+      kase.responder_assignment.update!(user: kase.responding_team.users.first)
+      kase.responder_assignment.accepted!
       kase.reload
     end
   end

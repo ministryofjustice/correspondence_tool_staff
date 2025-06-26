@@ -2,7 +2,7 @@ require "csv"
 
 module Stats
   module ETL
-    class OffenderSarClosedCases < BaseClosedCases
+    class OffenderSARClosedCases < BaseClosedCases
       RESULT_NAME = "offender-sar-closed-cases".freeze
 
       CSV_COLUMN_HEADINGS = [
@@ -18,6 +18,7 @@ module Stats
         "Pages for dispatch",
         "Exempt pages",
         "Final page count",
+        "Rejected case",
       ].freeze
 
       FIELD_COLUMNS = [
@@ -33,6 +34,7 @@ module Stats
         "number_of_final_pages::integer - number_of_exempt_pages::integer",
         "number_of_exempt_pages",
         "number_of_final_pages",
+        "rejected",
       ].freeze
 
       def result_name
@@ -42,11 +44,11 @@ module Stats
     private
 
       def columns
-        @columns ||= OffenderSarClosedCases::FIELD_COLUMNS
+        @columns ||= OffenderSARClosedCases::FIELD_COLUMNS
       end
 
       def heading
-        @heading ||= CSV.generate_line(OffenderSarClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
+        @heading ||= CSV.generate_line(OffenderSARClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
       end
     end
   end

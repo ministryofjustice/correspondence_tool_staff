@@ -5,13 +5,12 @@ module SetupCase
     @case = Case::Base
       .includes(
         :message_transitions,
-        transitions: %i[acting_user acting_team target_team],
         assignments: [:team],
         approver_assignments: [:user],
       )
       .find(case_id)
 
-    @case_transitions = @case.transitions.case_history.order(id: :desc)
+    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.page(params[:page]).order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
   end
 

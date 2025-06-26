@@ -12,6 +12,8 @@ feature "Submitting feedback" do
     login_as responder
     cases_page.load
     expect(cases_page).to have_service_feedback
+
+    cases_page.service_feedback.details_button.click
     expect(cases_page.service_feedback).to have_feedback_form
     expect(cases_page.service_feedback).to have_send_button
 
@@ -27,6 +29,8 @@ feature "Submitting feedback" do
     cases_page.load
 
     expect(cases_page).to have_service_feedback
+    cases_page.service_feedback.details_button.click
+
     expect(cases_page.service_feedback).to have_feedback_form
     expect(cases_page.service_feedback).to have_send_button
 

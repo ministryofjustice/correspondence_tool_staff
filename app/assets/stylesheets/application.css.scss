@@ -1,3 +1,7 @@
+@import 'jquery-ui/core';
+@import 'jquery-ui/button';
+@import 'jquery-ui/dialog';
+
 // From GDS's alphagov/govuk_frontend_toolkit
 @import 'colours';
 @import 'font_stack';
@@ -7,9 +11,6 @@
 @import 'typography';
 @import 'grid_layout';
 @import 'shims';
-@import 'jquery-ui.css';
-
-
 
 @import 'design-patterns/alpha-beta';
 @import 'design-patterns/buttons';
@@ -71,6 +72,7 @@
 @import "moj/component/teams";
 @import "moj/component/quick_links";
 @import "moj/component/data_request";
+@import "moj/component/data_request_area";
 @import "moj/component/letters";
 @import "moj/component/moj_banner";
 @import "moj/case_tabs";

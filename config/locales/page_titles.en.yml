@@ -2,8 +2,8 @@
 en:
   page_title:
     accessibility_statement: Accessibility statement
-    admin_case_creation: Admin case creation - Track-a-query
     admin_case_list: Admin case list - Track-a-query
+    admin_feedback_list: Admin feedback list - Track-a-query
     admin_user_list: Admin user list - Track-a-query
     all_cases: All open cases - Track-a-query
     all_new_cases: All new cases - Track-a-query
@@ -20,6 +20,7 @@ en:
       offender_sar:
         subject_details_step: Subject details - Creating an Offender SAR case - Track-a-query
         requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
+        reason_rejected_step: Reason rejected - Creating an Offender SAR case - Track-a-query
         recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
         requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
         request_details_step: Request details - Creating an Offender SAR case - Track-a-query
@@ -43,10 +44,11 @@ en:
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
+    data_request_area_page: Record data request area
     data_request_edit_page: Update page count
-    data_request_send_probation_email_page: Do you want to send the commissioning email to Branston Archives?
-    data_request_send_email_page: Are you sure you want to send the commissioning email?
+    data_request_area_send_email_page: Are you sure you want to send the commissioning email?
     data_request_show_page: View data request
+    data_request_area_show_page: View data request area
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
@@ -54,6 +56,7 @@ en:
     edit_user_page: Edit team member - %{team_name} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
+    accepted_date_received: Accepted date received - %{case_number} - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query
     login: Login - Track-a-query
@@ -61,7 +64,6 @@ en:
     marking_response_as_sent: Mark response as sent
     my_cases: My open cases - Track-a-query
     bu_areas: Areas covered for %{team_name} - Track-a-query
-    new_commissioning_document_page: Select Day 1 request document
     new_letter_page: Generate a letter - Track-a-query
     new_org_entity: New %{team_type} - Track-a-query
     new_user_page: New team member - %{team_name} - Track-a-query
@@ -69,6 +71,7 @@ en:
     preview_cover_page: Preview cover page - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
     assign_to_team_member_page: Assign responder - %{case_number} - Track-a-query
+    assign_to_vetter_page: Change vetting team member - %{case_number} - Track-a-query
     request_amends_page: Requesting amendments - %{case_number} - Track-a-query
     search: Searching for a case - Track-a-query
     settings: Business groups - Track-a-query
@@ -91,7 +94,10 @@ en:
     record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
+    add_an_address_contact_type: Add an address contact type - Track-a-query
     edit_an_address: Edit an address - Track-a-query
     partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
     ico_foi:
       require_further_action: Require further action - %{case_number} - Track-a-query
+    ico_sar:
+      complaint_outcome: What was the outcome of the SAR complaint?

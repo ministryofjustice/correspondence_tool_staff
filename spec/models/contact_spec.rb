@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: contacts
+#
+#  id                  :bigint           not null, primary key
+#  name                :string
+#  address_line_1      :string
+#  address_line_2      :string
+#  town                :string
+#  county              :string
+#  postcode            :string
+#  data_request_emails :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  contact_type_id     :bigint
+#  data_request_name   :string
+#  escalation_name     :string
+#  escalation_emails   :string
+#
 require "rails_helper"
 
 RSpec.describe Contact, type: :model do
@@ -22,6 +41,8 @@ RSpec.describe Contact, type: :model do
                   contact_type: "university")
   end
 
+  let(:contact_prison) { build_stubbed(:prison) }
+
   describe "validations" do
     it "is valid if it is has a name, address_line_1 and postcode, and contact_type" do
       expect(described_class.new).to validate_presence_of(:name)
@@ -34,6 +55,21 @@ RSpec.describe Contact, type: :model do
     it "must have a valid contact_type" do
       expect(contact_2).to be_valid
       expect { contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
+    end
+
+    describe "prison" do
+      it "is valid with an escalation name and valid escalation email address" do
+        expect(contact_prison).to validate_presence_of(:escalation_name)
+        expect(contact_prison).to validate_presence_of(:escalation_emails)
+
+        contact_prison.escalation_emails = "invalid"
+        contact_prison.valid?
+        expect(contact_prison.errors[:escalation_emails]).not_to be_empty
+
+        contact_prison.escalation_emails = "valid@domain.com"
+        contact_prison.valid?
+        expect(contact_prison.errors[:escalation_emails]).to be_empty
+      end
     end
 
     describe "data_request_emails" do
@@ -77,7 +113,7 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.address).to match("123 test road\nlittle heath\nbakersville\nMercia\nFE2 9JK")
     end
 
-    it "will output correctly if optional address parts are missing" do
+    it "outputs correctly if optional address parts are missing" do
       expect(contact.inline_address).to match("123 test road, FE2 9JK")
       expect(contact.address).to match("123 test road\nFE2 9JK")
     end
@@ -104,13 +140,23 @@ RSpec.describe Contact, type: :model do
 
   describe "class methods" do
     it "returns expected sql from #search_by_contact_name" do
-      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE '%LLP%') ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.search_by_contact_name("LLP").to_sql).to match(expected_sql)
     end
 
     it "returns expected sql from #filtered_search_by_contact_name" do
-      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE '%LLP%') ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.filtered_search_by_contact_name("probation,solicitor", "LLP").to_sql).to match(expected_sql)
+    end
+  end
+
+  describe "#prison?" do
+    it "is true when the contact is a prison" do
+      expect(contact_prison).to be_prison
+    end
+
+    it "is false when the contact is not a prison" do
+      expect(contact).not_to be_prison
     end
   end
 end

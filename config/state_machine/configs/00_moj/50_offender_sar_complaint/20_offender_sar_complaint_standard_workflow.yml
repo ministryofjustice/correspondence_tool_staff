@@ -16,7 +16,7 @@
                 send_acknowledgement_letter:
                 preview_cover_page:
                 edit_case:
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 reset_to_initial_state:
@@ -26,7 +26,7 @@
                   transition_to: vetting_in_progress
                 mark_as_require_response:
                   transition_to: response_required
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -39,7 +39,7 @@
               data_to_be_requested:
                 mark_as_waiting_for_data:
                   transition_to: waiting_for_data
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -55,7 +55,7 @@
                 mark_as_require_response:
                   if: Workflows::Predicates#is_not_litigation_complaint?
                   transition_to: response_required
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -68,7 +68,7 @@
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -80,7 +80,21 @@
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
-                assign_to_team_member:
+                mark_as_second_vetting_in_progress:
+                  transition_to: second_vetting_in_progress
+                move_to_team_member:
+                  if: Workflows::Predicates#responder_is_not_assigned?
+                reassign_user:
+                add_data_received:
+                add_note_to_case:
+                preview_cover_page:
+                edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
+              second_vetting_in_progress:
+                mark_as_ready_to_copy:
+                  transition_to: ready_to_copy
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -96,7 +110,7 @@
                 mark_as_ready_to_dispatch:
                   if: Workflows::Predicates#is_litigation_complaint?
                   transition_to: ready_to_dispatch
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 add_data_received:
@@ -109,7 +123,7 @@
                 mark_as_legal_proceedings_ongoing:
                   if: Workflows::Predicates#is_litigation_complaint?
                   transition_to: legal_proceedings_ongoing
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 send_dispatch_letter:
@@ -130,7 +144,7 @@
                 close:
                   if: Workflows::Predicates#is_not_litigation_complaint?
                   transition_to: closed
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 send_dispatch_letter:
@@ -154,7 +168,7 @@
                 send_dispatch_letter:
                 preview_cover_page:
                 edit_case:
-                assign_to_team_member:
+                move_to_team_member:
                   if: Workflows::Predicates#responder_is_not_assigned?
                 reassign_user:
                 reset_to_initial_state:

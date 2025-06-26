@@ -11,7 +11,6 @@
 #  preview_key  :string
 #  upload_group :string
 #  user_id      :integer
-#  state        :string           default("unprocessed"), not null
 #
 
 class CaseAttachment < ApplicationRecord
@@ -30,7 +29,12 @@ class CaseAttachment < ApplicationRecord
 
   scope :ico_decisions, -> { where(type: :ico_decision) }
 
-  enum type: { response: "response", request: "request", ico_decision: "ico_decision", commissioning_document: "commissioning_document" }
+  enum :type, {
+    response: "response",
+    request: "request",
+    ico_decision: "ico_decision",
+    commissioning_document: "commissioning_document",
+  }
 
   def filename
     File.basename(key)

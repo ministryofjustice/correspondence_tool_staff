@@ -1,4 +1,4 @@
-class ChangeSarIntoSarStandard < ActiveRecord::DataMigration
+class ChangeSARIntoSARStandard < ActiveRecord::DataMigration
   def up
     Case::Base
       .unscope(:where)

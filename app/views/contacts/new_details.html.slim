@@ -1,0 +1,14 @@
+- content_for :page_title do
+  = t('page_title.add_an_address')
+
+= link_to("Back", new_contact_path, class: 'govuk-back-link')
+
+- content_for :heading
+  = t('common.contacts.add_new_address')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @contact,
+  "#{pluralize(@contact.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= render 'form'

@@ -12,10 +12,7 @@
 # Ignore all logfiles and tempfiles.
 /tmp/*
 /log/*
-.docker-sync
-.local-dev/.setup-complete
 build
-
 
 # Ignore concatenated state machine config file - it will be regenerated
 # from the constituent parts
@@ -30,12 +27,19 @@ config/environments/*.local.yml
 .env
 env.sh
 .env.sh
+.docker-sync
+config/docker-dev/.setup-complete
 
+#Ignore local upload and attachments
+/uploads
+public/uploads
 
 # Ignore .DS_Store in all directories
 .DS_Store
+._DS_Store
 
-/public/assets
+public/assets/*
+!public/assets/govuk-frontend.*
 
 dump.rdb
 
@@ -61,6 +65,7 @@ coverage
 !public/robots.txt
 !lib/assets/kilo_map.csv
 !spec/fixtures/*.xlsx
+!spec/fixtures/*.txt
 !tmp/parallel_runtime_rspec.log
 
 # Generated documentation.
@@ -69,3 +74,5 @@ doc
 
 # ignore secret files
 *secret*.*
+
+.idea/

@@ -13,8 +13,10 @@ en:
       ready_for_vetting: Ready for vetting
       ready_to_copy: Ready to copy
       ready_to_dispatch: Ready to dispatch
+      second_vetting_in_progress: Second vetting in progress
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
+      invalid_submission: Rejected
     case/sar/offender_complaint:
       closed: Closed
       data_to_be_requested: Data to be requested
@@ -22,6 +24,7 @@ en:
       ready_for_vetting: Ready for vetting
       ready_to_copy: Ready to copy
       ready_to_dispatch: Ready to dispatch
+      second_vetting_in_progress: Second vetting in progress
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
       to_be_assessed: To be assessed

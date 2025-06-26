@@ -37,6 +37,14 @@ module PageObjects
               element :data, "td"
             end
 
+            section :third_party_email, "tr.third-party-email" do
+              element :data, "td"
+            end
+
+            section :rejected_reason, "tr.rejected-reasons" do
+              element :data, "td:first"
+            end
+
             section :prison_number, "tr.prison-number" do
               element :data, "td"
             end
@@ -54,6 +62,10 @@ module PageObjects
             end
 
             section :case_reference_number, "tr.case-reference-number" do
+              element :data, "td"
+            end
+
+            section :probation_area, "tr.probation-area" do
               element :data, "td"
             end
 
@@ -87,6 +99,10 @@ module PageObjects
 
             section :external_deadline, "tr.case-external-deadline" do
               element :data, "td:nth-child(2)"
+            end
+
+            section :dps_flag, "tr.subject-missing-data" do
+              element :data, "td"
             end
 
             section :response_address, "tr.response-address" do

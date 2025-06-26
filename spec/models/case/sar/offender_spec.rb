@@ -2,36 +2,40 @@
 #
 # Table name: cases
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  email                :string
-#  message              :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  received_date        :date
-#  postal_address       :string
-#  subject              :string
-#  properties           :jsonb
-#  requester_type       :enum
-#  number               :string           not null
-#  date_responded       :date
-#  outcome_id           :integer
-#  refusal_reason_id    :integer
-#  current_state        :string
-#  last_transitioned_at :datetime
-#  delivery_method      :enum
-#  workflow             :string
-#  deleted              :boolean          default(FALSE)
-#  info_held_status_id  :integer
-#  type                 :string
-#  appeal_outcome_id    :integer
-#  dirty                :boolean          default(FALSE)
+#  id                       :integer          not null, primary key
+#  name                     :string
+#  email                    :string
+#  message                  :text
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  received_date            :date
+#  postal_address           :string
+#  subject                  :string
+#  properties               :jsonb
+#  requester_type           :enum
+#  number                   :string           not null
+#  date_responded           :date
+#  outcome_id               :integer
+#  refusal_reason_id        :integer
+#  current_state            :string
+#  last_transitioned_at     :datetime
+#  delivery_method          :enum
+#  workflow                 :string
+#  deleted                  :boolean          default(FALSE)
+#  info_held_status_id      :integer
+#  type                     :string
+#  appeal_outcome_id        :integer
+#  dirty                    :boolean          default(FALSE)
+#  reason_for_deletion      :string
+#  user_id                  :integer          default(-100), not null
+#  reason_for_lateness_id   :bigint
+#  reason_for_lateness_note :string
 #
 
 require "rails_helper"
 
 describe Case::SAR::Offender do
-  context "when factory should be valid" do
+  context "when valid offender factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_case
 
@@ -68,6 +72,121 @@ describe Case::SAR::Offender do
       it "is not an offender_sar complaint" do
         kase = build_stubbed :offender_sar_case
         expect(kase.offender_sar_complaint?).to be false
+      end
+    end
+  end
+
+  describe "#external_deadline for rejected" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected) }
+
+    it "sets external deadline using a calculation of 90 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 90)
+    end
+  end
+
+  describe "#external_deadline for case flagged as dps missing data rejected sar" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected, flag_as_dps_missing_data: true) }
+
+    it "sets external deadline using a calculation of 60 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 60)
+    end
+  end
+
+  describe "#external_deadline for case not flagged as a dps missing data rejected sar" do
+    let(:rejected_offender_sar_case) { create(:offender_sar_case, :rejected, flag_as_dps_missing_data: false) }
+
+    it "sets external deadline using a calculation of 90 days from received_date" do
+      expect(rejected_offender_sar_case.external_deadline).to eq(Time.zone.today + 90)
+    end
+  end
+
+  describe ".close_expired_rejected" do
+    let(:rejected_expired) { create(:offender_sar_case, :rejected) }
+    let(:system_user) { User.system_admin }
+
+    before do
+      rejected_expired.update!(external_deadline: Date.yesterday)
+
+      create(:offender_sar_case) # not rejected
+      create(:offender_sar_case, :rejected) # rejected
+    end
+
+    it "calls CaseClosureService for each expired rejected case" do
+      expect(CaseClosureService).to receive(:new).with(rejected_expired, system_user, {}).and_call_original
+      described_class.close_expired_rejected
+    end
+  end
+
+  describe "#rejected_reasons" do
+    context "when the rejected reason other checkbox is selected and a reason is given" do
+      let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
+
+      it "sets the rejected reason" do
+        expect(case_rejected.rejected_reasons).to eq(%w[other])
+        expect(case_rejected.other_rejected_reason).to eq("More information")
+      end
+    end
+
+    context "when the rejected reason other checkbox is de-selected and a reason is present" do
+      let(:case_rejected) { create(:offender_sar_case, :rejected, rejected_reasons: %w[other], other_rejected_reason: "More information") }
+
+      it "sets the other rejected reason to blank" do
+        case_rejected.update!(rejected_reasons: %w[cctv_bwcf])
+
+        expect(case_rejected.rejected_reasons).to eq(%w[cctv_bwcf])
+        expect(case_rejected.other_rejected_reason).to eq("")
+      end
+    end
+  end
+
+  describe "#set_number" do
+    let(:case_rejected) { create(:offender_sar_case, :rejected) }
+    let(:kase) { create(:offender_sar_case) }
+
+    it "sets the prefix for rejected case" do
+      expect(case_rejected.number[0]).to eq("R")
+    end
+
+    it "does not set the prefix for a non rejected case" do
+      expect(kase.number[0]).to eq("2")
+    end
+  end
+
+  describe "#set_valid_case_number" do
+    let(:case_rejected) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: false) }
+    let(:case_rejected_dps_missing) { create(:offender_sar_case, :rejected, received_date: Date.parse("11/04/2024"), flag_as_dps_missing_data: true) }
+
+    it "does not create a non unique number and does remove the preceding 'R'" do
+      expect(case_rejected.set_valid_case_number).not_to eq "240411001"
+      expect(case_rejected.set_valid_case_number[0]).not_to eq "R"
+    end
+
+    it "creates a unique new number for the valid case" do
+      expect(case_rejected.set_valid_case_number).to eq "240411002"
+    end
+
+    it "adds the 'D' prefix to the number" do
+      expect(case_rejected_dps_missing.flag_as_dps_missing_data?).to eq true
+      expect(case_rejected_dps_missing.set_valid_case_number[0]).to eq "D"
+    end
+  end
+
+  describe "#prevent_number_change" do
+    context "when a rejected offender SAR" do
+      let(:case_rejected) { create(:offender_sar_case, :rejected) }
+
+      it "does not raise StandardError" do
+        case_rejected.number = "987654321"
+        expect { case_rejected.save! }.not_to raise_error
+      end
+    end
+
+    context "when a valid offender SAR" do
+      let(:kase) { create(:offender_sar_case) }
+
+      it "raises StandardError" do
+        kase.number = "987654321"
+        expect { kase.save! }.to raise_error(StandardError, "number is immutable")
       end
     end
   end
@@ -176,20 +295,27 @@ describe Case::SAR::Offender do
   end
 
   describe "#date_of_birth" do
+    let(:kase) { build_stubbed :offender_sar_case }
+
     context "with valid values" do
       it "validates date of birth" do
-        kase = build_stubbed :offender_sar_case
-
         expect(kase).to validate_presence_of(:date_of_birth)
         expect(kase).to allow_values("01-01-1967").for(:date_of_birth)
+        expect { kase.validate_date_of_birth }.not_to change(kase.errors, :count)
       end
     end
 
     context "with invalid value" do
-      it "errors" do
-        expect {
-          build_stubbed(:offender_sar_case, date_of_birth: "wibble")
-        }.to raise_error ArgumentError
+      it "is not valid" do
+        kase[:date_of_birth] = "wibble"
+        expect { kase.validate_date_of_birth }.to change(kase.errors, :count)
+      end
+    end
+
+    context "with all zeroes value" do
+      it "is not valid" do
+        kase[:date_of_birth] = "0000-00-00"
+        expect { kase.validate_date_of_birth }.to change(kase.errors, :count)
       end
     end
 
@@ -290,6 +416,13 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "when creating a rejected case" do
+    it "sets case_originally_rejected to true" do
+      kase = create :offender_sar_case, :rejected
+      expect(kase.case_originally_rejected).to eq true
+    end
+  end
+
   describe "third party details" do
     describe "with third_party_names" do
       it "validates third party names when third party is true" do
@@ -307,7 +440,7 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
-      it "does not validate third_party names when ecipient is not third party too" do
+      it "does not validate third_party names when recipient is not third party too" do
         kase = build_stubbed :offender_sar_case, third_party: false, third_party_name: "",
                                                  third_party_company_name: "", recipient: "subject_recipient"
         expect(kase).to be_valid
@@ -328,9 +461,35 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
-      it "does not validates presence of third party relationship when recipient is not third party" do
+      it "does not validate presence of third party relationship when recipient is not third party" do
         kase = build_stubbed :offender_sar_case, third_party: false, third_party_relationship: "",
-                                                 recipient: "subject_recipient"
+                                                 third_party_email: "", third_party_company_name: "", recipient: "subject_recipient"
+        expect(kase).to be_valid
+      end
+    end
+
+    describe "third party email" do
+      it "validates email address when there is an email address entered" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "email", third_party_company_name: "",
+                                                 recipient: "third_party_recipient"
+
+        expect(kase).not_to be_valid raise_error(ActiveRecord::RecordInvalid).with_message("invalid format for email address")
+      end
+
+      it "does not validate email address when there is no email address entered" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "", third_party_company_name: "ABC LLP",
+                                                 recipient: "third_party_recipient"
+
+        expect(kase).to be_valid
+      end
+
+      it "validates email address when the email address entered is the correct format" do
+        kase = build_stubbed :offender_sar_case, third_party: true, third_party_relationship: "Solicitor",
+                                                 third_party_email: "email@something.com", third_party_company_name: "ABC LLP",
+                                                 recipient: "third_party_recipient"
+
         expect(kase).to be_valid
       end
     end
@@ -756,6 +915,26 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#probation_area" do
+    let(:kase) { create :offender_sar_case }
+
+    context "when the area is nil" do
+      let(:kase)  { create :offender_sar_case, probation_area: nil }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to be nil
+      end
+    end
+
+    context "when the area is an empty string" do
+      let(:kase)  { create :offender_sar_case, probation_area: "" }
+
+      it "returns an empty string" do
+        expect(kase.probation_area).to eq ""
+      end
+    end
+  end
+
   describe "#number_of_days_for_vetting" do
     it "is nil if the vetting process has not started yet" do
       kase = create :offender_sar_case
@@ -799,6 +978,31 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe "#assign_vetter" do
+    let(:responder) { find_or_create :responder }
+    let(:responding_team) { responder.teams.first }
+
+    it "sets responding user to expected" do
+      kase = create :offender_sar_case, :vetting_in_progress
+      expect {
+        kase.assign_vetter(responder)
+      }.to change(kase.responder_assignment, :user_id).to responder.id
+    end
+  end
+
+  describe "#unassign_vetter" do
+    let(:responder) { find_or_create :responder }
+    let(:responding_team) { responder.teams.first }
+
+    it "sets responding user to nil" do
+      kase = create :offender_sar_case, :vetting_in_progress
+      kase.assignments << Assignment.new(state: "pending", team_id: responding_team.id, role: "responding", user: responder, approved: false)
+      expect {
+        kase.unassign_vetter
+      }.to change(kase.responder_assignment, :user_id).to nil
+    end
+  end
+
   describe "#partial flags" do
     it "errors when further_actions_required is true but is_partial_case" do
       kase = build_stubbed(:offender_sar_case, is_partial_case: false, further_actions_required: "yes")
@@ -815,6 +1019,46 @@ describe Case::SAR::Offender do
 
       kase = build_stubbed(:offender_sar_case, is_partial_case: true, further_actions_required: "no")
       expect(kase).to be_valid
+    end
+  end
+
+  describe "#rejected?" do
+    context "when case is unsaved" do
+      context "when case is rejected" do
+        it "returns true" do
+          kase = build(:offender_sar_case, :rejected)
+          expect(kase).to be_rejected
+        end
+      end
+
+      context "when case is not rejected" do
+        it "returns false" do
+          kase = build(:offender_sar_case)
+          expect(kase).not_to be_rejected
+        end
+      end
+    end
+
+    context "when case is rejected" do
+      it "returns true" do
+        kase = create(:offender_sar_case, :rejected)
+        expect(kase).to be_rejected
+      end
+    end
+
+    context "when case is rejected and closed" do
+      it "returns true" do
+        kase = create(:offender_sar_case, :rejected)
+        kase.close(build_stubbed(:user))
+        expect(kase).to be_rejected
+      end
+    end
+
+    context "when case is not rejected" do
+      it "returns false" do
+        kase = create(:offender_sar_case)
+        expect(kase).not_to be_rejected
+      end
     end
   end
 end

@@ -79,7 +79,7 @@ namespace :data do
 
     desc "Sets internal deadline on all cases"
     task set_internal_deadline: :environment do
-      Case::Base.all.each do |kase|
+      Case::Base.all.find_each do |kase|
         kase.__send__(:set_internal_deadline) if kase.internal_deadline.nil?
       end
     end
@@ -132,12 +132,6 @@ namespace :data do
           puts e.backtrace.join("\n\t")
         end
       end
-    end
-
-    desc "Add Business Unit roles"
-    task add_business_unit_roles: :environment do
-      require Rails.root.join("lib/cts/teams/roles_seeder")
-      CTS::Teams::RolesSeeder.new.run
     end
 
     desc "Fix invalid Offender SAR cases"

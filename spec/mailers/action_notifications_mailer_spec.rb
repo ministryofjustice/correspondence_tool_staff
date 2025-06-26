@@ -407,41 +407,22 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
   end
 
-  describe "commissioning_email" do
-    let(:commissioning_document) { create :commissioning_document }
-    let(:email_address) { "test@test.com" }
-    let(:kase_number) { "12345" }
-    let(:mail) { described_class.commissioning_email(commissioning_document, kase_number, email_address) }
+  describe "rpi_email" do
+    let(:rpi) { create :personal_information_request }
+    let(:target) { :branston }
+    let(:mail) { described_class.rpi_email(rpi, target) }
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
-        .to eq "94b66c61-feff-42f5-950d-d0af0a8205ef"
+        .to eq "5e63f6c1-e7d6-47da-845c-fa47343ab882"
     end
 
     it "personalises the email" do
-      expect(mail.govuk_notify_personalisation[:email_address]).to eq email_address
-      expect(mail.govuk_notify_personalisation[:deadline_text]).to eq I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
-      expect(mail.govuk_notify_personalisation[:email_subject]).to include "Subject Access Request"
+      expect(mail.govuk_notify_personalisation[:content]).to eq rpi.attachment_url(target)
     end
 
-    it "sets the To address of the email using the provided user" do
-      expect(mail.to).to include email_address
-    end
-
-    it "creates a DataRequestEmail record" do
-      expect {
-        mail.deliver
-      }.to change(DataRequestEmail, :count).by 1
-    end
-
-    context "when email is retried" do
-      it "doesn't create a new data_request_email record" do
-        create(:data_request_email, email_address:, data_request: commissioning_document.data_request)
-
-        expect {
-          mail.deliver
-        }.to change(DataRequestEmail, :count).by 0
-      end
+    it "sets the To address of the email based on the target" do
+      expect(mail.to).to include PersonalInformationRequest.email_for_target(target)
     end
   end
 end

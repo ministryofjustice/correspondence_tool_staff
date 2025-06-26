@@ -27,9 +27,9 @@ dc: dory
 	docker compose run --rm --entrypoint=/bin/sh app
 
 dc-clean:
-	rm -rf ./log* ./tmp* ./.local-dev/.setup-complete
+	rm -rf ./log* ./config/docker-dev/.setup-complete
 	docker compose down -v
-	docker-sync stop
+	docker-sync stop || true
 	docker-sync clean
 	docker system prune -f
 	clear
@@ -54,9 +54,6 @@ up-daemon: env dory
 
 setup:
 	docker compose exec app /usr/bin/install.sh
-
-spec-setup:
-	@/usr/bin/spec-install.sh
 
 sidekiq-anon:
 	bundle exec sidekiq -C config/sidekiq-anonymizer-jobs.yml
@@ -88,22 +85,11 @@ clean:
 shell:
 	docker compose exec --workdir /usr/src/app app /bin/sh
 
-specs: docker-check
-	clear
-	@chmod +x .local-dev/bin/spec-intro.sh && .local-dev/bin/spec-intro.sh
-	@docker compose exec --workdir /usr/src/app spec bash
-
 docker-check:
-	@chmod +x ./.local-dev/bin/check-docker.sh
-	@./.local-dev/bin/check-docker.sh
+	@chmod +x ./config/docker-dev/bin/check-docker.sh
+	@./config/docker-dev/bin/check-docker.sh
 
 dory:
-	@chmod +x ./.local-dev/bin/check-dory.sh
-	@./.local-dev/bin/check-dory.sh
+	@chmod +x ./config/docker-dev/bin/check-dory.sh
+	@./config/docker-dev/bin/check-dory.sh
 
-#####
-## Production CI mock
-#####
-
-ks-apply:
-	kubectl apply -f config/kubernetes/development
