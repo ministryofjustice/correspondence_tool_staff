@@ -50,10 +50,13 @@ cd correspondence_tool_staff && make launch
 ```
 All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
 
-You can access PGAdmin4 at http://localhost:5050 with the username `cts@pgadmin.com` and password `let-me-in`.
+You can access PGAdmin4 at http://localhost:5050 with: 
+- Username `cts@pgadmin.com` 
+- Password `let-me-in`.
 
 > [!IMPORTANT] 
 > **Viewing DB data**
+> 
 > Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. You will need to create a new server in PGAdmin4 with the following steps:
 > 1. Click on "Tools" in the top menu and select "Import/Export Servers".
 > 2. Select the "Import" tab.
