@@ -43,10 +43,10 @@ $ cd correspondence_tool_staff
 > 
 > To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
 
-Use the following chained command to start the app:
+Use the following command to start the app:
 
 ```
-cd correspondence_tool_staff && make launch
+make launch
 ```
 All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
 
