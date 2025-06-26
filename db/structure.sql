@@ -28,185 +28,158 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 -- Name: attachment_type; Type: TYPE; Schema: public; Owner: -
 --
 
-DO $$ BEGIN
-    CREATE TYPE public.attachment_type AS ENUM (
-        'response',
-        'request',
-        'ico_decision',
-        'commissioning_document'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
-
+CREATE TYPE public.attachment_type AS ENUM (
+    'response',
+    'request',
+    'ico_decision',
+    'commissioning_document'
+);
 
 
 --
 -- Name: cases_delivery_methods; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.cases_delivery_methods AS ENUM (
-        'sent_by_email',
-        'sent_by_post'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.cases_delivery_methods AS ENUM (
+    'sent_by_email',
+    'sent_by_post'
+);
+
 
 --
 -- Name: data_request_area_type; Type: TYPE; Schema: public; Owner: -
 --
 
-DO $$ BEGIN
-    CREATE TYPE public.data_request_area_type AS ENUM (
-        'prison',
-        'probation',
-        'branston',
-        'branston_registry',
-        'mappa',
-        'security',
-        'other_department',
-        'dps_sensitive'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+CREATE TYPE public.data_request_area_type AS ENUM (
+    'prison',
+    'probation',
+    'branston',
+    'branston_registry',
+    'mappa',
+    'security',
+    'other_department',
+    'dps_sensitive'
+);
+
 
 --
 -- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
-DO $$ BEGIN
-    CREATE TYPE public.request_types AS ENUM (
-        'all_prison_records',
-        'security_records',
-        'nomis_records',
-        'nomis_other',
-        'nomis_contact_logs',
-        'probation_records',
-        'cctv_and_bwcf',
-        'cctv',
-        'bwcf',
-        'telephone_recordings',
-        'telephone_pin_logs',
-        'probation_archive',
-        'mappa',
-        'pdp',
-        'court',
-        'other',
-        'cross_borders',
-        'cat_a',
-        'ndelius',
-        'dps',
-        'education',
-        'oasys_arns',
-        'dps_security',
-        'hpa',
-        'g2_security',
-        'g3_security',
-        'other_department',
-        'body_scans',
-        'g1_security'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+CREATE TYPE public.request_types AS ENUM (
+    'all_prison_records',
+    'security_records',
+    'nomis_records',
+    'nomis_other',
+    'nomis_contact_logs',
+    'probation_records',
+    'cctv_and_bwcf',
+    'cctv',
+    'bwcf',
+    'telephone_recordings',
+    'telephone_pin_logs',
+    'probation_archive',
+    'mappa',
+    'pdp',
+    'court',
+    'other',
+    'cross_borders',
+    'cat_a',
+    'ndelius',
+    'dps',
+    'education',
+    'oasys_arns',
+    'dps_security',
+    'hpa',
+    'g2_security',
+    'g3_security',
+    'other_department',
+    'body_scans',
+    'g1_security'
+);
+
 
 --
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.requester_type AS ENUM (
-        'academic_business_charity',
-        'journalist',
-        'member_of_the_public',
-        'offender',
-        'solicitor',
-        'staff_judiciary',
-        'what_do_they_know'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.requester_type AS ENUM (
+    'academic_business_charity',
+    'journalist',
+    'member_of_the_public',
+    'offender',
+    'solicitor',
+    'staff_judiciary',
+    'what_do_they_know'
+);
+
 
 --
 -- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.search_query_type AS ENUM (
-        'search',
-        'filter',
-        'list'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.search_query_type AS ENUM (
+    'search',
+    'filter',
+    'list'
+);
+
 
 --
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.state AS ENUM (
-        'pending',
-        'rejected',
-        'accepted',
-        'bypassed'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.state AS ENUM (
+    'pending',
+    'rejected',
+    'accepted',
+    'bypassed'
+);
 
 
 --
 -- Name: team_roles; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.team_roles AS ENUM (
-        'managing',
-        'responding',
-        'approving',
-        'administering'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.team_roles AS ENUM (
+    'managing',
+    'responding',
+    'approving',
+    'administering'
+);
 
 
 --
 -- Name: template_name; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.template_name AS ENUM (
-        'cat_a',
-        'cctv',
-        'cross_border',
-        'mappa',
-        'pdp',
-        'prison',
-        'probation',
-        'security',
-        'telephone',
-        'standard'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.template_name AS ENUM (
+    'cat_a',
+    'cctv',
+    'cross_border',
+    'mappa',
+    'pdp',
+    'prison',
+    'probation',
+    'security',
+    'telephone',
+    'standard'
+);
+
 
 --
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
-DO $$ BEGIN
-    CREATE TYPE public.user_role AS ENUM (
-        'creator',
-        'manager',
-        'responder',
-        'approver',
-        'admin',
-        'team_admin'
-    );
-EXCEPTION
-    WHEN duplicate_object THEN null;
-END $$;
+
+CREATE TYPE public.user_role AS ENUM (
+    'creator',
+    'manager',
+    'responder',
+    'approver',
+    'admin',
+    'team_admin'
+);
+
 
 SET default_tablespace = '';
 

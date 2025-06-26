@@ -21,4 +21,6 @@ rails db:seed
 # load pseudo users
 rake db:seed:dev
 
-npm install
+# install yarn dependencies
+npm install --global yarn
+yarn install
