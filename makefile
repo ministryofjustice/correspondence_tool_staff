@@ -1,4 +1,4 @@
-.PHONY: docker-shell
+.PHONY: launch
 
 # run docker in the background and open an interactive shell on an app container.
 # use `make shell` to open a prompt on the main app container

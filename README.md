@@ -46,7 +46,7 @@ $ cd correspondence_tool_staff
 Use the following command to start the app:
 
 ```
-make launch
+make
 ```
 All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
 
