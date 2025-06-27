@@ -8,7 +8,12 @@ DARK_GRAY='\033[3;90m'
 LIGHT_BLUE='\033[1;34m'
 NC='\033[0m' # No Color
 
-UTILITY_TITLE="${YELLOW}C T   S T A F F  ${DARK_GRAY}/  ${GREEN}T E S T   E N V I R O N M E N T"
+CAN_RUN="false"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  CAN_RUN="true" # MacOS
+fi
+
+UTILITY_TITLE="${YELLOW}C T   S T A F F  ${DARK_GRAY}/  ${GREEN}D E V E L O P M E N T   E N V I R O N M E N T"
 
 ## a full width line of stars
 FULL_WIDTH_STARS="*"
@@ -19,12 +24,22 @@ header() {
   echo -e "\n${DARK_GRAY}$FULL_WIDTH_STARS${NC}\n"
   echo -e "${DARK_GRAY}******     ${GREEN}$UTILITY_TITLE${NC}\n"
   echo -e "${DARK_GRAY}******     ${NC}$1\n"
-  echo -e "${DARK_GRAY}$FULL_WIDTH_STARS${NC}\n"
+}
+
+header_additional() {
+  echo -e "$1" | indent
+
+  if [[ -n "$2" ]]; then
+    header_close
+  fi
+}
+
+header_close() {
+  echo -e "\n${DARK_GRAY}$FULL_WIDTH_STARS${NC}\n"
 }
 
 sub_header() {
-  echo -e "\n\n\n${DARK_GRAY}$FULL_WIDTH_STARS${NC}\n"
-  echo -e "${DARK_GRAY}******  ${NC} $1\n"
+  echo -e "${DARK_GRAY}******    ${NC} $1\n"
   echo -e "${DARK_GRAY}$FULL_WIDTH_STARS${NC}\n"
 }
 
@@ -33,5 +48,5 @@ sub_header_divider() {
 }
 
 indent() {
-  sed 's/^/      /'
+  sed 's/^/           /'
 }
