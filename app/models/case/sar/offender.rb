@@ -250,7 +250,7 @@ class Case::SAR::Offender < Case::Base
 
   def validate_flag_as_dps_missing_data
     unless flag_as_dps_missing_data.in?([true, false])
-      errors.add(:flag_as_dps_missing_data, "cannot be blank2")
+      errors.add(:flag_as_dps_missing_data, "cannot be blank")
     end
   end
 
