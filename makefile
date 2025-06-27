@@ -1,4 +1,5 @@
 .PHONY: launch
+.DEFAULT_GOAL := launch
 
 # run docker in the background and open an interactive shell on an app container.
 # use `make shell` to open a prompt on the main app container
@@ -22,7 +23,7 @@ env:
 docker-sync:
 	docker-sync start
 
-dc: dory
+dc:
 	docker compose up -d app
 	docker compose run --rm --entrypoint=/bin/sh app
 
@@ -34,13 +35,13 @@ dc-clean:
 	docker system prune -f
 	clear
 
-dc-reset: dc-clean dory docker-sync
+dc-reset: dc-clean docker-sync
 	docker compose up --build
 
-dc-reset-bg: dc-clean dory docker-sync
+dc-reset-bg: dc-clean docker-sync
 	docker compose up -d --build
 
-dc-build: dory # no cleaning
+dc-build: # no cleaning
 	docker compose up -d --build
 
 down:
@@ -49,7 +50,7 @@ down:
 
 up: launch
 
-up-daemon: env dory
+up-daemon: env
 	docker compose up -d
 
 setup:
@@ -88,8 +89,3 @@ shell:
 docker-check:
 	@chmod +x ./config/docker-dev/bin/check-docker.sh
 	@./config/docker-dev/bin/check-docker.sh
-
-dory:
-	@chmod +x ./config/docker-dev/bin/check-dory.sh
-	@./config/docker-dev/bin/check-dory.sh
-
