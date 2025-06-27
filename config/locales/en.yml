@@ -117,7 +117,8 @@ en:
               not_allowed: "not allowed if there is a removal reason"
             remove_sent_to_sscl_reason:
               blank: "cannot be blank if sent date is removed"
-
+            flag_as_dps_missing_data:
+              blank: Please choose yes or no
         case/foi/standard:
           attributes: &foi_attr
             received_date:
