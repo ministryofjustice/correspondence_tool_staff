@@ -194,7 +194,6 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,              inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile,     inclusion: { in: [true, false], message: "cannot be blank" }
-  # validates :flag_as_dps_missing_data, inclusion: { in: [true, false], message: "cannot be blank" } if -> { current_state == "invalid_submission" && number.nil? }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
@@ -225,8 +224,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
   validate :validate_rejected_reason, if: -> { invalid_submission? }
-  validate :validate_flag_as_dps_missing_data, if: -> { current_state == "invalid_submission" && number.nil? }
-  # validate :validate_flag_as_dps_missing_data, if: -> { flag_as_dps_missing_data.nil? && current_state == "invalid_submission" && number.nil? }
+  validate :validate_flag_as_dps_missing_data, if: -> { (flag_as_dps_missing_data.nil? && current_state == 'invalid_submission' && number.nil?) }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -252,7 +250,7 @@ class Case::SAR::Offender < Case::Base
 
   def validate_flag_as_dps_missing_data
     unless flag_as_dps_missing_data.in?([true, false])
-      errors.add(:flag_as_dps_missing_data, "cannot be blank")
+      errors.add(:flag_as_dps_missing_data, "cannot be blank2")
     end
   end
 

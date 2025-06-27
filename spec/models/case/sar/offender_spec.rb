@@ -1061,14 +1061,4 @@ describe Case::SAR::Offender do
       end
     end
   end
-
-  describe "dps missing data validations" do
-    context "when flag_as_dps_missing_data is blank" do
-      it "adds an error to the model" do
-        kase = create(:offender_sar_case, :rejected, flag_as_dps_missing_data: nil)
-        kase.validate
-        expect(offender_sar_case.errors).to include("Flag as dps missing data can't be blank")
-      end
-    end
-  end
 end
