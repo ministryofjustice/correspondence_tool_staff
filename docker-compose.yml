@@ -1,5 +1,6 @@
 volumes:
   postgres-data:
+  pgadmin-server:
   redis:
   gems:
   spec-gems:
@@ -83,6 +84,7 @@ services:
     ports:
       - "5050:5050"
     volumes:
+      - pgadmin-server:/var/lib/pgadmin # persist pgadmin data
       - ./config/docker-dev/shared/pgadmin/storage:/var/lib/pgadmin/storage
     environment:
       PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change, it is used to construct a file path
