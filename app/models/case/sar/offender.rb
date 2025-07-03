@@ -192,8 +192,8 @@ class Case::SAR::Offender < Case::Base
 
   accepts_nested_attributes_for :data_requests
 
-  validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :third_party,              inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_high_profile,     inclusion: { in: [true, false], message: "cannot be blank" }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
@@ -224,7 +224,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
   validate :validate_rejected_reason, if: -> { invalid_submission? }
-  validate :validate_flag_as_dps_missing_data, if: -> { invalid_submission? }
+  validate :validate_flag_as_dps_missing_data, if: -> { flag_as_dps_missing_data.nil? && current_state == "invalid_submission" && number.nil? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
