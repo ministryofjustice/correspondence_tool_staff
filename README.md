@@ -36,6 +36,40 @@ $ cd correspondence_tool_staff
 
 ### Installing the app for development
 
+#### Out of the box - using docker compose
+
+> [!TIP]
+> To prevent issues with the local environment, we recommend using docker compose to run the app locally. This will ensure that the app runs in an environment similar to production.
+> 
+> To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
+
+Use the following command to start the app:
+
+```
+make
+```
+All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
+
+You can access PGAdmin4 at http://localhost:5050 with: 
+- Username `cts@pgadmin.com` 
+- Password `let-me-in`.
+
+> [!IMPORTANT] 
+> **Viewing DB data**
+> 
+> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. 
+> You will need to create a new server in PGAdmin4 with the following steps:
+> 1. Click on "Tools" in the top menu and select "Import/Export Servers".
+> 2. Select the "Import" tab.
+> 3. Click on the directory button alongside the Filename field.
+> 4. Click `server.json` in the file browser and click "Select".
+> 5. Click "Next" to proceed.
+> 6. Check the "Servers" checkbox and click "Next".
+> 7. Click "Finish" to complete the import process.
+> 8. When promoted, enter the password `postgres` to connect to the Postgres database.
+
+### Manual setup - using rbenv and Homebrew
+
 #### Latest Version of Ruby
 
 If you don't have `rbenv` already installed, install it as follows:
