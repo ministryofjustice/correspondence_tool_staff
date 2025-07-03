@@ -12,9 +12,6 @@ services:
     container_name: cts_app
     shm_size: '1g'
     env_file: .env
-    environment:
-      VIRTUAL_HOST: "track-a-query.docker"
-      VIRTUAL_PORT: "3000"
     build:
       args:
         development_mode: "true"
@@ -81,16 +78,17 @@ services:
 
   db_admin:
     container_name: cts_pgadmin4
-    image: dpage/pgadmin4:6.10
+    image: elestio/pgadmin:REL-9_4
     restart: always
     ports:
-      - "5050:80"
+      - "5050:5050"
+    volumes:
+      - ./config/docker-dev/shared/pgadmin/storage:/var/lib/pgadmin/storage
+    environment:
+      PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change this
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_LISTEN_PORT: 5050
     depends_on:
       - db
-    environment:
-      VIRTUAL_HOST: ${CTS_HOST_NAME}:5050
-      VIRTUAL_PORT: 5050
-      PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com
-      PGADMIN_DEFAULT_PASSWORD: let-me-in
     links:
       - db

@@ -59,6 +59,7 @@ coverage
 **/*.txt
 **/*.xls
 **/*.xlsx
+**/*.tar
 
 # exceptions to the above
 !db/structure.sql
@@ -76,3 +77,5 @@ doc
 *secret*.*
 
 .idea/
+/config/docker-dev/shared/pgadmin/storage/
+!/config/docker-dev/shared/pgadmin/storage/cts_pgadmin.com
