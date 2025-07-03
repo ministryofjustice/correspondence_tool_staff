@@ -86,7 +86,7 @@ group :test do
   gem "capybara-lockstep"
   gem "i18n-tasks"
   gem "rails-controller-testing", require: false
-  gem "shoulda-matchers", "~> 5.1"
+  gem "shoulda-matchers", "~> 6.5"
   gem "simplecov"
   gem "simplecov-json", require: false
   gem "site_prism", "< 5.0"

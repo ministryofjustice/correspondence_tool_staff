@@ -555,7 +555,7 @@ GEM
       concurrent-ruby
     shell-spinner (1.0.4)
       colorize
-    shoulda-matchers (5.1.0)
+    shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
     sidekiq (7.3.8)
       base64
@@ -710,7 +710,7 @@ DEPENDENCIES
   sentry-rails
   sentry-ruby
   shell-spinner
-  shoulda-matchers (~> 5.1)
+  shoulda-matchers (~> 6.5)
   sidekiq (< 8)
   simplecov
   simplecov-json
