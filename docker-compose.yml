@@ -85,7 +85,7 @@ services:
     volumes:
       - ./config/docker-dev/shared/pgadmin/storage:/var/lib/pgadmin/storage
     environment:
-      PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change this
+      PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change, it is used to construct a file path
       PGADMIN_DEFAULT_PASSWORD: postgres
       PGADMIN_LISTEN_PORT: 5050
     depends_on:

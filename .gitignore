@@ -78,4 +78,4 @@ doc
 
 .idea/
 /config/docker-dev/shared/pgadmin/storage/
-!/config/docker-dev/shared/pgadmin/storage/cts_pgadmin.com
+!/config/docker-dev/shared/pgadmin/storage/cts_pgadmin.com/*

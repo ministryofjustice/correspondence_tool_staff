@@ -57,17 +57,16 @@ You can access PGAdmin4 at http://localhost:5050 with:
 > [!IMPORTANT] 
 > **Viewing DB data**
 > 
-> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. You will need to create a new server in PGAdmin4 with the following steps:
+> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. 
+> You will need to create a new server in PGAdmin4 with the following steps:
 > 1. Click on "Tools" in the top menu and select "Import/Export Servers".
 > 2. Select the "Import" tab.
-> 3. Click on the "Browse" button and select the Upload option.
-> 4. Drag n' drop the `pgadmin4_server.json` file located in the `config/docker-dev` directory of this repository.
-> 5. Wait for it to finish importing the server configuration. Click on the black cross icon to close the import window.
-> 6. Click the uploaded file in the browser and click "Select".
-> 7. Click "Next" to proceed with the import.
-> 8. Check the Servers box and click "Next".
-> 9. Click "Finish" to complete the import process.
-> 10. When promoted, enter the password `postgres` to connect to the Postgres database.
+> 3. Click on the directory button alongside the Filename field.
+> 4. Click `server.json` in the file browser and click "Select".
+> 5. Click "Next" to proceed.
+> 6. Check the "Servers" checkbox and click "Next".
+> 7. Click "Finish" to complete the import process.
+> 8. When promoted, enter the password `postgres` to connect to the Postgres database.
 
 ### Manual setup - using rbenv and Homebrew
 
