@@ -1,6 +1,7 @@
-@import 'jquery-ui/core';
-@import 'jquery-ui/button';
-@import 'jquery-ui/dialog';
+@import 'jquery-ui/themes/base/core';
+@import 'jquery-ui/themes/base/dialog';
+@import 'jquery-ui/themes/base/button';
+@import 'jquery-ui/themes/base/overlay';
 
 // From GDS's alphagov/govuk_frontend_toolkit
 @import 'colours';
