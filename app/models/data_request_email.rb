@@ -11,6 +11,7 @@
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  data_request_area_id :bigint
+#  chase_number         :integer
 #
 class DataRequestEmail < ApplicationRecord
   belongs_to :data_request
@@ -20,7 +21,12 @@ class DataRequestEmail < ApplicationRecord
   validates :email_address, presence: true
   validates :status, presence: true
 
-  enum :email_type, { commissioning_email: 0 }
+  enum :email_type, {
+    commissioning_email: 0,
+    chase: 1,
+    chase_escalation: 2,
+    chase_overdue: 3,
+  }
 
   attribute :status, default: "created"
 

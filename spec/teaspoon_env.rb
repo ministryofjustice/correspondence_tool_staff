@@ -16,6 +16,17 @@ Teaspoon.configure do |config|
   # be rendered as fixtures.
   config.fixture_paths = ["spec/javascripts/fixtures"]
 
+  # Default phantomjs driver is no longer working in the pipeline and appears to be deprecated, switch to selenium
+  config.driver = :selenium
+
+  # Use Chrome - the default is Firefox which has known memory issues
+  config.driver_options = {
+    client_driver: :chrome,
+    selenium_options: {
+      options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless disable-gpu]),
+    },
+  }
+
   # SUITES
   #
   # You can modify the default suite configuration and create new suites here. Suites are isolated from one another.

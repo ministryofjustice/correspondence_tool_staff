@@ -1,42 +1,32 @@
 require "rails_helper"
 
 describe "cases/case_history.html.slim", type: :view do
-  it "displays the section heading" do
-    first = instance_double CaseTransitionDecorator,
-                            action_date: (Time.zone.now + 10.days).strftime("%d %b %Y %H:%M"),
-                            user_name: "Tom Smith",
-                            user_team: "Managing Team 1",
-                            event_and_detail: "Created new case"
+  let!(:transition) { create(:case_transition_assign_to_new_team).decorate }
+  let!(:case_transitions) { PaginatingDecorator.new(CaseTransition.all.page) }
 
-    transitions = [first]
-
-    assign(:case_transitions, transitions)
+  before do
     render partial: "cases/case_history",
-           locals: { case_details: first }
+           locals: { case_transitions: }
+  end
 
+  it "displays the section heading" do
     partial = case_history_section(rendered)
 
     expect(partial.section_heading.text).to eq "Case history"
   end
 
   it "displays date, user, team and event details" do
-    first = instance_double CaseTransitionDecorator,
-                            action_date: (Time.zone.now + 10.days).strftime("%d %b %Y<br>%H:%M"),
-                            user_name: "Tom Smith",
-                            user_team: "Managing Team 1",
-                            event_and_detail: "Created new case"
+    partial_row = case_history_section(rendered).rows.last
 
-    transitions = [first]
+    expect(partial_row.action_date.native.inner_html).to eq transition.action_date
+    expect(partial_row.user.native.inner_html).to eq transition.user_name
+    expect(partial_row.team.native.inner_html).to eq transition.user_team
+    expect(partial_row.details.native.inner_html).to eq "<p>#{transition.event_and_detail}</p>"
+  end
 
-    assign(:case_transitions, transitions)
-    render partial: "cases/case_history",
-           locals: { case_details: first }
-
-    partial = case_history_section(rendered)
-
-    expect(partial.rows.first.action_date.text).to eq first.action_date
-    expect(partial.rows.first.user.text).to eq first.user_name
-    expect(partial.rows.first.team.text).to eq first.user_team
-    expect(partial.rows.first.details.text).to eq first.event_and_detail
+  describe "pagination" do
+    it "renders the paginator" do
+      expect(response).to have_rendered("kaminari/_paginator")
+    end
   end
 end

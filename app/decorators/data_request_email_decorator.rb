@@ -6,7 +6,7 @@ class DataRequestEmailDecorator < Draper::Decorator
   end
 
   def email_type
-    I18n.t("helpers.label.data_request_email.email_type.#{super}")
+    I18n.t("helpers.label.data_request_email.email_type.#{super}", chase_number:)
   end
 
   def status

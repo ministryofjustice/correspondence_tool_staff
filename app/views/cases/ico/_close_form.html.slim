@@ -1,6 +1,8 @@
 - url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_closure)
 = form_for kase, as: :ico, url: url do |f|
-
+  - if @case.is_a?(Case::ICO::SAR)
+    = render partial: 'cases/ico/complaint_outcome_radios', locals: { form: f }
+  
   .ico-decision
     = f.radio_button_fieldset :ico_decision,
           choices: Case::ICO::Base.ico_decisions.keys

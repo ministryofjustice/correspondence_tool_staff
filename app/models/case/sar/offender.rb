@@ -83,9 +83,10 @@ class Case::SAR::Offender < Case::Base
   ].freeze
 
   REJECTED_AUTO_CLOSURE_DEADLINE = 90
+  DPS_AUTO_CLOSURE_DEADLINE = 60
 
   REJECTED_REASONS = {
-    "cctv_bwcv" => "CCTV / BWCV request",
+    "cctv_bwcf" => "CCTV / BWCF request",
     "change_of_name_certificate" => "Change of name certificate",
     "court_data_request" => "Court data request",
     "data_previously_requested" => "Data previously provided",
@@ -113,6 +114,7 @@ class Case::SAR::Offender < Case::Base
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
+                 flag_as_dps_missing_data: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -190,8 +192,8 @@ class Case::SAR::Offender < Case::Base
 
   accepts_nested_attributes_for :data_requests
 
-  validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
-  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :third_party,              inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_high_profile,     inclusion: { in: [true, false], message: "cannot be blank" }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
@@ -222,6 +224,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
   validate :validate_rejected_reason, if: -> { invalid_submission? }
+  validate :validate_flag_as_dps_missing_data, if: -> { flag_as_dps_missing_data.nil? && current_state == "invalid_submission" && number.nil? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -243,6 +246,12 @@ class Case::SAR::Offender < Case::Base
 
   def validate_received_date # rubocop:disable Lint/UselessMethodDefinition
     super
+  end
+
+  def validate_flag_as_dps_missing_data
+    unless flag_as_dps_missing_data.in?([true, false])
+      errors.add(:flag_as_dps_missing_data, "cannot be blank")
+    end
   end
 
   def validate_date_of_birth
@@ -527,7 +536,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def set_valid_case_number
-    self.number = next_number
+    self.number = if flag_as_dps_missing_data?
+                    "D#{next_number}"
+                  else
+                    next_number
+                  end
   end
 
 private
@@ -561,7 +574,11 @@ private
 
   def set_number
     self.number = if invalid_submission?
-                    "R#{next_number}"
+                    if flag_as_dps_missing_data?
+                      "DR#{next_number}"
+                    else
+                      "R#{next_number}"
+                    end
                   else
                     next_number
                   end
@@ -569,7 +586,9 @@ private
 
   def set_deadlines
     super
-    if rejected?
+    if rejected? & flag_as_dps_missing_data?
+      self.external_deadline = @deadline_calculator.days_after(DPS_AUTO_CLOSURE_DEADLINE, received_date)
+    elsif rejected?
       self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
     end
   end

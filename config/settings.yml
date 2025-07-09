@@ -44,6 +44,9 @@ case_closed_notify_template: '0f89383e-cee2-4a10-bc47-97879d1f6dc4'
 commissioning_notify_template: '94b66c61-feff-42f5-950d-d0af0a8205ef'
 commissioning_notify_reply_to: '879d54cc-a5f3-4acc-aa37-ca04e8f6c22d'
 rpi_template: '5e63f6c1-e7d6-47da-845c-fa47343ab882'
+commissioning_chase_template: '95b9af74-5037-4ec2-9e82-ee6fe1df6953'
+commissioning_chase_escalation_template: '09f631bc-58a2-4142-b4e8-43784646a7d1'
+commissioning_chase_overdue_template: 'd20279ec-116c-492f-a7bb-130556b20247'
 
 emails:
   branston: data.access1@justice.gov.uk

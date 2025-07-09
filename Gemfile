@@ -59,7 +59,9 @@ gem "pundit", "~>2.4"
 gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
-gem "rails-data-migrations"
+# Gem (https://github.com/anjlab/rails-data-migrations) does not support rails 7.2 so changed to this fork
+# TODO: Move back to original version when it is updated
+gem "rails-data-migrations", git: "https://github.com/notarize/rails-data-migrations.git", ref: "1ec8bf9"
 gem "recursive-open-struct"
 gem "sablon"
 gem "sass-rails", "~> 6.0"
@@ -81,6 +83,7 @@ gem "tzinfo-data"
 
 group :test do
   gem "capybara", "~> 3.37"
+  gem "capybara-lockstep"
   gem "i18n-tasks"
   gem "rails-controller-testing", require: false
   gem "shoulda-matchers", "~> 5.1"
@@ -101,7 +104,7 @@ group :development, :test do
   gem "parallel_tests"
   gem "phantomjs"
   gem "rspec-collection_matchers"
-  gem "rspec-rails", "~> 6.0"
+  gem "rspec-rails"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
   gem "teaspoon-jasmine"

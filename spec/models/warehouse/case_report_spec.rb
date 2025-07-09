@@ -235,7 +235,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
   describe "#rejected_reasons_selection" do
     it "returns hash with selection" do
       rejected_case = create(:offender_sar_case, :rejected)
-      expect(described_class.rejected_reasons_selection(rejected_case)).to match({ "cctv_bwcv" => "No",
+      expect(described_class.rejected_reasons_selection(rejected_case)).to match({ "cctv_bwcf" => "No",
                                                                                    "change_of_name_certificate" => "No",
                                                                                    "court_data_request" => "Yes",
                                                                                    "data_previously_requested" => "No",

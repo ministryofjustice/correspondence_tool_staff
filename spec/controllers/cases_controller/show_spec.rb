@@ -40,13 +40,10 @@ describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
         .to eq("cannot be blank")
     end
 
-    it "syncs case transitions tracker for user" do
+    it "syncs case transitions for user" do
       sign_in responder
 
-      stub_find_case(accepted_case.id) do |kase|
-        expect(kase).to receive(:sync_transition_tracker_for_user)
-                          .with(responder)
-      end
+      expect(CasesUsersTransitionsTracker).to receive(:sync_for_case_and_user).with(accepted_case, responder)
       get :show, params: { id: accepted_case.id }
     end
 
@@ -96,22 +93,49 @@ describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
       end
     end
 
-    context "when viewing a flagged accepted case" do
+    context "when viewing a flagged accepted case outside the escalation period" do
       let(:user) { flagged_accepted_case.responder }
 
-      before do
-        sign_in user
-        get :show, params: { id: flagged_accepted_case.id }
+      context "and outside the escalation_period" do
+        before do
+          sign_in user
+          flagged_accepted_case.update!(escalation_deadline: 2.days.ago)
+          get :show, params: { id: flagged_accepted_case.id }
+        end
+
+        it "permits adding a response" do
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :add_responses,
+                                                                :link_a_case,
+                                                                :reassign_user,
+                                                                :remove_linked_case,
+                                                                :upload_responses
+        end
+
+        it "renders the show page" do
+          expect(response).to have_rendered(:show)
+        end
       end
 
-      it {
-        expect(controller).to have_permitted_events_including :add_message_to_case,
-                                                              :add_responses,
-                                                              :reassign_user
-      }
+      context "and inside the escalation period" do
+        before do
+          sign_in user
+          flagged_accepted_case.update!(escalation_deadline: 2.days.from_now)
+          get :show, params: { id: flagged_accepted_case.id }
+        end
 
-      it "renders the show page" do
-        expect(response).to have_rendered(:show)
+        it "does not permit adding a response" do
+          expect(controller).to have_permitted_events :add_message_to_case,
+                                                      :link_a_case,
+                                                      :reassign_user,
+                                                      :remove_linked_case,
+                                                      :remove_response,
+                                                      :upload_responses
+        end
+
+        it "renders the show page" do
+          expect(response).to have_rendered(:show)
+        end
       end
     end
 

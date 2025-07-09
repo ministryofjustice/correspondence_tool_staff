@@ -7,12 +7,12 @@
 
 = form_for @case, as: :"#{@correspondence_type_key}", url: url do |f|
   .form-group
-    - unless @case.ico?
-      = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
+    - if @case.ico?
+      = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('cases.shared.date_responded_form.date_ico_decision_received_date'),
               form_hint_text: t('helpers.hint.shared.date_example'),
               today_button: {class: ''} }
     - else
-      = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('cases.shared.date_responded_form.date_ico_decision_received_date'),
+      = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
               form_hint_text: t('helpers.hint.shared.date_example'),
               today_button: {class: ''} }
 

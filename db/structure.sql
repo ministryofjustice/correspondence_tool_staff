@@ -56,7 +56,8 @@ CREATE TYPE public.data_request_area_type AS ENUM (
     'branston_registry',
     'mappa',
     'security',
-    'other_department'
+    'other_department',
+    'dps_sensitive'
 );
 
 
@@ -91,7 +92,9 @@ CREATE TYPE public.request_types AS ENUM (
     'hpa',
     'g2_security',
     'g3_security',
-    'other_department'
+    'other_department',
+    'body_scans',
+    'g1_security'
 );
 
 
@@ -571,11 +574,11 @@ CREATE TABLE public.commissioning_documents (
     id bigint NOT NULL,
     data_request_id bigint,
     template_name public.template_name,
-    sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     attachment_id bigint,
-    data_request_area_id bigint
+    data_request_area_id bigint,
+    sent_at timestamp(6) without time zone
 );
 
 
@@ -729,7 +732,8 @@ CREATE TABLE public.data_request_emails (
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    data_request_area_id bigint
+    data_request_area_id bigint,
+    chase_number integer
 );
 
 
@@ -2410,6 +2414,10 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250312113935'),
+('20250220153650'),
+('20250131145353'),
+('20250127103329'),
 ('20241018081532'),
 ('20241018080810'),
 ('20241017140610'),

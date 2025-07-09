@@ -30,7 +30,9 @@ module Cases
       end
     end
 
-    def show; end
+    def show
+      @sent_emails = @data_request_area.data_request_emails.order(created_at: :desc).map(&:decorate)
+    end
 
     def destroy
       if @data_request_area.data_request_emails.exists?

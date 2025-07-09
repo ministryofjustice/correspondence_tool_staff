@@ -51,9 +51,8 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         before { sign_in responder }
 
         it 'transitions current_state to "responded"' do
-          stub_find_case(kase.id) do |kase|
-            expect(kase).to receive(:respond).with(responder)
-          end
+          stub_find_case(kase)
+          expect(kase).to receive(:respond).with(responder)
           patch :confirm_respond, params:
         end
 

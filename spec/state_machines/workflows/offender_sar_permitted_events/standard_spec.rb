@@ -8,6 +8,7 @@ TRANSITIONS = [
       mark_as_waiting_for_data
       send_acknowledgement_letter
       send_day_1_email
+      send_chase_email
     ],
   },
   {
@@ -18,6 +19,7 @@ TRANSITIONS = [
       send_acknowledgement_letter
       move_case_back
       send_day_1_email
+      send_chase_email
     ],
   },
   {
@@ -30,6 +32,7 @@ TRANSITIONS = [
       record_sent_to_sscl
       date_sent_to_sscl_removed
       send_day_1_email
+      send_chase_email
     ],
   },
   {
@@ -43,6 +46,7 @@ TRANSITIONS = [
       record_sent_to_sscl
       date_sent_to_sscl_removed
       send_day_1_email
+      send_chase_email
     ],
   },
   {
@@ -54,6 +58,7 @@ TRANSITIONS = [
       record_sent_to_sscl
       date_sent_to_sscl_removed
       send_day_1_email
+      send_chase_email
     ],
   },
   {
@@ -66,6 +71,7 @@ TRANSITIONS = [
       record_sent_to_sscl
       date_sent_to_sscl_removed
       send_day_1_email
+      send_chase_email
     ],
   },
   {

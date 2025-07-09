@@ -10,7 +10,7 @@ module SetupCase
       )
       .find(case_id)
 
-    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.order(id: :desc)
+    @case_transitions = @case.transitions.includes(:acting_user, :acting_team, :target_team).case_history.page(params[:page]).order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
   end
 

@@ -5,7 +5,7 @@
 #  id                   :bigint           not null, primary key
 #  data_request_id      :bigint
 #  template_name        :enum
-#  sent                 :boolean          default(FALSE)
+#  sent_at              :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  attachment_id        :bigint

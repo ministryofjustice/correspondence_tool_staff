@@ -134,6 +134,8 @@ Rails.application.routes.draw do
       patch "record_further_action", on: :member, to: "ico#confirm_record_further_action"
       get "require_further_action", on: :member, to: "ico#require_further_action"
       patch "require_further_action", on: :member, to: "ico#confirm_require_further_action"
+      get "record_sar_complaint_outcome", on: :member, to: "ico_sar#record_complaint_outcome"
+      patch "record_sar_complaint_outcome", on: :member, to: "ico_sar#confirm_record_complaint_outcome"
     end
 
     resources :overturned_ico_fois, only: [:create], controller: "overturned_ico_foi", as: :case_overturned_ico_fois do
