@@ -1,26 +1,23 @@
 #js-search-for-case.form-group
   .js-original-case
     = f.text_field :original_case_number, class: 'form-control-1-4'
-
-    .form-group
-      = button_tag 'Link original case',
-              type: 'button',
-              class: 'button-secondary',
-              id: 'xhr-search-original-case-button',
-              data: { url: new_linked_cases_for_case_ico_index_path,
-                correspondence_type: correspondence_type_key,
-                link_type: 'original', method: :post }
+    = button_tag 'Link original case',
+            type: 'button',
+            class: 'button-secondary',
+            id: 'xhr-search-original-case-button',
+            data: { url: new_linked_cases_for_case_ico_index_path,
+              correspondence_type: correspondence_type_key,
+              link_type: 'original', method: :post }
 
   .js-related-case.js-hidden
     = f.text_field :related_case_number, class: 'form-control-1-4'
-    .form-group
-      = button_tag 'Link related case',
-              type: 'button',
-              class: 'button-secondary',
-              id: 'xhr-search-related-case-button',
-              data: { url: new_linked_cases_for_case_ico_index_path,
-                      correspondence_type: correspondence_type_key,
-                      link_type: 'related'}
+    = button_tag 'Link related case',
+            type: 'button',
+            class: 'button-secondary',
+            id: 'xhr-search-related-case-button',
+            data: { url: new_linked_cases_for_case_ico_index_path,
+                    correspondence_type: correspondence_type_key,
+                    link_type: 'related'}
 
 
 .js-original-case-and-friends

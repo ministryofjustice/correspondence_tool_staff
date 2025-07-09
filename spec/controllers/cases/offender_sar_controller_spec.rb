@@ -306,6 +306,37 @@ RSpec.describe Cases::OffenderSARController, type: :controller do
         end
       end
     end
+
+    context "when rejected" do
+      context "when the case is rejected" do
+        let(:rejected_case) { create(:offender_sar_case, :rejected).decorate }
+
+        it "sets @rejected to true" do
+          allow(controller).to receive(:build_case_from_session).and_return(rejected_case)
+          post(:create, params:)
+          expect(assigns(:rejected)).to be(true)
+        end
+      end
+
+      context "when params include rejected: true" do
+        let(:rejected_params) { params.merge(rejected: true) }
+
+        it "sets @rejected to true" do
+          post(:create, params: rejected_params)
+          expect(assigns(:rejected)).to be(true)
+        end
+      end
+
+      context "when current_state is invalid_submission" do
+        let(:offender_sar_params) { params[:offender_sar].merge(current_state: "invalid_submission") }
+        let(:rejected_params) { params.merge(offender_sar: offender_sar_params) }
+
+        it "sets @rejected to true" do
+          post(:create, params: rejected_params)
+          expect(assigns(:rejected)).to be(true)
+        end
+      end
+    end
   end
 
   describe "transitions" do

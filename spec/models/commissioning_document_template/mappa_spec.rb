@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Mappa do
-  subject(:template) { described_class.new(data_request_area: data_request) }
+  subject(:template) { described_class.new(data_request_area:, deadline:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -12,7 +12,8 @@ RSpec.describe CommissioningDocumentTemplate::Mappa do
                   prison_number: "AB12345",
                   other_subject_ids: "CD98765")
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+  let(:data_request_area) { build_stubbed(:data_request_area, offender_sar_case: kase) }
+  let(:deadline) { Date.new(2022, 11, 10) }
 
   describe "#path" do
     it "matches to a file" do
@@ -44,7 +45,7 @@ RSpec.describe CommissioningDocumentTemplate::Mappa do
     end
 
     context "with dates" do
-      let(:data_request) do
+      let(:data_request_area) do
         build_stubbed(:data_request,
                       offender_sar_case: kase,
                       date_from: Date.new(2024, 9, 1),

@@ -86,7 +86,6 @@ class CasesController < ApplicationController
 
     authorize @case
 
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     @s3_direct_post = S3Uploader.for(@case, "requests")
     @case = @case.decorate
     render "cases/edit"
@@ -118,7 +117,6 @@ class CasesController < ApplicationController
     end
 
     set_permitted_events
-    @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     redirect_to case_path(@case)
   end
 

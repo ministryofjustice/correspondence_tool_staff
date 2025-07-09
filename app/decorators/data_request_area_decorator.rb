@@ -26,7 +26,7 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def request_dates
-    data_requests.map { |request|
+    data_requests.in_progress.map { |request|
       request.decorate.request_dates
     }.join("\n")
   end
@@ -40,5 +40,17 @@ class DataRequestAreaDecorator < Draper::Decorator
     when :not_started
       "<strong class='govuk-tag govuk-tag--red'>Not started</strong>".html_safe
     end
+  end
+
+  def next_chase_description
+    type = {
+      DataRequestChase::ESCALATION_CHASE => "escalated ",
+      DataRequestChase::OVERDUE_CHASE => "overdue ",
+      DataRequestChase::STANDARD_CHASE => "",
+    }[next_chase_type]
+
+    chase_date = I18n.l(next_chase_date.to_date, format: :default)
+
+    "Chase #{next_chase_number} #{type}will be sent on #{chase_date}"
   end
 end

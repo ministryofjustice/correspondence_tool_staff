@@ -18,6 +18,7 @@ class PersonalInformationRequest < ApplicationRecord
   YES = "yes".freeze
   BRANSTON = :branston
   DISCLOSURE = :disclosure
+  DELETE_AFTER = 3.months
 
   attr_accessor :requesting_own_data,
                 :subject_full_name,
@@ -63,6 +64,8 @@ class PersonalInformationRequest < ApplicationRecord
                 :contact_email,
                 :needed_for_court,
                 :needed_for_court_information
+
+  scope :ready_to_delete, -> { where("created_at < ?", DELETE_AFTER.ago) }
 
   default_scope { where(deleted: false) }
 
@@ -166,6 +169,14 @@ class PersonalInformationRequest < ApplicationRecord
 
   def key(target)
     "rpi/#{target}/#{submission_id}.zip"
+  end
+
+  def soft_delete
+    # try deleting for both targets
+    [BRANSTON, DISCLOSURE].each do |target|
+      CASE_UPLOADS_S3_BUCKET.object(key(target))&.delete
+    end
+    update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
   end
 
 private

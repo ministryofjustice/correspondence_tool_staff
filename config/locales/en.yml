@@ -117,7 +117,8 @@ en:
               not_allowed: "not allowed if there is a removal reason"
             remove_sent_to_sscl_reason:
               blank: "cannot be blank if sent date is removed"
-
+            flag_as_dps_missing_data:
+              blank: Please choose yes or no
         case/foi/standard:
           attributes: &foi_attr
             received_date:
@@ -456,6 +457,7 @@ en:
       <<: *case_policy
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
+      can_set_outcome?: You are not authorised
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
@@ -476,6 +478,7 @@ en:
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
+      can_upload_request_attachment?: Request attachments cannot be uploaded.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -560,6 +563,7 @@ en:
         template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
+        flag_as_dps_missing_data: Flag as DPS missing data
         info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
@@ -582,6 +586,7 @@ en:
       ico:
         delivery_method: How and where should the information be sent?
         ico_decision: The original case has been
+        sar_complaint_outcome: What was the outcome of the SAR complaint?
         late_team_id_html: " "
         type: Original Case Type
       overturned_foi:
@@ -634,7 +639,8 @@ en:
         filter_complaint_subtype: Complaint sub type
         filter_status: Status
         filter_timeliness: Timeliness
-        filter_high_profile: Flag as high profile?
+        filter_high_profile: Flag as high profile
+        filter_dps_missing_data: DPS missing data
         filter_retention_state: Status
         filter_vetter: Vetting officer
       team:
@@ -735,32 +741,33 @@ en:
           dps: DPS
           education: Education
           oasys_arns: OASys / ARNS
-          dps_security: DPS security
           hpa: Historical Prisoner Application (HPA)
-          g2_security: G2 security
-          g3_security: G3 security
+          g1_security: G1
+          g2_security: G2
+          g3_security: G3
           other_department: Other department
           cctv: CCTV
           bwcf: BWCF
+          body_scans: Body scans
       data_request_area:
         location: Location
         data_request_area_type:
           prison: Prison
           probation: Probation
           branston: Branston
-          branston_registry: Branston Registry
+          branston_registry: Branston registry
           mappa: MAPPA
-          security: Security
+          dps_sensitive: DPS sensitive
           other_department: Other department
         headers:
           data_request_area_type:
             prison: prison
             probation: probation
-            branston: Branston
-            branston_registry: Branston Registry
+            branston: branston
+            branston_registry: branston Registry
             mappa: MAPPA
-            security: Security
-            other_department: Other department
+            dps_sensitive: DPS sensitive
+            other_department: other department
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         completed: "Yes, all data received"
@@ -769,6 +776,9 @@ en:
       data_request_email:
         email_type:
           commissioning_email: Day 1 commissioning email
+          chase: Chase %{chase_number} - Automated email
+          chase_escalation: Chase %{chase_number} escalated - Automated email
+          chase_overdue: Chase %{chase_number} overdue - Automated email
       commissioning_document:
         template_name:
           mappa: MAPPA
@@ -814,6 +824,16 @@ en:
         original_case:
         received_date: Date received at MOJ
       ico:
+        sar_complaint_outcome:
+          bau_ico_informed: "Was originally treated as BAU, the ICO have been informed"
+          bau_and_now_responded_as_sar: "Was originally treated as BAU and we have now also responded as a SAR"
+          not_received_now_responded_as_sar: "No evidence of ever receiving the SAR. We have now responded to the SAR"
+          sar_processed_but_overdue: "SAR Timeliness breach - SAR processed correctly but is overdue"
+          sar_incorrectly_processed_now_responded_as_sar: "SAR Timeliness breach - SAR was not processed correctly (e.g. logged as a SAR). We have now provided a SAR response"
+          responded_to_sar_and_ico_informed: "We have already responded to the SAR, the ICO were informed"
+          revised_sar_sent_exemptions_issue: "Revised SAR response sent, as correct exemption(s) was not applied originally by the business area"
+          revised_sar_sent_undisclosed_information: "Revised SAR response sent, as some information should have been disclosed by the business area"
+          other_outcome: "Other (state why in notes section)"
         email: "Recipient email address"
         ico_decision:
           upheld: Upheld by ICO
@@ -873,6 +893,7 @@ en:
         email: Email address (optional)
         external_reference: Requester reference (optional)
         high_profile: High profile
+        dps_missing_data: DPS missing data
         message: Additional case information
         number_dispatched_pages: "Number of pages"
         number_exempt_pages: "Number of pages"
@@ -1187,6 +1208,7 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
+      mark_as_responded: Mark as responded
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO

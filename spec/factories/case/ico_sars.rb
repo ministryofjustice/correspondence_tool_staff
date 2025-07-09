@@ -153,7 +153,8 @@ FactoryBot.define do
     late_team_id { responding_team.id }
 
     trait :overturned_by_ico do
-      ico_decision         { "overturned" }
+      ico_decision { "overturned" }
+      sar_complaint_outcome { "bau_ico_informed" }
       ico_decision_comment { Faker::TvShows::DrWho.quote }
     end
 
