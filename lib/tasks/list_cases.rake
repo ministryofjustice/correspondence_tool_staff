@@ -7,7 +7,7 @@ query = <<-SQL
          cases.type,
          cases.properties->>'subject_full_name' as full_name,
          cases.properties->>'subject_aliases' as "alias",
-         CASE WHEN cases.properties->>'date_of_birth'~'^\d{4}-\d{2}-\d{2}$' THEN TO_CHAR((cases.properties->>'date_of_birth')::date, 'DD/MM/YYYY')::text ELSE '01/01/0001' END AS date_of_birth,
+         cases.properties->>'date_of_birth' as date_of_birth,
          cases.properties->>'previous_case_numbers' as previous_case_numbers,
          cases.properties->>'prison_number' as prison_number,
          cases.properties->>'other_subject_ids' as pcn,
