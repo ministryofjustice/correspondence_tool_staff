@@ -73,7 +73,7 @@ namespace :dps do
         "Date To",
         "Pages Received",
         "Completed",
-        "Data Request Completed Date"
+        "Data Request Completed Date",
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
@@ -107,7 +107,7 @@ namespace :dps do
             record["date_to"],
             record["pages"],
             record["completed"],
-            record["completed_date"]
+            record["completed_date"],
         ]
         counter += 1
       end
