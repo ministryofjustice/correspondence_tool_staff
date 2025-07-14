@@ -82,37 +82,36 @@ namespace :dps do
       records_array.each do |record|
         # Write data to CSV
         csv << [
-            record["date_received"],
-            record["number"],
-            record["type"],
-            record["full_name"],
-            record["alias"],
-            record["date_of_birth"],
-            record["previous_case_numbers"],
-            record["prison_number"],
-            record["pcn"],
-            record["crn"],
-            record["subject_type"],
-            record["requester"],
-            record["third_party_name"],
-            record["third_party_company_name"],
-            record["postal_address"],
-            record["subject_address"],
-            record["request_location"],
-            record["request_location_two"],
-            record["request_type"],
-            record["request_type_note"],
-            record["date_requested"],
-            record["date_from"],
-            record["date_to"],
-            record["pages"],
-            record["completed"],
-            record["completed_date"],
+          record["date_received"],
+          record["number"],
+          record["type"],
+          record["full_name"],
+          record["alias"],
+          record["date_of_birth"],
+          record["previous_case_numbers"],
+          record["prison_number"],
+          record["pcn"],
+          record["crn"],
+          record["subject_type"],
+          record["requester"],
+          record["third_party_name"],
+          record["third_party_company_name"],
+          record["postal_address"],
+          record["subject_address"],
+          record["request_location"],
+          record["request_location_two"],
+          record["request_type"],
+          record["request_type_note"],
+          record["date_requested"],
+          record["date_from"],
+          record["date_to"],
+          record["pages"],
+          record["completed"],
+          record["completed_date"],
         ]
         counter += 1
       end
     end
-
     puts "#{counter} offender SAR cases with data requests listed in #{result_file}"
   end
 end
