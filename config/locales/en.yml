@@ -1271,7 +1271,7 @@ en:
     show_search_result_order_by_newest_destruction_date: Show newest destruction date first
     show_search_result_order_by_oldest_destruction_date: Show oldest destruction date first
     phase_banner: |
-      This is a new service.
+      This is a new service. Help us make this service better. Give us your <a href="https://www.smartsurvey.co.uk/s/J38MA6/" class="govuk-link govuk-link--no-visited-state">feedback</a>.
     service_name: Track a query
     signout: Sign out
     stats_custom_button: Create report
