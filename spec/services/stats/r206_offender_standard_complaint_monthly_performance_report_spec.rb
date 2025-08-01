@@ -55,6 +55,13 @@ module Stats
                                           complaint_type: "standard_complaint",
                                           identifier: "ostandard_complaint-4",
                                           received_date: @period_start + 61.minutes
+
+          @sar_5 = create :accepted_sar, identifier: "sar-5", received_date: @period_start + 61.minutes
+          @dps_standard_complaint_5 = create :offender_sar_complaint, :ready_to_copy,
+                                             complaint_type: "standard_complaint",
+                                             identifier: "ostandard_complaint-5",
+                                             flag_as_dps_missing_data: true,
+                                             received_date: @period_start + 61.minutes
         end
       end
 
@@ -65,6 +72,11 @@ module Stats
       it "returns only standard Offender SAR complaints within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
         expect(report.case_scope).to match_array([@ostandard_complaint_2, @ostandard_complaint_3, @ostandard_complaint_4])
+      end
+
+      it "does not return Offender SAR complaint cases with DPS flag set to Yes within the selected period" do
+        report = described_class.new(period_start: @period_start, period_end: @period_end)
+        expect(report.case_scope).not_to include [@dps_standard_complaint_5]
       end
 
       describe "stats values" do
