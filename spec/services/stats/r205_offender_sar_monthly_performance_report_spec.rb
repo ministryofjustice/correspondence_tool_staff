@@ -18,7 +18,7 @@ module Stats
     describe ".description" do
       it "returns correct description" do
         expect(described_class.description)
-          .to eq "Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month."
+          .to eq "Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month excluding missing DPS cases."
       end
     end
 
@@ -47,6 +47,11 @@ module Stats
           @sar_4 = create :accepted_sar, identifier: "sar-4", received_date: @period_end + 61.minutes
           @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: "osar-4", received_date: @period_end + 61.minutes
 
+          @sar_5 = create :accepted_sar, identifier: "sar-5", received_date: @period_end + 61.minutes
+          @offender_sar_5 = create :offender_sar_case, :ready_to_copy, identifier: "osar-5", received_date: @period_end + 61.minutes
+
+          @dps_offender_sar_1 = create :offender_sar_case, :ready_to_copy, :flag_as_dps_missing_data, :rejected, identifier: "dpssar-5", received_date: @period_end + 61.minutes
+
           @rejected_offender_sar_1 = create :offender_sar_case, :rejected, identifier: "rosar-1", received_date: @period_start + 5.days
 
           @offender_sar_complaint = create :offender_sar_complaint, :ready_to_copy, identifier: "ocomp-5", received_date: @period_end + 61.minutes
@@ -59,7 +64,13 @@ module Stats
 
       it "returns only Offender SAR cases within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
-        expect(report.case_scope).to match_array([@offender_sar_2, @offender_sar_3, @offender_sar_4])
+        expect(report.case_scope).to match_array([@offender_sar_2, @offender_sar_3, @offender_sar_4, @offender_sar_5])
+        expect(report.case_scope).not_to include [@offender_sar_complaint]
+      end
+
+      it "does not return Offender SAR cases with DPS flag set to Yes within the selected period" do
+        report = described_class.new(period_start: @period_start, period_end: @period_end)
+        expect(report.case_scope).not_to include [@dps_offender_sar_1]
         expect(report.case_scope).not_to include [@offender_sar_complaint]
       end
 
@@ -135,8 +146,8 @@ module Stats
             expect(results[201_812][:overall_responded_in_time]).to eq(1)
             expect(results[201_812][:overall_responded_late]).to eq(2)
             expect(results[201_812][:overall_open_in_time]).to eq(1)
-            expect(results[201_812][:overall_open_late]).to eq(3)
-            expect(results[201_812][:overall_performance]).to eq(14.3)
+            expect(results[201_812][:overall_open_late]).to eq(4)
+            expect(results[201_812][:overall_performance]).to eq(12.5)
 
             expect(results[201_901][:overall_responded_in_time]).to eq(1)
             expect(results[201_901][:overall_responded_late]).to eq(0)
