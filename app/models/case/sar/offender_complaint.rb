@@ -284,5 +284,5 @@ private
       first = Regexp.last_match(1)
       "#{first}Q"
     end
-  end 
+  end
 end
