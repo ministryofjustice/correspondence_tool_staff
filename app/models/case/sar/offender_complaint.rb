@@ -263,6 +263,7 @@ private
     counter = original_case.case_links.count
     counter_str = counter.positive? ? "-#{counter.to_s.rjust(3, '0')}" : ""
     new_case_number = "#{case_number_with_new_prefix(original_case.number)}#{counter_str}"
+
     raise "Duplicate case number, please try again " if Case::Base.find_by(number: new_case_number).present?
 
     new_case_number
@@ -278,11 +279,16 @@ private
     total_cost.present? && total_cost.positive?
   end
 
-  # If there is a second character, replace it with 'Q', else insert 'Q'
+  # 'Q' denotes a complaint in the legacy system, carried into new system
   def case_number_with_new_prefix(case_number)
-    case_number.sub(/\A([A-Za-z])([A-Za-z]?)/) do
-      first = Regexp.last_match(1)
-      "#{first}Q"
+    return nil if case_number.nil?
+
+    code_match = /\A([A-Za-z])([A-Za-z]?)/
+
+    if code_match =~ case_number
+      case_number.sub(code_match) { "#{$1}Q" }
+    else
+      "Q#{case_number}"
     end
   end
 end
