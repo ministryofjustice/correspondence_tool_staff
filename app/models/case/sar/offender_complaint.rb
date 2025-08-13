@@ -286,7 +286,7 @@ private
     code_match = /\A([A-Za-z])([A-Za-z]?)/
 
     if code_match =~ case_number
-      case_number.sub(code_match) { "#{$1}Q" }
+      case_number.sub(code_match) { "#{::Regexp.last_match(1)}Q" }
     else
       "Q#{case_number}"
     end
