@@ -281,7 +281,7 @@ private
 
   # 'Q' denotes a complaint in the legacy system, carried into new system
   def case_number_with_new_prefix(case_number)
-    return nil if case_number.nil?
+    return case_number if case_number.blank?
 
     code_match = /\A([A-Za-z])([A-Za-z]?)/
 
