@@ -262,7 +262,8 @@ private
     retries ||= 0
     counter = original_case.case_links.count
     counter_str = counter.positive? ? "-#{counter.to_s.rjust(3, '0')}" : ""
-    new_case_number = "Q#{original_case.number}#{counter_str}"
+    new_case_number = "#{case_number_with_new_prefix(original_case.number)}#{counter_str}"
+
     raise "Duplicate case number, please try again " if Case::Base.find_by(number: new_case_number).present?
 
     new_case_number
@@ -276,5 +277,18 @@ private
 
   def has_total_cost?
     total_cost.present? && total_cost.positive?
+  end
+
+  # 'Q' denotes a complaint in the legacy system, carried into new system
+  def case_number_with_new_prefix(case_number)
+    return case_number if case_number.blank?
+
+    code_match = /\A([A-Za-z])([A-Za-z]?)/
+
+    if code_match =~ case_number
+      case_number.sub(code_match) { "#{::Regexp.last_match(1)}Q" }
+    else
+      "Q#{case_number}"
+    end
   end
 end
