@@ -527,7 +527,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA) for the above person.
                   <br>
-                  <br>We have now completed your Subject Access Request (SAR), and the requested information has been provided to you digitally within this folder. Please note that the link will expire 30 days from the date of issue, and it is recommended to download this information as soon as possible.
+                  <br>We have now completed your Subject Access Request (SAR), and the requested information has been provided to you digitally within this folder. <strong>Please note that the link will expire 30 days from the date of issue</strong>, and it is recommended to download this information as soon as possible.
                   <br>
                   <br>Provided is all the information related to your request that I am able to release. Some information may have been withheld, and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
                   <br>
@@ -535,19 +535,20 @@ class LetterTemplateSeeder
                   <br>
                   <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
-                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF#{' '}
+                  <br>Information Commissioner&apos;s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
                   <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
                   <br>
                   <br>Finally, as the information contains personal data, it requires secure and responsible handling. It is strongly advised to:
                   <br>
-                  <ul>
-                  <li>Refrain from forwarding or sharing the link with unauthorised persons.</li>
-                  <li>Access the information in a secure environment using a trusted device.</li>
-                  <li>Store the link securely and only for as long as necessary.</li>
-                  <li>Delete the link once the data has been accessed or saved securely.</li>
-                  </ul>
+                  <br> &#8226; Refrain from forwarding or sharing the link with unauthorised persons.
+                  <br> &#8226; Access the information in a secure environment using a trusted device.
+                  <br> &#8226; Store the link securely and only for as long as necessary.
+                  <br> &#8226; Delete the link once the data has been accessed or saved securely.
+                  <br>
+                  <br>
+                  <br>
                   <br>
                   <br>Yours sincerely
                   <br>
