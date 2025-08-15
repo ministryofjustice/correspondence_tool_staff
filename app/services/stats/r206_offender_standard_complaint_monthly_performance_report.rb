@@ -15,7 +15,7 @@ module Stats
     def case_scope
       Case::Base.offender_sar_complaint
         .where("properties->>'complaint_type'::text = ? ", "standard_complaint")
-        .where("(properties->'flag_as_dps_missing_data')::boolean = ? OR properties->>'flag_as_dps_missing_data' IS NULL", false)
+        .where("properties->>'flag_as_dps_missing_data' IS NULL OR (properties->'flag_as_dps_missing_data')::boolean = ?", false)
         .where(received_date: @period_start..@period_end)
     end
 
