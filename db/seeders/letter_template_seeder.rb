@@ -405,7 +405,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>I note the contents and I have asked Her Majesty's Prison and Probation Service to look into the matter and advise you further.
+                  <br>I note the contents and I have asked His Majesty's Prison and Probation Service to look into the matter and advise you further.
                   <br>
                   <br><strong>Your letter/email has been sent on to: [INSERT APPROPRIATE ADDRESS]</strong>
                   <br>
@@ -588,7 +588,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
-                  <br>I would like to remind you that Her Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
+                  <br>I would like to remind you that His Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
@@ -633,7 +633,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
-                  <br>I would like to remind you that Her Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client's keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
+                  <br>I would like to remind you that His Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client's keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
