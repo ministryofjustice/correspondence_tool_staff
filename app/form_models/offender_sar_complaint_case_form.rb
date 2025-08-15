@@ -70,6 +70,7 @@ private
       postal_address
       probation_area
       flag_as_high_profile
+      flag_as_dps_missing_data
       date_of_birth
       email
     ]
