@@ -11,7 +11,7 @@ module Stats
     end
 
     # NOTE: Historical Complaint cases prior to 2025-08-14 will not contain
-    # the `proeprties->>flag_as_dps_missing_data` attribute
+    # the `proeprties->>flag_as_dps_missing_data` attribute. Order of WHERE precedence matters
     def case_scope
       Case::Base.offender_sar_complaint
         .where("properties->>'complaint_type'::text = ? ", "standard_complaint")
