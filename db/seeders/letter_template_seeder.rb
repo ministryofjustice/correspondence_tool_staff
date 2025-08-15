@@ -405,7 +405,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>I note the contents and I have asked Her Majesty’s Prison and Probation Service to look into the matter and advise you further.
+                  <br>I note the contents and I have asked Her Majesty's Prison and Probation Service to look into the matter and advise you further.
                   <br>
                   <br><strong>Your letter/email has been sent on to: [INSERT APPROPRIATE ADDRESS]</strong>
                   <br>
@@ -445,7 +445,7 @@ class LetterTemplateSeeder
                   <br>As previously advised some information may have been withheld and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of a crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
                   <br>
                   <br>It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
-                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow,
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow,
                   <br>Cheshire, SK9 5AF
                   <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
                   <br>
@@ -486,7 +486,7 @@ class LetterTemplateSeeder
                   <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
                   <br>If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
-                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow,
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow,
                   <br>Cheshire, SK9 5AF
                   <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
                   <br>
@@ -500,6 +500,61 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>DPA Team Manager
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                BODY
+               )
+    rec.update!(letter_address: <<~ADDRESS,
+      #{solictor_receiver}
+      <br>#{address}
+    ADDRESS
+               )
+
+    rec = LetterTemplate.find_by(abbreviation: "solicitor-dispatch")
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: "Solicitor dispatch letter",
+                abbreviation: "solicitor-dispatch",
+                template_type: "dispatch",
+                body: <<~BODY,
+                  <p>
+                  <br>
+                  <br>Dear <%= values.recipient_name %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br>
+                  <br><strong><%= values.subject_full_name&.upcase %><% if values.prison_number.present? %> - <%= values.first_prison_number %><% end %></strong>
+                  <br>
+                  <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA) for the above person.
+                  <br>
+                  <br>We have now completed your Subject Access Request (SAR), and the requested information has been provided to you digitally within this folder. Please note that the link will expire 30 days from the date of issue, and it is recommended to download this information as soon as possible.
+                  <br>
+                  <br>Provided is all the information related to your request that I am able to release. Some information may have been withheld, and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
+                  <br>
+                  <br>I can confirm that the personal data contained within these documents is being processed by the MoJ for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
+                  <br>
+                  <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
+                  <br>
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF#{' '}
+                  <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
+                  <br>
+                  <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
+                  <br>
+                  <br>Finally, as the information contains personal data, it requires secure and responsible handling. It is strongly advised to:
+                  <br>
+                  <ul>
+                  <li>Refrain from forwarding or sharing the link with unauthorised persons.</li>
+                  <li>Access the information in a secure environment using a trusted device.</li>
+                  <li>Store the link securely and only for as long as necessary.</li>
+                  <li>Delete the link once the data has been accessed or saved securely.</li>
+                  </ul>
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>Business Support Team
                   <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
@@ -533,11 +588,11 @@ class LetterTemplateSeeder
                   <br>
                   <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
-                  <br>I would like to remind you that Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
+                  <br>I would like to remind you that Her Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
-                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
                   <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
@@ -578,11 +633,11 @@ class LetterTemplateSeeder
                   <br>
                   <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
-                  <br>I would like to remind you that Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client’s keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
+                  <br>I would like to remind you that Her Majesty's Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client's keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we have forwarded your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>If you have any queries regarding your request please contact the Offender Subject Access Request Team, at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
-                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
                   <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
