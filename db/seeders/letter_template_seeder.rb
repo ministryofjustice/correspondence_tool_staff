@@ -2,7 +2,6 @@ class LetterTemplateSeeder
   def seed!
     Rails.logger.debug "---- Seeding Letter Templates ----"
     intial_letters_seed
-    bau_disclosed_letter_seed
   end
 
   def intial_letters_seed
