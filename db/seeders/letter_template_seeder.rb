@@ -511,10 +511,10 @@ class LetterTemplateSeeder
     ADDRESS
                )
 
-    rec = LetterTemplate.find_by(abbreviation: "solicitor-dispatch")
+    rec = LetterTemplate.find_by(abbreviation: "digital-dispatch-solicitor-letter")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: "Solicitor dispatch letter",
-                abbreviation: "solicitor-dispatch",
+    rec.update!(name: "Digital dispatch solicitor letter",
+                abbreviation: "digital-dispatch-solicitor-letter",
                 template_type: "dispatch",
                 body: <<~BODY,
                   <p>
