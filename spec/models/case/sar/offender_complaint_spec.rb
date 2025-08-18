@@ -865,6 +865,24 @@ describe Case::SAR::OffenderComplaint do
       complaint1 = create(:offender_sar_complaint, original_case: complaint.original_case)
       expect(complaint1.number).to eq "Q#{complaint.original_case.number}-001"
     end
+
+    it "'DQ' + original_case.number" do
+      test_cases = {
+        "D123456" => "DQ123456",
+        "DQ123456" => "DQ123456",
+        "DR123456" => "DQ123456",
+        "123456" => "Q123456",
+        nil => nil,
+        "  " => "  ",
+      }
+
+      complaint = create(:offender_sar_complaint)
+
+      test_cases.each do |input, output|
+        complaint.number = input
+        expect(complaint.send(:case_number_with_new_prefix, input)).to eq output
+      end
+    end
   end
 
   describe "#has_costs?" do

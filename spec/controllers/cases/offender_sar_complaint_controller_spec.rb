@@ -364,6 +364,7 @@ RSpec.describe Cases::OffenderSARComplaintController, type: :controller do
             received_date_yyyy: "2022",
             third_party: false,
             flag_as_high_profile: false,
+            flag_as_dps_missing_data: true,
             date_of_birth_dd: "1",
             date_of_birth_mm: "1",
             date_of_birth_yyyy: "1990",

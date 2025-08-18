@@ -9,6 +9,7 @@ module OffenderSARComplaintCasesParams
       :email,
       :requester_reference,
       :flag_as_high_profile,
+      :flag_as_dps_missing_data,
       :gld_contact_name,
       :gld_contact_email,
       :gld_contact_phone,
