@@ -70,7 +70,7 @@ gem "sentry-ruby"
 gem "shell-spinner"
 gem "sidekiq", "<8"
 gem "slim-rails", "~> 3.6"
-gem "sprockets", "~> 4.2.1"
+gem "sprockets", "~> 4.2.2"
 
 gem "table_print"
 gem "terser"

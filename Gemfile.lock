@@ -587,8 +587,9 @@ GEM
       railties (>= 3.1)
       slim (>= 3.0, < 6.0, != 5.0.0)
     smart_properties (1.17.0)
-    sprockets (4.2.1)
+    sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
+      logger
       rack (>= 2.2.4, < 4)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
@@ -718,7 +719,7 @@ DEPENDENCIES
   simplecov-json
   site_prism (< 5.0)
   slim-rails (~> 3.6)
-  sprockets (~> 4.2.1)
+  sprockets (~> 4.2.2)
   table_print
   teaspoon-jasmine
   terser
