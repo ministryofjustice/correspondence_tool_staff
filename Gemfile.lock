@@ -524,7 +524,7 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     sablon (0.3.2)
       nokogiri (>= 1.8.5)
       rubyzip (>= 1.1.1)
