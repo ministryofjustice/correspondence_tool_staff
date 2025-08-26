@@ -18,7 +18,7 @@ module Stats
     describe ".description" do
       it "returns correct description" do
         expect(described_class.description)
-          .to eq "Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month."
+          .to eq "Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month excluding missing DPS cases."
       end
     end
 
@@ -55,6 +55,27 @@ module Stats
                                      complaint_type: "ico_complaint",
                                      identifier: "ico_complaint-4",
                                      received_date: @period_start + 61.minutes
+
+          @sar_5 = create :accepted_sar, identifier: "sar-5", received_date: @period_start + 61.minutes
+          @oico_complaint_5 = create :offender_sar_complaint, :ready_to_copy,
+                                     complaint_type: "ico_complaint",
+                                     identifier: "oico_complaint-5",
+                                     flag_as_dps_missing_data: true,
+                                     received_date: @period_start + 61.minutes
+
+          # NOTE: missing flag_as_dps_missing_data
+          @sar_6 = create :accepted_sar, identifier: "sar-6", received_date: @period_start + 61.minutes
+          @oico_complaint_6 = create :offender_sar_complaint, :ready_to_copy,
+                                     complaint_type: "ico_complaint",
+                                     identifier: "oico_complaint-6",
+                                     received_date: @period_start + 7.days
+
+          @sar_7 = create :accepted_sar, identifier: "sar-7", received_date: @period_start + 61.minutes
+          @oico_complaint_7 = create :offender_sar_complaint, :ready_to_copy,
+                                     complaint_type: "ico_complaint",
+                                     identifier: "oico_complaint-7",
+                                     flag_as_dps_missing_data: false,
+                                     received_date: @period_start + 5.days
         end
       end
 
@@ -64,7 +85,7 @@ module Stats
 
       it "returns only Offender SAR cases within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
-        expect(report.case_scope).to match_array([@oico_complaint_2, @oico_complaint_3, @oico_complaint_4])
+        expect(report.case_scope).to contain_exactly(@oico_complaint_2, @oico_complaint_3, @oico_complaint_4, @oico_complaint_6, @oico_complaint_7)
       end
 
       describe "stats values" do
@@ -128,9 +149,9 @@ module Stats
 
             expect(results[201_904][:overall_responded_in_time]).to eq(2)
             expect(results[201_904][:overall_responded_late]).to eq(1)
-            expect(results[201_904][:overall_open_in_time]).to eq(3)
+            expect(results[201_904][:overall_open_in_time]).to eq(5)
             expect(results[201_904][:overall_open_late]).to eq(1)
-            expect(results[201_904][:overall_performance]).to eq(28.6)
+            expect(results[201_904][:overall_performance]).to eq(22.2)
           end
         end
       end
