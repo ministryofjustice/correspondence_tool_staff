@@ -574,10 +574,10 @@ GEM
       capybara (~> 3.27)
       site_prism-all_there (~> 2.0)
     site_prism-all_there (2.0.2)
-    slim (5.1.1)
+    slim (5.2.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
-    slim-rails (3.6.2)
+    slim-rails (3.7.0)
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 6.0, != 5.0.0)
@@ -595,13 +595,13 @@ GEM
       railties (>= 5.0)
     teaspoon-jasmine (2.9.1)
       teaspoon (>= 1.0.0)
-    temple (0.10.1)
+    temple (0.10.4)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
     terser (1.2.2)
       execjs (>= 0.3.0, < 3)
     thor (1.4.0)
-    tilt (2.1.0)
+    tilt (2.6.1)
     timecop (0.9.10)
     timeout (0.4.3)
     ttfunk (1.7.0)
@@ -712,7 +712,7 @@ DEPENDENCIES
   simplecov
   simplecov-json
   site_prism (< 5.0)
-  slim-rails (~> 3.6)
+  slim-rails (~> 3.7)
   sprockets (~> 4.2.2)
   table_print
   teaspoon-jasmine
