@@ -40,8 +40,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~BODY,
-      #{prison_receiver}
-      <br>#{address}
+      <p>
+        #{prison_receiver}<br>
+        #{address}
+      </p>
     BODY
                )
 
@@ -77,8 +79,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~BODY,
-      #{prison_receiver}
-      <br>#{address}
+      <p>
+        #{prison_receiver}<br>
+        #{address}
+      </p>
     BODY
                )
 
@@ -116,8 +120,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~BODY,
-      Business Hub
-      <br><%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
+      <p>
+        Business Hub<br>
+        <%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
+      </p>
     BODY
                )
 
@@ -159,8 +165,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{prison_receiver}
-      <br>#{address}
+      <p>
+        #{prison_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -196,8 +204,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -235,8 +245,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -279,8 +291,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -314,8 +328,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -358,8 +374,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -387,8 +405,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -421,8 +441,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -461,8 +483,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -506,8 +530,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -562,8 +588,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
   end
@@ -612,8 +640,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{prison_receiver}
-      <br>#{address}
+      <p>
+        #{prison_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
 
@@ -657,8 +687,10 @@ class LetterTemplateSeeder
                 BODY
                )
     rec.update!(letter_address: <<~ADDRESS,
-      #{solictor_receiver}
-      <br>#{address}
+      <p>
+        #{solictor_receiver}<br>
+        #{address}
+      </p>
     ADDRESS
                )
   end
