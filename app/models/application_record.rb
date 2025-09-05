@@ -14,7 +14,7 @@ class ApplicationRecord < ActiveRecord::Base
         end
 
         if validator.options[:unless].is_a?(Proc)
-          skip = !instance_exec(&validator.options[:unless]).nil?
+          skip = instance_exec(&validator.options[:unless])
         end
 
         next if skip
