@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe ApplicationRecord, type: :model do
   describe "#valid_attributes?" do
+    subject { klass.new(attributes) }
+
     let(:klass) do
       Class.new(Feedback) do
         attribute :fave_band, :string
@@ -14,39 +16,33 @@ RSpec.describe ApplicationRecord, type: :model do
     end
 
     context "when all attributes are valid" do
-      let(:valid_attributes) do
-        { comment: "nice", email: "test@example.com", fave_band: "The Beatles", fave_colour: "Blue", completed: true }
-      end
+      let(:attributes) { { comment: "nice", email: "test@example.com", fave_band: "The Beatles", fave_colour: "Blue", completed: true } }
 
-      it "returns true" do
-        my_feedback = klass.new(valid_attributes)
-        expect(my_feedback.valid_attributes?(valid_attributes)).to be true
-      end
+      it { is_expected.to be_valid_attributes(attributes) }
     end
 
     context "when some attributes are invalid" do
-      let(:invalid_attributes) do
-        { comment: "nice", "email" => "test@example.com", fave_band: nil, "fave_colour" => "" }
-      end
+      let(:attributes) { { comment: "nice", "email" => "test@example.com", fave_band: nil, "fave_colour" => "" } }
 
-      it "returns false" do
-        my_feedback = klass.new(invalid_attributes)
-        expect(my_feedback.valid_attributes?(invalid_attributes)).to be false
-      end
+      it { is_expected.not_to be_valid_attributes(attributes) }
 
       context "with conditional validations" do
         it "executes `if` condition" do
-          my_feedback = klass.new(invalid_attributes.merge(completed: true))
-          my_feedback.valid_attributes?(invalid_attributes.merge(completed: true))
+          invalid_attributes = attributes.merge(completed: true)
 
-          expect(my_feedback.errors.map(&:attribute)).to eq([:fave_band])
+          subject = klass.new(invalid_attributes)
+          subject.valid_attributes?(invalid_attributes)
+
+          expect(subject.errors.attribute_names).to eq([:fave_band])
         end
 
         it "executes `unless` condition" do
-          my_feedback = klass.new(invalid_attributes.merge(completed: false))
-          my_feedback.valid_attributes?(invalid_attributes.merge(completed: false))
+          invalid_attributes = attributes.merge(completed: false)
 
-          expect(my_feedback.errors.map(&:attribute)).to eq([:fave_colour])
+          subject = klass.new(invalid_attributes)
+          subject.valid_attributes?(invalid_attributes)
+
+          expect(subject.errors.attribute_names).to eq([:fave_colour])
         end
       end
     end
