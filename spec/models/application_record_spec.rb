@@ -46,5 +46,16 @@ RSpec.describe ApplicationRecord, type: :model do
         end
       end
     end
+
+    context "when some attributes are missing" do
+      let(:attributes) { { comment: "nice", email: "test@example.com", completed: true } }
+
+      it "does not validate missing attributes" do
+        subject = klass.new(attributes)
+        subject.valid_attributes?(attributes)
+
+        expect(subject.errors.attribute_names).to eq([])
+      end
+    end
   end
 end
