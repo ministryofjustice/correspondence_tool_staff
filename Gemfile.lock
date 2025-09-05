@@ -178,7 +178,7 @@ GEM
     connection_pool (2.5.4)
     crass (1.0.6)
     date (3.4.1)
-    debug (1.9.2)
+    debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     debug_inspector (1.2.0)
