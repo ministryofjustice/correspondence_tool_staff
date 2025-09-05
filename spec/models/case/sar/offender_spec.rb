@@ -45,11 +45,12 @@ describe Case::SAR::Offender do
 
   context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
-      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
+      kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil, flag_as_dps_missing_data: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
       expect(kase.errors[:third_party]).to eq(["cannot be blank"])
+      expect(kase.errors[:flag_as_high_profile]).to eq(["cannot be blank"])
     end
   end
 
@@ -1029,12 +1030,26 @@ describe Case::SAR::Offender do
           kase = build(:offender_sar_case, :rejected)
           expect(kase).to be_rejected
         end
+
+        it "is not valid without flag_as_dps_missing_data" do
+          kase = build_stubbed :offender_sar_case, :rejected, flag_as_dps_missing_data: nil
+
+          expect(kase).not_to be_valid
+          expect(kase.errors[:flag_as_dps_missing_data]).to eq(["cannot be blank"])
+        end
       end
 
       context "when case is not rejected" do
         it "returns false" do
           kase = build(:offender_sar_case)
           expect(kase).not_to be_rejected
+        end
+
+        it "is valid without flag_as_dps_missing_data" do
+          kase = build_stubbed :offender_sar_case, flag_as_dps_missing_data: nil
+
+          expect(kase).to be_valid
+          expect(kase.errors[:flag_as_dps_missing_data]).to be_empty
         end
       end
     end

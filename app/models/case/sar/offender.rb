@@ -516,7 +516,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def rejected?
-    if persisted?
+    if number.present? && persisted?
       number[0] == "R"
     else
       current_state == "invalid_submission"
