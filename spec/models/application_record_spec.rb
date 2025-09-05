@@ -32,7 +32,6 @@ RSpec.describe ApplicationRecord, type: :model do
       it "returns false" do
         my_feedback = klass.new(invalid_attributes)
         expect(my_feedback.valid_attributes?(invalid_attributes)).to be false
-        binding.break
       end
 
       context "with conditional validations" do
