@@ -83,7 +83,7 @@ feature "cases requiring clearance by disclosure specialist" do
     expect(cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.text).to eq(
       "Remove clearance",
     )
-    cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.click
+    cases_show_page.clearance_levels.basic_details.dacu_disclosure.remove_clearance.find_link.click
     expect(page).to have_current_path(remove_clearance_case_path(kase))
     fill_in "Reason for removing clearance", with: "reason"
     cases_remove_clearance_form_page.submit_button.click
