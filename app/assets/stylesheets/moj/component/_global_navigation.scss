@@ -63,7 +63,7 @@
 
   &__item {
     padding: 10px 0;
-    border-bottom: 1px solid #2e3133;
+    border-bottom: 1px solid #8eb8dc;
 
     @include media(desktop) {
       display: inline-block;
@@ -74,7 +74,6 @@
 
     &:last-child {
       border-bottom: none;
-      padding-bottom: 0;
     }
 
     // Javid: Current navigation is controlled by data definition in settings.yml

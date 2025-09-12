@@ -1,61 +1,40 @@
 #proposition-menu{
   color: #ffffff;
+
   @include media(desktop) {
     text-align: right;
+    padding-top: 3rem;
   }
-  a{
+
+  a {
     color: #ffffff;
     margin-left: $gutter;
     margin-right: $gutter;
     font-weight: bold;
+
     @include media(desktop) {
       margin-left : $gutter;
       margin-right: 0;
     }
+
     &:focus{
       outline: 1px solid $link-hover-colour;
     }
   }
 }
 
-#proposition-name{
-  font-family: "nta", Arial, sans-serif;
-  font-size: 24px;
-  line-height: 1.25;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-}
+.govuk-header {
+  font-size: 100%;
 
-#global-header.with-proposition .header-wrapper .header-proposition {
-  float: none;
-  width: unset;
-}
+  &__content {
+    display: inline-block;
+    max-width: 200px;
+  }
 
-#global-header .header-wrapper {
-  max-width: 960px;
-}
-
-.govuk-header__service-name{
-  font-size: 24px;
-}
-
-.govuk-header{
-  border-bottom: none;
-  font-size: 1.6rem;
-}
-
-.govuk-header__container{
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-top: 5px;
-}
-
-.govuk-header__logo {
-  width: unset;
-  padding-top: 5px;
-  margin-left: 10px;
-  margin-bottom: 5px
+  &__service-name {
+    font-size: 2.4rem;
+    display: inline-block;
+  }
 }
 
 .form-label, .gov_uk_date legend {
