@@ -16,6 +16,6 @@
         - if (page == current_page)
           - attrs["aria-current"] = "page"
         li[class=(page == current_page ? 'govuk-pagination__item govuk-pagination__item--current' : 'govuk-pagination__item')]
-          = link_to page, url_for(page: page), **attrs
+          = link_to page, (url_for(page: page) + "#data-table"), **attrs
 
     == next_page_tag unless current_page.last?
