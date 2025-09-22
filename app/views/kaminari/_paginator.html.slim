@@ -12,7 +12,7 @@
 
     ul.govuk-pagination__list
       - paginator.each_page do |page|
-        - attrs = { "aria-label": "Page #{page}" }
+        - attrs = { "aria-label": "Page #{page}", "class": "govuk-link govuk-pagination__link" }
         - if (page == current_page)
           - attrs["aria-current"] = "page"
         li[class=(page == current_page ? 'govuk-pagination__item govuk-pagination__item--current' : 'govuk-pagination__item')]
