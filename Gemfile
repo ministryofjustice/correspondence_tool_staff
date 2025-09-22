@@ -35,7 +35,7 @@ gem "govuk_template", "~> 0.26.0"
 gem "httparty"
 gem "humanize_boolean"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "jbuilder", "~> 2.11"
+gem "jbuilder", "~> 2.14"
 gem "jquery-rails", "~> 4.6"
 gem "jquery-ui-rails"
 gem "jsonb_accessor", "~> 1.4"
