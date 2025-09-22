@@ -1,67 +1,9 @@
-.pagination-next-prev {
-  font-size: large;
-}
-
-
-.pagination {
-  position: relative;
-  overflow: hidden;
-  margin-top: $gutter ;
-  width: 100%;
-}
-
-.pagination li {
-  list-style-image: none;
-  list-style: none;
-  width: 50%;
-
-}
-
-.pagination a:hover{
-  background: $highlight-colour;
-
-  .pagination-pages {
-    text-decoration: underline;
+.govuk-pagination {
+  &__cases {
+    justify-content: center;
   }
-}
 
-.pagination-prev {
-  float: left;
-  a {
-    padding: 15px 0 15px 35px;
-    display: block;
-    text-decoration: none;
-    &::before {
-      background: transparent image-url('arrow-sprite.png') no-repeat -20px -11px;
-      margin: -4px 0 0 -32px;
-      display: block;
-      float: left;
-      width: 30px;
-      height: 38px;
-      content: " ";
-    }
+  &__link {
+    font-size: 2rem;
   }
-}
-.pagination-next {
-  float: right;
-  text-align: right;
-  a {
-    padding: 15px 35px 15px 0;
-    display: block;
-    text-decoration: none;
-    &::before {
-      background: transparent image-url('arrow-sprite.png') no-repeat -102px -11px;
-      margin: -4px -32px 0 0;
-      display: block;
-      float: right;
-      width: 30px;
-      height: 38px;
-      content: " ";
-    }
-  }
-}
-
-.pagination-next-prev{
-  font-size: 120%;
-  text-decoration: none;
 }

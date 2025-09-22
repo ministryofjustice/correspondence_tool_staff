@@ -7,7 +7,15 @@
     paginator    : the paginator that renders the pagination tags inside
 
 == paginator.render do
-  nav role="navigation"
-    ul.pagination
-      == prev_page_tag unless current_page.first?
-      == next_page_tag unless current_page.last?
+  nav.govuk-pagination.govuk-pagination__cases aria-label="Pagination"
+    == prev_page_tag unless current_page.first?
+
+    ul.govuk-pagination__list
+      - paginator.each_page do |page|
+        - attrs = { "aria-label": "Page #{page}" }
+        - if (page == current_page)
+          - attrs["aria-current"] = "page"
+        li[class=(page == current_page ? 'govuk-pagination__item govuk-pagination__item--current' : 'govuk-pagination__item')]
+          = link_to page, url_for(page: page), **attrs
+
+    == next_page_tag unless current_page.last?
