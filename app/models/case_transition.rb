@@ -37,7 +37,7 @@ class CaseTransition < ApplicationRecord
   ANNOTATE_RETENTION_CHANGES = "annotate_retention_changes".freeze
   ANNOTATE_SYSTEM_RETENTION_CHANGES = "annotate_system_retention_changes".freeze
 
-  paginates_per 10
+  paginates_per 20
 
   after_destroy :update_most_recent, if: :most_recent?
 
