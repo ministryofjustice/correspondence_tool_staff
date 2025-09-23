@@ -155,10 +155,10 @@ namespace :data do
         ActiveRecord::Base.transaction do
           result = ActiveRecord::Base.connection.execute(sql)
           if result.any?
-            puts "| %-6s | %-25s |" % ["ID", "Updated At"]
-            puts "|%s|%s|" % ["-"*8, "-"*27]
+            puts sprintf("| %-6s | %-25s |", "ID", "Updated At")
+            puts sprintf("|%s|%s|", "-" * 8, "-" * 27)
             result.each do |row|
-              puts "| %-6s | %-25s |" % [row["id"], row["updated_at"]]
+              puts sprintf("| %-6s | %-25s |", row["id"], row["updated_at"])
             end
 
             puts "DONE --- flag_as_dps_missing_data migration completed."
