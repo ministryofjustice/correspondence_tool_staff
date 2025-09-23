@@ -132,6 +132,22 @@ namespace :data do
           puts e.backtrace.join("\n\t")
         end
       end
+
+      desc "Add missing flag_as_dps_missing_data property to cases"
+      task add_dps_missing_data_flag: :environment do
+        sql = <<-SQL
+          WITH updated AS (
+            UPDATE cases
+            SET
+              properties = jsonb_set(properties, '{flag_as_dps_missing_data}', 'false'::jsonb),
+              updated_at = NOW()
+            WHERE
+              properties ? 'flag_as_dps_missing_data' = FALSE
+            RETURNING *
+          )
+          SELECT * FROM updated;
+        SQL
+      end
     end
 
     desc "Fix invalid Offender SAR cases"
