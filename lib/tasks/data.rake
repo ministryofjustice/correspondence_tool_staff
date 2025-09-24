@@ -134,6 +134,43 @@ namespace :data do
       end
     end
 
+    desc "Add missing flag_as_dps_missing_data property to cases"
+    task add_dps_missing_data_flag: :environment do
+      sql = <<-SQL
+        WITH updated AS (
+          UPDATE cases
+          SET
+            properties = jsonb_set(properties, '{flag_as_dps_missing_data}', 'false'::jsonb, true),
+            updated_at = NOW()
+          WHERE
+            (properties IS NOT NULL AND NOT (properties ? 'flag_as_dps_missing_data'))
+            AND
+            type IN ('Case::SAR::Offender', 'Case::SAR::OffenderComplaint')
+          RETURNING *
+        )
+        SELECT id, updated_at FROM updated;
+      SQL
+
+      begin
+        ActiveRecord::Base.transaction do
+          result = ActiveRecord::Base.connection.execute(sql)
+          if result.any?
+            puts sprintf("| %-6s | %-25s |", "ID", "Updated At")
+            puts sprintf("|%s|%s|", "-" * 8, "-" * 27)
+            result.each do |row|
+              puts sprintf("| %-6s | %-25s |", row["id"], row["updated_at"])
+            end
+
+            puts "DONE --- flag_as_dps_missing_data migration completed."
+          else
+            puts "DONE --- flag_as_dps_missing_data migration completed. No records updated."
+          end
+        end
+      rescue StandardError => e
+        puts "ERROR --- #{e.class}: #{e.message}"
+      end
+    end
+
     desc "Fix invalid Offender SAR cases"
     task fix_invalid_offender_sar_cases: :environment do
       fix_invalid_offender_sar_cases
