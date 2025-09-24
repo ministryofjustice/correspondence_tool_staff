@@ -1875,6 +1875,7 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
+    truncate: "&hellip;"
 
   mailer:
     commissioning_email:
