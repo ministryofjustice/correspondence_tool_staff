@@ -1091,7 +1091,7 @@ en:
 
   common:
     accessibility: Accessibility
-    alert_banner_html: "This service will be down for essential maintenance from 17:30 on Tuesday 17 December. The site will resume service after business hours. Please contact <a href='mailto:noreply-correspondence@justice.gov.uk'>noreply-correspondence@justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
+    alert_banner_html: "This service will be down for essential maintenance from 17:30 on Tuesday 17 December. The site will resume service after business hours. Please contact <a href='mailto:correspondence-gg@justice.gov.uk'>correspondence-gg@justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
       answered_in_time: Answered in time
