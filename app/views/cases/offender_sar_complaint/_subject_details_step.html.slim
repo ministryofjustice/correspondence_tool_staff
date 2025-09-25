@@ -27,6 +27,8 @@
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys
 
+  = f.email_field :email
+
   = f.text_area :subject_address, rows: '4'
 
   = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
