@@ -18,6 +18,7 @@ feature "pagination" do
 
       expect(open_cases_page.case_list.count).to eq 20
       expect(open_cases_page.pagination).to have_next_page_link
+      expect(open_cases_page.pagination).to have_page_number_links
 
       open_cases_page.pagination.next_page_link.click
 
