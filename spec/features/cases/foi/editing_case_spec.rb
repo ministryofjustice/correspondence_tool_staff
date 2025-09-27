@@ -39,7 +39,6 @@ feature "Editing a case" do
     click_link "Edit case details"
     expect(cases_edit_page).to be_displayed
     expect(cases_edit_page).to have_checked_field("Member of the public")
-
   end
 
   scenario "editing a case with no changes" do

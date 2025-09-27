@@ -34,14 +34,14 @@ feature "Editing a SAR case" do
     expect(cases_show_page.case_details.sar_basic_details.date_received.data.text).to eq Time.zone.today.strftime(Settings.default_date_format)
   end
 
-  scenario "editing a case and requestor type is displayed" do
+  scenario "editing a case and subject type is displayed" do
     kase = create :accepted_sar, received_date: 2.days.ago
     open_cases_page.load
     click_link kase.number
     expect(cases_show_page).to be_displayed
     click_link "Edit case details"
     expect(cases_edit_page).to be_displayed
-    expect(cases_edit_page).to have_checked_field("Member of the public")
+    expect(cases_edit_page).to have_checked_field("Offender")
   end
 
   scenario "Uploading new request files", js: true do
