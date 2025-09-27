@@ -32,6 +32,16 @@ feature "Editing a case" do
     expect(cases_show_page.case_details.foi_basic_details.email.data.text).to eq "john.doe@moj.com"
   end
 
+  scenario "editing a case and requestor type is displayed" do
+    kase = create :case, received_date: 2.days.ago
+    open_cases_page.load
+    click_link kase.number
+    click_link "Edit case details"
+    expect(cases_edit_page).to be_displayed
+    expect(cases_edit_page).to have_checked_field("Member of the public")
+
+  end
+
   scenario "editing a case with no changes" do
     kase = create :accepted_case, received_date: 2.days.ago
     open_cases_page.load
