@@ -82,7 +82,7 @@ gem "ruby-progressbar"
 gem "tzinfo-data"
 
 group :test do
-  gem "capybara", "~> 3.37"
+  gem "capybara", "~> 3.40"
   gem "capybara-lockstep"
   gem "i18n-tasks"
   gem "rails-controller-testing", require: false
