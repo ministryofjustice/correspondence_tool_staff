@@ -388,7 +388,7 @@ GEM
       date
       stringio
     public_suffix (5.0.3)
-    puma (6.6.1)
+    puma (7.0.4)
       nio4r (~> 2.0)
     pundit (2.4.0)
       activesupport (>= 3.0.0)
@@ -691,7 +691,7 @@ DEPENDENCIES
   pg_search (~> 2.3.6)
   phantomjs
   prawndown
-  puma (~> 6.4)
+  puma (~> 7.0)
   pundit (~> 2.4)
   rails (~> 7.0)
   rails-controller-testing
