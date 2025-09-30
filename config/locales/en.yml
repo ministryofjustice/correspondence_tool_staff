@@ -1656,6 +1656,7 @@ en:
         link: View
         emails_header: Commissioning emails
         emails_history_header: Email history
+        document_deleted: Document has been deleted
       create:
         success: Data request area successfully recorded
       index:
