@@ -19,10 +19,26 @@ RSpec.describe CommissioningDocumentDecorator, type: :model do
   end
 
   describe ":download_link" do
-    it "returns a download link" do
-      path = "/cases/#{commissioning_document.data_request_area.case_id}/data_request_areas/#{commissioning_document.data_request_area_id}/commissioning_documents/download"
-      expect(commissioning_document.download_link).to include(path)
-      expect(commissioning_document.download_link).to include("<a href")
+    let(:path) do
+      "/cases/#{commissioning_document.data_request_area.case_id}/data_request_areas/#{commissioning_document.data_request_area_id}/commissioning_documents/download"
+    end
+
+    context "when case is not destroyed" do
+      it "returns a download link" do
+        expect(commissioning_document.download_link).to include(path)
+        expect(commissioning_document.download_link).to include("<a href")
+      end
+    end
+
+    # i.e. anonymised or destroyed case
+    context "when case is destroyed" do
+      before do
+        allow(commissioning_document.data_request_area.offender_sar_case).to receive(:readonly?).and_return(true)
+      end
+
+      it "returns a not found message" do
+        expect(commissioning_document.download_link).to eq "Document has been deleted"
+      end
     end
   end
 end

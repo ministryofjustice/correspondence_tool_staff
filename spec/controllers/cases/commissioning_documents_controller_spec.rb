@@ -26,9 +26,37 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       }
     end
 
-    it "downloads the commissioning document" do
-      get(:download, params:)
-      expect(response.headers["Content-Disposition"]).to match(/filename=".*docx"/)
+    context "when case is not destroyed" do
+      it "downloads the commissioning document" do
+        get(:download, params:)
+        expect(response.headers["Content-Disposition"]).to match(/filename=".*docx"/)
+      end
+    end
+
+    context "when case is destroyed" do
+      let(:offender_sar_case) do
+        create(
+          :offender_sar_case,
+          :closed,
+          date_responded: Time.zone.today,
+          retention_schedule:
+            RetentionSchedule.new(
+              state: :to_be_anonymised,
+              planned_destruction_date: Time.zone.local(2025, 5, 15),
+            ),
+        )
+      end
+
+      before do
+        offender_sar_case.retention_schedule.anonymise!
+      end
+
+      it "commissioning document is not found" do
+        get(:download, params:)
+
+        expect(response).to have_http_status(410)
+        expect(response.body).to include("The content or document you requested is not available")
+      end
     end
   end
 
