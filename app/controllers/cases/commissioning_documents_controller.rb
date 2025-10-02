@@ -6,6 +6,7 @@ module Cases
 
     def download
       return unless @commissioning_document.persisted?
+      raise ActiveRecord::RecordNotFound if @case.readonly? # assume anonymised/destroyed case
 
       send_data(@commissioning_document.document,
                 filename: @commissioning_document.filename,

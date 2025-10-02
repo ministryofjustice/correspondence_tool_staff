@@ -43,7 +43,8 @@ div class="case"
               tr
                 td = @data_request_area.request_document
                 td = @commissioning_document&.updated_at
-                td = t('.document_deleted')
+                td
+                  span = @commissioning_document&.download_link
 
           - if !@data_request_area.commissioning_email_sent? && policy(@case).can_send_day_1_email?
             div.button-holder
