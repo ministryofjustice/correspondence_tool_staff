@@ -65,7 +65,7 @@ describe "cases/filters/incoming.html.slim", type: :view do
 
     first_case = incoming_cases_page.case_list[0]
     expect(first_case.number.text).to eq "Case number #{case1.number}"
-    expect(first_case.request.name.text).to eq "Joe Smith | Member of the public"
+    expect(first_case.request.name.text).to eq "Joe Smith | member_of_the_public"
     expect(first_case.request.subject.text).to eq "Prison Reform"
     expect(first_case.request.message.text).to eq "message number 1"
     expect(first_case.actions.take_on_case.text).to eq "Take case on"
