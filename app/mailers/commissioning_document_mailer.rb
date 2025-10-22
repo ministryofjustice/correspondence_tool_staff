@@ -29,7 +29,7 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       email_address: recipient,
       deadline: commissioning_document.deadline,
       deadline_days: commissioning_document.deadline_days,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: "2 weeks"),
+      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: "4 weeks"),
     )
 
     @data_request_email = DataRequestEmail.find_or_create_by!(
