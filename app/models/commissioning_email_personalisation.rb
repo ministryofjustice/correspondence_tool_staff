@@ -31,6 +31,6 @@ private
 
   def link_to_file
     file = StringIO.new(commissioning_document.document)
-    Notifications.prepare_upload(file, confirm_email_before_download: true)
+    Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: "4 weeks")
   end
 end

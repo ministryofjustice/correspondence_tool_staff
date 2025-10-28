@@ -6,6 +6,7 @@ module Cases
 
     def download
       return unless @commissioning_document.persisted?
+      raise ContentGoneError if @case.readonly?
 
       send_data(@commissioning_document.document,
                 filename: @commissioning_document.filename,
