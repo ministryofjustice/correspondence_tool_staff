@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
+  class ContentGoneError < StandardError; end
+
   GLOBAL_NAV_EXCLUSION_PATHS    = %w[/cases/filter].freeze
   CSV_REQUEST_REGEX             = /\.csv$/
 
@@ -23,6 +25,10 @@ class ApplicationController < ActionController::Base
   before_action :set_hompepage_nav, if: -> { current_user.present? && global_nav_required? }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  rescue_from ContentGoneError do
+    render file: Rails.root.join("public/410.html"), status: :gone, layout: false
+  end
 
   def set_user
     @user = current_user
