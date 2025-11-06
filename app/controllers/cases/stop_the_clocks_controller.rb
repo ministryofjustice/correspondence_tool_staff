@@ -5,13 +5,13 @@ module Cases
     before_action :set_case, only: %i[new create]
 
     def new
-      authorize @case, :stop_the_clock?
+      authorize @case, :can_stop_the_clock?
 
       @case = CaseStopTheClockDecorator.decorate @case
     end
 
     def create
-      authorize @case, :stop_the_clock?
+      authorize @case, :can_stop_the_clock?
 
       stop_the_clock_params = params[:case]
 
