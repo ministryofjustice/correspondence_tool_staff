@@ -105,4 +105,9 @@ namespace :retention_schedules do
     puts "\n Case errors: \n--------------\n\n" if errors.any?
     errors.each { |error| puts error }
   end
+
+  desc "Removes Commissioning Documents uploaded to S3 that should be destroyed"
+  task remove_expired_documents: :environment do
+    # Get all
+  end
 end
