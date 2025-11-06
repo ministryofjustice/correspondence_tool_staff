@@ -251,6 +251,11 @@ module CasesHelper
               confirm_accepted_date_received_case_sar_offender_path(@case),
               id: "action--accepted-date-received",
               class: "button"
+    when :stop_the_clock
+      link_to t("common.case.stop_the_clock"),
+              new_case_stop_the_clock_path(@case),
+              id: "action--stop_the_clock",
+              class: "button state-action-button"
     end
   end
 

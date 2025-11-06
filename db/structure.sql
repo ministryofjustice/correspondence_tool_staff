@@ -411,7 +411,10 @@ CREATE TABLE public.cases (
     reason_for_deletion character varying,
     user_id integer DEFAULT '-100'::integer NOT NULL,
     reason_for_lateness_id bigint,
-    reason_for_lateness_note character varying
+    reason_for_lateness_note character varying,
+    stop_at timestamp(6) without time zone,
+    stop_reason character varying,
+    stop_by integer
 );
 
 
@@ -2414,6 +2417,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251106102228'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),

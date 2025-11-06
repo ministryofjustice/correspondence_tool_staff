@@ -47,6 +47,9 @@ div id="case-#{@correspondence_type_key}" class="case"
           - if policy(@case).assignments_execute_reassign_user?
             = action_button_for(:reassign_user)
 
+          - if policy(@case).can_stop_the_clock?
+            = action_button_for(:stop_the_clock)
+
         = action_buttons_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension).join(' ').html_safe
 
         - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
