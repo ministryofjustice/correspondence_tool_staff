@@ -199,6 +199,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     has_settlement_cost? || has_total_cost?
   end
 
+  def stoppable?
+    false
+  end
+
 private
 
   def validate_external_deadline_required
