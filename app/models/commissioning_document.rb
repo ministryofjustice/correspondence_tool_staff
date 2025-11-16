@@ -19,10 +19,11 @@ class CommissioningDocument < ApplicationRecord
     mappa: CommissioningDocumentTemplate::Mappa,
     pdp: CommissioningDocumentTemplate::Pdp,
     prison: CommissioningDocumentTemplate::Prison,
+    prison_security_records: CommissioningDocumentTemplate::PrisonSecurityRecords,
     probation: CommissioningDocumentTemplate::Probation,
     security: CommissioningDocumentTemplate::Security,
-    telephone: CommissioningDocumentTemplate::Telephone,
     standard: CommissioningDocumentTemplate::Standard,
+    telephone: CommissioningDocumentTemplate::Telephone,
   }.freeze
 
   enum :template_name, {
@@ -32,6 +33,7 @@ class CommissioningDocument < ApplicationRecord
     mappa: "mappa",
     pdp: "pdp",
     prison: "prison",
+    prison_security_records: "prison_security_records",
     probation: "probation",
     security: "security",
     telephone: "telephone",
