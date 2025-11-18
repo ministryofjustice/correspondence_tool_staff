@@ -39,6 +39,19 @@ class DataRequest < ApplicationRecord
 
   before_validation :clean_attributes
 
+  after_create do
+    template_name = case request_type
+                    when "mappa"
+                      "mappa"
+                    when "security_records"
+                      "prison_security_records"
+                    else
+                      "standard"
+                    end
+
+    create_commissioning_document(template_name:)
+  end
+
   scope :completed, -> { where(completed: true) }
   scope :in_progress, -> { where(completed: false) }
 

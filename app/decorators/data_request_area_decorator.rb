@@ -21,9 +21,9 @@ class DataRequestAreaDecorator < Draper::Decorator
     contact&.name || super
   end
 
-  def request_document
-    commissioning_document.decorate.request_document
-  end
+  # def request_document
+  #   commissioning_document.decorate.request_document
+  # end
 
   def request_dates
     data_requests.in_progress.map { |request|

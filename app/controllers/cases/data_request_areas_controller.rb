@@ -2,7 +2,7 @@ module Cases
   class DataRequestAreasController < ApplicationController
     before_action :set_case
     before_action :set_data_request_area, only: %i[show destroy send_email]
-    before_action :set_commissioning_document, only: %i[show send_email]
+    # before_action :set_commissioning_document, only: %i[show send_email]
     before_action :authorize_action
 
     def new
@@ -58,9 +58,9 @@ module Cases
       @data_request_area = @case.data_request_areas.find(params[:id]).decorate
     end
 
-    def set_commissioning_document
-      @commissioning_document = @data_request_area.commissioning_document.decorate
-    end
+    # def set_commissioning_document
+    #   @commissioning_document = @data_request_area.commissioning_document.decorate
+    # end
 
     def create_params
       params.require(:data_request_area).permit(:data_request_area_type, :location, :contact_id)

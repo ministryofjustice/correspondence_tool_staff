@@ -28,10 +28,11 @@ class DataRequestArea < ApplicationRecord
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
-  after_create do
-    template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
-    create_commissioning_document(template_name:)
-  end
+
+  # after_create do
+  #   template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
+  #   create_commissioning_document(template_name:)
+  # end
 
   enum :data_request_area_type, {
     prison: "prison",
