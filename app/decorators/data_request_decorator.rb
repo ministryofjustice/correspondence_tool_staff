@@ -18,7 +18,6 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def request_document
-    comm
     commissioning_document.decorate.request_document
   end
 
