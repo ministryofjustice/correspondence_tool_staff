@@ -942,6 +942,10 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def stoppable?
+    false
+  end
+
 private
 
   def create_deadline_calculator
