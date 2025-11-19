@@ -1,0 +1,41 @@
+- content_for :page_title do
+  = t('page_title.stop_the_clock_page', case_number: @case.number)
+
+- content_for :heading
+  = "Stop the clock"
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+div.action-copy
+  p
+    = "You are stopping the clock on:"
+    strong.strong-block
+      = @case.subject
+  p.notice
+    i class="icon icon-important"
+      span.visually-hidden
+        = "Important"
+    strong.normal-weight
+      = "The additional time cannot be used to determine whether exemptions apply."
+      br
+      = "It must already be identified that a qualified exemption applies."
+
+br
+
+= form_for @case, as: :case, url: case_stop_the_clocks_path(@case), method: :post do |f|
+  = f.text_area :stop_reason
+
+  .button-holder
+    = submit_tag 'Stop the clock', class: 'button'
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')

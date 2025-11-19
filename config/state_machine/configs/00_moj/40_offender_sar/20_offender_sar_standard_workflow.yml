@@ -17,6 +17,7 @@
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+                stop_the_clock:
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
@@ -149,3 +150,6 @@
                 add_note_to_case:
                 validate_rejected_case:
                   transition_to: data_to_be_requested
+              stopped:
+                add_data_received:
+                add_note_to_case:

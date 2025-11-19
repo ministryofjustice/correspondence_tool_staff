@@ -24,3 +24,4 @@
       - ready_to_dispatch
       - invalid_submission
       - closed
+      - stopped

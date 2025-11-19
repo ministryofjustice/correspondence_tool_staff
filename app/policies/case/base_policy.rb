@@ -293,6 +293,11 @@ class Case::BasePolicy < ApplicationPolicy
     check_can_trigger_event(:extend_for_pit)
   end
 
+  def can_stop_the_clock?
+    clear_failed_checks
+    self.case.stoppable?
+  end
+
   def remove_pit_extension?
     clear_failed_checks
     check_can_trigger_event(:remove_pit_extension)

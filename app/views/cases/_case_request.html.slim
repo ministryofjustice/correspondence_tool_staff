@@ -14,7 +14,7 @@
     - if case_details.message.present?
       p.message-body
         = show_hide_message(case_details)
-    - if case_details.message.empty? && case_details.type_of_offender_sar?
+    - if case_details.message&.empty? && case_details.type_of_offender_sar?
       p.message-body
         = t('cases.offender_sar.request_info_hint')
 

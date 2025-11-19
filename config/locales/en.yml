@@ -1186,6 +1186,7 @@ en:
           other: "%{count} calendar days"
       sent_to_sscl: Sent to SSCL
       status: Status
+      stop_the_clock: Stop the clock
       subject_address: Location
       subject_aliases: Alias
       third_party: Information requested on someone's behalf?

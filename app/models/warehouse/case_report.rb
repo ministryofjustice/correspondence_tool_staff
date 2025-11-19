@@ -238,6 +238,7 @@ module Warehouse
 
       # Methods copied from CSVExporter
 
+      # TODO: (MS) Should this logic include stop_the_clock?
       def extension_count(kase)
         pit_count = 0
         sar_count = 0

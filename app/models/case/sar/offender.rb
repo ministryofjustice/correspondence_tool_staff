@@ -537,6 +537,10 @@ class Case::SAR::Offender < Case::Base
                   end
   end
 
+  def stoppable?
+    true
+  end
+
 private
 
   def set_subject

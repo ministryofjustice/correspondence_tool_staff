@@ -6,6 +6,8 @@
           manager:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
                 add_message_to_case:
                 assign_responder:
                   transition_to: awaiting_responder
@@ -22,6 +24,8 @@
                   switch_workflow: trigger
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
                 add_message_to_case:
                 assign_to_new_team:
                   transition_to: awaiting_responder
@@ -38,6 +42,8 @@
                   switch_workflow: trigger
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 assign_to_new_team:

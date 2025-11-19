@@ -211,6 +211,10 @@ class Case::SAR::Standard < Case::Base
     Case::ICO::SAR
   end
 
+  def stoppable?
+    true
+  end
+
 private
 
   def update_deadlines
