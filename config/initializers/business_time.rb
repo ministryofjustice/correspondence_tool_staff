@@ -18,7 +18,7 @@ ADDITIONAL_BANK_HOLIDAYS = [
   "2026-03-17", # St Patrick's Day
   "2026-07-13", # Battle of the Boyne
   "2026-08-03", # Summer bank holiday
-  "2026-11-30", # St Andrew's Daygit
+  "2026-11-30", # St Andrew's Day
   "2027-01-02", # 2nd January
 ].freeze
 
