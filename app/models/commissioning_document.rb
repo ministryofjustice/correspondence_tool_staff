@@ -72,6 +72,12 @@ class CommissioningDocument < ApplicationRecord
     :docx
   end
 
+  def update_used_template?(params)
+    request_area_id = params[:data_request_area_id]
+    template_name = params[:template_name]
+    update(template_name: template_name)
+  end
+
   def remove_attachment
     return if attachment.nil?
 

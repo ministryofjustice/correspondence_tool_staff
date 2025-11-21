@@ -42,8 +42,7 @@ class DataRequest < ApplicationRecord
   after_create do
     if request_type == "security_records"
       template_name = "security"
-      commissioning_document.update!(template_name:)
-      next
+      commissioning_document&.update_used_template(:data_request_area_id, template_name)
     end
   end
 
