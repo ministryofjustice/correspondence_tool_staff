@@ -244,7 +244,7 @@ class User < ApplicationRecord
 private
 
   def all_possible_user_correspondence_types
-    teams.collect(&:correspondence_types).flatten.uniq
+    teams.includes([:correspondence_types]).collect(&:correspondence_types).flatten.uniq
   end
 
   def bad_passwords

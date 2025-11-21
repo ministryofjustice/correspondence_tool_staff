@@ -19,6 +19,9 @@
 //= require govuk/show-hide-content
 //= require govuk/details.polyfill
 //= require moj
+// require test
+// require govuk-frontend.min
+// require moj-frontend.min
 //= require_tree ./modules
 
 

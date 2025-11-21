@@ -192,6 +192,9 @@ Rails.application.routes.draw do
     resources :sar_extensions, only: %i[new create]
     resource :sar_extensions, only: [:destroy]
 
+    resources :stop_the_clocks, only: %i[new create]
+    resources :restart_the_clocks, only: %i[new create]
+
     resources :approvals, only: %i[new create]
 
     resource :responses, only: [:create] do

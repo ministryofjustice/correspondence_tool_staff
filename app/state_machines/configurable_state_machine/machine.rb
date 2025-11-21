@@ -6,7 +6,7 @@ module ConfigurableStateMachine
       @events = nil
     end
 
-    # Ideal there shouldn't be any other definitions of states other than state machine yaml file. but
+    # Ideally there shouldn't be any other definitions of states other than state machine yaml file. but
     # tried to remove it with a method in manager and ended up with an error below
     # >> Circular dependency detected while autoloading constant in one of policy ruby code
     # Couldn't think of easy way to fix it, so just added missing states here
@@ -30,6 +30,7 @@ module ConfigurableStateMachine
          response_required
          waiting
          invalid_submission
+         stopped
          closed]
     end
 

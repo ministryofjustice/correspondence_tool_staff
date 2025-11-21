@@ -36,6 +36,15 @@
         margin: 0;
       }
     }
+
+    &--stop_the_clock {
+      background-color: lightblue;
+      color: #ccc;
+
+      .govuk-button {
+        font-size: 1.5rem;
+      }
+    }
   }
 
   &__group {

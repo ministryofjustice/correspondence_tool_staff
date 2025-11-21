@@ -206,6 +206,14 @@ class Workflows::Predicates
     !(@kase.type == "Case::SAR::Offender" && @kase.rejected?)
   end
 
+  def can_stop_the_clock?
+    @kase.stoppable? && !@kase.stopped?
+  end
+
+  def can_restart_the_clock?
+    @kase.stoppable? && @kase.stopped?
+  end
+
 private
 
   def case_already_late?

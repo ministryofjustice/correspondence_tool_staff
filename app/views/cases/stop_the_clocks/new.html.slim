@@ -1,0 +1,54 @@
+- content_for :page_title do
+  = t('page_title.stop_the_clock_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+div.action-copy
+  p
+    = "This will pause the time limit for responding to the request. The deadline will be extended automatically when the clock is restarted"
+
+br
+
+= form_for @case, as: :case, url: case_stop_the_clocks_path(@case), method: :post do |f|
+  .form-group
+    h2.form-label
+      = t('.categories_title')
+    p.form-hint
+      = t('.categories_hint')
+
+    - t('.categories').keys.each do |category|
+      - sub_categories = t(".categories.#{category}")
+      fieldset
+        legend
+          span.form-label
+            = sub_categories[0]
+
+        = f.collection_check_boxes :stop_the_clock_categories, sub_categories.drop(1), :first, :first
+
+  = f.text_area :stop_the_clock_reason, rows: 5, label_options: { value: t('.reason_for_stopping'), hint_text: "No change" }
+
+  .form-group
+    = f.gov_uk_date_field :stop_the_clock_date, { \
+        legend_text: t('.stop_the_clock_date'),
+        form_hint_text: t('.stop_the_clock_date_hint',
+        stop_the_clock_limit: Time.zone.now),
+        today_button: { class: ''} \
+      }
+
+  .button-holder
+    = submit_tag 'Stop the clock', class: 'button'
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')

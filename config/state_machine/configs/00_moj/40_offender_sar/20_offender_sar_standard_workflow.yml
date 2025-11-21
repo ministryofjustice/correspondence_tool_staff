@@ -17,6 +17,7 @@
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
@@ -31,6 +32,7 @@
                   transition_to: data_to_be_requested
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
@@ -48,6 +50,7 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
@@ -69,6 +72,7 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               second_vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
@@ -87,6 +91,7 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               ready_to_copy:
                 mark_as_ready_to_dispatch:
                   if: Workflows::Predicates#is_ready_to_dispatch?
@@ -105,6 +110,7 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               ready_to_dispatch:
                 close:
                   transition_to: closed
@@ -121,6 +127,7 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
               closed:
                 add_note_to_case:
                 send_dispatch_letter:

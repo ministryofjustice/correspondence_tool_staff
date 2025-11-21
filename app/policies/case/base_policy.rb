@@ -303,6 +303,11 @@ class Case::BasePolicy < ApplicationPolicy
     self.case.stoppable?
   end
 
+  def can_restart_the_clock?
+    clear_failed_checks
+    self.case.stopped?
+  end
+
   def show?
     # This is just a catch-all in case we introduce a new type without a
     # corresponding policy for the new type. For safety sake, we do not allow

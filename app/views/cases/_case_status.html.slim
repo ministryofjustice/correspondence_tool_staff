@@ -36,7 +36,8 @@
         .case-status__data
           = case_details.ico_reference_number
 
-  .case-status__info.case-status__info--deadlines
+  div[class="case-status__info case-status__info--deadlines #{case_details.stopped? ? "case-status__info--stop_the_clock" : ''}"]
+    h2
     - if case_details.internal_deadline.present?
       .case-status__group.draft
         .case-status__date-title
@@ -49,3 +50,6 @@
         = t('common.case.external_deadline')
       .case-status__date-value
         = case_details.external_deadline
+
+    - if case_details.stoppable?
+      = render partial: 'cases/extension_options'

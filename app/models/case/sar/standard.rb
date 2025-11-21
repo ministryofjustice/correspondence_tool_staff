@@ -64,10 +64,9 @@ class Case::SAR::Standard < Case::Base
                  request_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
-                 # indicate whether the deadline has been extended
                  deadline_extended: [:boolean, { default: false }],
-                 # indicate how long has been extended so far in time units
-                 extended_times: :integer
+                 extended_times: :integer, # tally num extensions
+                 stop_the_clock: [:boolean, { default: false }]
 
   attr_accessor :missing_info
 
@@ -213,6 +212,11 @@ class Case::SAR::Standard < Case::Base
 
   def stoppable?
     true
+  end
+
+  def stopped_at
+    return Time.zone.now.to_date-5.days
+    transitions.where(event: "stopped").order(id: :desc).first&.created_at&.to_date
   end
 
 private

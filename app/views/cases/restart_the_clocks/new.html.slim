@@ -1,0 +1,38 @@
+- content_for :page_title do
+  = t('page_title.restart_the_clock_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+div.case__restart-the-clocks-summary.govuk-inset-text
+  p = t('.summary')
+  p
+    time[datetime = @case.stopped_at] = l(@case.stopped_at, format: :long)
+  p = t('.consequence')
+
+br
+
+= form_for @case, as: :case, url: case_restart_the_clocks_path(@case), method: :post do |f|
+  .form-group
+    = f.gov_uk_date_field :restart_the_clock_date, { \
+        legend_text: t('.restart_the_clock_date'),
+        form_hint_text: t('.restart_the_clock_date_hint'),
+        today_button: { class: ''} \
+      }
+
+  .button-holder
+    = submit_tag 'Restart the clock', class: 'button'
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')
