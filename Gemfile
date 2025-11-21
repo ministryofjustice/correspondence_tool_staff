@@ -50,6 +50,7 @@ gem "matrix" # required by prawn
 gem "notifications-ruby-client", ">= 5.4"
 gem "omniauth-azure-activedirectory-v2", "~> 1.0.0"
 gem "omniauth-rails_csrf_protection"
+gem "openssl", "~> 3.3", ">= 3.3.2"
 gem "paper_trail"
 gem "pg", "~> 1.5"
 gem "pg_search", "~> 2.3.6"

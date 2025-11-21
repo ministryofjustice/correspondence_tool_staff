@@ -39,6 +39,14 @@ class DataRequest < ApplicationRecord
 
   before_validation :clean_attributes
 
+  after_create do
+    if request_type == "security_records"
+      template_name = "security"
+      commissioning_document.update!(template_name:)
+      next
+    end
+  end
+
   scope :completed, -> { where(completed: true) }
   scope :in_progress, -> { where(completed: false) }
 

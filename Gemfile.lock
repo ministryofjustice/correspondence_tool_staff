@@ -358,6 +358,7 @@ GEM
     omniauth-rails_csrf_protection (1.0.2)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
+    openssl (3.3.2)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
     paper_trail (16.0.0)
@@ -685,6 +686,7 @@ DEPENDENCIES
   notifications-ruby-client (>= 5.4)
   omniauth-azure-activedirectory-v2 (~> 1.0.0)
   omniauth-rails_csrf_protection
+  openssl (~> 3.3, >= 3.3.2)
   paper_trail
   parallel_tests
   pg (~> 1.5)
