@@ -39,10 +39,11 @@ class DataRequest < ApplicationRecord
 
   before_validation :clean_attributes
 
-  after_create do
+  # TODO: Replace "security" with a constant or enum value from somehere
+  # TODO: Should be in the data_request_service?
+  before_create do
     if request_type == "security_records"
-      template_name = "security"
-      commissioning_document&.update_used_template(:data_request_area_id, template_name)
+      data_request_area.commissioning_document.update!(template_name: "security")
     end
   end
 
