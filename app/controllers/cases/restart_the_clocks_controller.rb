@@ -28,7 +28,7 @@ module Cases
       service = CaseRestartTheClockService.new(
         current_user,
         @case,
-        restart_the_clock_date
+        restart_the_clock_date,
       )
 
       result = service.call

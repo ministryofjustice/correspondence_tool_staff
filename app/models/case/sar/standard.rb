@@ -43,7 +43,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   include DraftTimeliness::ProgressedForClearance
-  #include Stoppable
+  # include Stoppable
 
   before_save do
     self.workflow = "standard" if workflow.nil?
@@ -210,7 +210,6 @@ class Case::SAR::Standard < Case::Base
   def self.ico_model
     Case::ICO::SAR
   end
-
 
   # Stop the Clock functionality
 

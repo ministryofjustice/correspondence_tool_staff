@@ -32,7 +32,7 @@ class CaseRestartTheClockService
         )
 
         @case.update!(current_state: last_working_state)
-        @case.extend_deadline!(new_external_deadline, (@case.extended_times || 0))
+        @case.extend_deadline!(new_external_deadline, @case.extended_times || 0)
 
         if flagged_aka_trigger?
           @case.update!(internal_deadline: new_internal_deadline)
@@ -50,6 +50,7 @@ class CaseRestartTheClockService
   end
 
 private
+
   def flagged_aka_trigger?
     @case.flagged? && @case.internal_deadline.present?
   end
@@ -59,22 +60,18 @@ private
   end
 
   def new_external_deadline
-    @new_external_deadline ||= begin
-      @case.deadline_calculator.days_after(paused_duration_days, @case.external_deadline)
-    end
+    @new_external_deadline ||= @case.deadline_calculator.days_after(paused_duration_days, @case.external_deadline)
   end
 
   def new_internal_deadline
-    @new_internal_deadline ||= begin
-      @case.deadline_calculator.days_after(paused_duration_days, @case.internal_deadline)
-    end
+    @new_internal_deadline ||= @case.deadline_calculator.days_after(paused_duration_days, @case.internal_deadline)
   end
 
   def message
     internal_deadline_message =
       if flagged_aka_trigger?
         ["Old draft deadline: #{I18n.localize(@case.internal_deadline, format: :long)}."] +
-        ["New draft deadline: #{I18n.localize(new_internal_deadline, format: :long)}."]
+          ["New draft deadline: #{I18n.localize(new_internal_deadline, format: :long)}."]
       else
         []
       end
@@ -94,7 +91,7 @@ private
       return false
     end
 
-    if @restart_the_clock_date > Date.today
+    if @restart_the_clock_date > Time.zone.today
       @case.errors.add(:restart_the_clock_date, "cannot be in the future")
       @result = :validation_error
       return false

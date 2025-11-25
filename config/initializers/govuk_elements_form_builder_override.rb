@@ -4,26 +4,26 @@
 # TODO: Remove on upgrade CDPTKAN-XXX
 module GovukElementsFormBuilder
   class FormBuilder < ActionView::Helpers::FormBuilder
-    def fieldset_legend attribute, options
+    def fieldset_legend(attribute, options)
       legend_text = options.fetch(:legend_options, {}).delete(:text)
 
       legend = content_tag(:legend) do
         tags = [content_tag(
-                  :span,
-                  legend_text || fieldset_text(attribute),
-                  merge_attributes(options[:legend_options], default: {class: 'form-label-bold'})
-                )]
+          :span,
+          legend_text || fieldset_text(attribute),
+          merge_attributes(options[:legend_options], default: { class: "form-label-bold" }),
+        )]
 
         if error_for? attribute
           tags << content_tag(
             :span,
             error_full_message_for(attribute),
-            class: 'error-message'
+            class: "error-message",
           )
         end
 
         hint = hint_text attribute
-        tags << content_tag(:span, hint, class: 'form-hint') if hint
+        tags << content_tag(:span, hint, class: "form-hint") if hint
 
         safe_join tags
       end

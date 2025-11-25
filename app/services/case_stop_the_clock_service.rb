@@ -81,7 +81,7 @@ private
       return false
     end
 
-    if @stop_at > Date.today
+    if @stop_at > Time.zone.today
       @case.errors.add(:stop_the_clock_date, :future)
       @result = :validation_error
       return false
