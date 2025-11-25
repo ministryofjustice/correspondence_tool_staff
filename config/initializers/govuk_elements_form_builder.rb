@@ -1,7 +1,7 @@
 # Cannot upgrade govuk_elements_form_builder gem to v1.3.1 yet due to
 # compatibility issues with govuk_frontend_toolkit - however need the ability to
 # set custom legend text for fieldsets for Stop the Clock functionality.
-# TODO: Remove on upgrade CDPTKAN-XXX
+# TODO: Remove on upgrade CDPTKAN-419
 module GovukElementsFormBuilder
   class FormBuilder < ActionView::Helpers::FormBuilder
     def fieldset_legend(attribute, options)
