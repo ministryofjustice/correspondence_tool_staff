@@ -66,6 +66,8 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  include Stoppable
+
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
   VETTING_IN_PROCESS_EVENT = "mark_as_vetting_in_progress".freeze
