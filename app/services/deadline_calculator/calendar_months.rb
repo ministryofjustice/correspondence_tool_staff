@@ -1,6 +1,6 @@
 # This calculator is based on the rules from ICO for SAR case type
 # - calender month for external deadline , extended external deadline (extension deadline)
-# - if non-business-day, find the closet future working day
+# - if non-business-day, find the closest future working day
 # Assumption
 #  The time unit for calculating for external deadlines is all based on calendar month.
 #  The current implementation does not handle if one type of deadline is based on days

@@ -253,6 +253,15 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
+            stop_the_clock_reason:
+              blank: cannot be blank
+            stop_the_clock_categories:
+              blank: must be selected
+            stop_the_clock_date:
+              blank: cannot be blank
+              invalid: cannot be before the case was received
+              future: cannot be in the future
+              past: cannot stop prior to last unpause
         case/sar/internal_review:
           attributes:
             original_case:
@@ -522,6 +531,7 @@ en:
     formats:
       default: "%-d %b %Y"
       compact: "%d-%m-%Y"
+      long: "%e %B %Y"
 
   time:
     formats:
@@ -656,6 +666,7 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+        stop_the_clock_reason: You must explain your reasons.
       contact:
         data_request_emails: Add multiple email addresses on separate lines
         escalation_name: Enter the name of the prison governor
@@ -1378,6 +1389,31 @@ en:
         heading: Extend for Public Interest Test (PIT)
         extension_date: Date of extension deadline
         extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    stop_the_clocks:
+      new:
+        heading: Stop the clock on this case
+        stop_the_clock_date: When should the clock be stopped from?
+        stop_the_clock_date_hint: For example 16 7 2025.
+        reason_for_stopping: Describe your reasons for stopping the clock in more detail
+        categories_title: Why are you stopping the clock on this case?
+        categories_hint: Select all that apply and at least 1 reason.
+        categories:
+          to_clarify_something:
+            - To clarify something
+            - CCTV or BWCF requirements
+            - Telephone recording requirements
+            - Refine or reduce the scope
+            - Another question about the requirements
+          to_request_more_information:
+            - To request more information
+            - Search location
+            - Unique identifier (such as National Insurance number or date of birth)
+            - Names and email address of individuals (staff requests only)
+          something_else:
+            - Something else
+            - Request is illegible or unreadable
+            - "Respondent's name or address is different"
+            - Another reason
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
