@@ -66,6 +66,8 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  # include Stoppable
+
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
   VETTING_IN_PROCESS_EVENT = "mark_as_vetting_in_progress".freeze
@@ -535,6 +537,34 @@ class Case::SAR::Offender < Case::Base
                   else
                     next_number
                   end
+  end
+
+  # Stop the Clock functionality
+
+  attr_reader :stop_the_clock_date, :stop_the_clock_categories, :stop_the_clock_reason
+
+  def stoppable?
+    !stopped? && !closed?
+  end
+
+  def restartable?
+    stopped? && stopped_at.present?
+  end
+
+  def last_stop_the_clock_transition
+    @last_stop_the_clock_transition ||= transitions.where(event: "stop_the_clock").order(id: :desc).first
+  end
+
+  def last_restart_the_clock_transition
+    @last_restart_the_clock_transition ||= transitions.where(event: "restart_the_clock").order(id: :desc).first
+  end
+
+  def stopped_at
+    @stopped_at ||= last_stop_the_clock_transition&.details&.fetch("stop_the_clock_date")&.to_date
+  end
+
+  def restarted_at
+    @restarted_at ||= last_restart_the_clock_transition&.details&.fetch("restart_the_clock_date")&.to_date
   end
 
 private

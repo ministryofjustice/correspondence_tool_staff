@@ -43,6 +43,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   include DraftTimeliness::ProgressedForClearance
+  # include Stoppable
 
   before_save do
     self.workflow = "standard" if workflow.nil?
@@ -64,10 +65,9 @@ class Case::SAR::Standard < Case::Base
                  request_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
-                 # indicate whether the deadline has been extended
                  deadline_extended: [:boolean, { default: false }],
-                 # indicate how long has been extended so far in time units
-                 extended_times: :integer
+                 extended_times: :integer, # tally num extensions
+                 stop_the_clock: [:boolean, { default: false }]
 
   attr_accessor :missing_info
 
@@ -209,6 +209,34 @@ class Case::SAR::Standard < Case::Base
 
   def self.ico_model
     Case::ICO::SAR
+  end
+
+  # Stop the Clock functionality
+
+  attr_reader :stop_the_clock_date, :stop_the_clock_categories, :stop_the_clock_reason
+
+  def stoppable?
+    !stopped? && !closed?
+  end
+
+  def restartable?
+    stopped? && stopped_at.present?
+  end
+
+  def last_stop_the_clock_transition
+    @last_stop_the_clock_transition ||= transitions.where(event: "stop_the_clock").order(id: :desc).first
+  end
+
+  def last_restart_the_clock_transition
+    @last_restart_the_clock_transition ||= transitions.where(event: "restart_the_clock").order(id: :desc).first
+  end
+
+  def stopped_at
+    @stopped_at ||= last_stop_the_clock_transition&.details&.fetch("stop_the_clock_date")&.to_date
+  end
+
+  def restarted_at
+    @restarted_at ||= last_restart_the_clock_transition&.details&.fetch("restart_the_clock_date")&.to_date
   end
 
 private

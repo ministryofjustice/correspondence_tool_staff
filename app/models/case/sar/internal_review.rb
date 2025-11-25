@@ -105,6 +105,10 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
   end
 
+  def stoppable?
+    false
+  end
+
   def validate_other_option_details
     other_is_selected = outcome_reasons.map(&:abbreviation).include?("other")
     other_not_selected = !other_is_selected
