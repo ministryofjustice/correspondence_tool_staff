@@ -1,4 +1,4 @@
-module Stoppable
+module Case::SAR::Stoppable
   extend ActiveSupport::Concern
 
   included do
