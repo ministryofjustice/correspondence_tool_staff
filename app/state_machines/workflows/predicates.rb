@@ -207,7 +207,7 @@ class Workflows::Predicates
   end
 
   def can_stop_the_clock?
-    @kase.stoppable? && !@kase.stopped?
+    FeatureSet.stop_the_clock.enabled? && @kase.stoppable? && !@kase.stopped?
   end
 
 private

@@ -72,6 +72,30 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
       end
     end
 
+    context "and manager in production environment" do
+      before do
+        feature = instance_double(FeatureSet::EnabledFeature, enabled?: false, disabled?: true)
+        allow(FeatureSet).to receive(:stop_the_clock).and_return(feature)
+      end
+
+      context "and in unassigned state" do
+        let(:manager) { create :manager }
+
+        it "shows permitted events" do
+          k = create :sar_case
+          expect(k.current_state).to eq "unassigned"
+          expect(k.state_machine.permitted_events(manager.id)).to eq %i[add_message_to_case
+                                                                        assign_responder
+                                                                        destroy_case
+                                                                        edit_case
+                                                                        flag_for_clearance
+                                                                        link_a_case
+                                                                        remove_linked_case
+                                                                        request_further_clearance]
+        end
+      end
+    end
+
     context "when not in assigned team" do
       let(:responder) { create :responder }
 
