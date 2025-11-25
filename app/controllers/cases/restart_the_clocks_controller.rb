@@ -25,8 +25,6 @@ module Cases
         nil
       end
 
-      binding.break
-
       service = CaseRestartTheClockService.new(
         current_user,
         @case,

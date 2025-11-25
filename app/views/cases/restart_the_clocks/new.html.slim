@@ -24,12 +24,11 @@ div.case__restart-the-clocks-summary.govuk-inset-text
 br
 
 = form_for @case, as: :case, url: case_restart_the_clocks_path(@case), method: :post do |f|
-  .form-group
-    = f.gov_uk_date_field :restart_the_clock_date, { \
-        legend_text: t('.restart_the_clock_date'),
-        form_hint_text: t('.restart_the_clock_date_hint'),
-        today_button: { class: ''} \
-      }
+  = f.gov_uk_date_field :restart_the_clock_date, { \
+      legend_text: t('.restart_the_clock_date'),
+      form_hint_text: t('.restart_the_clock_date_hint'),
+      today_button: { class: ''} \
+    }
 
   .button-holder
     = submit_tag 'Restart the clock', class: 'button'

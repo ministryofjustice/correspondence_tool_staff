@@ -28,24 +28,36 @@ br
     p.form-hint
       = t('.categories_hint')
 
+    - if @case.errors.include?(:stop_the_clock_categories)
+      .form-group.edit_case__stop-the-clock-categories-error
+        span.error-message
+          = "Stop the clock categories must be selected"
+
+
     - t('.categories').keys.each do |category|
       - sub_categories = t(".categories.#{category}")
-      fieldset
-        legend
-          span.form-label
-            = sub_categories[0]
+      = f.collection_check_boxes :stop_the_clock_categories,
+          sub_categories.drop(1).map { |child| ["#{sub_categories[0]} - #{child}", child] },
+          :first, :last,
+          { \
+            legend_options: { \
+              text: sub_categories[0],
+              class: @case.errors.include?(:stop_the_clock_categories) ? "edit_case__stop-the-clock-categories-error__message" : '' },
+          }
 
-        = f.collection_check_boxes :stop_the_clock_categories, sub_categories.drop(1), :first, :first
 
-  = f.text_area :stop_the_clock_reason, rows: 5, label_options: { value: t('.reason_for_stopping'), hint_text: "No change" }
+    = f.text_area :stop_the_clock_reason,
+        rows: 5,
+        label_options: { value: t('.reason_for_stopping'), for: :case_stop_the_clock_reason, form_hint_text: "lol", hint_text: "3", hint: "sd" },
+        form_hint_text: "Stop it", hint_text: "3", hint: "sd"
 
-  .form-group
+
     = f.gov_uk_date_field :stop_the_clock_date, { \
         legend_text: t('.stop_the_clock_date'),
-        form_hint_text: t('.stop_the_clock_date_hint',
-        stop_the_clock_limit: Time.zone.now),
+        form_hint_text: t('.stop_the_clock_date_hint'),
         today_button: { class: ''} \
       }
+
 
   .button-holder
     = submit_tag 'Stop the clock', class: 'button'

@@ -239,6 +239,13 @@ td {
   font-weight: bold
 }
 
+.edit_case__stop-the-clock-categories-error {
+  &__message + .error-message {
+    display: none;
+  }
+}
+
+
 .case__restart-the-clocks-summary {
   time {
     font-weight: bold;

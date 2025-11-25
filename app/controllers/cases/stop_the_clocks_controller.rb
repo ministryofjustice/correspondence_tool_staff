@@ -15,9 +15,9 @@ module Cases
 
       stop_the_clock_params = params[:case]
 
-      service = CaseStopTheClockService.new current_user,
-                                            @case,
-                                            stop_the_clock_params[:stop_reason]
+      service = CaseStopTheClockService.new(
+        current_user, @case, stop_the_clock_params
+      )
       result = service.call
 
       case result
@@ -26,7 +26,12 @@ module Cases
         redirect_to case_path(@case.id)
       when :validation_error
         @case = CaseStopTheClockDecorator.decorate @case
-        @case.stop_reason = stop_the_clock_params[:stop_reason]
+        @case.stop_the_clock_categories = stop_the_clock_params[:stop_the_clock_categories]
+        @case.stop_the_clock_reason = stop_the_clock_params[:stop_the_clock_reason]
+        @case.stop_the_clock_date_yyyy = stop_the_clock_params[:stop_the_clock_date_yyyy]
+        @case.stop_the_clock_date_mm = stop_the_clock_params[:stop_the_clock_date_mm]
+        @case.stop_the_clock_date_dd = stop_the_clock_params[:stop_the_clock_date_dd]
+
         render :new
       else
         flash[:alert] = "Unable to stop the clock on this case."

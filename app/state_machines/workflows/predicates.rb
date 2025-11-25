@@ -210,10 +210,6 @@ class Workflows::Predicates
     @kase.stoppable? && !@kase.stopped?
   end
 
-  def can_restart_the_clock?
-    @kase.stoppable? && @kase.stopped?
-  end
-
 private
 
   def case_already_late?

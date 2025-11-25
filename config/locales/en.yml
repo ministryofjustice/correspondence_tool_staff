@@ -253,6 +253,15 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
+            stop_the_clock_reason:
+              blank: cannot be blank
+            stop_the_clock_categories:
+              blank: must be selected
+            stop_the_clock_date:
+              blank: cannot be blank
+              invalid: cannot be before the case was received
+              future: cannot be in the future
+              past: cannot stop prior to last unpause
         case/sar/internal_review:
           attributes:
             original_case:
@@ -470,6 +479,7 @@ en:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
+      can_restart_the_clock?: You are not authorised to restart the clock or the case has not already been stopped.
     case/sar/internal_review_policy:
       can_close_case?: You are not authorised to close this case
       respond_and_close?: You are not authorised to close this case
@@ -481,6 +491,7 @@ en:
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
       can_upload_request_attachment?: Request attachments cannot be uploaded.
+      can_restart_the_clock?: You are not authorised to restart the clock or the case has not already been stopped.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -657,7 +668,7 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
-        reason_for_stopping: You must explain your reasons.
+        stop_the_clock_reason: You must explain your reasons.
       contact:
         data_request_emails: Add multiple email addresses on separate lines
         escalation_name: Enter the name of the prison governor
@@ -1403,7 +1414,7 @@ en:
           something_else:
             - Something else
             - Request is illegible or unreadable
-            - Respondent\'s name or address is different
+            - "Respondent's name or address is different"
             - Another reason
     restart_the_clocks:
       new:

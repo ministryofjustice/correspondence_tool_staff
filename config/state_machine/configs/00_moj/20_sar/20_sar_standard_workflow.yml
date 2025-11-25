@@ -70,10 +70,7 @@
                   transition_to: awaiting_responder
 
               stopped:
-                extend_sar_deadline:
-                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
-                restart:
-                  if: Workflows::Predicates#can_restart_the_clock?
+                restart_the_clock:
 
               closed:
                 add_message_to_case:

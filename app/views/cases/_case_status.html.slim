@@ -51,5 +51,7 @@
       .case-status__date-value
         = case_details.external_deadline
 
-    - if case_details.stoppable?
-      = render partial: 'cases/extension_options'
+    div.moj-button-menu[id="moj-button-menu" data-module="moj-button-menu" data-button-text="Deadline options"]
+      = action_button_for(:stop_the_clock) if permitted_events.any?(:stop_the_clock)
+      = action_button_for(:restart_the_clock) if permitted_events.any?(:restart_the_clock)
+      = action_button_for(:extend_sar_deadline) if permitted_events.any?(:extend_sar_deadline)
