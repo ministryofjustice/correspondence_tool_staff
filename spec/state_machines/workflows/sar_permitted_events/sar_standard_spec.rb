@@ -16,7 +16,8 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         flag_for_clearance
                                                                         link_a_case
                                                                         remove_linked_case
-                                                                        request_further_clearance]
+                                                                        request_further_clearance
+                                                                        stop_the_clock]
         end
       end
 
@@ -31,7 +32,8 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         flag_for_clearance
                                                                         link_a_case
                                                                         remove_linked_case
-                                                                        request_further_clearance]
+                                                                        request_further_clearance
+                                                                        stop_the_clock]
         end
       end
 
@@ -48,6 +50,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         link_a_case
                                                                         remove_linked_case
                                                                         request_further_clearance
+                                                                        stop_the_clock
                                                                         unassign_from_user]
         end
       end

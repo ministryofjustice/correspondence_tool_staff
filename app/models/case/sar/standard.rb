@@ -43,6 +43,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   include DraftTimeliness::ProgressedForClearance
+  include Stoppable
 
   before_save do
     self.workflow = "standard" if workflow.nil?
