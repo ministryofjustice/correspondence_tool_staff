@@ -11,10 +11,10 @@ describe "cases/case_status.html.slim", type: :view do
                              type_abbreviation: "FOI",
                              who_its_with: "DACU",
                              type_of_offender_sar?: false,
-                             offender_sar?: false
+                             offender_sar?: false,
+                             stopped?: false
 
-    render partial: "cases/case_status",
-           locals: { case_details: unassigned_case }
+    render partial: "cases/case_status", locals: { case_details: unassigned_case }
 
     partial = case_status_section(rendered)
 
@@ -42,7 +42,8 @@ describe "cases/case_status.html.slim", type: :view do
                          type_abbreviation: "FOI",
                          who_its_with: "",
                          type_of_offender_sar?: false,
-                         offender_sar?: false
+                         offender_sar?: false,
+                         stopped?: false
 
     render partial: "cases/case_status",
            locals: { case_details: closed_case }
@@ -68,7 +69,8 @@ describe "cases/case_status.html.slim", type: :view do
                               type_abbreviation: "FOI",
                               who_its_with: "DACU",
                               type_of_offender_sar?: false,
-                              offender_sar?: false
+                              offender_sar?: false,
+                              stopped?: false
 
     render partial: "cases/case_status",
            locals: { case_details: non_trigger_case }
@@ -96,7 +98,8 @@ describe "cases/case_status.html.slim", type: :view do
              type_abbreviation: "OVERTURNED_SAR",
              who_its_with: "DACU",
              type_of_offender_sar?: false,
-             offender_sar?: false
+             offender_sar?: false,
+             stopped?: false
     end
 
     it "does not show ICO case reference number for foi cases" do
@@ -109,7 +112,8 @@ describe "cases/case_status.html.slim", type: :view do
                                 type_abbreviation: "FOI",
                                 who_its_with: "DACU",
                                 type_of_offender_sar?: false,
-                                offender_sar?: false
+                                offender_sar?: false,
+                                stopped?: false
 
       render partial: "cases/case_status",
              locals: { case_details: non_trigger_case }
@@ -139,7 +143,8 @@ describe "cases/case_status.html.slim", type: :view do
                         type_abbreviation: "ICO",
                         who_its_with: "DACU",
                         type_of_offender_sar?: false,
-                        offender_sar?: false
+                        offender_sar?: false,
+                        stopped?: false
 
       render partial: "cases/case_status",
              locals: { case_details: ico_case }
@@ -176,9 +181,9 @@ describe "cases/case_status.html.slim", type: :view do
         number_final_pages: "250",
       }
       offender_sar_case = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                                 params.merge({ type_of_offender_sar?: true })
+                                 params.merge({ type_of_offender_sar?: true, stopped?: false })
       offender_sar_complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                                      params.merge({ offender_sar_complaint?: true })
+                                      params.merge({ offender_sar_complaint?: true, stopped?: false })
 
       [offender_sar_case, offender_sar_complaint].each do |kase|
         render partial: "cases/case_status",
@@ -212,7 +217,7 @@ describe "cases/case_status.html.slim", type: :view do
         number_final_pages: "250",
       }
       kase = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                    params.merge({ type_of_offender_sar?: true })
+                    params.merge({ type_of_offender_sar?: true, stopped?: false })
 
       render partial: "cases/case_status",
              locals: { case_details: kase }
@@ -232,7 +237,8 @@ describe "cases/case_status.html.slim", type: :view do
                         type_abbreviation: "ICO",
                         who_its_with: "DACU",
                         type_of_offender_sar?: false,
-                        offender_sar?: false
+                        offender_sar?: false,
+                        stopped?: false
 
       render partial: "cases/case_status",
              locals: { case_details: ico_case }

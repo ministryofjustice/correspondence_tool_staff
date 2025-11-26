@@ -436,8 +436,8 @@ describe "cases/show.html.slim", type: :view do
           render
           cases_show_page.load(rendered)
 
-          expect(cases_show_page.actions).to have_extend_sar_deadline
-          expect(cases_show_page.actions).not_to have_remove_sar_deadline_extension
+          expect(cases_show_page).to have_extend_sar_deadline
+          expect(cases_show_page).not_to have_remove_sar_deadline_extension
         end
       end
     end
@@ -466,8 +466,8 @@ describe "cases/show.html.slim", type: :view do
           render
           cases_show_page.load(rendered)
 
-          expect(cases_show_page.actions).not_to have_extend_sar_deadline
-          expect(cases_show_page.actions).to have_remove_sar_deadline_extension
+          expect(cases_show_page).not_to have_extend_sar_deadline
+          expect(cases_show_page).to have_remove_sar_deadline_extension
         end
       end
     end
