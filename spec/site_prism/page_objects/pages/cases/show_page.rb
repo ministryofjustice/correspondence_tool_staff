@@ -32,8 +32,6 @@ module PageObjects
           element :assign_to_team_member, "#action--assign-to-team-member"
           element :mark_as_sent_and_close, "#action--mark-response-as-sent-and-close"
           element :progress_to_disclosure, "#action--progress-for-clearance"
-          element :extend_sar_deadline, "#action--extend-deadline-for-sar"
-          element :remove_sar_deadline_extension, "#action--remove-extended-deadline-for-sar"
           element :mark_as_waiting_for_data, "#action--mark-as-waiting-for-data"
           element :mark_as_ready_for_vetting, "#action--mark-as-ready-for-vetting"
           element :mark_as_vetting_in_progress, "#action--mark-as-vetting-in-progress"
@@ -43,6 +41,9 @@ module PageObjects
         end
         element :extend_for_pit_action, "#action--extend-for-pit"
         element :remove_pit_extension_action, "#action--remove-pit-extension"
+        element :remove_sar_deadline_extension, "#action--remove-extended-deadline-for-sar"
+        element :extend_sar_deadline, "#action--extend-deadline-for-sar"
+        element :stop_the_clock, "#action--stop-the-clock"
 
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, ".case-status"
