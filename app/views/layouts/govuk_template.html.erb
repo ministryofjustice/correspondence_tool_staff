@@ -38,7 +38,7 @@
 
   <body<%= content_for?(:body_classes) ? raw(" class=\"govuk-template__body #{yield(:body_classes)}\"") : 'govuk-template__body' %>>
     <script type="module" src="/assets/govuk-frontend.min.js"></script>
-    <script type="module" src="/assets/moj-frontend.min.js"></script>
+    <!--<script type="module" src="/assets/moj-frontend.min.js"></script>-->
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
     <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
