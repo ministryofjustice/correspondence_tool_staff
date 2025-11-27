@@ -443,7 +443,7 @@ describe "cases/show.html.slim", type: :view do
       end
     end
 
-    context "after it is extended" do
+    context "and after it is extended" do
       let(:sar) do
         extended_sar = create(:sar_case, :extended_deadline_sar)
         extended_sar.external_deadline += 60.days
@@ -475,7 +475,7 @@ describe "cases/show.html.slim", type: :view do
   end
 
   describe "stopping a SAR case" do
-    context "before it is stopped" do
+    context "and before it is stopped" do
       let(:sar) { create(:approved_sar).decorate }
 
       before do
