@@ -44,6 +44,7 @@ module PageObjects
         element :remove_sar_deadline_extension, "#action--remove-extended-deadline-for-sar"
         element :extend_sar_deadline, "#action--extend-deadline-for-sar"
         element :stop_the_clock, "#action--stop-the-clock"
+        element :restart_the_clock, "#action--restart-the-clock"
 
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, ".case-status"

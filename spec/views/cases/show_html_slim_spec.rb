@@ -15,6 +15,7 @@ describe "cases/show.html.slim", type: :view do
       can_accept_or_reject_approver_assignment?
       can_view_attachments?
       can_add_message_to_case?
+      can_stop_the_clock?
       destroy_case?
       destroy_case_link?
       extend_sar_deadline?
@@ -442,7 +443,7 @@ describe "cases/show.html.slim", type: :view do
       end
     end
 
-    describe "after it is extended" do
+    context "after it is extended" do
       let(:sar) do
         extended_sar = create(:sar_case, :extended_deadline_sar)
         extended_sar.external_deadline += 60.days
@@ -468,6 +469,33 @@ describe "cases/show.html.slim", type: :view do
 
           expect(cases_show_page).not_to have_extend_sar_deadline
           expect(cases_show_page).to have_remove_sar_deadline_extension
+        end
+      end
+    end
+  end
+
+  describe "stopping a SAR case" do
+    context "before it is stopped" do
+      let(:sar) { create(:approved_sar).decorate }
+
+      before do
+        assign(:case, sar)
+        assign(:permitted_events, [:stop_the_clock])
+        assign(:filtered_permitted_events, [:stop_the_clock])
+
+        setup_policies(
+          can_stop_the_clock?: true,
+        )
+      end
+
+      context "when a manager" do
+        it "shows stop the clock action" do
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page).to have_stop_the_clock
+          expect(cases_show_page).not_to have_restart_the_clock
         end
       end
     end

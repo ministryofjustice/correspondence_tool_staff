@@ -179,11 +179,12 @@ describe "cases/case_status.html.slim", type: :view do
         page_count: "500",
         number_exempt_pages: "200",
         number_final_pages: "250",
+        stopped?: false,
       }
       offender_sar_case = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                                 params.merge({ type_of_offender_sar?: true, stopped?: false })
+                                 params.merge({ type_of_offender_sar?: true })
       offender_sar_complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                                      params.merge({ offender_sar_complaint?: true, stopped?: false })
+                                      params.merge({ offender_sar_complaint?: true })
 
       [offender_sar_case, offender_sar_complaint].each do |kase|
         render partial: "cases/case_status",
@@ -215,9 +216,10 @@ describe "cases/case_status.html.slim", type: :view do
         page_count: "500",
         number_exempt_pages: "200",
         number_final_pages: "250",
+        stopped?: false,
       }
       kase = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
-                    params.merge({ type_of_offender_sar?: true, stopped?: false })
+                    params.merge({ type_of_offender_sar?: true })
 
       render partial: "cases/case_status",
              locals: { case_details: kase }
