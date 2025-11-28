@@ -556,6 +556,7 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     send_email: Send commissioning email
+    stop_the_clock: Stop the clock
 
   helpers:
     fieldset:
@@ -1397,6 +1398,7 @@ en:
         reason_for_stopping: Describe your reasons for stopping the clock in more detail
         categories_title: Why are you stopping the clock on this case?
         categories_hint: Select all that apply and at least 1 reason.
+        categories_error: Stop the clock categories must be selected
         categories:
           to_clarify_something:
             - To clarify something
