@@ -103,9 +103,9 @@ private
 
   def unique_pending_responder
     if self.case && (state == "pending" && role == "responding")
-      num_existing = self.case&.assignments&.responding&.pending&.size
+      num_existing = self.case.assignments&.responding&.pending&.size
       if num_existing > 1
-        errors.add(:state, "responding not unique")
+        errors.add(:role, "responding not unique")
       end
     end
   end
