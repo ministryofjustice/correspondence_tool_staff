@@ -458,6 +458,8 @@ en:
       upload_responses?: You are not authorised to upload a response for this case.
       can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
+      can_stop_the_clock?: You are not authorised to stop the clock on this case.
+      can_restart_the_clock?: You are not authorised to restart the clock on this case.
     case/base_policy:
       can_download_stats?: You are not authorised to view or download statistics.
     case/ico/foi_policy:
@@ -558,6 +560,7 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     send_email: Send commissioning email
+    stop_the_clock: Stop the clock
 
   helpers:
     fieldset:
@@ -1399,6 +1402,7 @@ en:
         reason_for_stopping: Describe your reasons for stopping the clock in more detail
         categories_title: Why are you stopping the clock on this case?
         categories_hint: Select all that apply and at least 1 reason.
+        categories_error: Stop the clock categories must be selected
         categories:
           to_clarify_something:
             - To clarify something
