@@ -34,7 +34,7 @@ describe "cases/stop_the_clocks/new.html.slim", type: :view do
         "To request more information - Names and email address of individuals (staff requests only)",
         "Something else - Request is illegible or unreadable",
         "Something else - Respondent's name or address is different",
-        "Something else - Another reason"
+        "Something else - Another reason",
       ]
 
       values.each do |value|

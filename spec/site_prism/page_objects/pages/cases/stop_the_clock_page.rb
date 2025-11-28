@@ -27,7 +27,6 @@ module PageObjects
         element :submit_button, ".button"
         element :cancel, "a.acts-like-button"
 
-
         def fill_in_stop_the_clock_date(date)
           stop_the_clock_date_day.set(date.day)
           stop_the_clock_date_month.set(date.month)

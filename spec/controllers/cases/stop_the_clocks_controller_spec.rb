@@ -17,7 +17,7 @@ describe Cases::StopTheClocksController, type: :controller do
       case: {
         stop_the_clock_categories: [
           "To clarify something - CCTV or BWCF requirements",
-          "Something else - Another reason"
+          "Something else - Another reason",
         ],
         stop_the_clock_date_dd: "10",
         stop_the_clock_date_mm: "8",
@@ -32,25 +32,29 @@ describe Cases::StopTheClocksController, type: :controller do
   end
 
   describe "#new" do
-    subject(:response) { get :new, params: { case_id: sar_case.id} }
+    subject(:response) { get :new, params: { case_id: sar_case.id } }
 
     context "when manager" do
-      let (:user) { manager }
+      let(:user) { manager }
+
       it { is_expected.to have_http_status(:ok) }
     end
 
     context "when approver" do
-      let (:user) { approver }
+      let(:user) { approver }
+
       it { is_expected.to have_http_status(:ok) }
     end
 
     context "when team_admin" do
-      let (:user) { team_admin }
+      let(:user) { team_admin }
+
       it { is_expected.to have_http_status(:ok) }
     end
 
     context "when responder" do
-      let (:user) { responder }
+      let(:user) { responder }
+
       it { is_expected.to have_http_status(:redirect) }
     end
   end
@@ -64,7 +68,7 @@ describe Cases::StopTheClocksController, type: :controller do
           case: {
             stop_the_clock_categories: [
               "To clarify something - CCTV or BWCF requirements",
-              "Something else - Another reason"
+              "Something else - Another reason",
             ],
             stop_the_clock_date_dd: "10",
             stop_the_clock_date_mm: "8",
