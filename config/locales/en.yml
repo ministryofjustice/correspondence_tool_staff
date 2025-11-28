@@ -458,6 +458,8 @@ en:
       upload_responses?: You are not authorised to upload a response for this case.
       can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
+      can_stop_the_clock?: You are not authorised to stop the clock on this case.
+      can_restart_the_clock?: You are not authorised to restart the clock on this case.
     case/base_policy:
       can_download_stats?: You are not authorised to view or download statistics.
     case/ico/foi_policy:
