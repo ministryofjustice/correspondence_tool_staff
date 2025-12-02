@@ -102,10 +102,6 @@ ew_bank_holidays = %w[
   2025-12-26
 ]
 
-hols = if Rails.env.production?
-         BankHoliday.all.map(&:date)
-       else
-         ew_bank_holidays
-       end
+hols = BankHoliday.all.map(&:date)
 
 BusinessTime::Config.holidays = hols.map(&:to_date)
