@@ -1420,6 +1420,9 @@ en:
             - Request is illegible or unreadable
             - "Respondent's name or address is different"
             - Another reason
+      create:
+        success: You have stopped the clock on this case.
+        failure: Unable to stop the clock on this case.
     restart_the_clocks:
       new:
         heading: Restart the clock on this case
@@ -1428,9 +1431,6 @@ en:
         reason_for_restarting: Describe your reasons for restarting the clock in more detail
         summary: 'The clock was stopped on:'
         consequence: The new deadlines will be calculated automatically based on the restart date specified below.
-      create:
-        success: You have stopped the clock on this case.
-        failure: Unable to stop the clock on this case.
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
