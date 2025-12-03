@@ -16,6 +16,4 @@ ADDITIONAL_BANK_HOLIDAYS = [
   "2025-12-01", # St Andrew's Day (substitute day)
 ].freeze
 
-hols = BankHoliday.all.map(&:date)
-
-BusinessTime::Config.holidays = hols.map(&:to_date)
+BusinessTime::Config.holidays = BankHoliday.all.map(&:date)
