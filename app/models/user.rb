@@ -241,6 +241,10 @@ class User < ApplicationRecord
     teams.map(&:name).to_sentence
   end
 
+  def allowed_to_stop_the_clock?
+    manager? || team_admin? || approver?
+  end
+
 private
 
   def all_possible_user_correspondence_types
