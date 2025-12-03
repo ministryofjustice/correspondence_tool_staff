@@ -27,7 +27,7 @@ module Cases
 
         render :new
       else
-        flash[:alert] = I18n.t("cases.stop_the_clock.create.failure")
+        flash[:alert] = I18n.t("cases.stop_the_clocks.create.failure")
         redirect_to case_path(@case.id)
       end
     end
