@@ -229,7 +229,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
             expect(k.current_state).to eq "awaiting_responder"
             expect(k.state_machine.permitted_events(unassigned_approver.id))
-              .to match_array %i[reassign_user unflag_for_clearance]
+              .to match_array %i[reassign_user stop_the_clock unflag_for_clearance]
           end
         end
 
@@ -239,7 +239,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
             expect(k.current_state).to eq "drafting"
             expect(k.state_machine.permitted_events(unassigned_approver.id))
-              .to match_array %i[reassign_user unflag_for_clearance]
+              .to match_array %i[reassign_user stop_the_clock unflag_for_clearance]
           end
         end
 
@@ -249,7 +249,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
             expect(k.current_state).to eq "pending_dacu_clearance"
             expect(k.state_machine.permitted_events(unassigned_approver.id))
-              .to match_array %i[reassign_user unflag_for_clearance]
+              .to match_array %i[reassign_user stop_the_clock unflag_for_clearance]
           end
         end
 
@@ -260,7 +260,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
             expect(k.current_state).to eq "awaiting_dispatch"
             expect(k.workflow).to eq "trigger"
             expect(k.state_machine.permitted_events(unassigned_approver.id))
-              .to match_array [:reassign_user]
+              .to match_array %i[reassign_user stop_the_clock]
           end
         end
 
@@ -289,6 +289,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
             .to match_array %i[
               add_message_to_case
               reassign_user
+              stop_the_clock
               unaccept_approver_assignment
               unflag_for_clearance
             ]
@@ -304,6 +305,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
             .to match_array %i[
               add_message_to_case
               reassign_user
+              stop_the_clock
               unaccept_approver_assignment
               unflag_for_clearance
             ]
@@ -322,6 +324,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
               extend_sar_deadline
               reassign_user
               remove_sar_deadline_extension
+              stop_the_clock
               unaccept_approver_assignment
               unflag_for_clearance
             ]
@@ -341,6 +344,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
               extend_sar_deadline
               reassign_user
               request_amends
+              stop_the_clock
               unaccept_approver_assignment
               unflag_for_clearance
             ]
@@ -355,7 +359,8 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.workflow).to eq "trigger"
           expect(k.state_machine.permitted_events(approver.id)).to eq %i[add_message_to_case
                                                                          extend_sar_deadline
-                                                                         reassign_user]
+                                                                         reassign_user
+                                                                         stop_the_clock]
         end
       end
 
