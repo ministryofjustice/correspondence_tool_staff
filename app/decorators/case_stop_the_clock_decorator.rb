@@ -5,7 +5,7 @@ class CaseStopTheClockDecorator < Draper::Decorator
   attr_accessor :stop_the_clock_date_dd, :stop_the_clock_date_mm, :stop_the_clock_date_yyyy, :stop_the_clock_categories, :stop_the_clock_reason
 
   def self.build(kase, params = nil)
-    self.decorate(kase).tap do |decorator|
+    decorate(kase).tap do |decorator|
       return decorator unless params
 
       decorator.stop_the_clock_categories = params[:stop_the_clock_categories]
