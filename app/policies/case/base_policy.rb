@@ -300,7 +300,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_stop_the_clock?
     clear_failed_checks
-    self.case.stoppable? && (user.manager? || user.team_admin? || user.approver?)
+    self.case.stoppable? && user.allowed_to_stop_the_clock?
   end
 
   def show?
