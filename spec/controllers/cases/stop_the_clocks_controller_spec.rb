@@ -60,6 +60,12 @@ describe Cases::StopTheClocksController, type: :controller do
   end
 
   describe "#create" do
+    subject(:response) { post :create, params: post_params }
+
+    before do
+      allow(CaseStopTheClockService).to receive(:new).and_return(service)
+    end
+
     context "when manager" do
       let(:user) { manager }
       let(:post_params) do
@@ -78,17 +84,9 @@ describe Cases::StopTheClocksController, type: :controller do
         }
       end
 
-      before do
-        allow(CaseStopTheClockService).to receive(:new).and_return(service)
-        sign_in user
-      end
-
       context "with valid params" do
-        before do
-          post :create, params: post_params
-        end
-
         it "calls the CaseStopTheClockService" do
+          expect(response).to have_http_status(:redirect)
           expect(CaseStopTheClockService).to have_received(:new)
           expect(service).to have_received(:call)
           expect(request.flash[:notice]).to eq "You have stopped the clock on this case."
@@ -119,6 +117,27 @@ describe Cases::StopTheClocksController, type: :controller do
           expect(request).to redirect_to(case_path(sar_case.id))
         end
       end
+    end
+
+    context "when responder" do
+      let(:user) { responder }
+      let(:post_params) do
+        {
+          case_id: sar_case.id,
+          case: {
+            stop_the_clock_categories: [
+              "To clarify something - CCTV or BWCF requirements",
+              "Something else - Another reason",
+            ],
+            stop_the_clock_date_dd: "10",
+            stop_the_clock_date_mm: "8",
+            stop_the_clock_date_yyyy: "2025",
+            stop_the_clock_reason: "need more time",
+          },
+        }
+      end
+
+      it { is_expected.to have_http_status(:redirect) }
     end
   end
 end
