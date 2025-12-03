@@ -7,7 +7,7 @@ module Cases
     def new
       authorize @case, :can_stop_the_clock?
 
-      @case = CaseStopTheClockDecorator.decorate @case
+      @case = CaseStopTheClockDecorator.build(@case)
     end
 
     def create
@@ -15,26 +15,19 @@ module Cases
 
       stop_the_clock_params = params[:case]
 
-      service = CaseStopTheClockService.new(
-        current_user, @case, stop_the_clock_params
-      )
+      service = CaseStopTheClockService.new(current_user, @case, stop_the_clock_params)
       result = service.call
 
       case result
       when :ok
-        flash[:notice] = "You have stopped the clock on this case."
+        flash[:notice] = I18n.t("cases.stop_the_clocks.create.success")
         redirect_to case_path(@case.id)
       when :validation_error
-        @case = CaseStopTheClockDecorator.decorate @case
-        @case.stop_the_clock_categories = stop_the_clock_params[:stop_the_clock_categories]
-        @case.stop_the_clock_reason = stop_the_clock_params[:stop_the_clock_reason]
-        @case.stop_the_clock_date_yyyy = stop_the_clock_params[:stop_the_clock_date_yyyy]
-        @case.stop_the_clock_date_mm = stop_the_clock_params[:stop_the_clock_date_mm]
-        @case.stop_the_clock_date_dd = stop_the_clock_params[:stop_the_clock_date_dd]
+        @case = CaseStopTheClockDecorator.build(@case, stop_the_clock_params)
 
         render :new
       else
-        flash[:alert] = "Unable to stop the clock on this case."
+        flash[:alert] = I18n.t("cases.stop_the_clock.create.failure")
         redirect_to case_path(@case.id)
       end
     end
