@@ -37,6 +37,7 @@ public/uploads
 
 public/assets/*
 !public/assets/govuk-frontend.*
+!public/assets/moj-frontend.*
 
 dump.rdb
 

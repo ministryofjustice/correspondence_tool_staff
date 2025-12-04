@@ -83,6 +83,7 @@ en:
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
     stop_the_clock_page: Stop the clock - %{case_number} - Track-a-query
+    restart_the_clock_page: Restart the clock - %{case_number} - Track-a-query
     resend_unlock: Resend unlock instructions - Track-a-query
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
     user_detail_page: Open cases - %{full_name} - Track-a-query

@@ -197,8 +197,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "unassigned"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(unassigned_approver.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array(%i[stop_the_clock])
         end
       end
 
@@ -208,8 +207,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "awaiting_responder"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(unassigned_approver.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array(%i[stop_the_clock])
         end
       end
 
@@ -219,8 +217,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "drafting"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(unassigned_approver.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array(%i[stop_the_clock])
         end
       end
 
@@ -230,8 +227,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "pending_dacu_clearance"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(unassigned_approver.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array(%i[stop_the_clock])
         end
       end
 
@@ -241,8 +237,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "awaiting_dispatch"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(unassigned_approver.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array(%i[stop_the_clock])
         end
       end
 
@@ -268,7 +263,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.current_state).to eq "unassigned"
           expect(k.workflow).to eq "trigger"
           expect(k.state_machine.permitted_events(disclosure_specialist.id))
-            .to match_array %i[accept_approver_assignment unflag_for_clearance]
+            .to match_array %i[accept_approver_assignment stop_the_clock unflag_for_clearance]
         end
       end
 
@@ -279,7 +274,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.current_state).to eq "awaiting_responder"
           expect(k.workflow).to eq "trigger"
           expect(k.state_machine.permitted_events(disclosure_specialist.id))
-            .to match_array %i[accept_approver_assignment unflag_for_clearance]
+            .to match_array %i[accept_approver_assignment stop_the_clock unflag_for_clearance]
         end
       end
 
@@ -290,7 +285,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.current_state).to eq "drafting"
           expect(k.workflow).to eq "trigger"
           expect(k.state_machine.permitted_events(disclosure_specialist.id))
-            .to match_array %i[accept_approver_assignment unflag_for_clearance]
+            .to match_array %i[accept_approver_assignment stop_the_clock unflag_for_clearance]
         end
       end
 
@@ -301,7 +296,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.current_state).to eq "pending_dacu_clearance"
           expect(k.workflow).to eq "trigger"
           expect(k.state_machine.permitted_events(disclosure_specialist.id))
-            .to match_array %i[accept_approver_assignment unflag_for_clearance]
+            .to match_array %i[accept_approver_assignment stop_the_clock unflag_for_clearance]
         end
       end
 
@@ -311,8 +306,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
           expect(k.current_state).to eq "awaiting_dispatch"
           expect(k.workflow).to eq "trigger"
-          expect(k.state_machine.permitted_events(disclosure_specialist.id))
-            .to be_empty
+          expect(k.state_machine.permitted_events(disclosure_specialist.id)).to match_array(%i[stop_the_clock])
         end
       end
 
