@@ -19,7 +19,7 @@ ADDITIONAL_BANK_HOLIDAYS = [
   "2026-07-13", # Battle of the Boyne
   "2026-08-03", # Summer bank holiday
   "2026-11-30", # St Andrew's Day
-  "2027-01-02", # 2nd January
+  "2027-01-04", # 2nd January (substitute day)
 ].freeze
 
 ew_bank_holidays = %w[
