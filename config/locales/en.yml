@@ -1409,16 +1409,17 @@ en:
             - CCTV or BWCF requirements
             - Telephone recording requirements
             - Refine or reduce the scope
-            - Another question about the requirements
+            - Clarify something else
           to_request_more_information:
             - To request more information
             - Search location
-            - Unique identifier (such as National Insurance number or date of birth)
-            - Names and email address of individuals (staff requests only)
+            - Unique identifier
+            - Names and email address of individuals
           something_else:
             - Something else
             - Request is illegible or unreadable
-            - "Respondent's name or address is different"
+            - Third party details (offender SARs only)
+            - Data subject verification check
             - Another reason
       create:
         success: You have stopped the clock on this case.

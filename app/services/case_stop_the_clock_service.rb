@@ -59,13 +59,13 @@ private
   end
 
   def validate_params
-    if @stop_reason.blank?
-      @case.errors.add(:stop_the_clock_reason, :blank)
+    if @stop_categories.empty?
+      @case.errors.add(:stop_the_clock_categories, :blank)
       @result = :validation_error
     end
 
-    if @stop_categories.empty?
-      @case.errors.add(:stop_the_clock_categories, :blank)
+    if @stop_reason.blank?
+      @case.errors.add(:stop_the_clock_reason, :blank)
       @result = :validation_error
     end
 
