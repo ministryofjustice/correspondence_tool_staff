@@ -19,8 +19,8 @@ feature "when extending a SAR case deadline" do
 
       # 1. Can extend SAR deadline only
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.actions).to have_extend_sar_deadline
-      expect(cases_show_page.actions).not_to have_remove_sar_deadline_extension
+      expect(cases_show_page).to have_extend_sar_deadline
+      expect(cases_show_page).not_to have_remove_sar_deadline_extension
 
       # 2. Extend by 30 days for the first time
       extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
@@ -39,11 +39,11 @@ feature "when extending a SAR case deadline" do
 
       # 4. No longer able to extend
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.actions).not_to have_extend_sar_deadline
-      expect(cases_show_page.actions).to have_remove_sar_deadline_extension
+      expect(cases_show_page).not_to have_extend_sar_deadline
+      expect(cases_show_page).to have_remove_sar_deadline_extension
 
       # 5. Remove extension should display initial deadline
-      cases_show_page.actions.remove_sar_deadline_extension.click
+      cases_show_page.remove_sar_deadline_extension.click
       expect(cases_show_page).to be_displayed
       case_deadline_text_to_be(original_deadline.strftime("%-d %b %Y"))
     end
@@ -63,8 +63,8 @@ feature "when extending a SAR case deadline" do
 
       # 2. No longer able to extend
       cases_show_page.load(id: kase.id)
-      expect(cases_show_page.actions).not_to have_extend_sar_deadline
-      expect(cases_show_page.actions).to have_remove_sar_deadline_extension
+      expect(cases_show_page).not_to have_extend_sar_deadline
+      expect(cases_show_page).to have_remove_sar_deadline_extension
 
       # 3. Trying to extend again displays an error message
       visit new_case_sar_extension_path(kase)
@@ -107,7 +107,7 @@ feature "when extending a SAR case deadline" do
       # 1. No button to extend deadline
       cases_show_page.load(id: kase.id)
       expect(cases_show_page).to be_displayed
-      expect(cases_show_page.actions).not_to have_extend_sar_deadline
+      expect(cases_show_page).not_to have_extend_sar_deadline
 
       # 2. Unauthorized to extend deadline
       visit new_case_sar_extension_path(kase)
