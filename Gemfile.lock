@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/ministryofjustice/bank_holiday.git
-  revision: 16d511a1d1628eece8d61ade9223b10caccbcea3
-  branch: bundler-fix
-  specs:
-    bank_holiday (0.0.4)
-      dish
-
-GIT
   remote: https://github.com/notarize/rails-data-migrations.git
   revision: 1ec8bf92275f5e31fd2820ea39025b25620db7ef
   ref: 1ec8bf9
@@ -190,7 +182,6 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
-    dish (0.0.6)
     docile (1.4.0)
     draper (4.0.2)
       actionpack (>= 5.0)
@@ -641,7 +632,6 @@ DEPENDENCIES
   awesome_print
   aws-sdk-s3
   axlsx_styler
-  bank_holiday!
   better_errors
   binding_of_caller
   bootsnap (>= 1.1.0)
