@@ -242,7 +242,7 @@ class User < ApplicationRecord
   end
 
   def allowed_to_stop_the_clock?
-    manager? || team_admin? || approver?
+    manager? || approver? || (responder? && team_admin?)
   end
 
 private

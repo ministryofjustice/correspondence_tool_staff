@@ -5,6 +5,9 @@
         ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:
             states:
+              stop_the_clock:
+                if: Workflows::Predicates#can_stop_the_clock?
+                transition_to: stopped
               data_to_be_requested:
                 mark_as_waiting_for_data:
                   transition_to: waiting_for_data
@@ -19,6 +22,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               waiting_for_data:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
                 add_data_received:
@@ -34,6 +40,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               ready_for_vetting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
                 add_data_received:
@@ -52,6 +61,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               vetting_in_progress:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
                   after_transition: Workflows::Hooks#unassign_vetter
@@ -74,6 +86,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               second_vetting_in_progress:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
                   after_transition: Workflows::Hooks#unassign_vetter
@@ -93,6 +108,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               ready_to_copy:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 mark_as_ready_to_dispatch:
                   if: Workflows::Predicates#is_ready_to_dispatch?
                   transition_to: ready_to_dispatch
@@ -112,6 +130,9 @@
                   if: Workflows::Predicates#can_start_complaint?
 
               ready_to_dispatch:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 close:
                   transition_to: closed
                 add_data_received:
@@ -127,6 +148,9 @@
                 date_sent_to_sscl_removed:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+
+              stopped:
+                restart_the_clock:
 
               closed:
                 add_note_to_case:
