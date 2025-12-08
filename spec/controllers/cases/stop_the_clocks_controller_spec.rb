@@ -1,11 +1,12 @@
 require "rails_helper"
 
 describe Cases::StopTheClocksController, type: :controller do
-  let(:manager)     { find_or_create :disclosure_bmt_user }
-  let(:approver)    { find_or_create :approver }
-  let(:team_admin)  { find_or_create :team_admin }
-  let(:responder)   { find_or_create :responder }
-  let(:sar_case)    { create :sar_case }
+  let(:manager)                   { find_or_create :disclosure_bmt_user }
+  let(:approver)                  { find_or_create :approver }
+  let(:responder_and_team_admin)  { find_or_create :responder_and_team_admin }
+  let(:team_admin)                { find_or_create :team_admin }
+  let(:responder)                 { find_or_create :responder }
+  let(:sar_case)                  { create :sar_case }
 
   let(:service) do
     instance_double(CaseStopTheClockService, call: :ok, result: :ok)
@@ -46,13 +47,13 @@ describe Cases::StopTheClocksController, type: :controller do
       it { is_expected.to have_http_status(:ok) }
     end
 
-    context "when team_admin" do
-      let(:user) { team_admin }
+    context "when responder and team_admin" do
+      let(:user) { responder_and_team_admin }
 
       it { is_expected.to have_http_status(:ok) }
     end
 
-    context "when responder" do
+    context "when responder only" do
       let(:user) { responder }
 
       it { is_expected.to have_http_status(:redirect) }

@@ -28,12 +28,13 @@ describe "cases/stop_the_clocks/new.html.slim", type: :view do
         "To clarify something - CCTV or BWCF requirements",
         "To clarify something - Telephone recording requirements",
         "To clarify something - Refine or reduce the scope",
-        "To clarify something - Another question about the requirements",
+        "To clarify something - Clarify something else",
         "To request more information - Search location",
-        "To request more information - Unique identifier (such as National Insurance number or date of birth)",
-        "To request more information - Names and email address of individuals (staff requests only)",
+        "To request more information - Unique identifier",
+        "To request more information - Names and email address of individuals",
         "Something else - Request is illegible or unreadable",
-        "Something else - Respondent's name or address is different",
+        "Something else - Third party details (offender SARs only)",
+        "Something else - Data subject verification check",
         "Something else - Another reason",
       ]
 
