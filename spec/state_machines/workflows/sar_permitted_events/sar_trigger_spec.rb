@@ -259,8 +259,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
 
             expect(k.current_state).to eq "awaiting_dispatch"
             expect(k.workflow).to eq "trigger"
-            expect(k.state_machine.permitted_events(unassigned_approver.id))
-              .to match_array %i[reassign_user stop_the_clock]
+            expect(k.state_machine.permitted_events(unassigned_approver.id)).to match_array %i[reassign_user stop_the_clock]
           end
         end
 
