@@ -176,6 +176,9 @@
           approver:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -190,6 +193,9 @@
                   switch_workflow: standard
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -204,6 +210,9 @@
                   switch_workflow: standard
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -223,6 +232,9 @@
                   switch_workflow: standard
 
               pending_dacu_clearance:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -251,6 +263,9 @@
                   transition_to: drafting
 
               awaiting_dispatch:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -261,6 +276,9 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_sar_deadline_extension:
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+
+              stopped:
+                restart_the_clock:
 
               closed:
                 add_message_to_case:
