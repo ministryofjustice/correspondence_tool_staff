@@ -253,6 +253,15 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
+            stop_the_clock_reason:
+              blank: cannot be blank
+            stop_the_clock_categories:
+              blank: must be selected
+            stop_the_clock_date:
+              blank: cannot be blank
+              invalid: cannot be before the case was received
+              future: cannot be in the future
+              past: cannot stop prior to last unpause
         case/sar/internal_review:
           attributes:
             original_case:
@@ -449,6 +458,8 @@ en:
       upload_responses?: You are not authorised to upload a response for this case.
       can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
+      can_stop_the_clock?: You are not authorised to stop the clock on this case.
+      can_restart_the_clock?: You are not authorised to restart the clock on this case.
     case/base_policy:
       can_download_stats?: You are not authorised to view or download statistics.
     case/ico/foi_policy:
@@ -522,6 +533,7 @@ en:
     formats:
       default: "%-d %b %Y"
       compact: "%d-%m-%Y"
+      long: "%e %B %Y"
 
   time:
     formats:
@@ -546,6 +558,7 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     send_email: Send commissioning email
+    stop_the_clock: Stop the clock
 
   helpers:
     fieldset:
@@ -656,6 +669,7 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+        stop_the_clock_reason: You must explain your reasons.
       contact:
         data_request_emails: Add multiple email addresses on separate lines
         escalation_name: Enter the name of the prison governor
@@ -1126,6 +1140,7 @@ en:
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
+      external_deadline_paused: Final deadline (paused)
       filename: File name
       gld_contact_name: GLD contact name
       gld_contact_email: GLD contact email
@@ -1134,6 +1149,7 @@ en:
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       internal_deadline: Draft deadline
+      internal_deadline_paused: Draft deadline (paused)
       ico_contact_name: ICO contact name
       ico_contact_email: ICO contact email
       ico_contact_phone: ICO contact phone
@@ -1378,6 +1394,36 @@ en:
         heading: Extend for Public Interest Test (PIT)
         extension_date: Date of extension deadline
         extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    stop_the_clocks:
+      new:
+        heading: Stop the clock on this case
+        stop_the_clock_date: When should the clock be stopped from?
+        stop_the_clock_date_hint: For example 16 7 2025.
+        reason_for_stopping: Describe your reasons for stopping the clock in more detail
+        categories_title: Why are you stopping the clock on this case?
+        categories_hint: Select all that apply and at least 1 reason.
+        categories_error: Stop the clock categories must be selected
+        categories:
+          to_clarify_something:
+            - To clarify something
+            - CCTV or BWCF requirements
+            - Telephone recording requirements
+            - Refine or reduce the scope
+            - Clarify something else
+          to_request_more_information:
+            - To request more information
+            - Search location
+            - Unique identifier
+            - Names and email address of individuals
+          something_else:
+            - Something else
+            - Request is illegible or unreadable
+            - Third party details (offender SARs only)
+            - Data subject verification check
+            - Another reason
+      create:
+        success: You have stopped the clock on this case.
+        failure: Unable to stop the clock on this case.
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ

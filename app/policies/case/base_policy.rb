@@ -298,6 +298,11 @@ class Case::BasePolicy < ApplicationPolicy
     check_can_trigger_event(:remove_pit_extension)
   end
 
+  def can_stop_the_clock?
+    clear_failed_checks
+    self.case.stoppable? && user.allowed_to_stop_the_clock?
+  end
+
   def show?
     # This is just a catch-all in case we introduce a new type without a
     # corresponding policy for the new type. For safety sake, we do not allow

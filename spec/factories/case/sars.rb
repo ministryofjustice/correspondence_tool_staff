@@ -119,6 +119,12 @@ FactoryBot.define do
         kase.extend_deadline!(kase.external_deadline + 30.days, 1)
       end
     end
+
+    trait :stopped do
+      after(:create) do |kase, evaluator|
+        create :case_stop_the_clock, case: kase, acting_user: evaluator.manager
+      end
+    end
   end
 
   factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: "Case::SAR::Standard" do
