@@ -260,4 +260,35 @@ describe "cases/case_status.html.slim", type: :view do
       expect(partial.details.ico_ref_number.text).to eq "123456789ABC"
     end
   end
+
+  describe "stop the clock" do
+    context "when Standard SAR case is stopped" do
+      let(:sar) { create :sar_case, :stopped }
+      let(:decorated_case) { Case::SAR::StandardDecorator.new(sar) }
+
+      it "displays paused deadlines" do
+        render partial: "cases/case_status", locals: { case_details: decorated_case }
+        partial = case_status_section(rendered)
+
+        expect(partial.deadlines.text).not_to include "Draft deadline (paused)"
+        expect(partial.deadlines.final_label.text).to eq "Final deadline (paused)"
+        expect(partial.deadlines.final.text).to eq decorated_case.external_deadline
+      end
+    end
+
+    context "when Flagged SAR case is stopped" do
+      let(:sar) { create :sar_case, :flagged, :stopped }
+      let(:decorated_case) { Case::SAR::StandardDecorator.new(sar) }
+
+      it "displays paused deadlines" do
+        render partial: "cases/case_status", locals: { case_details: decorated_case }
+        partial = case_status_section(rendered)
+
+        expect(partial.deadlines.draft_label.text).to eq "Draft deadline (paused)"
+        expect(partial.deadlines.draft.text).to eq decorated_case.internal_deadline
+        expect(partial.deadlines.final_label.text).to eq "Final deadline (paused)"
+        expect(partial.deadlines.final.text).to eq decorated_case.external_deadline
+      end
+    end
+  end
 end

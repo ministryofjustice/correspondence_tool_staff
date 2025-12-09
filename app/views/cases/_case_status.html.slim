@@ -41,13 +41,13 @@
     - if case_details.internal_deadline.present?
       .case-status__group.draft
         .case-status__date-title
-          = t('common.case.internal_deadline')
+          = t("common.case.internal_deadline#{case_details.stopped? ? '_paused' : ''}")
         .case-status__date-value
           = case_details.internal_deadline
 
     .case-status__group.external
       .case-status__date-title
-        = t('common.case.external_deadline')
+        = t("common.case.external_deadline#{case_details.stopped? ? '_paused' : ''}")
       .case-status__date-value
         = case_details.external_deadline
 
