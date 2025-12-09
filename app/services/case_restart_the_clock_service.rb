@@ -33,7 +33,7 @@ class CaseRestartTheClockService
 
         update_attrs = {
           current_state: last_working_state,
-          external_deadline: new_external_deadline
+          external_deadline: new_external_deadline,
         }
         update_attrs[:internal_deadline] = new_internal_deadline if flagged_aka_trigger?
         @case.update!(update_attrs)
