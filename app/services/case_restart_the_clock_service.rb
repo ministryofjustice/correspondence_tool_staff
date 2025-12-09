@@ -31,12 +31,12 @@ class CaseRestartTheClockService
           },
         )
 
-        @case.update!(current_state: last_working_state)
-        @case.extend_deadline!(new_external_deadline, @case.extended_times || 0)
-
-        if flagged_aka_trigger?
-          @case.update!(internal_deadline: new_internal_deadline)
-        end
+        update_attrs = {
+          current_state: last_working_state,
+          external_deadline: new_external_deadline
+        }
+        update_attrs[:internal_deadline] = new_internal_deadline if flagged_aka_trigger?
+        @case.update!(update_attrs)
 
         @result = :ok
       end
@@ -56,7 +56,7 @@ private
   end
 
   def paused_duration_days
-    @paused_duration_days ||= (@case.stopped_at.to_date..@restart_the_clock_date).count
+    @paused_duration_days ||= (@case.stopped_at.to_date...@restart_the_clock_date).count
   end
 
   def new_external_deadline
