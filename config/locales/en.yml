@@ -1140,6 +1140,7 @@ en:
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
+      external_deadline_paused: Final deadline (paused)
       filename: File name
       gld_contact_name: GLD contact name
       gld_contact_email: GLD contact email
@@ -1148,6 +1149,7 @@ en:
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       internal_deadline: Draft deadline
+      internal_deadline_paused: Draft deadline (paused)
       ico_contact_name: ICO contact name
       ico_contact_email: ICO contact email
       ico_contact_phone: ICO contact phone
