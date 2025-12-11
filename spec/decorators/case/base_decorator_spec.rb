@@ -237,6 +237,13 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
+  describe "#subject_type_display" do
+    it "returns subject type" do
+      kase = create(:sar_case, name: "Blade Wilson", subject_type: "member_of_the_public").decorate
+      expect(kase.subject_type_display).to eq "Member of the public"
+    end
+  end
+
   describe "#message_extract" do
     context "when message fewer than 360 chars" do
       it "returns the entire message" do
