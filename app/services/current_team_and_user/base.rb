@@ -58,7 +58,7 @@ module CurrentTeamAndUser
       previous_state = @case.last_stop_the_clock_transition&.details&.fetch("last_status", nil)
 
       if previous_state
-        self.__send__(previous_state)
+        __send__(previous_state)
       else
         @team = @case.managing_team
         @user = nil
