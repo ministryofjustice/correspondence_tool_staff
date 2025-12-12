@@ -210,6 +210,10 @@ class Workflows::Predicates
     FeatureSet.stop_the_clock.enabled? && @kase.stoppable? && @user.allowed_to_stop_the_clock?
   end
 
+  def can_restart_the_clock?
+    FeatureSet.stop_the_clock.enabled? && @kase.restartable? && @user.allowed_to_stop_the_clock?
+  end
+
 private
 
   def case_already_late?
