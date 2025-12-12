@@ -1399,6 +1399,9 @@ en:
     stop_the_clocks:
       new:
         heading: Stop the clock on this case
+        action_copy:
+          This will pause the time limit for responding to the request.
+          The deadline will be extended automatically when the clock is restarted.
         stop_the_clock_date: When should the clock be stopped from?
         stop_the_clock_date_hint: For example 16 7 2025.
         reason_for_stopping: Describe your reasons for stopping the clock in more detail
