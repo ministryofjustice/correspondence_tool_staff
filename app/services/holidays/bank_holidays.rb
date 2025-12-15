@@ -10,7 +10,7 @@ module Holidays
       data[region]["events"]
     end
 
-    def get_bank_hols_england_and_wales()
+    def get_bank_hols_england_and_wales
       get_bank_hols("england-and-wales")
     end
     def get_bank_hols_scotland
