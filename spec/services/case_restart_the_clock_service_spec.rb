@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CaseRestartTheClockService do
   let(:user)    { find_or_create :manager_approver }
-  let(:kase)    { create(:sar_case, received_date: Date.new(2025, 11, 1)) }
+  let(:kase)    { create(:sar_case, :stopped, received_date: Date.new(2025, 11, 1)) }
   let(:service) { described_class.new(user, kase, restart_the_clock_params) }
 
   before do
@@ -14,8 +14,8 @@ describe CaseRestartTheClockService do
       case_transition = kase.transitions.last
 
       expect(service.result).to eq :validation_error
-      expect(kase.current_state).to eq "unassigned"
-      expect(case_transition.message).to be_nil
+      expect(kase.current_state).to eq "stopped"
+      expect(case_transition.message).to eq "Spec Stop the Clock"
     end
   end
 
@@ -34,17 +34,15 @@ describe CaseRestartTheClockService do
       end
 
       it "updates the case details" do
-        expect(kase.current_state).to eq "stopped"
+        expect(kase.current_state).to eq "unassigned"
       end
 
       it "generates a case transition" do
         case_transition = kase.transitions.last
         expected_message = <<~MSG
           Clock restarted from:  6 November 2025.
-          Old draft deadline: 21 November 2025.
-          New draft deadline: 28 November 2025.
-          Old final deadline: 26 November 2025.
-          New final deadline: 3 December 2025.
+          Old final deadline:  1 December 2025.
+          New final deadline:  2 December 2025.
         MSG
 
         expect(case_transition.message).to eq expected_message.strip
@@ -79,7 +77,7 @@ describe CaseRestartTheClockService do
       it_behaves_like "invalid restart the clock service"
 
       it "has error" do
-        expect(kase.errors[:restart_the_clock_date]).to eq ["cannot be before the case was received"]
+        expect(kase.errors[:restart_the_clock_date]).to eq ["cannot be before case was received"]
       end
     end
 
