@@ -9,8 +9,8 @@ RSpec.describe Holidays::BankHolidays do
 
     it "returns bank holidays for a region from the UK government API" do
       response = { "england-and-wales" => { "events" => [{ "title" => "Christmas Day", "date" => "2025-12-25" }] } }
-      allow(HTTParty).to receive(:get).with(get_bank_hols).and_return(response)
-      data = HTTParty.get(get_bank_hols)
+      allow(HTTParty).to receive(:get).with(url).and_return(response)
+      data = HTTParty.get(url)
       expect(data["england-and-wales"]["events"]).to include({ "title" => "Christmas Day", "date" => "2025-12-25" })
     end
 
