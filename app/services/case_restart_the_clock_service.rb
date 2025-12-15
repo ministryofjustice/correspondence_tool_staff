@@ -1,19 +1,30 @@
 class CaseRestartTheClockService
   attr_reader :result, :error
 
-  def initialize(user, kase, restart_the_clock_date)
+  def initialize(user, kase, restart_the_clock_params)
     @user = user
     @case = kase
-    @restart_the_clock_date = restart_the_clock_date
     @result = :incomplete
+
+    @restart_at = begin
+      Date.new(
+        restart_the_clock_params[:restart_the_clock_date_yyyy].to_i,
+        restart_the_clock_params[:restart_the_clock_date_mm].to_i,
+        restart_the_clock_params[:restart_the_clock_date_dd].to_i,
+      )
+    rescue StandardError
+      nil
+    end
   end
 
   def call
     ActiveRecord::Base.transaction do
       if validate_params
-        last_working_state = @case.last_stop_the_clock_transition.details["last_status"]
+        last_working_state = @case.last_stop_the_clock_transition&.details&.fetch("last_status", nil)
 
-        raise "No last working state found - unable to restart if previous state is unknown" if last_working_state.blank?
+        if last_working_state.blank?
+          return @result = :last_working_state_missing
+        end
 
         @case.state_machine.restart_the_clock!(
           acting_user: @user,
@@ -21,12 +32,9 @@ class CaseRestartTheClockService
 
           to_state: last_working_state,
 
-          final_deadline: new_external_deadline,
-          original_final_deadline: @case.external_deadline,
-
           message: message,
           details: {
-            restart_the_clock_date: @restart_the_clock_date,
+            restart_the_clock_date: @restart_at,
             new_status: last_working_state,
           },
         )
@@ -56,15 +64,15 @@ private
   end
 
   def paused_duration_days
-    @paused_duration_days ||= (@case.stopped_at.to_date...@restart_the_clock_date).count
+    @paused_duration_days ||= (@case.stopped_at.to_date...@restart_at).count
   end
 
   def new_external_deadline
-    @new_external_deadline ||= @case.deadline_calculator.days_after(paused_duration_days, @case.external_deadline)
+    @new_external_deadline ||= @case.deadline_calculator.closest_working_day_after(paused_duration_days, @case.external_deadline)
   end
 
   def new_internal_deadline
-    @new_internal_deadline ||= @case.deadline_calculator.days_after(paused_duration_days, @case.internal_deadline)
+    @new_internal_deadline ||= @case.deadline_calculator.closest_working_day_after(paused_duration_days, @case.internal_deadline)
   end
 
   def message
@@ -77,7 +85,7 @@ private
       end
 
     (
-      ["Clock restarted from: #{I18n.localize(@restart_the_clock_date, format: :long)}."] +
+      ["Clock restarted from: #{I18n.localize(@restart_at, format: :long)}."] +
       internal_deadline_message +
       ["Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}."] +
       ["New final deadline: #{I18n.localize(new_external_deadline, format: :long)}."]
@@ -85,25 +93,25 @@ private
   end
 
   def validate_params
-    if @restart_the_clock_date.blank?
+    if @restart_at.blank?
       @case.errors.add(:restart_the_clock_date, "cannot be blank")
       @result = :validation_error
       return false
     end
 
-    if @restart_the_clock_date > Time.zone.today
+    if @restart_at > Time.zone.today
       @case.errors.add(:restart_the_clock_date, "cannot be in the future")
       @result = :validation_error
       return false
     end
 
-    if @restart_the_clock_date < @case.received_date.to_date
+    if @restart_at < @case.received_date.to_date
       @case.errors.add(:restart_the_clock_date, "cannot be before case was received")
       @result = :validation_error
       return false
     end
 
-    if @restart_the_clock_date < @case.stopped_at.to_date
+    if @restart_at < @case.stopped_at.to_date
       @case.errors.add(:restart_the_clock_date, "cannot be before clock was stopped")
       @result = :validation_error
       return false

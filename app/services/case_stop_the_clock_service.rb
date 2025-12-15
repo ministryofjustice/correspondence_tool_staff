@@ -4,6 +4,7 @@ class CaseStopTheClockService
   def initialize(user, kase, stop_the_clock_params)
     @user = user
     @case = CaseStopTheClockDecorator.decorate kase
+    @result = :incomplete
 
     @stop_categories = stop_the_clock_params[:stop_the_clock_categories]&.reject(&:blank?)&.uniq || []
     @stop_reason = stop_the_clock_params[:stop_the_clock_reason]
@@ -17,8 +18,6 @@ class CaseStopTheClockService
     rescue StandardError
       nil
     end
-
-    @result = :incomplete
   end
 
   def call

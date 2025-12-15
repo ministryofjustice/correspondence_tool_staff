@@ -162,5 +162,10 @@ describe CaseStopTheClockService do
         expect(kase.errors[:stop_the_clock_date]).to eq ["cannot be in the future"]
       end
     end
+
+    # context "when overlapping date" do
+    #   # Stop the clock transitions already in place
+    #   # Then try to stop the clock again with date before last restart date
+    # end
   end
 end

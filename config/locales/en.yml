@@ -1437,6 +1437,10 @@ en:
         reason_for_restarting: Describe your reasons for restarting the clock in more detail
         summary: 'The clock was stopped on:'
         consequence: The new deadlines will be calculated automatically based on the restart date specified below.
+      create:
+        success: You have restarted the clock on this case. The deadlines have been updated.
+        failure: Unable to restart the clock on this case.
+        last_working_state_missing: No last working state found - unable to restart if previous state is unknown
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
