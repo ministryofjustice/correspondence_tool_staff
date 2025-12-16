@@ -49,6 +49,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -70,6 +71,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 link_a_case:
                 remove_linked_case:
                 remove_sar_deadline_extension:
