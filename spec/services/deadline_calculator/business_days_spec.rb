@@ -279,6 +279,32 @@ describe DeadlineCalculator::BusinessDays do
     end
   end
 
+  describe "#options" do
+    context "when all_holidays? is true" do
+      before do
+        allow(kase).to receive(:all_holidays?).and_return(true)
+        allow(BankHolidays).to receive(:get_bank_hols_england_and_wales).and_return([Date.new(2023, 1, 1)])
+        allow(calculator).to receive(:get_bank_hols_scotland).and_return([Date.new(2023, 1, 2)])
+        allow(calculator).to receive(:get_bank_hols_northern_ireland).and_return([Date.new(2023, 1, 3)])
+      end
+
+      it "returns a hash with all unique holidays" do
+        expect(calculator.send(:options)).to eq( { holidays: [Date.new(2023, 1, 1), Date.new(2023, 1, 2), Date.new(2023, 1, 3)] } )
+      end
+    end
+
+    context "when all_holidays? is false" do
+      before do
+        allow(kase).to receive(:all_holidays?).and_return(false)
+      end
+
+      it "returns an empty hash" do
+        expect(calculator.send(:options)).to eq({})
+      end
+    end
+  end
+end
+
   describe "OFFENDER_SAR_COMPLAINT requests" do
     let(:offender_sar_complaint) do
       build_stubbed :offender_sar_complaint,

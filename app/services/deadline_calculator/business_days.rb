@@ -86,7 +86,7 @@ module DeadlineCalculator
     end
 
     def options
-      kase.all_holidays? ? { holidays: ADDITIONAL_BANK_HOLIDAYS } : {}
+      kase.all_holidays? ? { holidays: (BankHolidays.get_bank_hols_england_and_wales + get_bank_hols_scotland + get_bank_hols_northern_ireland).uniq } : {}
     end
   end
 end
