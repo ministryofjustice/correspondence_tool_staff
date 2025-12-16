@@ -315,6 +315,16 @@ en:
             date_of_birth:
               blank: cannot be blank
             accepted_date_received: When was the outstanding information received?
+            stop_the_clock_reason:
+              blank: cannot be blank
+            stop_the_clock_categories:
+              blank: must be selected
+            stop_the_clock_date:
+              blank: cannot be blank
+              invalid: cannot be before the case was received
+              future: cannot be in the future
+              past: cannot stop prior to last unpause
+
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
