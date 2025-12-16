@@ -20,12 +20,6 @@ class CaseRestartTheClockService
   def call
     ActiveRecord::Base.transaction do
       if validate_params
-        last_working_state = @case.last_stop_the_clock_transition&.details&.fetch("last_status", nil)
-
-        if last_working_state.blank?
-          return @result = :last_working_state_missing
-        end
-
         @case.state_machine.restart_the_clock!(
           acting_user: @user,
           acting_team: @user.case_team(@case),
@@ -93,6 +87,16 @@ private
   end
 
   def validate_params
+    unless @case.stopped?
+      @result = :error
+      return false
+    end
+
+    if last_working_state.blank?
+      @result = :last_working_state_missing
+      return false
+    end
+
     if @restart_at.blank?
       @case.errors.add(:restart_the_clock_date, "cannot be blank")
       @result = :validation_error
@@ -118,5 +122,9 @@ private
     end
 
     @result = :ok if @case.errors.empty?
+  end
+
+  def last_working_state
+    @last_working_state ||= @case.last_stop_the_clock_transition&.details&.fetch("last_status", nil)
   end
 end

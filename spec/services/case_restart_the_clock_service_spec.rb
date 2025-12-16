@@ -65,7 +65,7 @@ describe CaseRestartTheClockService do
       end
     end
 
-    context "when early date" do
+    context "when before received date" do
       let(:restart_the_clock_params) do
         {
           restart_the_clock_date_yyyy: 2025,
@@ -78,6 +78,24 @@ describe CaseRestartTheClockService do
 
       it "has error" do
         expect(kase.errors[:restart_the_clock_date]).to eq ["cannot be before case was received"]
+      end
+    end
+
+    context "when before last stopped date" do
+      let(:restart_the_clock_params) do
+        stopped_date = kase.stopped_at.to_date - 1.day
+
+        {
+          restart_the_clock_date_yyyy: stopped_date.year,
+          restart_the_clock_date_mm: stopped_date.month,
+          restart_the_clock_date_dd: stopped_date.day,
+        }
+      end
+
+      it_behaves_like "invalid restart the clock service"
+
+      it "has error" do
+        expect(kase.errors[:restart_the_clock_date]).to eq ["cannot be before clock was stopped"]
       end
     end
 
@@ -95,6 +113,22 @@ describe CaseRestartTheClockService do
 
       it "has error" do
         expect(kase.errors[:restart_the_clock_date]).to eq ["cannot be in the future"]
+      end
+    end
+
+    context "when last transition is not stop the clock" do
+      let(:kase) { create(:approved_sar, received_date: Date.new(2025, 11, 1)) }
+      let(:restart_the_clock_params) do
+        {
+          restart_the_clock_date_yyyy: "2025",
+          restart_the_clock_date_mm: "11",
+          restart_the_clock_date_dd: "6",
+        }
+      end
+
+      it "raises error" do
+        expect(service.result).to eq :error
+        expect(kase.errors).to be_empty
       end
     end
   end
