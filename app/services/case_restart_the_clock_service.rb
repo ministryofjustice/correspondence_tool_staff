@@ -3,7 +3,7 @@ class CaseRestartTheClockService
 
   def initialize(user, kase, restart_the_clock_params)
     @user = user
-    @case = kase
+    @case = CaseRestartTheClockDecorator.decorate kase
     @result = :incomplete
 
     @restart_at = begin
@@ -97,26 +97,26 @@ private
       return false
     end
 
-    if @restart_at.blank?
-      @case.errors.add(:restart_the_clock_date, "cannot be blank")
+    if @restart_at.blank
+      @case.errors.add(:restart_the_clock_date, :blank)
       @result = :validation_error
       return false
     end
 
     if @restart_at > Time.zone.today
-      @case.errors.add(:restart_the_clock_date, "cannot be in the future")
+      @case.errors.add(:restart_the_clock_date, :future)
       @result = :validation_error
       return false
     end
 
     if @restart_at < @case.received_date.to_date
-      @case.errors.add(:restart_the_clock_date, "cannot be before case was received")
+      @case.errors.add(:restart_the_clock_date, :invalid)
       @result = :validation_error
       return false
     end
 
     if @restart_at < @case.stopped_at.to_date
-      @case.errors.add(:restart_the_clock_date, "cannot be before clock was stopped")
+      @case.errors.add(:restart_the_clock_date, :past)
       @result = :validation_error
       return false
     end

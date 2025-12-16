@@ -253,6 +253,11 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
+            restart_the_clock_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              invalid: cannot be before case was received
+              past: cannot be before clock was stopped
             stop_the_clock_reason:
               blank: cannot be blank
             stop_the_clock_categories:
@@ -315,6 +320,11 @@ en:
             date_of_birth:
               blank: cannot be blank
             accepted_date_received: When was the outstanding information received?
+            restart_the_clock_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              invalid: cannot be before case was received
+              past: cannot be before clock was stopped
             stop_the_clock_reason:
               blank: cannot be blank
             stop_the_clock_categories:
