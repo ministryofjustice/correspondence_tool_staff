@@ -253,6 +253,11 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
+            restart_the_clock_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              invalid: cannot be before case was received
+              past: cannot be before clock was stopped
             stop_the_clock_reason:
               blank: cannot be blank
             stop_the_clock_categories:
@@ -315,6 +320,21 @@ en:
             date_of_birth:
               blank: cannot be blank
             accepted_date_received: When was the outstanding information received?
+            restart_the_clock_date:
+              blank: cannot be blank
+              future: cannot be in the future
+              invalid: cannot be before case was received
+              past: cannot be before clock was stopped
+            stop_the_clock_reason:
+              blank: cannot be blank
+            stop_the_clock_categories:
+              blank: must be selected
+            stop_the_clock_date:
+              blank: cannot be blank
+              invalid: cannot be before the case was received
+              future: cannot be in the future
+              past: cannot stop prior to last unpause
+
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -481,6 +501,7 @@ en:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
+      can_restart_the_clock?: You are not authorised to restart the clock or the case has not already been stopped.
     case/sar/internal_review_policy:
       can_close_case?: You are not authorised to close this case
       respond_and_close?: You are not authorised to close this case
@@ -492,6 +513,7 @@ en:
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
       can_upload_request_attachment?: Request attachments cannot be uploaded.
+      can_restart_the_clock?: You are not authorised to restart the clock or the case has not already been stopped.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -1397,6 +1419,9 @@ en:
     stop_the_clocks:
       new:
         heading: Stop the clock on this case
+        action_copy:
+          This will pause the time limit for responding to the request.
+          The deadline will be extended automatically when the clock is restarted.
         stop_the_clock_date: When should the clock be stopped from?
         stop_the_clock_date_hint: For example 16 7 2025.
         reason_for_stopping: Describe your reasons for stopping the clock in more detail
@@ -1424,6 +1449,18 @@ en:
       create:
         success: You have stopped the clock on this case.
         failure: Unable to stop the clock on this case.
+    restart_the_clocks:
+      new:
+        heading: Restart the clock on this case
+        restart_the_clock_date: When should the clock restart from?
+        restart_the_clock_date_hint: For example 16 7 2025.
+        reason_for_restarting: Describe your reasons for restarting the clock in more detail
+        summary: 'The clock was stopped on:'
+        consequence: The new deadlines will be calculated automatically based on the restart date specified below.
+      create:
+        success: You have restarted the clock on this case. The deadlines have been updated.
+        failure: Unable to restart the clock on this case.
+        last_working_state_missing: No last working state found - unable to restart if previous state is unknown
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ

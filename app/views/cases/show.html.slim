@@ -38,7 +38,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
           - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
           - permitted_events = permitted_events - [:mark_as_awaiting_response_for_partial_case, :mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
-          - permitted_events = permitted_events - [:extend_sar_deadline, :remove_sar_deadline_extension, :stop_the_clock]
+          - permitted_events = permitted_events - [:extend_sar_deadline, :remove_sar_deadline_extension, :stop_the_clock, :restart_the_clock]
           - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
             - permitted_events.delete(:close)
 
@@ -47,9 +47,6 @@ div id="case-#{@correspondence_type_key}" class="case"
 
           - if policy(@case).assignments_execute_reassign_user?
             = action_button_for(:reassign_user)
-
-          - if permitted_events.include?(:stop_the_clock)
-            span.visually-hidden.state-machine--stop-the-clock = "Stop The Clock"
 
         = action_buttons_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension).join(' ').html_safe
 

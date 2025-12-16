@@ -71,6 +71,7 @@
 
               stopped:
                 restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
 
               closed:
                 add_message_to_case:
@@ -91,10 +92,16 @@
           responder:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_responder_assignment:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
@@ -105,6 +112,9 @@
                   transition_to: unassigned
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -120,6 +130,10 @@
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
+
+              stopped:
+                restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
 
               closed:
                 add_message_to_case:
@@ -160,3 +174,4 @@
 
               stopped:
                 restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?

@@ -256,6 +256,11 @@ module CasesHelper
               new_case_stop_the_clock_path(@case),
               id: "action--stop-the-clock",
               class: "govuk-button moj-button-menu__item govuk-button--secondary"
+    when :restart_the_clock
+      link_to "Restart the clock",
+              new_case_restart_the_clock_path(@case),
+              id: "action--restart-the-clock",
+              class: "govuk-button moj-button-menu__item govuk-button--secondary"
     end
   end
 
