@@ -97,7 +97,7 @@ private
       return false
     end
 
-    if @restart_at.blank
+    if @restart_at.blank?
       @case.errors.add(:restart_the_clock_date, :blank)
       @result = :validation_error
       return false
