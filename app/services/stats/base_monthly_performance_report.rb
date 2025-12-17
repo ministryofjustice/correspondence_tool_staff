@@ -139,8 +139,13 @@ module Stats
       analyser.run
       column_key = analyser.result
       month = construct_year_month(kase.received_date)
-      @stats.record_stats(month, column_key)
-      @stats.record_stats(:total, column_key)
+
+      if block_given?
+        yield month, column_key
+      else
+        @stats.record_stats(month, column_key)
+        @stats.record_stats(:total, column_key)
+      end
     end
 
     def array_of_month_numbers

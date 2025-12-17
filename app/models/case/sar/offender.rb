@@ -539,6 +539,10 @@ class Case::SAR::Offender < Case::Base
                   end
   end
 
+  def sar_extensions
+    transitions.where(event: "extend_sar_deadline").order(:id)
+  end
+
 private
 
   def set_subject

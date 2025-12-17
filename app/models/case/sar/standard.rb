@@ -158,11 +158,11 @@ class Case::SAR::Standard < Case::Base
     max_allowed_deadline_date > external_deadline
   end
 
-  def initial_deadline
-    sar_extensions = transitions
-      .where(event: "extend_sar_deadline")
-      .order(:id)
+  def sar_extensions
+    transitions.where(event: "extend_sar_deadline").order(:id)
+  end
 
+  def initial_deadline
     if sar_extensions.any?
       sar_extensions.first.original_final_deadline
     else
