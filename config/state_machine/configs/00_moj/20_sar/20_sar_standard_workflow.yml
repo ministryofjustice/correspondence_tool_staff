@@ -166,7 +166,7 @@
                   if: Workflows::Predicates#can_stop_the_clock?
                   transition_to: stopped
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 remove_sar_deadline_extension:
