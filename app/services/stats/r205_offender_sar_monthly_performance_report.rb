@@ -45,6 +45,11 @@ module Stats
       @stats.record_stats(month, column_key)
       @stats.record_stats(:total, column_key)
 
+      # TODO: Implement extend_sar_deadline event for Offender SARs
+      if kase.try(:sar_extensions)&.any?
+        @stats.record_stats(month, :num_sar_extensions)
+      end
+
       if kase.stopped?
         @stats.record_stats(month, :num_stopped)
       end
