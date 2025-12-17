@@ -33,6 +33,21 @@ module Stats
     def add_report_callbacks
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_total_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_percentages(@stats) })
+
+      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_num_sar_extensions(@stats) })
+    end
+
+    def analyse_case(kase)
+      analyser = self.class.case_analyzer.new(kase)
+      analyser.run
+      column_key = analyser.result
+      month = construct_year_month(kase.received_date)
+      @stats.record_stats(month, column_key)
+      @stats.record_stats(:total, column_key)
+
+      if kase.stopped?
+        @stats.record_stats(month, :num_stopped)
+      end
     end
   end
 end

@@ -12,6 +12,10 @@ module Stats
           row[:overall_performance] = OffenderSARCalculations.calculate_overall_performance(row)
         end
       end
+
+      def self.calculate_num_sar_extensions(stats)
+        # TODO: Determine how to calculate SAR extensions
+      end
     end
 
     def self.calculate_overall_performance(row)
