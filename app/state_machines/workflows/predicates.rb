@@ -222,6 +222,10 @@ class Workflows::Predicates
     FeatureSet.stop_the_clock.enabled? && @kase.restartable? && @user.allowed_to_stop_the_clock?
   end
 
+  def can_auto_close_case?
+    FeatureSet.stop_the_clock.enabled? && @kase.stopped? && @kase.prolonged_stop?
+  end
+
 private
 
   def case_already_late?

@@ -152,6 +152,9 @@
               stopped:
                 restart_the_clock:
                   if: Workflows::Predicates#can_restart_the_clock?
+                auto_close:
+                  if: Workflows::Predicates#can_auto_close_case?
+                  transition_to: closed
 
               closed:
                 add_note_to_case:

@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: auto-close-paused-sar-cases
+spec:
+  schedule: "23 6 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: track-a-query
+          containers:
+          - name: jobs
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:qa.latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - sh
+              - "-c"
+              - "bundle exec rake 'sar:auto_close_paused'"
+            env:
+              - name: DATABASE_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-rds-output
+                    key: url
+              - name: REDIS_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-elasticache-redis-output
+                    key: url
+              - name: REDIS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-elasticache-redis-output
+                    key: auth_token
+              - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-s3-output
+                    key: bucket_name
+            envFrom:
+              - configMapRef:
+                  name: environment-variables
+              - secretRef:
+                  name: app-secrets
+          restartPolicy: OnFailure

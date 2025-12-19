@@ -28,4 +28,8 @@ module Stoppable
   def last_restart_the_clock_transition
     @last_restart_the_clock_transition ||= transitions.where(event: "restart_the_clock").order(id: :desc).first
   end
+
+  def prolonged_stop?
+    @prolonged_stop ||= stopped_at.present? && ((Time.zone.today - stopped_at).to_i > Settings.auto_close_stopped_threshold)
+  end
 end

@@ -42,6 +42,11 @@ namespace :sar do
     end
   end
 
+  desc "Auto-closes long-term paused/stopped SAR cases"
+  task auto_close_paused: :environment do
+    CaseAutoCloseService.call(dryrun: false)
+  end
+
   namespace :offender do
     desc "Close rejected offender SARs that were received over the deadline"
     task close_expired_rejected: :environment do
