@@ -22,10 +22,7 @@ class CaseAutoCloseService
             message: "Auto-closed by system due to pause exceeding #{Settings.auto_close_stopped_threshold} days.",
           )
 
-          service = RetentionSchedules::AddScheduleService.new(kase:, user: User.system_admin)
-          service.call
-
-          Rails.logger.info("Case ID: #{kase.id} --- Auto Closed successfully --- Retention schedule: #{service.result}")
+          RetentionSchedules::AddScheduleService.new(kase:, user: User.system_admin).call
         rescue StandardError => e
           Rails.logger.error("Error auto-closing Case ID: #{kase.id} --- #{e.message}")
         end
