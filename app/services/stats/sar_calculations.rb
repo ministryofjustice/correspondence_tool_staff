@@ -22,13 +22,13 @@ module Stats
 
       def self.sum_all_received(prefix, row)
         ttl = "#{prefix}_total".to_sym
-        # st  = "#{prefix}_stopped".to_sym
+        ext = "#{prefix}_sar_extensions".to_sym
         rit = "#{prefix}_responded_in_time".to_sym
         rl  = "#{prefix}_responded_late".to_sym
         oit = "#{prefix}_open_in_time".to_sym
         ol  = "#{prefix}_open_late".to_sym
 
-        row[ttl] = row[rit] + row[rl] + row[oit] + row[ol] # - row[st]
+        row[ttl] = row[rit] + row[rl] + row[oit] + row[ol] + row[ext]
       end
 
       def self.calculate_percentages(stats)
