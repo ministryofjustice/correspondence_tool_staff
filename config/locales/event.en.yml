@@ -95,6 +95,7 @@ en:
     validate_rejected_case: Valid case created
     stop_the_clock: Case paused
     restart_the_clock: Case unpaused
+    auto_close: Auto closed
 
   retention_schedule_case_notes:
     update:

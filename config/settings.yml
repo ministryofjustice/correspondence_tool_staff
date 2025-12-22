@@ -74,6 +74,7 @@ offender_sar_cases:
 pit_extension_limit: 20
 sar_extension_default_gap: 30
 sar_extension_default_limit: 60
+auto_close_stopped_threshold: 90
 
 default_date_format: '%-d %b %Y'
 default_time_format: '%d %b %Y %H:%M'
