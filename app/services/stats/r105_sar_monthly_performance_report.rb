@@ -36,23 +36,5 @@ module Stats
       @stats.add_callback(:before_finalise, -> { SARCalculations::Callbacks.calculate_max_achievable(@stats) })
       @stats.add_callback(:before_finalise, -> { SARCalculations::Callbacks.calculate_sar_extensions(@stats) })
     end
-
-    # def analyse_case(kase)
-    #   super do |month, column_key|
-    #     @stats.record_stats(month, column_key)
-
-    #     @stats.record_stats(month, "#{kase.trigger_status}_sar_extensions".to_sym)
-    #     if kase.sar_extensions.any?
-    #     end
-
-    #     @stats.record_stats(month, "#{kase.trigger_status}_stopped".to_sym)
-    #     if kase.stopped?
-    #     end
-
-    #     @stats.record_stats(:total, column_key)
-    #     unless kase.stopped?
-    #     end
-    #   end
-    # end
   end
 end
