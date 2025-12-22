@@ -76,6 +76,9 @@ module Stats
     def run(*)
       analyse_case_for_main_stats
       analyse_case_for_responding_business_unit
+
+      analyse_case_for_stopped if @kase.stopped?
+      analyse_case_for_sar_extensions if @kase.sar_extensions.any?
     end
 
   private
@@ -131,6 +134,18 @@ module Stats
       else
         OPEN_IN_TIME
       end
+    end
+
+    def analyse_case_for_stopped
+      return false unless @kase.stopped?
+
+      @result = "#{@kase.trigger_status}_stopped".to_sym
+    end
+
+    def analyse_case_for_sar_extensions
+      return false unless @kase.sar_extensions.any?
+
+      @result = "#{@kase.trigger_status}_sar_extensions".to_sym
     end
   end
 end
