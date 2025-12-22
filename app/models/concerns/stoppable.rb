@@ -30,6 +30,6 @@ module Stoppable
   end
 
   def prolonged_stop?
-    @prolonged_stop ||= stopped_at.present? && ((Time.zone.today - stopped_at).to_i > Settings.auto_close_stopped_threshold)
+    @prolonged_stop ||= stopped? && stopped_at.present? && ((Time.zone.today - stopped_at).to_i > Settings.auto_close_stopped_threshold)
   end
 end
