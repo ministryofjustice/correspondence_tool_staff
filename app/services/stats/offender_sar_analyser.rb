@@ -2,7 +2,7 @@ module Stats
   class OffenderSARAnalyser
     COMMON_SUPERHEADINGS = {
       overall_performance: "Overall",
-      overall_max_achievable: "Max achieveable",
+      overall_max_achievable: "Max achievable",
       overall_total: "Overall",
       overall_sar_extensions: "Extended",
       overall_stopped: "Paused",
