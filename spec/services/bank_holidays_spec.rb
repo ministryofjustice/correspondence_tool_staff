@@ -1,35 +1,25 @@
 require "rails_helper"
 
 RSpec.describe BankHolidays do
+  let(:fixture_data) { File.read("spec/fixtures/bank_holidays_response.json") }
+  let(:parsed_data) { JSON.parse(fixture_data) }
+  let(:bank_holidays) { described_class.new }
+
+  before do
+    allow(Net::HTTP).to receive(:get)
+                          .with(URI("https://www.gov.uk/bank-holidays.json"))
+                          .and_return(fixture_data)
+  end
+
   describe "#get_bank_holidays_for" do
-    subject(:bank_holidays) { described_class.new(division) }
-
-    before do
-      allow(Net::HTTP).to receive(:get).with(URI("https://www.gov.uk/bank-holidays.json"))
-                                       .and_return(File.read("spec/fixtures/bank_holidays_response.json"))
-    end
-
-    context "when division is 'england-and-wales'" do
-      let(:division) { "england-and-wales" }
-
-      it "returns 'england-and-wales' holidays" do
-        expect(bank_holidays.get_bank_holidays_for(division)).to eq(JSON.parse(File.read("spec/fixtures/bank_holidays_response.json"))[division]["events"])
-      end
-    end
-
-    context "when division is 'scotland'" do
-      let(:division) { "scotland" }
-
-      it "returns 'scotland' holidays" do
-        expect(bank_holidays.get_bank_holidays_for(division)).to eq(JSON.parse(File.read("spec/fixtures/bank_holidays_response.json"))[division]["events"])
-      end
-    end
-
-    context "when division is 'northern-ireland'" do
-      let(:division) { "northern-ireland" }
-
-      it "returns 'northern-ireland' holidays" do
-        expect(bank_holidays.get_bank_holidays_for(division)).to eq(JSON.parse(File.read("spec/fixtures/bank_holidays_response.json"))[division]["events"])
+    %w[england-and-wales scotland northern-ireland].each do |division|
+      puts division
+      context "when division is '#{division}'" do
+        it "returns '#{division}' holidays" do
+          puts division
+          expect(bank_holidays).to eq(parsed_data[division]["events"])
+          puts bank_holidays
+        end
       end
     end
   end
