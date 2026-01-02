@@ -54,7 +54,7 @@ gem "paper_trail"
 gem "pg", "~> 1.5"
 gem "pg_search", "~> 2.3.6"
 gem "prawndown"
-gem "puma", "~> 6.4"
+gem "puma", "~> 7.1"
 gem "pundit", "~>2.4"
 gem "rails", "~> 7.0"
 # Reduces boot times through caching; required in config/boot.rb
