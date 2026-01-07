@@ -48,7 +48,7 @@ gem "loofah", ">= 2.3.1"
 gem "mail", ">= 2.8"
 gem "matrix" # required by prawn
 gem "notifications-ruby-client", ">= 5.4"
-gem "omniauth-azure-activedirectory-v2", "~> 1.0.0"
+gem "omniauth-azure-activedirectory-v2", "~> 2.4.0"
 gem "omniauth-rails_csrf_protection"
 gem "paper_trail"
 gem "pg", "~> 1.5"
