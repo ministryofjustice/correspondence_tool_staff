@@ -71,6 +71,7 @@
 
               stopped:
                 restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
 
               closed:
                 add_message_to_case:
@@ -91,10 +92,16 @@
           responder:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_responder_assignment:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
@@ -105,6 +112,9 @@
                   transition_to: unassigned
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -121,6 +131,10 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
 
+              stopped:
+                restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
+
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -132,19 +146,32 @@
           approver:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 flag_for_clearance:
                   switch_workflow: trigger
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 flag_for_clearance:
                   switch_workflow: trigger
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 remove_sar_deadline_extension:
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+
+              stopped:
+                restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?

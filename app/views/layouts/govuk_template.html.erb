@@ -16,6 +16,7 @@
 
     <%= stylesheet_link_tag "fonts.css", media: "all", integrity: true, crossorigin: "anonymous" %>
     <%= stylesheet_link_tag "/assets/govuk-frontend.min.css" %>
+    <%= stylesheet_link_tag "/assets/moj-frontend.min.css" %>
     <!--[if lt IE 9]><%= javascript_include_tag "ie.js", integrity: true, crossorigin: "anonymous" %><![endif]-->
 
     <%= favicon_link_tag asset_path('images/favicon.ico'), sizes: '48x48' %>
@@ -35,8 +36,12 @@
     <meta property="og:image" content="<%= asset_path "opengraph-image.png" %>">
   </head>
 
-  <body<%= content_for?(:body_classes) ? raw(" class=\"#{yield(:body_classes)}\"") : '' %>>
+  <body<%= content_for?(:body_classes) ? raw(" class=\"govuk-template__body #{yield(:body_classes)}\"") : 'govuk-template__body' %>>
+    <script type="module" src="/assets/govuk-frontend.min.js"></script>
+    <script type="module" src="/assets/moj-frontend.min.js"></script>
+
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
 
     <%= yield :body_start %>
 
@@ -127,5 +132,13 @@
 
     <%# if no GOVUK-namespaced module has loaded we can assume JS has failed and remove the class %>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
+
+    <script type="module">
+      import * as GOVUKFrontend from '/assets/govuk-frontend.min.js'
+      import * as MOJFrontend from '/assets/moj-frontend.min.js'
+
+      GOVUKFrontend.initAll()
+      MOJFrontend.initAll()
+    </script>
   </body>
 </html>

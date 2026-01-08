@@ -254,7 +254,7 @@ module Features
 
     def extend_sar_deadline_for(kase:, num_calendar_months:, reason: "The reason for extending")
       cases_show_page.load(id: kase.id)
-      cases_show_page.actions.extend_sar_deadline.click
+      cases_show_page.extend_sar_deadline.click
 
       expect(cases_extend_sar_deadline_page).to be_displayed
 

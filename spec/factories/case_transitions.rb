@@ -468,4 +468,40 @@ FactoryBot.define do
     acting_team { self.case.responding_team }
     acting_user { acting_team.responders.first }
   end
+
+  factory :case_transition_stop_the_clock, parent: :case_transition do
+    event       { "stop_the_clock" }
+    to_state    { "stopped" }
+
+    acting_user { acting_team.managers.first }
+    acting_team { self.case.managing_team }
+
+    message     { "Spec Stop the Clock" }
+
+    details do
+      {
+        stop_the_clock_categories: ["To clarify something - Refine everything", "Something else - Have no data"],
+        stop_the_clock_reason: "Needed to stop the clock for testing",
+        stop_the_clock_date: self.case.received_date + 5.days,
+        last_status: self.case.current_state,
+      }
+    end
+  end
+
+  factory :case_transition_restart_the_clock, parent: :case_transition do
+    event       { "restart_the_clock" }
+    to_state    { "drafting" }
+
+    acting_user { acting_team.managers.first }
+    acting_team { self.case.managing_team }
+
+    message     { "Spec Restart the Clock" }
+
+    details do
+      {
+        restart_the_clock_date: self.case.received_date + 10.days,
+        new_status: "unassigned",
+      }
+    end
+  end
 end

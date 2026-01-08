@@ -36,16 +36,24 @@
         .case-status__data
           = case_details.ico_reference_number
 
-  .case-status__info.case-status__info--deadlines
+  div[class="case-status__info case-status__info--deadlines #{case_details.stopped? ? "case-status__info--stop_the_clock" : ''}"]
+    h2
     - if case_details.internal_deadline.present?
       .case-status__group.draft
         .case-status__date-title
-          = t('common.case.internal_deadline')
+          = t("common.case.internal_deadline#{case_details.stopped? ? '_paused' : ''}")
         .case-status__date-value
           = case_details.internal_deadline
 
     .case-status__group.external
       .case-status__date-title
-        = t('common.case.external_deadline')
+        = t("common.case.external_deadline#{case_details.stopped? ? '_paused' : ''}")
       .case-status__date-value
         = case_details.external_deadline
+
+    - permitted_events ||= local_assigns.fetch(:permitted_events, [])
+    div.moj-button-menu[id="moj-button-menu" data-module="moj-button-menu" data-button-text="Deadline options"]
+      = action_button_for(:stop_the_clock) if permitted_events.any?(:stop_the_clock)
+      = action_button_for(:restart_the_clock) if permitted_events.any?(:restart_the_clock)
+      = action_button_for(:extend_sar_deadline) if permitted_events.any?(:extend_sar_deadline)
+      = action_button_for(:remove_sar_deadline_extension) if permitted_events.any?(:remove_sar_deadline_extension)
