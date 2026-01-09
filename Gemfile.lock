@@ -245,7 +245,8 @@ GEM
     highline (3.1.2)
       reline
     htmlentities (4.3.4)
-    httparty (0.21.0)
+    httparty (0.24.0)
+      csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     humanize_boolean (0.0.2)
@@ -324,7 +325,8 @@ GEM
     minitest (5.25.5)
     msgpack (1.7.5)
     multi_json (1.15.0)
-    multi_xml (0.6.0)
+    multi_xml (0.8.0)
+      bigdecimal (>= 3.1, < 5)
     net-imap (0.5.9)
       date
       net-protocol
