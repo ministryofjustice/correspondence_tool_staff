@@ -1,14 +1,10 @@
-class BankHolidays
+class BankHolidaysService
   URL = "https://www.gov.uk/bank-holidays.json".freeze
 
-  attr_reader :holidays
+  attr_accessor :holidays
 
-  def initialize(holidays_json = nil)
-    # If no JSON is provided, fetch from the URL
-    holidays_json ||= fetch_holidays.to_json
-
-    @holidays = holidays_json.is_a?(String) ? JSON.parse(holidays_json) : holidays_json
-
+  def initialize
+    @holidays = fetch_holidays
   end
 
   def get_bank_holidays_for(division)
