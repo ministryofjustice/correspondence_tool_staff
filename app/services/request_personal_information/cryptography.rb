@@ -41,6 +41,7 @@ private
 
   attr_accessor :encryption_key, :encryption_iv
 
+  # rubocop:disable Naming/MethodParameterName
   def validate_key_iv!(key, iv)
     unless key.is_a?(String) && key.bytesize == 32
       raise ArgumentError, "Encryption key must be a 32-byte string for AES-256-CBC"
@@ -50,4 +51,5 @@ private
       raise ArgumentError, "Encryption IV must be a 16-byte string for AES-256-CBC"
     end
   end
+  # rubocop:enable Naming/MethodParameterName
 end
