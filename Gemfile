@@ -101,6 +101,7 @@ group :development, :test do
   gem "bullet"
   gem "colorize"
   gem "debug", ">= 1.0.0"
+  gem 'openssl', '~> 4.0'
   gem "parallel_tests"
   gem "phantomjs"
   gem "rspec-collection_matchers"

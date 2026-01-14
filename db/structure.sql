@@ -1,6 +1,12 @@
+\restrict EVHjUSvWLfEcEK7YIWh865iwdnngW9fkjLwkgTHW4iH4lqUwxvWbQ09F13vmnil
+
+-- Dumped from database version 16.9 (Postgres.app)
+-- Dumped by pg_dump version 18.1
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -230,6 +236,38 @@ CREATE SEQUENCE public.assignments_id_seq
 --
 
 ALTER SEQUENCE public.assignments_id_seq OWNED BY public.assignments.id;
+
+
+--
+-- Name: bank_holidays; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bank_holidays (
+    id bigint NOT NULL,
+    data json NOT NULL,
+    hash_value character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bank_holidays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bank_holidays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bank_holidays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bank_holidays_id_seq OWNED BY public.bank_holidays.id;
 
 
 --
@@ -1433,6 +1471,13 @@ ALTER TABLE ONLY public.assignments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: bank_holidays id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bank_holidays ALTER COLUMN id SET DEFAULT nextval('public.bank_holidays_id_seq'::regclass);
+
+
+--
 -- Name: case_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1656,6 +1701,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.assignments
     ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bank_holidays bank_holidays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bank_holidays
+    ADD CONSTRAINT bank_holidays_pkey PRIMARY KEY (id);
 
 
 --
@@ -1955,6 +2008,13 @@ CREATE INDEX index_assignments_on_team_id ON public.assignments USING btree (tea
 --
 
 CREATE INDEX index_assignments_on_user_id ON public.assignments USING btree (user_id);
+
+
+--
+-- Name: index_bank_holidays_on_hash_value; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_bank_holidays_on_hash_value ON public.bank_holidays USING btree (hash_value);
 
 
 --
@@ -2411,9 +2471,13 @@ ALTER TABLE ONLY public.data_request_areas
 -- PostgreSQL database dump complete
 --
 
+\unrestrict EVHjUSvWLfEcEK7YIWh865iwdnngW9fkjLwkgTHW4iH4lqUwxvWbQ09F13vmnil
+
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251223150031'),
+('20251217151713'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),
