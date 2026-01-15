@@ -2006,13 +2006,6 @@ CREATE INDEX index_assignments_on_user_id ON public.assignments USING btree (use
 
 
 --
--- Name: index_bank_holidays_on_hash_value; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_bank_holidays_on_hash_value ON public.bank_holidays USING btree (hash_value);
-
-
---
 -- Name: index_case_attachments_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
