@@ -1,5 +1,3 @@
-require "digest"
-
 # == Schema Information
 #
 # Table name: bank_holidays
@@ -13,22 +11,6 @@ require "digest"
 class BankHolidays < ApplicationRecord
   validates :data, presence: true
   validates :hash_value, presence: true
-
-  # Public: Return all bank holiday dates for all regions as Date objects.
-  #
-  # This is a convenience class-level API that aggregates dates
-  # across all persisted records.
-  def self.all_dates
-    # Use `flat_map` so we always get back a flat Array<Date> and
-    # guard against nil from instances by compacting.
-    all.flat_map { |record| record.dates_for_all_regions }.compact
-  end
-
-  # Backwards-compatible alias for callers that might still be using
-  # the old API name but expect raw Date objects.
-  class << self
-    alias_method :all_formatted_dates, :all_dates
-  end
 
   # Public: Return the original ISO 8601 date strings for one or more regions.
   #
@@ -89,34 +71,6 @@ class BankHolidays < ApplicationRecord
         nil
       end
     end.compact
-  end
-
-  # Public: Return Date objects for all regions in this record.
-  #
-  # Flattens all regions' `events` arrays into a single Array<Date>.
-  def dates_for_all_regions
-    safe_data = parsed_data
-    return [] unless safe_data.is_a?(Hash)
-
-    safe_data.values.flat_map do |region_hash|
-      next [] unless region_hash.is_a?(Hash)
-
-      events = region_hash["events"]
-      next [] unless events.is_a?(Array)
-
-      events.filter_map do |event|
-        next unless event.is_a?(Hash)
-
-        raw_date = event["date"]
-        next unless raw_date.is_a?(String) && !raw_date.empty?
-
-        begin
-          Date.iso8601(raw_date)
-        rescue ArgumentError
-          nil
-        end
-      end
-    end
   end
 
   private
