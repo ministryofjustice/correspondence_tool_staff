@@ -1,3 +1,5 @@
+require Rails.root.join('app/models/bank_holidays')
+
 class BankHolidaysService
   URL = "https://www.gov.uk/bank-holidays.json".freeze
   CACHE_KEY = "bank_holidays_service:data".freeze
@@ -22,8 +24,7 @@ class BankHolidaysService
     last_record = BankHolidays.last
 
     # Avoid writing duplicate records when the data hasn't changed
-    ADDITIONAL_BANK_HOLIDAYS = last_record.dates_for_regions(:northern_ireland, :scotland).map(&:to_date).freeze
-    Rails.logger.error(ADDITIONAL_BANK_HOLIDAYS))
+    Rails.logger.error(last_record.dates_for(:england_and_wales))
 
     return if last_record&.hash_value == hash_value
 
