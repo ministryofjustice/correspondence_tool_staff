@@ -172,4 +172,8 @@ FactoryBot.define do
       kase.save!
     end
   end
+
+  trait :flag_as_dps_missing_data do
+    flag_as_dps_missing_data { true }
+  end
 end

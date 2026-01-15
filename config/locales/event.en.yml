@@ -93,6 +93,8 @@ en:
     annotate_retention_changes: Retention details edited
     annotate_system_retention_changes: Retention details edited - System update
     validate_rejected_case: Valid case created
+    stop_the_clock: Case paused
+    restart_the_clock: Case unpaused
 
   retention_schedule_case_notes:
     update:

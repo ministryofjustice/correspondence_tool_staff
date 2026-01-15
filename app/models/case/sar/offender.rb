@@ -66,6 +66,8 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  include Stoppable
+
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
   VETTING_IN_PROCESS_EVENT = "mark_as_vetting_in_progress".freeze
@@ -194,6 +196,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,              inclusion: { in: [true, false], message: "cannot be blank" }
   validates :flag_as_high_profile,     inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_dps_missing_data, inclusion: { in: [true, false], message: "cannot be blank" }, if: -> { rejected? }
 
   validates :subject_address, presence: true
   validates :subject_full_name, presence: true
@@ -224,7 +227,6 @@ class Case::SAR::Offender < Case::Base
   validate :validate_sent_to_sscl_at
   validate :validate_remove_sent_to_sscl_reason
   validate :validate_rejected_reason, if: -> { invalid_submission? }
-  validate :validate_flag_as_dps_missing_data, if: -> { flag_as_dps_missing_data.nil? && current_state == "invalid_submission" && number.nil? }
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -246,12 +248,6 @@ class Case::SAR::Offender < Case::Base
 
   def validate_received_date # rubocop:disable Lint/UselessMethodDefinition
     super
-  end
-
-  def validate_flag_as_dps_missing_data
-    unless flag_as_dps_missing_data.in?([true, false])
-      errors.add(:flag_as_dps_missing_data, "cannot be blank")
-    end
   end
 
   def validate_date_of_birth
@@ -522,7 +518,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def rejected?
-    if persisted?
+    if number.present? && persisted?
       number[0] == "R"
     else
       current_state == "invalid_submission"

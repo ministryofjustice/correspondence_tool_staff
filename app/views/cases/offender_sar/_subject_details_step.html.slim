@@ -13,8 +13,6 @@
 
   = f.text_field :subject_aliases
 
-  = f.email_field :email
-
   = f.text_field :previous_case_numbers
 
   = f.text_field :other_subject_ids
@@ -28,6 +26,8 @@
 
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys
+
+  = f.email_field :email
 
   = f.text_area :subject_address, rows: '4', class: 'address_input'
   = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "prison,probation" }
