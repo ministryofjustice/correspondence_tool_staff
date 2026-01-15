@@ -6,7 +6,5 @@ class CreateBankHolidays < ActiveRecord::Migration[7.2]
       t.string :hash_value , null: false
       t.timestamps
     end
-
-    add_index :bank_holidays, %i[hash_value], unique: true
   end
 end
