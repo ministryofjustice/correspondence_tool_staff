@@ -17,7 +17,6 @@ gem "awesome_print"
 gem "aws-sdk-s3"
 # AXLSX styler - easy styling of cells based on cell references
 gem "axlsx_styler"
-# gem "bank_holiday", git: "https://github.com/ministryofjustice/bank_holiday.git", branch: "bundler-fix"
 gem "business_time"
 gem "config"
 gem "devise"
