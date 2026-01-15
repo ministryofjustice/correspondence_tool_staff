@@ -48,6 +48,7 @@ FactoryBot.define do
     gld_reference                   { "gld-ref-001" }
     third_party                     { false }
     flag_as_high_profile            { false }
+    flag_as_dps_missing_data        { false }
     created_at                      { creation_time }
     creator                         { responder }
     external_deadline               { Time.zone.today + 20.days }

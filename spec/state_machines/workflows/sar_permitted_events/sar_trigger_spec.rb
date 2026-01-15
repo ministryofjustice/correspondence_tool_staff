@@ -16,7 +16,8 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                       edit_case
                       flag_for_clearance
                       link_a_case
-                      remove_linked_case]
+                      remove_linked_case
+                      stop_the_clock]
         end
       end
 
@@ -30,7 +31,8 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         edit_case
                                                                         flag_for_clearance
                                                                         link_a_case
-                                                                        remove_linked_case]
+                                                                        remove_linked_case
+                                                                        stop_the_clock]
         end
       end
 
@@ -47,6 +49,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         link_a_case
                                                                         remove_linked_case
                                                                         remove_sar_deadline_extension
+                                                                        stop_the_clock
                                                                         unassign_from_user]
         end
       end
@@ -62,6 +65,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         extend_sar_deadline
                                                                         link_a_case
                                                                         remove_linked_case
+                                                                        stop_the_clock
                                                                         unassign_from_user]
         end
       end
@@ -76,6 +80,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         extend_sar_deadline
                                                                         link_a_case
                                                                         remove_linked_case
+                                                                        stop_the_clock
                                                                         unassign_from_user]
         end
       end

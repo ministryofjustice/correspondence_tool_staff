@@ -13,10 +13,12 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
     instance_double User,
                     full_name: "test"
   end
+
   let(:new_assignment) do
     instance_double Assignment,
                     user: new_user
   end
+
   let(:service) do
     instance_double CaseAssignToTeamMemberService,
                     call: true,

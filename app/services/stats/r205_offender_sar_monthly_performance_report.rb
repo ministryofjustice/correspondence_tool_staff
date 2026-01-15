@@ -6,7 +6,7 @@ module Stats
       end
 
       def description
-        "Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month."
+        "Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month excluding missing DPS cases."
       end
 
       def indexes_for_percentage_columns
@@ -23,7 +23,7 @@ module Stats
     end
 
     def case_scope
-      Case::Base.offender_sar.where(received_date: @period_start..@period_end).where.not("LEFT(cases.number, 1) = 'R'")
+      Case::Base.offender_sar.where(received_date: @period_start..@period_end).where.not("LEFT(cases.number, 1) = 'R' OR LEFT(cases.number, 1) = 'D'")
     end
 
     def report_type

@@ -1,17 +1,7 @@
-/ Link to the "Next" page
-  - available local variables
-    url          : url to the next page
-    current_page : a page object for the currently displayed page
-    total_pages  : total number of pages
-    per_page     : number of items to fetch per page
-    remote       : data-remote
-li.pagination-next
-  - unless current_page.last?
-    == link_to url, rel: 'next'
-      .pagination-next-prev
-        = t('pagination.next').html_safe
-        .visually-hidden
-          = " page"
-      .pagination-pages
-        = "#{current_page.number + 1} of #{total_pages}"
-
+div.govuk-pagination__next
+  a.govuk-link.govuk-pagination__link href="#{url}#data-table" rel="next"
+    span.govuk-pagination__link-title
+      | Next
+      span.govuk-visually-hidden page
+    svg.govuk-pagination__icon.govuk-pagination__icon--next xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13"
+      path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"

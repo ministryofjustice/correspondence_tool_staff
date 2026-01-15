@@ -2,31 +2,40 @@ require "csv"
 require "json"
 
 query = <<-SQL
-  SELECT cases.properties->>'case_reference_number',
+  SELECT TO_CHAR(cases.received_date, 'DD/MM/YYYY') as date_received,
          cases.number,
-         cases.received_date,
          cases.type,
-         cases.properties,
-         cases.postal_address,
-         dr.id,
-         dr.request_type,
-         dr.request_type_note,
-         dr.date_requested,
-         dr.date_from,
-         dr.date_to,
-         dr.cached_num_pages,
-         dr.cached_date_received,
-         dr.contact_id,
-         c.name,
-         dr.location
+         cases.properties->>'subject_full_name' as full_name,
+         cases.properties->>'subject_aliases' as "alias",
+         cases.properties->>'date_of_birth' as date_of_birth,
+         cases.properties->>'previous_case_numbers' as previous_case_numbers,
+         cases.properties->>'prison_number' as prison_number,
+         cases.properties->>'other_subject_ids' as pcn,
+         cases.properties->>'case_reference_number' as crn,
+         cases.properties->>'subject_type' as subject_type,
+         CASE WHEN (cases.properties->>'third_party')::boolean = true THEN 'Solicitor/other' ELSE 'Data subject' END AS requester,
+         cases.properties->>'third_party_name' as third_party_name,
+         cases.properties->>'third_party_company_name' as third_party_company_name,
+         cases.postal_address as postal_address,
+         cases.properties->>'subject_address' as subject_address,
+         dr.location as request_location,
+         contacts.name as request_location_two,
+         dr.request_type as request_type,
+         dr.request_type_note as request_type_note,
+         TO_CHAR(dr.date_requested, 'DD/MM/YYYY') as date_requested,
+         TO_CHAR(dr.date_from, 'DD/MM/YYYY') as date_from,
+         TO_CHAR(dr.date_to, 'DD/MM/YYYY') as date_to,
+         dr.cached_num_pages as pages,
+         CASE WHEN dr.completed = true THEN 'Yes' ELSE 'No' END AS completed,
+         CASE WHEN dr.cached_date_received IS NULL THEN 'No date recorded' ELSE TO_CHAR(dr.cached_date_received, 'DD/MM/YYYY') END as completed_date
   FROM cases
-  LEFT JOIN data_requests dr ON cases.id = dr.case_id
-  LEFT JOIN data_request_areas dra ON dr.data_request_area_id = dra.id
-  LEFT JOIN contacts c ON dr.contact_id = c.id
+  LEFT JOIN data_requests AS dr ON dr.case_id = cases.id
+  LEFT JOIN data_request_areas AS dra ON dr.data_request_area_id = dra.id
+  LEFT JOIN contacts ON dra.contact_id = contacts.id
   WHERE cases.type = 'Case::SAR::Offender'
     AND cases.received_date >= '2018-01-01'
     AND cases.received_date <= '2024-09-30'
-  ORDER BY (properties->>'case_reference_number');
+  ORDER BY cases.number ASC;
 SQL
 
 namespace :dps do
@@ -38,80 +47,71 @@ namespace :dps do
 
     CSV.open(result_file, "wb") do |csv|
       # Define headers
-      csv << %w[
-        case_reference_number
-        case_number
-        received_date
-        type
-        requester_subject_full_name
-        subject_aliases
-        date_of_birth
-        prison_number
-        other_subject_ids
-        previous_case_numbers
-        subject_type
-        third_party_company_name
-        requester_third_party_name
-        postal_address
-        request_type
-        request_type_note
-        date_requested
-        date_from
-        date_to
-        number_final_pages
-        cached_date_received
-        contact_id
-        contact_name
-        location
+      csv << [
+        "Date Received",
+        "Case Number",
+        "Case Type",
+        "Full Name of Subject",
+        "Alias",
+        "Date of Birth",
+        "Previous SAR Case Numbers",
+        "Prison Number",
+        "PCN",
+        "CRN",
+        "Subject Type",
+        "Requester",
+        "Third Party Name",
+        "Third Party Company Name",
+        "Postal Address",
+        "Subject Address",
+        "Location",
+        "Location two",
+        "Data Request Type",
+        "Request Type Note",
+        "Date Requested",
+        "Date From",
+        "Date To",
+        "Pages Received",
+        "Completed",
+        "Data Request Completed Date",
       ]
 
       puts "Writing offender SAR cases with data requests to #{result_file}"
       puts "Total records found: #{records_array.count}"
 
       records_array.each do |record|
-        # Parse JSON properties
-        json_data = begin
-          JSON.parse(record["properties"])
-        rescue StandardError
-          {}
-        end
-
-        # Remove new lines and carriage returns from all string values in json_data
-        json_data.each do |key, value|
-          json_data[key] = value.is_a?(String) ? value.gsub(/[\n\r]/, " ") : value
-        end
-
         # Write data to CSV
         csv << [
-          json_data["case_reference_number"],
-          record["case_number"],
-          record["received_date"],
+          record["date_received"],
+          record["number"],
           record["type"],
-          json_data["subject_full_name"],
-          json_data["subject_aliases"],
-          json_data["date_of_birth"],
-          json_data["prison_number"],
-          json_data["other_subject_ids"],
-          json_data["previous_case_numbers"],
-          json_data["subject_type"],
-          json_data["third_party_company_name"],
-          json_data["third_party_name"],
+          record["full_name"],
+          record["alias"],
+          record["date_of_birth"],
+          record["previous_case_numbers"],
+          record["prison_number"],
+          record["pcn"],
+          record["crn"],
+          record["subject_type"],
+          record["requester"],
+          record["third_party_name"],
+          record["third_party_company_name"],
           record["postal_address"],
+          record["subject_address"],
+          record["request_location"],
+          record["request_location_two"],
           record["request_type"],
           record["request_type_note"],
           record["date_requested"],
           record["date_from"],
           record["date_to"],
-          record["cached_num_pages"],
-          record["cached_date_received"],
-          record["contact_id"],
-          record["contact_name"],
-          record["location"],
+          record["pages"],
+          record["completed"],
+          record["completed_date"],
         ]
         counter += 1
       end
     end
-
     puts "#{counter} offender SAR cases with data requests listed in #{result_file}"
   end
 end

@@ -449,6 +449,8 @@ en:
       upload_responses?: You are not authorised to upload a response for this case.
       can_move_to_team_member?: You are not authorised to assign the responder to this case.
       can_be_reopened?: You are not authorised to reopen this case.
+    case/base_policy:
+      can_download_stats?: You are not authorised to view or download statistics.
     case/ico/foi_policy:
       <<: *case_policy
       can_close_case?: You are not authorised to close this case
@@ -1089,7 +1091,7 @@ en:
 
   common:
     accessibility: Accessibility
-    alert_banner_html: "This service will be down for essential maintenance from 17:30 on Tuesday 17 December. The site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
+    alert_banner_html: "This service will be down for essential maintenance from 17:30 on Tuesday 17 December. The site will resume service after business hours. Please contact <a href='mailto:correspondence-gg@justice.gov.uk'>correspondence-gg@justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
       answered_in_time: Answered in time
@@ -1270,8 +1272,8 @@ en:
     show_search_result_order_by_oldest_first: Show oldest cases first
     show_search_result_order_by_newest_destruction_date: Show newest destruction date first
     show_search_result_order_by_oldest_destruction_date: Show oldest destruction date first
-    phase_banner: |
-      This is a new service.
+    phase_banner_html: |
+      This is a new service. Help us make this service better. Give us your <a href="https://www.smartsurvey.co.uk/s/J38MA6/" class="govuk-link govuk-link--no-visited-state">feedback</a>.
     service_name: Track a query
     signout: Sign out
     stats_custom_button: Create report
@@ -1873,6 +1875,7 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
+    truncate: "&hellip;"
 
   mailer:
     commissioning_email:

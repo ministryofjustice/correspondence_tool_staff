@@ -28,6 +28,6 @@
 <% urls = [new_user_unlock_url, new_user_password_url, user_unlock_url, user_password_url] %>
 <%- if urls.map { |url| request.url == url }.include?(true) %>
   <%= content_tag :p do %>
-    For any technical queries, please contact <%= link_to "correspondence@digital.justice.gov.uk", "mailto:correspondence@digital.justice.gov.uk", target:"_top" %>
+    For any technical queries, please contact <%= link_to "correspondence-gg@justice.gov.uk", "mailto:correspondence-gg@justice.gov.uk", target:"_top" %>
   <% end %>
 <% end -%>

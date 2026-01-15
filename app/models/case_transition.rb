@@ -37,7 +37,7 @@ class CaseTransition < ApplicationRecord
   ANNOTATE_RETENTION_CHANGES = "annotate_retention_changes".freeze
   ANNOTATE_SYSTEM_RETENTION_CHANGES = "annotate_system_retention_changes".freeze
 
-  paginates_per 10
+  paginates_per 20
 
   after_destroy :update_most_recent, if: :most_recent?
 
@@ -69,7 +69,7 @@ class CaseTransition < ApplicationRecord
 
   def self.next_sort_key(kase)
     n = kase.transitions.order(sort_key: :desc).limit(1).pluck(:sort_key).singular_or_nil
-    n.nil? ? 10 : n + 10
+    n.nil? ? 20 : n + 20
   end
 
   def self.unset_most_recent(kase)

@@ -67,11 +67,13 @@ describe Case::SAR::OffenderComplaint do
 
   context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
-      kase = build_stubbed :offender_sar_complaint, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
+      kase = build_stubbed :offender_sar_complaint, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil, flag_as_dps_missing_data: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
       expect(kase.errors[:third_party]).to eq(["cannot be blank"])
+      expect(kase.errors[:flag_as_high_profile]).to eq(["cannot be blank"])
+      expect(kase.errors[:flag_as_dps_missing_data]).to be_empty
     end
   end
 
@@ -864,6 +866,24 @@ describe Case::SAR::OffenderComplaint do
       complaint = create(:offender_sar_complaint)
       complaint1 = create(:offender_sar_complaint, original_case: complaint.original_case)
       expect(complaint1.number).to eq "Q#{complaint.original_case.number}-001"
+    end
+
+    it "'DQ' + original_case.number" do
+      test_cases = {
+        "D123456" => "DQ123456",
+        "DQ123456" => "DQ123456",
+        "DR123456" => "DQ123456",
+        "123456" => "Q123456",
+        nil => nil,
+        "  " => "  ",
+      }
+
+      complaint = create(:offender_sar_complaint)
+
+      test_cases.each do |input, output|
+        complaint.number = input
+        expect(complaint.send(:case_number_with_new_prefix, input)).to eq output
+      end
     end
   end
 

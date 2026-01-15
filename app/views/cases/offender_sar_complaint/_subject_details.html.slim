@@ -8,9 +8,6 @@ tr.prison-number
 tr.subject-aliases
   th = t('common.case.subject_aliases')
   td = case_details.subject_aliases
-tr.subject-email
-  th = t('common.case/offender_sar.email')
-  td = case_details.email
 tr.previous-case-numbers
   th = t('common.case.previous_case_numbers')
   td = case_details.previous_case_numbers
@@ -29,6 +26,9 @@ tr.date-of-birth
 
 = render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
 
+tr.subject-email
+  th = t('common.case/offender_sar.email')
+  td = case_details.email
 tr.subject-address
   th = t('common.case.subject_address')
   td
@@ -36,3 +36,7 @@ tr.subject-address
 tr.subject-high-priority
   th = t('helpers.label.offender_sar.high_profile')
   td = case_details.flag_as_high_profile.humanize
+tr.subject-missing-data
+  - value = case_details.flag_as_dps_missing_data.humanize
+  th = t('helpers.label.offender_sar.dps_missing_data')
+  td = value.include?("Nothing") ? "No" : value
