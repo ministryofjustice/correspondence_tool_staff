@@ -1,8 +1,3 @@
-\restrict EVHjUSvWLfEcEK7YIWh865iwdnngW9fkjLwkgTHW4iH4lqUwxvWbQ09F13vmnil
-
--- Dumped from database version 16.9 (Postgres.app)
--- Dumped by pg_dump version 18.1
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -2471,12 +2466,9 @@ ALTER TABLE ONLY public.data_request_areas
 -- PostgreSQL database dump complete
 --
 
-\unrestrict EVHjUSvWLfEcEK7YIWh865iwdnngW9fkjLwkgTHW4iH4lqUwxvWbQ09F13vmnil
-
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20251223150031'),
 ('20251217151713'),
 ('20250312113935'),
 ('20250220153650'),
