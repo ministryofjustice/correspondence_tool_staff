@@ -48,9 +48,6 @@ services:
   log:
     container_name: cts_redis
     image: redis:alpine
-    environment:
-      VIRTUAL_HOST: redis.${CTS_HOST_NAME}
-      VIRTUAL_PORT: 6379
     ports:
       - '6379:6379'
     volumes:
