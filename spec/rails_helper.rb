@@ -73,6 +73,7 @@ require Rails.root.join("spec/support/features/interactions/overturned_ico.rb")
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 $LOAD_PATH.unshift(File.join(File.expand_path(__dir__), "site_prism"))
+require "site_prism"
 require "site_prism/page_objects/pages/application"
 
 # include linked_cases_section specifically to avoid machine-specific load order issues
@@ -86,7 +87,9 @@ Dir[Rails.root.join("spec/site_prism/page_objects/pages/**/*.rb")].each { |f| re
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.maintain_test_schema!
+unless ENV["SKIP_DB"]
+  ActiveRecord::Migration.maintain_test_schema!
+end
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -98,7 +101,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   %i[controller view request].each do |type|
     config.include(Rails::Controller::Testing::TestProcess, type:)
@@ -160,12 +163,14 @@ RSpec.configure do |config|
   self.class.const_set(:CASE_UPLOADS_S3_BUCKET,
                        TestAWSS3.new.bucket(Settings.case_uploads_s3_bucket))
 
-  config.before(:suite) do
-    DbHousekeeping.clean(seed: true)
-  end
+  unless ENV["SKIP_DB"]
+    config.before(:suite) do
+      DbHousekeeping.clean(seed: true)
+    end
 
-  config.after(:suite) do
-    DbHousekeeping.clean(seed: false)
+    config.after(:suite) do
+      DbHousekeeping.clean(seed: false)
+    end
   end
 
   config.before(:example, tag: :cli) do
@@ -198,6 +203,8 @@ def seed_database_for_tests
   FactoryBot.find_or_create :default_press_officer
   FactoryBot.find_or_create :default_private_officer
 end
+
+require "shoulda/matchers"
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|

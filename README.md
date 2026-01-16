@@ -36,6 +36,40 @@ $ cd correspondence_tool_staff
 
 ### Installing the app for development
 
+#### Out of the box - using docker compose
+
+> [!TIP]
+> To prevent issues with the local environment, we recommend using docker compose to run the app locally. This will ensure that the app runs in an environment similar to production.
+> 
+> To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
+
+Use the following command to start the app:
+
+```
+make
+```
+All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
+
+You can access PGAdmin4 at http://localhost:5050 with: 
+- Username `cts@pgadmin.com` 
+- Password `let-me-in`.
+
+> [!IMPORTANT] 
+> **Viewing DB data**
+> 
+> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. 
+> You will need to create a new server in PGAdmin4 with the following steps:
+> 1. Click on "Tools" in the top menu and select "Import/Export Servers".
+> 2. Select the "Import" tab.
+> 3. Click on the directory button alongside the Filename field.
+> 4. Click `server.json` in the file browser and click "Select".
+> 5. Click "Next" to proceed.
+> 6. Check the "Servers" checkbox and click "Next".
+> 7. Click "Finish" to complete the import process.
+> 8. When promoted, enter the password `postgres` to connect to the Postgres database.
+
+### Manual setup - using rbenv and Homebrew
+
 #### Latest Version of Ruby
 
 If you don't have `rbenv` already installed, install it as follows:
@@ -404,3 +438,35 @@ This path can also be used on the live site when you are logged in as an admin.
 | RequestPersonalInformationJob | Builds request from API and sends email |                                                                    |
 | SearchIndexUpdaterJob         | Updates search index when case changes  |                                                                    |
 | SearchIndexBuNameUpdaterJob   | Updater when Busines Unit name changes  | Calls the SearchIndexUpdaterJob for every case linked to the BU    |
+
+
+
+## Troubleshooting: psql not found or permission issues
+
+If you see an error like:
+
+  Please check the output above for any errors and make sure that psql is installed in your PATH and has proper permissions
+
+it means the PostgreSQL client tools are not available on your system PATH or they cannot be executed.
+
+- Using Docker (recommended):
+  - No action needed. Our dev image includes the PostgreSQL client tools and the entrypoint now performs a preflight check for `psql` and `pg_isready` before attempting to connect.
+  - Start the stack with: `docker compose up`.
+
+- Running locally without Docker:
+  1) Install the PostgreSQL client tools (psql):
+     - macOS (Homebrew): `brew install libpq && brew link --force libpq`
+     - Ubuntu/Debian: `sudo apt-get update && sudo apt-get install -y postgresql-client`
+     - Fedora: `sudo dnf install postgresql`
+     - Windows: Install PostgreSQL from https://www.postgresql.org/download/ and ensure `psql.exe` is on your PATH.
+  2) Verify installation: `psql --version` and `pg_isready --version`
+  3) Ensure your environment variables are set, e.g.:
+     - `export DATABASE_URL=postgresql://YOUR_USER@localhost/correspondence_platform_development`
+     - Or copy `.env.example` to `.env` and adjust as needed.
+  4) Test connectivity:
+     - `psql "$DATABASE_URL" -c "SELECT 1;"`
+
+- Permissions:
+  - On Unix systems, ensure the binary is executable: `which psql` then `ls -l $(which psql)`.
+  - If connecting to a local server via sockets, ensure you have permission to access the socket directory (commonly `/var/run/postgresql` or `/tmp`). Alternatively, use TCP by setting `PGHOST=127.0.0.1`.
+
