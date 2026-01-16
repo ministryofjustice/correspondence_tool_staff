@@ -69,10 +69,10 @@ sidekiq-uploads:
 	bundle exec sidekiq -C config/sidekiq-uploads.yml
 
 browser-sync:
-	docker compose exec -d app /usr/bin/browserSync.sh
+	@docker compose exec -d app /usr/bin/browserSync.sh
 
-server:
-	docker compose exec app /usr/bin/app-server-start.sh
+server: endpoints
+	@docker compose exec app /usr/bin/app-server-start.sh
 
 restart:
 	docker-sync clean
@@ -89,3 +89,7 @@ shell:
 docker-check:
 	@chmod +x ./config/docker-dev/bin/check-docker.sh
 	@./config/docker-dev/bin/check-docker.sh
+
+endpoints:
+	@chmod +x ./config/docker-dev/bin/announce-endpoints.sh
+	@./config/docker-dev/bin/announce-endpoints.sh

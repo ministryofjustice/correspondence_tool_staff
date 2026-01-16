@@ -17,7 +17,7 @@ UTILITY_TITLE="${YELLOW}C T   S T A F F  ${DARK_GRAY}/  ${GREEN}D E V E L O P M 
 
 ## a full width line of stars
 FULL_WIDTH_STARS="*"
-for ((i = 1; i < "$(tput cols)"; i++)); do FULL_WIDTH_STARS="$FULL_WIDTH_STARS*"; done
+for ((i = 1; i < $(tput cols); i++)); do FULL_WIDTH_STARS="$FULL_WIDTH_STARS*"; done
 ####
 
 header() {
