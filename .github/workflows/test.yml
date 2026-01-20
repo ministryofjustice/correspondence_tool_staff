@@ -53,7 +53,7 @@ jobs:
           bundler-cache: true
 
       - name: "Setup Chrome"
-        uses: browser-actions/setup-chrome@v2
+        uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
