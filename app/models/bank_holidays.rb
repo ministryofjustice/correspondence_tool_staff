@@ -57,22 +57,6 @@ class BankHolidays < ApplicationRecord
     end
   end
 
-  # Public: Return formatted date strings for the requested region.
-  #
-  # region - see #dates_for
-  # format - A strftime-compatible format string. Defaults to "DD/MM/YYYY".
-  #
-  # Returns an Array<String>.
-  def formatted_dates_for(region, format: "%d/%m/%Y")
-    dates_for(region).map do |raw|
-      begin
-        Date.iso8601(raw).strftime(format)
-      rescue ArgumentError
-        nil
-      end
-    end.compact
-  end
-
   private
 
   # Safely normalise whatever we were given as a region name to the
