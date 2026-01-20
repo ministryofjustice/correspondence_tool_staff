@@ -52,6 +52,16 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: "Setup Chrome"
+        uses: browser-actions/setup-chrome@v2
+        with:
+          chrome-version: stable
+
+      - name: "Setup Chromedriver"
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: latest
+
       - name: "Install packages"
         run: yarn install --pure-lockfile
 

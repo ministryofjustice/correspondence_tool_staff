@@ -103,9 +103,11 @@ group :development, :test do
   gem 'openssl', '~> 4.0'
   gem "parallel_tests"
   gem "phantomjs"
+  gem "rack", "~> 2.2"
   gem "rspec-collection_matchers"
   gem "rspec-rails"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
   gem "teaspoon-jasmine"
+  gem "webrick", "~> 1.8"
 end
