@@ -58,9 +58,9 @@ jobs:
           chrome-version: stable
 
       - name: "Setup Chromedriver"
-        uses: nanasess/setup-chromedriver@v2
+        uses: browser-actions/setup-chromedriver@v1
         with:
-          chromedriver-version: latest
+          chromedriver-version: ${{ steps.setup-chrome.outputs.chrome-version }}
 
       - name: "Install packages"
         run: yarn install --pure-lockfile
