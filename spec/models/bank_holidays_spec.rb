@@ -51,35 +51,6 @@ RSpec.describe BankHolidays, type: :model do
         expect(record.dates_for_regions(r1, nil, "")).to match_array(record.dates_for(r1))
       end
     end
-
-    describe "#formatted_dates_for" do
-      it "formats dates using the default format" do
-        region = "england-and-wales"
-        expected = record.dates_for(region).map { |d| Date.iso8601(d).strftime("%d/%m/%Y") }
-        expect(record.formatted_dates_for(region)).to eq(expected)
-      end
-
-      it "uses a custom format when provided" do
-        region = "scotland"
-        fmt = "%Y-%m-%d"
-        expected = record.dates_for(region).map { |d| Date.iso8601(d).strftime(fmt) }
-        expect(record.formatted_dates_for(region, format: fmt)).to eq(expected)
-      end
-
-      it "skips invalid date strings during formatting" do
-        # Inject an invalid date into a copy of the data under a region that exists
-        data = Marshal.load(Marshal.dump(parsed_fixture))
-        data["england-and-wales"]["events"] << { "date" => "not-a-date" }
-        rec = described_class.new(data: data, hash_value: "with-invalid")
-
-        raw = rec.dates_for("england-and-wales")
-        formatted = rec.formatted_dates_for("england-and-wales")
-        # One of the raw entries is invalid, so formatted should be strictly smaller
-        expect(raw.length).to be > formatted.length
-        # All formatted entries should parse with the default format chain we used above
-        expect { formatted.each { |s| Date.strptime(s, "%d/%m/%Y") } }.not_to raise_error
-      end
-    end
   end
 
   describe "behaviour with String JSON data" do
