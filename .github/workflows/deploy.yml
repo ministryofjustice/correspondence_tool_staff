@@ -6,9 +6,14 @@ on:
 env:
   PREFIX: "ct-staff"
   SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
 
 jobs:
   build:
@@ -17,10 +22,6 @@ jobs:
 
     outputs:
       build_tag: ${{ steps.vars.outputs.build_tag }}
-
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
 
     steps:
       - name: Checkout
@@ -62,11 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: development
-
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
-
     env:
       KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
       KUBE_CERT: ${{ secrets.KUBE_CERT }}
@@ -133,10 +129,6 @@ jobs:
     needs: build
     environment: staging
 
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
-
     env:
       KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
       KUBE_CERT: ${{ secrets.KUBE_CERT }}
@@ -202,10 +194,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: qa
-
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
 
     env:
       KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}
@@ -276,10 +264,6 @@ jobs:
     needs: deploy-staging
     if: ${{ github.ref == 'refs/heads/main' }}
     environment: production
-
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
 
     env:
       KUBE_NAMESPACE: ${{ secrets.KUBE_NAMESPACE }}

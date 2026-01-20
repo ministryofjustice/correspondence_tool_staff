@@ -1,4 +1,4 @@
-name: Test Workflow
+name: "Test Workflow"
 on:
   pull_request:
   push:
@@ -15,18 +15,18 @@ jobs:
     env:
       RAILS_ENV: test
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Setup Ruby and install gems
+      - name: "Setup Ruby and install gems"
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
-      - name: Lint Ruby files
+      - name: "Lint Ruby files"
         run: bin/rubocop
 
-      - name: Security audit application code
+      - name: "Security audit application code"
         run: bundle exec brakeman -q
 
   javascript_test:
@@ -39,23 +39,23 @@ jobs:
       CI: true
 
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Allow tests to run
+      - name: "Allow tests to run"
         run: |
           mkdir -p log tmp tmp/pids
           sudo sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
 
-      - name: Setup Ruby and install gems
+      - name: "Setup Ruby and install gems"
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
-      - name: Install packages
+      - name: "Install packages"
         run: yarn install --pure-lockfile
 
-      - name: Javascript tests
+      - name: "Javascript tests"
         run: bundle exec teaspoon
 
   test:
@@ -99,28 +99,28 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Setup Ruby and install gems
+      - name: "Setup Ruby and install gems"
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
-      - name: Install packages
+      - name: "Install packages"
         run: yarn install --pure-lockfile
 
-      - name: Setup databases
+      - name: "Setup databases"
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 1
           max_attempts: 3
           command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
-      - name: Run unit and feature tests
+      - name: "Run unit and feature tests"
         run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
 
-      - name: Upload coverage
+      - name: "Upload coverage"
         uses: actions/upload-artifact@v4
         with:
           include-hidden-files: true
@@ -135,24 +135,25 @@ jobs:
       RAILS_ENV: test
       AWS_ACCESS_KEY_ID: 123
       AWS_SECRET_ACCESS_KEY: 456
+      AWS_EC2_METADATA_DISABLED: "true"
     steps:
-      - name: Checkout code
+      - name: "Checkout code"
         uses: actions/checkout@v4
 
-      - name: Setup Ruby and install gems
+      - name: "Setup Ruby and install gems"
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
 
-      - name: Download coverage
+      - name: "Download coverage"
         uses: actions/download-artifact@v4
         with:
           path: coverage
 
-      - name: Collate coverage
+      - name: "Collate coverage"
         run: bundle exec rake coverage:report
 
-      - name: Code coverage result
+      - name: "Code coverage result"
         uses: joshmfrankel/simplecov-check-action@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
