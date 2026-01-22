@@ -228,12 +228,12 @@ describe Case::BaseDecorator, type: :model do
   describe "#requester_name_and_type" do
     it "returns name and requestor type" do
       kase = create(:case, name: "Stepriponikas Bonstart", requester_type: "member_of_the_public").decorate
-      expect(kase.requester_name_and_type).to eq "Stepriponikas Bonstart | Member of the public"
+      expect(kase.requester_name_and_type).to eq "Stepriponikas Bonstart | member_of_the_public"
     end
 
     it "returns the name and subject type" do
       kase = create(:sar_case, name: "Wade Wilson", subject_type: "staff").decorate
-      expect(kase.requester_name_and_type).to eq "Wade Wilson | Staff"
+      expect(kase.requester_name_and_type).to eq "Wade Wilson | staff"
     end
   end
 
