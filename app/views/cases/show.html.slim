@@ -38,6 +38,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
           - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
           - permitted_events = permitted_events - [:mark_as_awaiting_response_for_partial_case, :mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
+          - permitted_events = permitted_events - [:extend_sar_deadline, :remove_sar_deadline_extension, :stop_the_clock]
           - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
             - permitted_events.delete(:close)
 
@@ -59,10 +60,10 @@ div id="case-#{@correspondence_type_key}" class="case"
           - action_button_for(:progress_for_clearance)
 
   section.case-info
-    = render partial: 'cases/case_status', locals: {case_details: @case}
+    = render partial: 'cases/case_status', locals: { case_details: @case, permitted_events: @permitted_events }
 
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
-    = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
+    = render partial: 'cases/ico/ico_final_decision', locals: { case_details: @case }
 
   - if @case.offender_sar? && @case.closed? && !@case.rejected?
     section.case-info

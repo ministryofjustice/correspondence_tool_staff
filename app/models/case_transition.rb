@@ -36,6 +36,7 @@ class CaseTransition < ApplicationRecord
   ADD_NOTE_TO_CASE_EVENT = "add_note_to_case".freeze
   ANNOTATE_RETENTION_CHANGES = "annotate_retention_changes".freeze
   ANNOTATE_SYSTEM_RETENTION_CHANGES = "annotate_system_retention_changes".freeze
+  STOP_THE_CLOCK_EVENT = "stop_the_clock".freeze
 
   paginates_per 20
 
@@ -48,7 +49,8 @@ class CaseTransition < ApplicationRecord
                  filenames: [:string, { array: true, default: [] }],
                  final_deadline: :date,
                  linked_case_id: :integer,
-                 original_final_deadline: :date
+                 original_final_deadline: :date,
+                 details: :json
 
   belongs_to :acting_user, class_name: "User"
   belongs_to :acting_team, class_name: "Team"
@@ -92,6 +94,7 @@ private
       ADD_NOTE_TO_CASE_EVENT,
       ANNOTATE_RETENTION_CHANGES,
       ANNOTATE_SYSTEM_RETENTION_CHANGES,
+      STOP_THE_CLOCK_EVENT,
     ].include? event
   end
 end
