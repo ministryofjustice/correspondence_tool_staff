@@ -2,7 +2,7 @@
   = hidden_field_tag('search_query[filter_type]', 'filter_by_condition')
   = hidden_field_tag('search_query[parent_id]', @parent_id)
 
-  .case-filters.grid-row
+  #data-table.case-filters.grid-row
     details
       summary aria-controls="filter-cases-accordion" aria-expanded="false" role="button"
         span.case-filters__summary.case-filters__summary--outer
@@ -13,6 +13,6 @@
             summary aria-controls="#{filter.class.identifier}_content" id="#{filter.class.identifier}_content_btn" aria-expanded="false" role="button"
               span.case-filters__summary
                 = t("filters.headings.#{filter.class.identifier}")
-            .case-filters__content class="case-filters__content--#{filter.class.identifier}" id="#{filter.class.identifier}_content" aria-hidden="true" 
+            .case-filters__content class="case-filters__content--#{filter.class.identifier}" id="#{filter.class.identifier}_content" aria-hidden="true"
               = render partial: "cases/search_filters/#{filter.class.template_name}", locals: { f: f, filter: filter }
         input.button type="submit" value="Filter"
