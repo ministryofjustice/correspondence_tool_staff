@@ -1,5 +1,3 @@
-require "rack"
-
 Teaspoon.configure do |config|
   # Determines where the Teaspoon routes will be mounted. Changing this to "/jasmine" would allow you to browse to
   # `http://localhost:3000/jasmine` to run your tests.
@@ -21,14 +19,12 @@ Teaspoon.configure do |config|
   # Default phantomjs driver is no longer working in the pipeline and appears to be deprecated, switch to selenium
   config.driver = :selenium
 
-  chrome_args = %w[headless disable-gpu no-sandbox disable-dev-shm-usage]
-  opts = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
-  opts.binary = ENV["CHROME_BIN"] if ENV["CHROME_BIN"]
-
   # Use Chrome - the default is Firefox which has known memory issues
   config.driver_options = {
     client_driver: :chrome,
-    selenium_options: { options: opts },
+    selenium_options: {
+      options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless disable-gpu]),
+    },
   }
 
   # SUITES
