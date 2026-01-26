@@ -2,8 +2,6 @@ require Rails.root.join("app/models/bank_holidays")
 
 class BankHolidaysService
   URL = "https://www.gov.uk/bank-holidays.json".freeze
-  CACHE_KEY = "bank_holidays_service:data".freeze
-  CACHE_TTL = 12.hours
 
   attr_reader :holidays
 
@@ -44,8 +42,6 @@ private
       return {}
     end
 
-    # Cache only successful, valid payloads
-    Rails.cache.write(CACHE_KEY, parsed, expires_in: CACHE_TTL)
     parsed
   rescue JSON::ParserError => e
     Rails.logger.error("Failed to parse bank holidays JSON: #{e.message}")
