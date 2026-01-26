@@ -14,7 +14,7 @@ class BankHolidaysService
 
   # Persist the latest snapshot of holidays if it has changed
   def backup
-    return unless holidays.present?
+    return if holidays.blank?
     return unless holidays.is_a?(Hash)
     return if holidays.empty?
 

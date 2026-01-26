@@ -69,6 +69,7 @@ jobs:
       - name: "Javascript tests"
         env:
           CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CHROMEDRIVER_PATH: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         run: bundle exec teaspoon
 
   test:

@@ -692,7 +692,7 @@ DEPENDENCIES
   govuk_frontend_toolkit (>= 9.0.0)
   govuk_notify_rails
   govuk_template (~> 0.26.0)
-  httparty
+  httparty (~> 0.24.0)
   humanize_boolean
   i18n-tasks
   jbuilder (~> 2.14)

@@ -31,7 +31,7 @@ gem "govuk_elements_rails",   ">= 3.1.2"
 gem "govuk_frontend_toolkit", ">= 9.0.0"
 gem "govuk_notify_rails"
 gem "govuk_template", "~> 0.26.0"
-gem "httparty"
+gem "httparty", "~> 0.24.0"
 gem "humanize_boolean"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.14"
@@ -100,7 +100,7 @@ group :development, :test do
   gem "bullet"
   gem "colorize"
   gem "debug", ">= 1.0.0"
-  gem 'openssl', '~> 4.0'
+  gem "openssl", "~> 4.0"
   gem "parallel_tests"
   gem "phantomjs"
   gem "rack", "~> 2.2"
