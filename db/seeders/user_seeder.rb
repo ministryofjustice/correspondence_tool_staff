@@ -18,7 +18,7 @@ class UserSeeder
     CSV.foreach(FILENAME) do |row|
       process_row(row)
     rescue StandardError => e
-      Rails.logger.debug "Errror processing this row:"
+      Rails.logger.debug "Error processing this row:"
       Rails.logger.debug "#{e.class} - #{e.message}"
       Rails.logger.debug ">>>>>>>>>>>>>>>>>"
       Rails.logger.debug row
