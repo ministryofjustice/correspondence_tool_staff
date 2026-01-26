@@ -1,8 +1,9 @@
 module DbHousekeeping
   def self.clean(seed: true)
     tables = %w[
-      cases
+      bank_holidays
       assignments
+      cases
       case_attachments
       case_closure_metadata
       case_number_counters
