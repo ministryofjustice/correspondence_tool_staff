@@ -1,4 +1,4 @@
-require Rails.root.join('app/models/bank_holidays')
+require Rails.root.join("app/models/bank_holidays")
 
 class BankHolidaysService
   URL = "https://www.gov.uk/bank-holidays.json".freeze

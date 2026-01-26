@@ -28,7 +28,7 @@ Teaspoon.configure do |config|
   # Use Chrome - the default is Firefox which has known memory issues
   config.driver_options = {
     client_driver: :chrome,
-    selenium_options: { options: opts }
+    selenium_options: { options: opts, }
   }
 
   # SUITES
