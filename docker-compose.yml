@@ -1,0 +1,93 @@
+volumes:
+  postgres-data:
+  pgadmin-server:
+  redis:
+  gems:
+  spec-gems:
+  cts-app-sync:
+    external: true
+
+services:
+
+  app:
+    container_name: cts_app
+    shm_size: '1g'
+    env_file: .env
+    build:
+      args:
+        development_mode: "true"
+      context: .
+      dockerfile: config/docker-dev/Dockerfile
+      target: dev
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+    depends_on:
+      - db
+      - log
+    volumes:
+      - .:/usr/src/app/
+      - gems:/usr/local/bundle
+      - cts-app-sync:/usr/src/app/:nocopy
+
+  db:
+    container_name: cts_postgres
+    image: postgres:17
+    restart: unless-stopped
+    shm_size: '2g'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  log:
+    container_name: cts_redis
+    image: redis:alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+
+  sidekiq:
+    container_name: cts_sidekiq
+    env_file: .env
+    environment:
+      REDIS_URL: redis://redis@log:6379
+      REDIS_URL_SIDEKIQ: ${REDIS_URL}/1
+    stdin_open: true
+    tty: true
+    depends_on:
+      - app
+    build:
+      args:
+        development_mode: "true"
+      context: .
+      dockerfile: config/docker-dev/Dockerfile
+      target: dev
+    volumes:
+      - .:/usr/src/app/
+      - gems:/usr/local/bundle
+      - /usr/src/app/tmp # don't mount tmp directory
+
+  db_admin:
+    container_name: cts_pgadmin4
+    image: elestio/pgadmin:REL-9_4
+    restart: always
+    ports:
+      - "5050:5050"
+    volumes:
+      - pgadmin-server:/var/lib/pgadmin # persist pgadmin data
+      - ./config/docker-dev/shared/pgadmin/storage:/var/lib/pgadmin/storage
+    environment:
+      PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change, it is used to construct a file path
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_LISTEN_PORT: 5050
+    depends_on:
+      - db
+    links:
+      - db

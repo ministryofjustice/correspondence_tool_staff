@@ -27,6 +27,8 @@ config/environments/*.local.yml
 .env
 env.sh
 .env.sh
+.docker-sync
+config/docker-dev/.setup-complete
 
 #Ignore local upload and attachments
 /uploads
@@ -34,6 +36,7 @@ public/uploads
 
 # Ignore .DS_Store in all directories
 .DS_Store
+._DS_Store
 
 public/assets/*
 !public/assets/govuk-frontend.*
@@ -56,6 +59,7 @@ coverage
 **/*.txt
 **/*.xls
 **/*.xlsx
+**/*.tar
 
 # exceptions to the above
 !db/structure.sql
@@ -73,3 +77,5 @@ doc
 *secret*.*
 
 .idea/
+/config/docker-dev/shared/pgadmin/storage/
+!/config/docker-dev/shared/pgadmin/storage/cts_pgadmin.com/*
