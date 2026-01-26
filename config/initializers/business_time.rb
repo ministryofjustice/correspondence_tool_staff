@@ -3,10 +3,7 @@ BusinessTime::Config.work_week = %w[mon tue wed thu fri]
 Rails.application.config.after_initialize do
   if Rails.env.test?
     if BankHolidays.count == 0
-      # In tests, use a fixed set of bank holidays from fixtures
-      fixture_json = File.read(Rails.root.join("spec/fixtures/bank_holidays_response.json"))
-      parsed_fixture = JSON.parse(fixture_json)
-      BankHolidays.create!(data: parsed_fixture, hash_value: "test-fixture")
+      BankHolidaysService.new
     end
   end
 
