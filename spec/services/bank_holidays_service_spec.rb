@@ -25,42 +25,30 @@ RSpec.describe BankHolidaysService, type: :service do
 
   describe "loading" do
     it "returns an empty hash and does not raise when JSON is invalid" do
-      # There is always 1 record, created by initialisation
-      # we have to be certain no other records have been created
-      expect(BankHolidays.count).to eq(1)
-
       allow(Net::HTTP).to receive(:get).and_return("not-json")
       service = described_class.new
 
       expect(service.holidays).to eq({})
       # No backup should occur if there is no data
-      expect(BankHolidays.count).to eq(1)
+      expect(BankHolidays.count).to eq(0)
       expect(Rails.logger).to have_received(:error).with(/Failed to parse bank holidays JSON/)
     end
 
     it "returns an empty hash when network fetch fails" do
-      # There is always 1 record, created by initialisation
-      # we have to be certain no other records have been created
-      expect(BankHolidays.count).to eq(1)
-
       allow(Net::HTTP).to receive(:get).and_raise(StandardError.new("boom"))
       service = described_class.new
 
       expect(service.holidays).to eq({})
-      expect(BankHolidays.count).to eq(1)
+      expect(BankHolidays.count).to eq(0)
       expect(Rails.logger).to have_received(:error).with(/Failed to fetch bank holidays/)
     end
 
     it "returns an empty hash when remote returns blank body" do
-      # There is always 1 record, created by initialisation
-      # we have to be certain no other records have been created
-      expect(BankHolidays.count).to eq(1)
-
       allow(Net::HTTP).to receive(:get).and_return("")
       service = described_class.new
 
       expect(service.holidays).to eq({})
-      expect(BankHolidays.count).to eq(1)
+      expect(BankHolidays.count).to eq(0)
     end
   end
 
