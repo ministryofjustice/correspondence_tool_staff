@@ -27,7 +27,7 @@ class BankHolidaysService
     ::BankHolidays.create!(data: holidays, hash_value: hash_value)
   end
 
-  private
+private
 
   # Load holidays from the remote endpoint, returning a parsed JSON hash.
   # On any error (network failure, blank body, invalid JSON), returns {}

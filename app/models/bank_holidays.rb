@@ -57,7 +57,7 @@ class BankHolidays < ApplicationRecord
     end
   end
 
-  private
+private
 
   # Safely normalise whatever we were given as a region name to the
   # string key used in the stored JSON.

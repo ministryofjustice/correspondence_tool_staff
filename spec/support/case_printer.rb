@@ -6,7 +6,7 @@ class CasePrinter
 
   def print
     generate_lines
-    @lines.each { |l| puts l }
+    @lines.each { |l| Rails.logger.debug l }
     nil
   end
 

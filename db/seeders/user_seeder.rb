@@ -25,7 +25,9 @@ class UserSeeder
       Rails.logger.debug "<<<<<<<<<<<<<<<<<"
       Rails.logger.debug "Backtrace"
       Rails.logger.debug e.backtrace
+      # rubocop:disable Rails/Exit
       exit
+      # rubocop:enable Rails/Exit
     end
     populate_dev_users
     populate_hq_users
