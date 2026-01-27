@@ -1,13 +1,11 @@
 BusinessTime::Config.work_week = %w[mon tue wed thu fri]
 
 Rails.application.config.after_initialize do
-  if Rails.env.test?
-    if BankHolidays.count == 0
-      BankHolidaysService.new
-    end
+  if Rails.env.test? && BankHolidays.count.zero?
+    BankHolidaysService.new
   end
 
-  holidays = BankHolidays.last
+  BankHolidays.last
 
   # Load additional bank holidays for Scotland and Northern Ireland
   ADDITIONAL_BANK_HOLIDAYS = BankHolidays.last.dates_for_regions(:scotland, :northern_ireland)
