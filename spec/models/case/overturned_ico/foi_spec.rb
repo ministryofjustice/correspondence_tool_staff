@@ -260,6 +260,7 @@ describe Case::OverturnedICO::FOI do
         Date.new(2023, 11, 30), # St Andrews Day
       ])
     end
+
     it "sets the internal deadline from the external deadline including all holidays" do
       Timecop.freeze(2023, 11, 22, 10, 0, 0) do
         kase = create :overturned_ico_foi,
