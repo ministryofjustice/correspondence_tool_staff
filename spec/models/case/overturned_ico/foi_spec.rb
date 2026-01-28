@@ -255,6 +255,11 @@ describe Case::OverturnedICO::FOI do
   end
 
   context "when setting deadlines" do
+    before do
+      allow(BusinessTimeConfig).to receive(:additional_bank_holidays).and_return([
+        Date.new(2023, 11, 30), # St Andrews Day
+      ])
+    end
     it "sets the internal deadline from the external deadline including all holidays" do
       Timecop.freeze(2023, 11, 22, 10, 0, 0) do
         kase = create :overturned_ico_foi,
