@@ -325,7 +325,7 @@ describe CaseCreateService do
       it "sets the escalation date to 20 working days before the external deadline" do
         ccs.call
         kase = Case::OverturnedICO::FOI.last
-        expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline, holidays: ADDITIONAL_BANK_HOLIDAYS)
+        expect(kase.internal_deadline).to eq 20.business_days.before(kase.external_deadline, holidays: ::BusinessTimeConfig.additional_bank_holidays)
       end
 
       it "calls #link_related_cases on the newly created case" do
