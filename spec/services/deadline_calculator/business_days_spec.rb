@@ -6,9 +6,9 @@ describe DeadlineCalculator::BusinessDays do
       Date.new(2023, 11, 30), # St Andrews Day
     ])
   end
+
   let(:thu_oct_19) { Date.new(2023, 10, 19) }
   let(:tue_oct_24) { Date.new(2023, 10, 24) }
-
 
   describe "FOI requests" do
     let(:foi_case) do
