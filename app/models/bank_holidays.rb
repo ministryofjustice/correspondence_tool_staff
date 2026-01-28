@@ -12,6 +12,39 @@ class BankHolidays < ApplicationRecord
   validates :data, presence: true
   validates :hash_value, presence: true
 
+  # Class: Check if a given date is a bank holiday in any of the specified regions.
+  #
+  # date    - Date, Time, DateTime, or String ("YYYY-MM-DD").
+  # regions - One or more region identifiers (Symbols/Strings). Defaults to :all,
+  #           which means all available regions present in the stored payload
+  #           (e.g. england-and-wales, scotland, northern-ireland). Underscores
+  #           and hyphens are accepted for explicit regions.
+  #
+  # Returns true if the date matches a bank holiday in any provided region
+  # using the latest BankHolidays record, otherwise false. Returns false when
+  # there is no stored data or the input cannot be coerced to a date.
+  def self.bank_holiday?(date, regions: :all)
+    return false if date.nil?
+
+    record = BankHolidays.last
+    return false unless record
+
+    iso = coerce_to_iso(date)
+    return false unless iso
+
+    # Resolve the list of regions. :all means include all regions in the payload.
+    region_list =
+      if regions == :all || (regions.respond_to?(:include?) && regions.include?(:all))
+        record.available_regions
+      else
+        Array(regions).compact
+      end
+
+    return false if region_list.empty?
+
+    record.dates_for_regions(*region_list).include?(iso)
+  end
+
   # Public: Return the original ISO 8601 date strings for one or more regions.
   #
   # *regions - One or more Symbols/Strings matching top-level keys in the
@@ -27,6 +60,20 @@ class BankHolidays < ApplicationRecord
       .map { |r| dates_for(r) } # reuse single-region logic
       .flatten
       .uniq
+  end
+
+  # Public: List all available region keys present in the stored payload.
+  #
+  # Returns an Array<String> of region keys (e.g. ["england-and-wales", "scotland"]).
+  # Only includes keys that look like valid region objects with an events array.
+  def available_regions
+    safe_data = parsed_data
+    return [] unless safe_data.is_a?(Hash)
+
+    safe_data.keys.grep(String).select do |key|
+      region_hash = safe_data[key]
+      region_hash.is_a?(Hash) && region_hash["events"].is_a?(Array)
+    end
   end
 
   # Public: Return the original ISO 8601 date strings for the requested region.
@@ -58,6 +105,33 @@ class BankHolidays < ApplicationRecord
   end
 
 private
+
+  # Coerce various date/time inputs to an ISO8601 date string (YYYY-MM-DD).
+  # Returns nil when coercion is not possible.
+  def self.coerce_to_iso(value)
+    case value
+    when Date
+      value.iso8601
+    when Time, DateTime, ActiveSupport::TimeWithZone
+      value.to_date.iso8601
+    when String
+      begin
+        Date.parse(value).iso8601
+      rescue ArgumentError
+        nil
+      end
+    else
+      if value.respond_to?(:to_date)
+        begin
+          value.to_date.iso8601
+        rescue StandardError
+          nil
+        end
+      else
+        nil
+      end
+    end
+  end
 
   # Safely normalise whatever we were given as a region name to the
   # string key used in the stored JSON.

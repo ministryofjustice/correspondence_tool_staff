@@ -63,4 +63,27 @@ RSpec.describe BankHolidays, type: :model do
       expect(record.dates_for(region)).to eq(expected)
     end
   end
+
+  describe ".bank_holiday?" do
+    before do
+      described_class.delete_all
+      described_class.create!(data: parsed_fixture, hash_value: "hash1")
+    end
+
+    it "returns true for a date present in any region by default (:all)" do
+      scotland_date = parsed_fixture["scotland"]["events"].first["date"]
+      expect(described_class.bank_holiday?(scotland_date)).to be(true)
+    end
+
+    it "respects explicit regions filter" do
+      ew_dates = parsed_fixture["england-and-wales"]["events"].map { |e| e["date"] }
+      ni_dates = parsed_fixture["northern-ireland"]["events"].map { |e| e["date"] }
+      ni_only_date = (ni_dates - ew_dates).first
+      # Sanity check in case fixtures change: fall back to a known NI-specific date
+      ni_only_date ||= "2019-03-18" # St Patrick's Day substitute (example in fixtures)
+
+      expect(described_class.bank_holiday?(ni_only_date, regions: [:england_and_wales])).to be(false)
+      expect(described_class.bank_holiday?(ni_only_date, regions: [:northern_ireland])).to be(true)
+    end
+  end
 end
