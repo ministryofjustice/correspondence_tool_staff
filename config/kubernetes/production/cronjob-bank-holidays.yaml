@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: bank-holidays-updater
-  namespace: track-a-query-development
+  namespace: track-a-query-production
 spec:
   # # # # # # #
   #  In the UK, it's normally safe to check for changes in annual UK bank holidays from late summer to early autumn
@@ -22,7 +22,7 @@ spec:
           serviceAccountName: track-a-query
           containers:
           - name: jobs
-            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
             imagePullPolicy: IfNotPresent
             command:
               - sh
