@@ -104,8 +104,6 @@ class BankHolidays < ApplicationRecord
     end
   end
 
-private
-
   # Coerce various date/time inputs to an ISO8601 date string (YYYY-MM-DD).
   # Returns nil when coercion is not possible.
   def self.coerce_to_iso(value)
@@ -127,11 +125,11 @@ private
         rescue StandardError
           nil
         end
-      else
-        nil
       end
     end
   end
+
+private
 
   # Safely normalise whatever we were given as a region name to the
   # string key used in the stored JSON.
