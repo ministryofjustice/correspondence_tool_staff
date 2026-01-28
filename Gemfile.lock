@@ -452,7 +452,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    recursive-open-struct (2.0.0)
+    recursive-open-struct (2.1.0)
       ostruct
     redis-client (0.23.2)
       connection_pool
