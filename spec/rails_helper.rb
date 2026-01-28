@@ -172,6 +172,119 @@ RSpec.configure do |config|
     CTS.instance_variables.each { |var| CTS.remove_instance_variable var }
   end
 
+  config.before do
+    ew_bank_holidays = %w[
+      2016-01-01
+      2016-03-25
+      2016-03-28
+      2016-05-02
+      2016-05-30
+      2016-08-29
+      2016-12-26
+      2016-12-27
+      2017-01-02
+      2017-04-14
+      2017-04-17
+      2017-05-01
+      2017-05-29
+      2017-08-28
+      2017-12-25
+      2017-12-26
+      2018-01-01
+      2018-03-30
+      2018-04-02
+      2018-05-07
+      2018-05-28
+      2018-08-27
+      2018-12-25
+      2018-12-26
+      2019-01-01
+      2019-04-19
+      2019-04-22
+      2019-05-06
+      2019-05-27
+      2019-08-26
+      2019-12-25
+      2019-12-26
+      2020-01-01
+      2020-04-10
+      2020-04-13
+      2020-05-08
+      2020-05-25
+      2020-08-31
+      2020-12-25
+      2020-12-28
+      2021-01-01
+      2021-04-02
+      2021-04-05
+      2021-05-03
+      2021-05-31
+      2021-08-30
+      2021-12-27
+      2021-12-28
+      2022-01-03
+      2022-04-15
+      2022-04-18
+      2022-05-02
+      2022-06-02
+      2022-06-03
+      2022-08-29
+      2022-09-19
+      2022-12-26
+      2022-12-27
+      2023-01-02
+      2023-04-07
+      2023-04-10
+      2023-05-01
+      2023-05-08
+      2023-05-29
+      2023-08-28
+      2023-12-25
+      2023-12-26
+      2024-01-01
+      2024-03-29
+      2024-04-01
+      2024-05-06
+      2024-05-27
+      2024-08-26
+      2024-12-25
+      2024-12-26
+      2025-01-01
+      2025-04-18
+      2025-04-21
+      2025-05-05
+      2025-05-26
+      2025-08-25
+      2025-12-25
+      2025-12-26
+      2026-01-01
+      2026-04-03
+      2026-04-06
+      2026-05-04
+      2026-05-25
+      2026-08-31
+      2026-12-25
+      2026-12-28
+      2027-01-01
+    ]
+
+    # Define a minimal stub for BusinessTime::Config if the gem isn't loaded in test
+    unless defined?(BusinessTime::Config)
+      stub_const("BusinessTime", Module.new)
+
+      config_mod = Module.new
+      config_mod.singleton_class.class_eval do
+        attr_accessor :work_week, :holidays
+      end
+      stub_const("BusinessTime::Config", config_mod)
+    end
+
+    # Ensure clean state before each example
+    BusinessTime::Config.work_week = nil
+    BusinessTimeConfig.instance_variable_set(:@additional_bank_holidays, nil)
+    BusinessTime::Config.holidays = ew_bank_holidays.map(&:to_date)
+  end
+
   # Automatically reset Date/Time/DateTime to prevent issues
   # during CI builds
   config.after(:all) do
