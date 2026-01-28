@@ -86,7 +86,7 @@ module DeadlineCalculator
     end
 
     def options
-      kase.all_holidays? ? { holidays: ADDITIONAL_BANK_HOLIDAYS } : {}
+      kase.all_holidays? ? { holidays: BusinessTimeConfig.additional_bank_holidays } : {}
     end
   end
 end

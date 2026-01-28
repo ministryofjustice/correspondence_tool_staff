@@ -1,5 +1,5 @@
 # config/business_time.rb
-module BusinessTimeBootstrap
+module BusinessTimeConfig
 module_function
 
   # reader to assign at runtime
@@ -25,8 +25,6 @@ module_function
     BusinessTime::Config.holidays  = record.dates_for(:england_and_wales).map(&:to_date)
 
     # store runtime-derived value without a constant
-    @additional_bank_holidays = record.dates_for_regions(:scotland, :northern_ireland).map(&:to_date).freeze
+    @additional_bank_holidays = record.dates_for_regions(:scotland, :northern_ireland).freeze
   end
 end
-
-ADDITIONAL_BANK_HOLIDAYS = BusinessTimeBootstrap.additional_bank_holidays
