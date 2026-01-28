@@ -1,4 +1,3 @@
-# config/business_time.rb
 module BusinessTimeConfig
 module_function
 
@@ -22,9 +21,7 @@ module_function
 
     # 4) Config
     BusinessTime::Config.work_week = %w[mon tue wed thu fri]
-    BusinessTime::Config.holidays  = record.dates_for(:england_and_wales).map(&:to_date)
-
-    # store runtime-derived value without a constant
+    BusinessTime::Config.holidays = record.dates_for(:england_and_wales).map(&:to_date)
     @additional_bank_holidays = record.dates_for_regions(:scotland, :northern_ireland).freeze
   end
 end

@@ -246,7 +246,7 @@ describe DeadlineCalculator::BusinessDays do
       end
 
       it "includes additional holidays" do
-        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ::BusinessTimeConfig.additional_bank_holidays })
         deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
       end
     end
@@ -273,7 +273,7 @@ describe DeadlineCalculator::BusinessDays do
       end
 
       it "includes additional holidays" do
-        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ::BusinessTimeConfig.additional_bank_holidays })
         deadline_calculator.days_late(thu_oct_19, tue_oct_24)
       end
     end
