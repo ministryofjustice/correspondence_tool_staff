@@ -1,6 +1,11 @@
 # config/business_time.rb
 module BusinessTimeBootstrap
-  module_function
+module_function
+
+  # reader to assign at runtime
+  def additional_bank_holidays
+    @additional_bank_holidays
+  end
 
   def configure!
     # 1) Load latest record
@@ -19,8 +24,9 @@ module BusinessTimeBootstrap
     BusinessTime::Config.work_week = %w[mon tue wed thu fri]
     BusinessTime::Config.holidays  = record.dates_for(:england_and_wales).map(&:to_date)
 
-    # rubocop:disable Lint/Syntax
-    ADDITIONAL_BANK_HOLIDAYS = record.dates_for_regions(:scotland, :northern_ireland).map(&:to_date)
-    # rubocop:enable Lint/Syntax
+    # store runtime-derived value without a constant
+    @additional_bank_holidays = record.dates_for_regions(:scotland, :northern_ireland).map(&:to_date).freeze
   end
 end
+
+ADDITIONAL_BANK_HOLIDAYS = BusinessTimeBootstrap.additional_bank_holidays
