@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: bank-holidays-updater
+  namespace: track-a-query-development
 spec:
   # # # # # # #
   #  In the UK, it's normally safe to check for changes in annual UK bank holidays from late summer to early autumn

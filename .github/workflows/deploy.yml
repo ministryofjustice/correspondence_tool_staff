@@ -118,6 +118,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/development/cronjob-bank-holidays.yaml
 
   notify-development:
     needs: [build, deploy-development]
