@@ -4,28 +4,6 @@ describe DeadlineCalculator::BusinessDays do
   let(:thu_oct_19) { Date.new(2023, 10, 19) }
   let(:tue_oct_24) { Date.new(2023, 10, 24) }
 
-  BusinessTimeConfig.additional_bank_holidays = [
-    "2023-07-12", # Battle of the Boyne
-    "2023-08-07", # Summer bank holiday
-    "2023-11-30", # St Andrew's Day
-    "2024-01-02", # 2nd January
-    "2024-03-18", # St Patrick's Day
-    "2024-07-12", # Battle of the Boyne
-    "2024-08-05", # Summer bank holiday
-    "2024-12-02", # St Andrew's Day (substitute day)
-    "2025-01-02", # 2nd January
-    "2025-03-17", # St Patricks's Day
-    "2025-07-14", # Battle of the Boyne (substitute day)
-    "2025-08-04", # Summer bank holiday
-    "2025-12-01", # St Andrew's Day (substitute day)
-    "2026-01-02", # 2nd January"
-    "2026-03-17", # St Patrick's Day
-    "2026-07-13", # Battle of the Boyne
-    "2026-08-03", # Summer bank holiday
-    "2026-11-30", # St Andrew's Day
-    "2027-01-04", # 2nd January (substitute day)
-  ].freeze
-
   describe "FOI requests" do
     let(:foi_case) do
       build_stubbed :foi_case,
