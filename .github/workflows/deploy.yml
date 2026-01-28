@@ -118,6 +118,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/development/cronjob-bank-holidays.yaml
 
   notify-development:
     needs: [build, deploy-development]
@@ -188,6 +190,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/staging/cronjob-bank-holidays.yaml
 
   notify-staging:
     needs: [build, deploy-staging]
@@ -261,6 +265,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/qa/cronjob-bank-holidays.yaml
 
   notify-qa:
     needs: [build, deploy-qa]
@@ -341,6 +347,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/rpi-delete \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/production/cronjob-bank-holidays.yaml
 
   notify-production:
     needs: [build, deploy-production]

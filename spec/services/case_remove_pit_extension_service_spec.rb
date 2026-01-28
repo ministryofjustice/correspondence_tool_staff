@@ -39,7 +39,7 @@ describe CaseRemovePITExtensionService do
       freeze_time do
         service.call
         expect(case_being_drafted.external_deadline)
-          .to eq 20.business_days.after(received_date, holidays: ADDITIONAL_BANK_HOLIDAYS)
+          .to eq 20.business_days.after(received_date, holidays: ::BusinessTimeConfig.additional_bank_holidays)
       end
     end
 

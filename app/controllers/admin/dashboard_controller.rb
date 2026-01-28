@@ -31,6 +31,10 @@ class Admin::DashboardController < AdminController
     @version = Settings.git_commit
   end
 
+  def bank_holidays
+    @bank_holidays = BankHolidays.order(created_at: :desc).page(params[:page]).per(50)
+  end
+
 private
 
   def count_cases_created_on(date)
