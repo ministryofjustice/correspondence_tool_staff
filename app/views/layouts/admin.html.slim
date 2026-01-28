@@ -16,6 +16,8 @@
             = link_to "Search Queries", admin_dashboard_search_queries_path
           li class="tab #{active_link_class('/admin/dashboard/system')}"
             = link_to "System", admin_dashboard_system_path
+          li class="tab #{active_link_class('/admin/dashboard/bank-holidays')}"
+                = link_to "Bank Holidays", admin_dashboard_bank_holidays_path
   = yield
 
 = render template: "layouts/application"
