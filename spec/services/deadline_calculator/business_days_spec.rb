@@ -3,6 +3,7 @@ require "rails_helper"
 describe DeadlineCalculator::BusinessDays do
   let(:thu_oct_19) { Date.new(2023, 10, 19) }
   let(:tue_oct_24) { Date.new(2023, 10, 24) }
+
   BusinessTimeConfig.additional_bank_holidays = [
     "2023-07-12", # Battle of the Boyne
     "2023-08-07", # Summer bank holiday
