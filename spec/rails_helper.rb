@@ -268,21 +268,7 @@ RSpec.configure do |config|
       2027-01-01
     ]
 
-    # Define a minimal stub for BusinessTime::Config if the gem isn't loaded in test
-    unless defined?(BusinessTime::Config)
-      stub_const("BusinessTime", Module.new)
-
-      config_mod = Module.new
-      config_mod.singleton_class.class_eval do
-        attr_accessor :work_week, :holidays
-      end
-      stub_const("BusinessTime::Config", config_mod)
-    end
-
-    # Ensure clean state before each example
-    BusinessTime::Config.work_week = nil
-    BusinessTimeConfig.instance_variable_set(:@additional_bank_holidays, nil)
-    BusinessTime::Config.holidays = ew_bank_holidays.map(&:to_date)
+    BusinessTime::Config.holidays = Array(ew_bank_holidays).map(&:to_date)
   end
 
   # Automatically reset Date/Time/DateTime to prevent issues
