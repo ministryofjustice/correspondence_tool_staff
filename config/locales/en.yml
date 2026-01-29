@@ -481,6 +481,8 @@ en:
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
       can_upload_request_attachment?: Request attachments cannot be uploaded.
+      extend_sar_deadline?: 'SAR deadline cannot be extended'
+      remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
