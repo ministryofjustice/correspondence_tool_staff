@@ -1,0 +1,199 @@
+- content_for :heading
+  = "UK Bank Holidays"
+
+- total = BankHolidays.count
+- latest = BankHolidays.last
+- latest_updated = BankHolidays.order(updated_at: :desc).first
+- regions_last, events_count_last = bank_holidays_summary(latest)
+
+
+.grid-row.case-status#summary
+  .case-status__info.case-status__info--details
+    .case-status__group.status
+      .case-status__data--large
+        strong= "Summary"
+
+    .case-status__group.page-counts
+      .grid-row
+        .column-one-half
+          .case-status__heading.case-status__heading--pages
+            strong= "Total records"
+          .case-status__date-value = total
+        .column-one-half
+          .case-status__heading.case-status__heading--pages
+            strong= "Total holidays in latest record"
+          .case-status__date-value = events_count_last
+
+  .case-status__info.case-status__info--deadlines
+    .case-status__group.draft
+      .case-status__date-title
+        strong= "Last Updated"
+      .case-status__date-value
+        = (l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M") rescue latest_updated.updated_at)
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full
+    p.button-holder
+      a.button href='#scotland' Jump to Scotland
+      |
+      a.button href='#northern-ireland' Jump to Northern Ireland
+      |
+      a.button href='#records' Jump to Stored Data
+
+.grid-row#england-wales
+  .column-two-thirds.table-container.container
+    h2.heading-large
+      = "England and Wales"
+    - england_wales = latest[:data].is_a?(Hash) ? (latest[:data]['england-and-wales'] || latest[:data][:england_and_wales]) : nil
+    - events = []
+    - if england_wales.is_a?(Hash)
+      - evs = england_wales['events'] || england_wales[:events]
+      - events = evs.is_a?(Array) ? evs : []
+    -# Sort events by date descending (newest first); invalid/missing dates sink to bottom
+    - events = events.sort_by { |ev| begin; ds = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil; Date.parse(ds.to_s) rescue Date.new(0); end }.reverse
+    - if events.any?
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+        thead
+          tr
+            th scope='col' Holiday
+            th scope='col' Date
+        tbody
+          - current_year = nil
+          - events.each do |ev|
+            - title = ev.is_a?(Hash) ? (ev['title'] || ev[:title]) : nil
+            - date_str = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil
+            - year = (begin; Date.parse(date_str).year rescue nil; end)
+            - if year && year != current_year
+              - current_year = year
+              tr.year-header
+                th scope='colgroup' colspan='2' = current_year
+            tr
+              td= title
+              -# Ordinalize day (e.g., 1st, 2nd) and append month and year
+              - formatted_date = (begin; d = Date.parse(date_str); "#{d.day.ordinalize} #{d.strftime('%B %Y')}" rescue date_str; end)
+              td= formatted_date
+    - else
+      p No bank holidays found for England and Wales.
+    p.button-holder
+      a.button href='#top' Back to top
+
+.grid-row#scotland
+  .column-two-thirds.table-container.container
+    h2.heading-large
+      = "Scotland"
+    - scotland = latest[:data].is_a?(Hash) ? (latest[:data]['scotland'] || latest[:data][:scotland]) : nil
+    - events = []
+    - if scotland.is_a?(Hash)
+      - evs = scotland['events'] || scotland[:events]
+      - events = evs.is_a?(Array) ? evs : []
+    -# Sort events by date descending (newest first); invalid/missing dates sink to bottom
+    - events = events.sort_by { |ev| begin; ds = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil; Date.parse(ds.to_s) rescue Date.new(0); end }.reverse
+    - if events.any?
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+        thead
+          tr
+            th scope='col' Holiday
+            th scope='col' Date
+        tbody
+          - current_year = nil
+          - events.each do |ev|
+            - title = ev.is_a?(Hash) ? (ev['title'] || ev[:title]) : nil
+            - date_str = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil
+            - year = (begin; Date.parse(date_str).year rescue nil; end)
+            - if year && year != current_year
+              - current_year = year
+              tr.year-header
+                th scope='colgroup' colspan='2' = current_year
+            tr
+              td= title
+              -# Ordinalize day (e.g., 1st, 2nd) and append month and year
+              - formatted_date = (begin; d = Date.parse(date_str); "#{d.day.ordinalize} #{d.strftime('%B %Y')}" rescue date_str; end)
+              td= formatted_date
+    - else
+      p No bank holidays found for Scotland.
+    p.button-holder
+      a.button href='#top' Back to top
+
+.grid-row#northern-ireland
+  .column-two-thirds.table-container.container
+    h2.heading-large
+      = "Northern Ireland"
+    - northern_ireland = latest[:data].is_a?(Hash) ? (latest[:data]['northern-ireland'] || latest[:data][:northern_ireland]) : nil
+    - events = []
+    - if northern_ireland.is_a?(Hash)
+      - evs = northern_ireland['events'] || northern_ireland[:events]
+      - events = evs.is_a?(Array) ? evs : []
+    -# Sort events by date descending (newest first); invalid/missing dates sink to bottom
+    - events = events.sort_by { |ev| begin; ds = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil; Date.parse(ds.to_s) rescue Date.new(0); end }.reverse
+    - if events.any?
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+        thead
+          tr
+            th scope='col' Holiday
+            th scope='col' Date
+        tbody
+          - current_year = nil
+          - events.each do |ev|
+            - title = ev.is_a?(Hash) ? (ev['title'] || ev[:title]) : nil
+            - date_str = ev.is_a?(Hash) ? (ev['date'] || ev[:date]) : nil
+            - year = (begin; Date.parse(date_str).year rescue nil; end)
+            - if year && year != current_year
+              - current_year = year
+              tr.year-header
+                th scope='colgroup' colspan='2' = current_year
+            tr
+              td= title
+              -# Ordinalize day (e.g., 1st, 2nd) and append month and year
+              - formatted_date = (begin; d = Date.parse(date_str); "#{d.day.ordinalize} #{d.strftime('%B %Y')}" rescue date_str; end)
+              td= formatted_date
+    - else
+      p No bank holidays found for Northern Ireland.
+    p.button-holder
+      a.button href='#top' Back to top
+
+.grid-row#records
+  .column-full.table-container.container
+    h2.heading-large
+      = "Stored Bank Holidays"
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col' ID
+          th scope='col' Created at
+          th scope='col' Updated at
+          th scope='col' Hash
+          th scope='col' Regions / Events summary
+      tbody
+        - @bank_holidays.each do |rec|
+          - regions, events_count = bank_holidays_summary(rec)
+          tr
+            td= rec.id
+            td= l(rec.created_at, format: :short) rescue rec.created_at
+            td= l(rec.updated_at, format: :short) rescue rec.updated_at
+            td= rec.hash_value
+            td
+              - if regions.any?
+                | Regions: #{regions.join(', ')}
+                br
+                | Total events: #{events_count}
+              - else
+                | (no region data)
+
+= paginate @bank_holidays
