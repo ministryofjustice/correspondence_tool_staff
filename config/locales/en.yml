@@ -1540,11 +1540,11 @@ en:
         close_date:  Date response sent
     sar_extensions:
       create:
-        success: Case extended for SAR
-        error: Unable to perform SAR extension on case %{case_number}
+        success: Case extended for %{case_type}
+        error: Unable to perform %{case_type} extension on case %{case_number}
       destroy:
         success: Deadline extension removed
-        error: Unable to remove SAR deadline extension
+        error: Unable to remove %{case_type} deadline extension
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.

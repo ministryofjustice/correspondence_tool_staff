@@ -15,6 +15,10 @@
                 send_chase_email:
                 preview_cover_page:
                 edit_case:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -30,6 +34,10 @@
                 edit_case:
                 move_case_back:
                   transition_to: data_to_be_requested
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -48,6 +56,10 @@
                 move_to_team_member:
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -70,6 +82,10 @@
                 move_to_team_member:
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -89,6 +105,10 @@
                 move_to_team_member:
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -108,6 +128,10 @@
                   if: Workflows::Predicates#already_late?
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 
@@ -125,6 +149,10 @@
                   transition_to: ready_to_copy
                 record_sent_to_sscl:
                 date_sent_to_sscl_removed:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
 

@@ -70,6 +70,16 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_complaint
   end
 
+  def extend_sar_deadline?
+    clear_failed_checks
+    check_user_can_manage_offender_sar && check_can_trigger_event(:extend_sar_deadline)
+  end
+
+  def remove_sar_deadline_extension?
+    clear_failed_checks
+    check_user_can_manage_offender_sar && check_can_trigger_event(:remove_sar_deadline_extension)
+  end
+
   def can_upload_request_attachment?
     false
   end
