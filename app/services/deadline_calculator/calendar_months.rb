@@ -49,15 +49,17 @@ module DeadlineCalculator
     end
 
     def external_deadline
-      calculate_final_date_from_time_units(
-        kase.correspondence_type.external_time_limit, kase.received_date
-      )
+      calculate_final_date_from_time_units(kase.correspondence_type.external_time_limit, kase.received_date)
     end
 
+    # Used block rather than explicit optional parameter for `base_date` to avoid
+    # changing method signature, breaking consistency with other deadline calculators.
     def extension_deadline(time_limit)
-      calculate_final_date_from_time_units(
-        time_limit + kase.correspondence_type.external_time_limit, kase.received_date
-      )
+      if block_given?
+        calculate_final_date_from_time_units(time_limit, yield)
+      else
+        calculate_final_date_from_time_units(time_limit + kase.correspondence_type.external_time_limit, kase.received_date)
+      end
     end
 
     def business_unit_deadline_for_date(*)
