@@ -39,7 +39,11 @@ class CaseExtendSARDeadlineService
 private
 
   def new_extension_deadline(extend_by)
-    @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
+    if @case.try(:restarted_at).present?
+      @case.deadline_calculator.extension_deadline(extend_by) { @case.external_deadline }
+    else
+      @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
+    end
   end
 
   def message

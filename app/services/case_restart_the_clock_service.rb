@@ -30,6 +30,8 @@ class CaseRestartTheClockService
           details: {
             restart_the_clock_date: @restart_at,
             new_status: last_working_state,
+            new_external_deadline: new_external_deadline,
+            new_internal_deadline: flagged_aka_trigger? ? new_internal_deadline : nil,
           },
         )
 
