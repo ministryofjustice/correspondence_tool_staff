@@ -66,6 +66,7 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  include Extendable
   include Stoppable
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
@@ -144,7 +145,10 @@ class Case::SAR::Offender < Case::Base
                  case_originally_rejected: :boolean,
                  other_rejected_reason: :string,
                  rejected_reasons: [:string, { array: true, default: [] }],
-                 probation_area: :string
+                 probation_area: :string,
+                 # Deadline extension properties
+                 deadline_extended: [:boolean, { default: false }],
+                 extended_times: :integer
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -590,9 +594,13 @@ private
   end
 
   def update_deadlines
-    super
     if changed.include?("received_date") && rejected?
       self.external_deadline = @deadline_calculator.days_after(REJECTED_AUTO_CLOSURE_DEADLINE, received_date)
+    elsif changed.include?("received_date") && !extended_for_pit?
+      self.internal_deadline = @deadline_calculator.internal_deadline
+      self.external_deadline = @deadline_calculator.external_deadline
+      self.extended_times = 0
+      self.deadline_extended = false
     end
   end
 end
