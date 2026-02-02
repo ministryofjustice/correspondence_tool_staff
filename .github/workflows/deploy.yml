@@ -262,6 +262,9 @@ jobs:
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
             jobs="${{ vars.ECR_URL }}:$SHA"
 
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/auto-close-paused-sar-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
   notify-qa:
     needs: [build, deploy-qa]
     uses: ./.github/workflows/notification.yml
