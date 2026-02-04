@@ -14,6 +14,10 @@ class CommissioningDocumentDecorator < Draper::Decorator
   end
 
   def download_link
-    link_to("Download", h.download_case_data_request_area_commissioning_documents_path(data_request_area.case_id, data_request_area, self))
+    if data_request_area.offender_sar_case.readonly?
+      I18n.t("cases.data_request_areas.show.document_deleted")
+    else
+      link_to("Download", h.download_case_data_request_area_commissioning_documents_path(data_request_area.case_id, data_request_area, self))
+    end
   end
 end
