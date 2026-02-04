@@ -10,6 +10,6 @@ end
 
 def get_expected_deadline(base_date)
   expected_deadline = base_date
-  expected_deadline = expected_deadline.tomorrow while !expected_deadline.workday? || expected_deadline.bank_holiday?
+  expected_deadline = expected_deadline.tomorrow while !expected_deadline.workday? || BankHolidays.bank_holiday?(expected_deadline)
   expected_deadline
 end
