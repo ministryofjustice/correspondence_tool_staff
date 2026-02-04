@@ -574,11 +574,11 @@ GEM
       json
       simplecov
     simplecov_json_formatter (0.1.4)
-    site_prism (4.0.3)
-      addressable (~> 2.8)
-      capybara (~> 3.27)
-      site_prism-all_there (~> 2.0)
-    site_prism-all_there (2.0.2)
+    site_prism (5.1.1)
+      addressable (~> 2.8, >= 2.8.4)
+      capybara (~> 3.34)
+      site_prism-all_there (> 3, < 5)
+    site_prism-all_there (3.0.7)
     slim (5.2.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
@@ -719,7 +719,7 @@ DEPENDENCIES
   sidekiq (< 9)
   simplecov
   simplecov-json
-  site_prism (< 5.0)
+  site_prism (< 6.0)
   slim-rails (~> 3.7)
   sprockets (~> 4.2.2)
   table_print
