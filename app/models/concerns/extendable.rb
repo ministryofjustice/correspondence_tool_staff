@@ -41,13 +41,12 @@ module Extendable
 
   # The deadlines are all calculated based on the date case is received or last restart
   def max_allowed_deadline_date
-    @deadline_calculator.max_allowed_deadline_date(max_time_limit) do
-      if restarted_at.present?
-        old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
-        old_deadline || received_date
-      else
-        received_date
-      end
+    if restarted_at.present?
+      old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
+
+      @deadline_calculator.max_allowed_deadline_date(max_time_limit) { old_deadline || received_date }
+    else
+      @deadline_calculator.max_allowed_deadline_date(max_time_limit)
     end
   end
 

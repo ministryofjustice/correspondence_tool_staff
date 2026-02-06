@@ -89,7 +89,7 @@ describe CaseExtendSARDeadlineService do
           it { is_expected.to eq :validation_error }
 
           it "has error message" do
-            expect(kase.errors[:extension_period]).to eq ["cannot be more than two calendar months beyond the received date"]
+            expect(kase.errors[:extension_period]).to eq ["cannot be more than two calendar months beyond the received date or last paused date"]
           end
         end
 
