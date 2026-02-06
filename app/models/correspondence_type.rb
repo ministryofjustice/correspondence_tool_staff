@@ -149,4 +149,8 @@ class CorrespondenceType < ApplicationRecord
   def self.custom_reporting_types
     by_report_category
   end
+
+  def shortname
+    abbreviation.humanize
+  end
 end

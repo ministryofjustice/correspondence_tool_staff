@@ -43,6 +43,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   include DraftTimeliness::ProgressedForClearance
+  include Extendable
   include Stoppable
 
   before_save do
@@ -65,9 +66,8 @@ class Case::SAR::Standard < Case::Base
                  request_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
-                 # indicate whether the deadline has been extended
+                 # Deadline extension properties
                  deadline_extended: [:boolean, { default: false }],
-                 # indicate how long has been extended so far in time units
                  extended_times: :integer
 
   attr_accessor :missing_info
@@ -154,57 +154,6 @@ class Case::SAR::Standard < Case::Base
     true
   end
 
-  def deadline_extendable?
-    max_allowed_deadline_date > external_deadline
-  end
-
-  def sar_extensions
-    transitions.where(event: "extend_sar_deadline").order(:id)
-  end
-
-  def initial_deadline
-    if sar_extensions.any?
-      sar_extensions.first.original_final_deadline
-    else
-      external_deadline
-    end
-  end
-
-  def extend_deadline!(new_deadline, new_extended_times)
-    update!(
-      external_deadline: new_deadline,
-      deadline_extended: true,
-      extended_times: new_extended_times,
-    )
-  end
-
-  def reset_deadline!
-    if restarted_at.present?
-      old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
-    end
-
-    old_deadline ||= @deadline_calculator.external_deadline
-
-    update!(
-      external_deadline: old_deadline,
-      deadline_extended: false,
-      extended_times: 0,
-    )
-  end
-
-  # The deadlines are all calculated based on the date case is received
-  def max_allowed_deadline_date
-    @deadline_calculator.max_allowed_deadline_date(max_time_limit)
-  end
-
-  def extension_time_limit
-    correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
-  end
-
-  def extension_time_default
-    correspondence_type.extension_time_default || Settings.sar_extension_default_time_gap
-  end
-
   def self.factory(type)
     case type&.downcase
     when "standard"
@@ -227,10 +176,6 @@ private
       self.extended_times = 0
       self.deadline_extended = false
     end
-  end
-
-  def max_time_limit
-    correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
   end
 
   def use_subject_as_requester
