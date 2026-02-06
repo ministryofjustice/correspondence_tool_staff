@@ -179,8 +179,14 @@ class Case::SAR::Standard < Case::Base
   end
 
   def reset_deadline!
+    if restarted_at.present?
+      old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
+    end
+
+    old_deadline ||= @deadline_calculator.external_deadline
+
     update!(
-      external_deadline: @deadline_calculator.external_deadline,
+      external_deadline: old_deadline,
       deadline_extended: false,
       extended_times: 0,
     )
