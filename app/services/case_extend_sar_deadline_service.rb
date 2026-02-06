@@ -68,7 +68,7 @@ private
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_period,
-        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date",
+        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(

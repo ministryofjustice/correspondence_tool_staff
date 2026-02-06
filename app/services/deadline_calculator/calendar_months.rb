@@ -68,9 +68,12 @@ module DeadlineCalculator
 
     def max_allowed_deadline_date(time_limit = nil)
       time_limit ||= kase.correspondence_type.extension_time_limit || 0
-      calculate_final_date_from_time_units(
-        time_limit + kase.correspondence_type.external_time_limit, kase.received_date
-      )
+
+      if block_given?
+        calculate_final_date_from_time_units(time_limit, yield)
+      else
+        calculate_final_date_from_time_units(time_limit + kase.correspondence_type.external_time_limit, kase.received_date)
+      end
     end
 
     def time_units_desc_for_deadline(time_limit = 1)
