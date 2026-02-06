@@ -28,7 +28,7 @@ module Cases
         @case.reason_for_extending = params[:case][:reason_for_extending]
         render :new
       else
-        lash[:alert] = t(".error", case_type: @case.correspondence_type.shortname, case_number: @case.number)
+        flash[:alert] = t(".error", case_type: @case.correspondence_type.shortname, case_number: @case.number)
         redirect_to case_path(@case.id)
       end
     end
