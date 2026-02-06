@@ -514,6 +514,8 @@ en:
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
       can_upload_request_attachment?: Request attachments cannot be uploaded.
       can_restart_the_clock?: You are not authorised to restart the clock or the case has not already been stopped.
+      extend_sar_deadline?: 'SAR deadline cannot be extended'
+      remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -1623,11 +1625,11 @@ en:
         close_date:  Date response sent
     sar_extensions:
       create:
-        success: Case extended for SAR
-        error: Unable to perform SAR extension on case %{case_number}
+        success: Case extended for %{case_type}
+        error: Unable to perform %{case_type} extension on case %{case_number}
       destroy:
         success: Deadline extension removed
-        error: Unable to remove SAR deadline extension
+        error: Unable to remove %{case_type} deadline extension
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
