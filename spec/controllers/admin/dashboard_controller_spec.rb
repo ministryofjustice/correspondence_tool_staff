@@ -74,4 +74,14 @@ describe Admin::DashboardController do
       expect(git_sha).to eq Settings.git_commit
     end
   end
+
+  describe "#bank_holidays" do
+    before { sign_in admin }
+
+    it "renders the page" do
+      get :bank_holidays
+      expect(response).to have_http_status(:ok)
+      expect(request.path).to eq("/admin/dashboard/bank-holidays")
+    end
+  end
 end

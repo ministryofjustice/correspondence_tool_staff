@@ -233,6 +233,38 @@ ALTER SEQUENCE public.assignments_id_seq OWNED BY public.assignments.id;
 
 
 --
+-- Name: bank_holidays; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bank_holidays (
+    id bigint NOT NULL,
+    data json NOT NULL,
+    hash_value character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: bank_holidays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.bank_holidays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bank_holidays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.bank_holidays_id_seq OWNED BY public.bank_holidays.id;
+
+
+--
 -- Name: case_attachments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1433,6 +1465,13 @@ ALTER TABLE ONLY public.assignments ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: bank_holidays id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bank_holidays ALTER COLUMN id SET DEFAULT nextval('public.bank_holidays_id_seq'::regclass);
+
+
+--
 -- Name: case_attachments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1656,6 +1695,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.assignments
     ADD CONSTRAINT assignments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bank_holidays bank_holidays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bank_holidays
+    ADD CONSTRAINT bank_holidays_pkey PRIMARY KEY (id);
 
 
 --
@@ -2414,6 +2461,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20251217151713'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),

@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: bank-holidays-updater
+  namespace: track-a-query-qa
+spec:
+  # # # # # # #
+  #  In the UK, it's normally safe to check for changes in annual UK bank holidays from late summer to early autumn
+  #  (August-October) of the preceding year as many bank holiday dates for the following year are known by then.
+  #  However, this is an automated system where we allow for last-minute additions, for example, Queen Elizabeth's
+  #  Platinum Jubilee and funeral, and the King's Coronation. Whilst these types of additions are rare, they are still
+  #  possible. HTTP requests are minor; therefore, we run this job daily, capturing any changes as soon as possible.
+  # # # # # # #
+  schedule: "0 7 * * *" # At 07:00 AM every day
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: track-a-query
+          containers:
+          - name: jobs
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:qa.latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - sh
+              - "-c"
+              - "bundle exec rake 'bank_holidays:run'"
+            env:
+              - name: DATABASE_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-rds-output
+                    key: url
+            envFrom:
+              - configMapRef:
+                  name: environment-variables
+              - secretRef:
+                  name: app-secrets
+          restartPolicy: OnFailure

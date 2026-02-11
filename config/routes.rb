@@ -305,6 +305,7 @@ Rails.application.routes.draw do
       get "/dashboard/search_queries" => "dashboard#search_queries"
       get "/dashboard/list_queries" => "dashboard#list_queries"
       get "/dashboard/system" => "dashboard#system"
+      get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
     end
   end
 

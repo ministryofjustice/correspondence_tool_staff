@@ -13,9 +13,10 @@
     = " #{ 'active user'.pluralize(@active_users_count)}"
 
 .grid-row
-  = form_with method: :get do |f|
-    = f.text_field :search_for, value: params[:search_for]
-    = f.submit "Search"
+  .column-full.container
+    = form_with method: :get do |f|
+      = f.text_field :search_for, value: params[:search_for]
+      = f.submit "Search"
 
 .grid-row
   .column-full.table-container.container

@@ -81,7 +81,7 @@ describe Case::SARPolicy do
       rescue StandardError
         []
       end
-      puts "Failed CasePolicy checks: #{failed_checks.map(&:first).map(&:to_s).join(', ')}"
+      Rails.logger.debug "Failed CasePolicy checks: #{failed_checks.map(&:first).map(&:to_s).join(', ')}"
     end
   end
 
