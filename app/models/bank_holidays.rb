@@ -9,6 +9,8 @@
 #  updated_at       :datetime         not null
 
 class BankHolidays < ApplicationRecord
+  self.table_name = "bank_holidays"
+
   validates :data, presence: true
   validates :hash_value, presence: true
 
