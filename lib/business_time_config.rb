@@ -7,6 +7,11 @@ module_function
   end
 
   def configure!
+    # Shenanigans with database check due to rails db tasks executing
+    # this module beforehand, leading to a 'chicken-and-egg' problem
+    # when corresponding bank_holidays migration is attempted to be run.
+    # Similary, during Github Workflows, the test suite will attempt to load this
+    # module before the database is even created (via rails db:prepare, etc) causing CI failures.
     begin
       ActiveRecord::Base.connection.table_exists?("bank_holidays")
     rescue StandardError
