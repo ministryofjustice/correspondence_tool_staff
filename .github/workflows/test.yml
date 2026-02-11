@@ -36,6 +36,8 @@ jobs:
 
     env:
       RAILS_ENV: test
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
+      COVERAGE: true
       CI: true
 
     steps:
@@ -54,6 +56,13 @@ jobs:
 
       - name: Install packages
         run: yarn install --pure-lockfile
+
+      - name: Setup database
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 1
+          max_attempts: 3
+          command: bin/rails db:setup
 
       - name: Javascript tests
         run: bundle exec teaspoon
