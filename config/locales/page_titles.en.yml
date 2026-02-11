@@ -54,7 +54,7 @@ en:
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
     edit_case_page: Editing a case - %{case_number} - Track-a-query
     edit_user_page: Edit team member - %{team_name} - Track-a-query
-    extend_sar_deadline: Extend deadline for SAR - %{case_number}
+    extend_sar_deadline: Extend deadline for %{case_type} - %{case_number}
     forgot_password: Forgot your password - Track-a-query
     accepted_date_received: Accepted date received - %{case_number} - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query

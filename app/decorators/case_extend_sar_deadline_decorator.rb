@@ -1,5 +1,5 @@
 class CaseExtendSARDeadlineDecorator < Draper::Decorator
-  decorates Case::SAR::Standard
+  decorates Case::Base
   delegate_all
 
   NUMBER_TO_WORDS = %w[zero one two three four five six seven eight nine ten].freeze
