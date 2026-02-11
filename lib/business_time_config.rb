@@ -31,12 +31,4 @@ module_function
     BusinessTime::Config.holidays = record.dates_for(:england_and_wales).map(&:to_date)
     @additional_bank_holidays = record.dates_for_regions(:scotland, :northern_ireland).freeze
   end
-
-  def database_exists?
-    ActiveRecord::Base.connection
-  rescue ActiveRecord::NoDatabaseError
-    false
-  else
-    true
-  end
 end
