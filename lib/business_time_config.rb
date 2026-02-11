@@ -3,17 +3,22 @@ module_function
 
   # reader to assign at runtime
   def additional_bank_holidays
-    @additional_bank_holidays
+    @additional_bank_holidays || []
   end
 
   def configure!
+    unless ActiveRecord::Base.connection.table_exists? "bank_holidays"
+      puts "Bank holidays table is not available. BusinessTimeConfig cannot be configured."
+      return
+    end
+
     # 1) Load latest record
-    record = BankHolidays.order(created_at: :desc).first
+    record = BankHoliday.order(created_at: :desc).first
 
     # 2) If missing, try again
     unless record
       BankHolidaysService.new
-      record = BankHolidays.order(created_at: :desc).first
+      record = BankHoliday.order(created_at: :desc).first
     end
 
     # 3) Fail if still missing

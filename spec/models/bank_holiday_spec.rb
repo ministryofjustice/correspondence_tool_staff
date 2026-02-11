@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe BankHolidays, type: :model do
+RSpec.describe BankHoliday, type: :model do
   let(:fixture_json) { File.read(Rails.root.join("spec/fixtures/bank_holidays_response.json")) }
   let(:parsed_fixture) { JSON.parse(fixture_json) }
 
