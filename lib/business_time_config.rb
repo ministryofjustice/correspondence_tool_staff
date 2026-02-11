@@ -7,7 +7,9 @@ module_function
   end
 
   def configure!
-    unless database_exists? && ActiveRecord::Base.connection.table_exists?("bank_holidays")
+    begin
+      ActiveRecord::Base.connection.table_exists?("bank_holidays")
+    rescue StandardError
       Rails.logger.error "Bank holidays table is not available. BusinessTimeConfig cannot be configured."
       return
     end
