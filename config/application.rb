@@ -75,7 +75,7 @@ module CorrespondencePlatform
         exit # rubocop:disable Rails/Exit
       end
 
-      # BusinessTimeConfig.configure!
+      BusinessTimeConfig.configure!
     end
     # Don't generate system test files.
     config.generators.system_tests = nil
