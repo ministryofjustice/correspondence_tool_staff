@@ -29,53 +29,53 @@ jobs:
       - name: Security audit application code
         run: bundle exec brakeman -q
 
-  javascript_test:
-    runs-on: ubuntu-latest
-    permissions:
-      checks: write
+  # javascript_test:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     checks: write
 
-    env:
-      RAILS_ENV: test
-      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
-      COVERAGE: true
-      CI: true
+  #   env:
+  #     RAILS_ENV: test
+  #     DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
+  #     COVERAGE: true
+  #     CI: true
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+  #   services:
+  #     postgres:
+  #       image: postgres:16-alpine
+  #       env:
+  #         POSTGRES_USER: postgres
+  #         POSTGRES_PASSWORD: postgres
+  #       ports:
+  #         - 5432:5432
+  #       options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Allow tests to run
-        run: |
-          mkdir -p log tmp tmp/pids
-          sudo sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
+  #     - name: Allow tests to run
+  #       run: |
+  #         mkdir -p log tmp tmp/pids
+  #         sudo sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
 
-      - name: Setup Ruby and install gems
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
+  #     - name: Setup Ruby and install gems
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         bundler-cache: true
 
-      - name: Install packages
-        run: yarn install --pure-lockfile
+  #     - name: Install packages
+  #       run: yarn install --pure-lockfile
 
-      - name: Setup database
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 1
-          max_attempts: 3
-          command: bin/rails db:setup
+  #     - name: Setup database
+  #       uses: nick-fields/retry@v3
+  #       with:
+  #         timeout_minutes: 1
+  #         max_attempts: 3
+  #         command: bin/rails db:setup
 
-      - name: Javascript tests
-        run: bundle exec teaspoon
+  #     - name: Javascript tests
+  #       run: bundle exec teaspoon
 
   test:
     runs-on: ubuntu-latest
@@ -138,6 +138,9 @@ jobs:
 
       - name: Run unit and feature tests
         run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
+
+      - name: Javascript tests
+        run: bundle exec teaspoon
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
