@@ -175,6 +175,6 @@ jobs:
           minimum_file_coverage: 100
 
   build-and-deploy:
-    needs: [linting, coverage]
+    needs: [linting, javascript_test, coverage]
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
