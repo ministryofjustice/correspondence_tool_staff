@@ -8,9 +8,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 
-class BankHolidays < ApplicationRecord
-  self.table_name = "bank_holidays"
-
+class BankHoliday < ApplicationRecord
   validates :data, presence: true
   validates :hash_value, presence: true
 
@@ -23,12 +21,12 @@ class BankHolidays < ApplicationRecord
   #           and hyphens are accepted for explicit regions.
   #
   # Returns true if the date matches a bank holiday in any provided region
-  # using the latest BankHolidays record, otherwise false. Returns false when
+  # using the latest BankHoliday record, otherwise false. Returns false when
   # there is no stored data or the input cannot be coerced to a date.
   def self.bank_holiday?(date, regions: :all)
     return false if date.nil?
 
-    record = BankHolidays.last
+    record = BankHoliday.last
     return false unless record
 
     iso = coerce_to_iso(date)

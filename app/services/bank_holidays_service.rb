@@ -1,5 +1,3 @@
-require Rails.root.join("app/models/bank_holidays")
-
 class BankHolidaysService
   URL = "https://www.gov.uk/bank-holidays.json".freeze
 
@@ -19,10 +17,10 @@ class BankHolidaysService
     hash_value = Digest::MD5.hexdigest(JSON.generate(holidays))
 
     # Avoid writing duplicate records when the data hasn't changed
-    record = BankHolidays.last
+    record = BankHoliday.last
     return if record&.hash_value == hash_value
 
-    ::BankHolidays.create!(data: holidays, hash_value: hash_value)
+    ::BankHoliday.create!(data: holidays, hash_value: hash_value)
   end
 
 private

@@ -1,9 +1,9 @@
 - content_for :heading
   = "UK Bank Holidays"
 
-- total = BankHolidays.count
-- latest = BankHolidays.last
-- latest_updated = BankHolidays.order(updated_at: :desc).first
+- total = BankHoliday.count
+- latest = BankHoliday.last
+- latest_updated = BankHoliday.order(updated_at: :desc).first
 - regions_last, events_count_last = bank_holidays_summary(latest)
 
 

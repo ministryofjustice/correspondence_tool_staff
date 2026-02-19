@@ -13,7 +13,7 @@ RSpec.describe BankHolidaysService, type: :service do
     it "fetches and parses JSON into #holidays and performs a backup" do
       allow(Net::HTTP).to receive(:get).and_return(fixture_json)
 
-      expect { described_class.new }.to change(BankHolidays, :count).by(1)
+      expect { described_class.new }.to change(BankHoliday, :count).by(1)
       service = described_class.new # null_store cache means it will refetch each time in test env
 
       expect(service.holidays).to be_a(Hash)
@@ -30,7 +30,7 @@ RSpec.describe BankHolidaysService, type: :service do
 
       expect(service.holidays).to eq({})
       # No backup should occur if there is no data
-      expect(BankHolidays.count).to eq(0)
+      expect(BankHoliday.count).to eq(0)
       expect(Rails.logger).to have_received(:error).with(/Failed to parse bank holidays JSON/)
     end
 
@@ -39,7 +39,7 @@ RSpec.describe BankHolidaysService, type: :service do
       service = described_class.new
 
       expect(service.holidays).to eq({})
-      expect(BankHolidays.count).to eq(0)
+      expect(BankHoliday.count).to eq(0)
       expect(Rails.logger).to have_received(:error).with(/Failed to fetch bank holidays/)
     end
 
@@ -48,7 +48,7 @@ RSpec.describe BankHolidaysService, type: :service do
       service = described_class.new
 
       expect(service.holidays).to eq({})
-      expect(BankHolidays.count).to eq(0)
+      expect(BankHoliday.count).to eq(0)
     end
   end
 
@@ -58,18 +58,18 @@ RSpec.describe BankHolidaysService, type: :service do
       allow(Net::HTTP).to receive(:get).and_return(fixture_json)
       first_service = described_class.new
       expect(first_service.holidays).to eq(parsed_fixture)
-      expect(BankHolidays.count).to eq(1)
+      expect(BankHoliday.count).to eq(1)
 
       # Second load with identical data shouldn't create another record
       allow(Net::HTTP).to receive(:get).and_return(fixture_json)
-      expect { described_class.new }.not_to change(BankHolidays, :count)
+      expect { described_class.new }.not_to change(BankHoliday, :count)
 
       # Third load with modified data should create a new record
       mutated = JSON.parse(fixture_json)
       mutated["england-and-wales"]["events"] << { "title" => "Test Day", "date" => "2099-01-01" }
       allow(Net::HTTP).to receive(:get).and_return(mutated.to_json)
 
-      expect { described_class.new }.to change(BankHolidays, :count).by(1)
+      expect { described_class.new }.to change(BankHoliday, :count).by(1)
     end
   end
 end

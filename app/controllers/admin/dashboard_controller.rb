@@ -32,7 +32,7 @@ class Admin::DashboardController < AdminController
   end
 
   def bank_holidays
-    @bank_holidays = BankHolidays.order(created_at: :desc).page(params[:page]).per(50)
+    @bank_holidays = BankHoliday.order(created_at: :desc).page(params[:page]).per(50)
   end
 
 private

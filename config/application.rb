@@ -14,6 +14,8 @@ require "action_view/railtie"
 require "action_cable/engine"
 require "sprockets/railtie"
 
+require_relative "../lib/business_time_config"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -72,6 +74,8 @@ module CorrespondencePlatform
         Rails.logger.debug e.message
         exit # rubocop:disable Rails/Exit
       end
+
+      BusinessTimeConfig.configure!
     end
     # Don't generate system test files.
     config.generators.system_tests = nil
