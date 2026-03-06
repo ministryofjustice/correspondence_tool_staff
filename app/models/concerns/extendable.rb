@@ -1,8 +1,10 @@
 module Extendable
   extend ActiveSupport::Concern
 
-  # NOTE: Conflating the number of months case can be extended e.g. 2 with the number of times
-  # the case is extended. If the case is extended by 2 months, the extended_times == 2
+  # NOTE: By using `extended_times` we are conflating the number of months a case can be extended e.g. 2
+  # with the number of times the case is extended. If the case is extended by 2 months, the extended_times == 2
+  # The `extended_times` value is also used for reporting. The actual number of months extended is not recorded
+  # explicitly in transitions, hence using `extended_times` instead.
   def deadline_extendable?
     extended_times.to_i < extension_time_limit
   end
