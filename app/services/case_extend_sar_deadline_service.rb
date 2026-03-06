@@ -58,14 +58,12 @@ private
   end
 
   def validate_extension_deadline
-    extension_limit = @case.max_allowed_deadline_date
-
     if @extension_period.blank?
       @case.errors.add(
         :extension_period,
         "cannot be blank",
       )
-    elsif @extension_deadline > extension_limit
+    elsif (@case.extended_times.to_i + @extension_period.to_i) > @case.extension_time_limit
       @case.errors.add(
         :extension_period,
         "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",

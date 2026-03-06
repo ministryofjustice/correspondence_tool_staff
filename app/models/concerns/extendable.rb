@@ -1,8 +1,10 @@
 module Extendable
   extend ActiveSupport::Concern
 
+  # NOTE: Conflating the number of months case can be extended e.g. 2 with the number of times
+  # the case is extended. If the case is extended by 2 months, the extended_times == 2
   def deadline_extendable?
-    max_allowed_deadline_date > external_deadline
+    extended_times.to_i < extension_time_limit
   end
 
   def initial_deadline
@@ -50,16 +52,14 @@ module Extendable
     end
   end
 
-  def extension_time_limit
+  def max_time_limit
     correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
   end
+
+  alias_method :extension_time_limit, :max_time_limit
 
   def extension_time_default
     correspondence_type.extension_time_default || Settings.sar_extension_default_time_gap
-  end
-
-  def max_time_limit
-    correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
   end
 
   def sar_extensions

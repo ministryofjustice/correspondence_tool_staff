@@ -306,7 +306,7 @@ describe Case::SAR::Standard do
 
       it "is false when already extended equal or beyond satutory limit" do
         sar = freeze_time { create :approved_sar }
-        sar.external_deadline = sar_case.max_allowed_deadline_date
+        sar.extended_times = sar.extension_time_limit
 
         expect(sar.deadline_extendable?).to eq false
       end
