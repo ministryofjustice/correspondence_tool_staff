@@ -154,6 +154,10 @@ class Case::SAR::Standard < Case::Base
     true
   end
 
+  def original_external_deadline
+    @deadline_calculator.external_deadline
+  end
+
   def deadline_extendable?
     max_allowed_deadline_date > external_deadline
   end
@@ -180,7 +184,7 @@ class Case::SAR::Standard < Case::Base
 
   def reset_deadline!
     update!(
-      external_deadline: @deadline_calculator.external_deadline,
+      external_deadline: original_external_deadline,
       deadline_extended: false,
       extended_times: 0,
     )
@@ -217,7 +221,7 @@ private
   def update_deadlines
     if changed.include?("received_date") && !extended_for_pit?
       self.internal_deadline = @deadline_calculator.internal_deadline
-      self.external_deadline = @deadline_calculator.external_deadline
+      self.external_deadline = original_external_deadline
       self.extended_times = 0
       self.deadline_extended = false
     end
