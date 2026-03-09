@@ -63,7 +63,7 @@ private
         :extension_period,
         "cannot be blank",
       )
-    elsif (@case.extended_times.to_i + @extension_period.to_i) > @case.extension_time_limit
+    elsif (@case.num_months_extended + @extension_period.to_i) > @case.extension_time_limit
       @case.errors.add(
         :extension_period,
         "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",

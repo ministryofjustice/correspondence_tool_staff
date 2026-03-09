@@ -6,7 +6,11 @@ module Extendable
   # The `extended_times` value is also used for reporting. The actual number of months extended is not recorded
   # explicitly in transitions, hence using `extended_times` instead.
   def deadline_extendable?
-    extended_times.to_i < extension_time_limit
+    num_months_extended < extension_time_limit
+  end
+
+  def num_months_extended
+    extended_times.to_i
   end
 
   def initial_deadline
@@ -41,17 +45,6 @@ module Extendable
       deadline_extended: false,
       extended_times: 0,
     )
-  end
-
-  # The deadlines are all calculated based on the date case is received or last restart
-  def max_allowed_deadline_date
-    if restarted_at.present?
-      old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
-
-      @deadline_calculator.max_allowed_deadline_date(max_time_limit) { old_deadline || received_date }
-    else
-      @deadline_calculator.max_allowed_deadline_date(max_time_limit)
-    end
   end
 
   def max_time_limit

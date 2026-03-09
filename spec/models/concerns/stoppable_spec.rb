@@ -7,7 +7,7 @@ RSpec.describe Stoppable do
     end
   end
 
-  describe "#total_time_stopped" do
+  describe "#total_days_stopped" do
     before do
       events = [
         { event: "add_note_to_case" },
@@ -53,13 +53,13 @@ RSpec.describe Stoppable do
     end
 
     it "calculates total time stopped across all stop/restart events" do
-      expect(kase.total_time_stopped).to eq(22)
+      expect(kase.total_days_stopped).to eq(22)
     end
 
     it "returns 0 if there are no stop/start events" do
       kase.transitions.where(event: %w[restart_the_clock stop_the_clock]).delete_all
 
-      expect(kase.total_time_stopped).to eq(0)
+      expect(kase.total_days_stopped).to eq(0)
     end
   end
 end

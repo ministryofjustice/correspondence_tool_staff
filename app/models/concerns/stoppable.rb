@@ -34,8 +34,8 @@ module Stoppable
   end
 
   # Calculate the total time stopped across all stop/restart transitions for a case
-  def total_time_stopped
-    @total_time_stopped ||= begin
+  def total_days_stopped
+    @total_days_stopped ||= begin
       events = transitions.where(event: %w[stop_the_clock restart_the_clock]).order(id: :asc)
       last_stop_date = nil
 
