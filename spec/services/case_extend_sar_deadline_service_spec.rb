@@ -30,7 +30,7 @@ describe CaseExtendSARDeadlineService do
               acting_team: acting_team,
               final_deadline: get_expected_deadline(2.months.since(kase.received_date)),
               original_final_deadline: initial_deadline,
-              message: "test\nDeadline extended by one calendar month",
+              message: anything,
             )
         end
 

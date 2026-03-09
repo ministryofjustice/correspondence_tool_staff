@@ -33,6 +33,7 @@ describe CaseRemoveSARDeadlineExtensionService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
+            message: anything,
           )
       end
 

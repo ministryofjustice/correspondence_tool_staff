@@ -21,6 +21,7 @@ class CaseExtendSARDeadlineService
           original_final_deadline: @case.external_deadline,
           message:,
         )
+
         new_extended_times = @extension_period.to_i + (@case.extended_times || 0)
         @case.extend_deadline!(@extension_deadline, new_extended_times)
         @result = :ok
@@ -47,7 +48,12 @@ private
   end
 
   def message
-    "#{@reason}\nDeadline extended by #{@case.time_period_description(@extension_period.to_i)}"
+    [
+      @reason,
+      "Deadline extended by #{@case.time_period_description(@extension_period.to_i)}\n",
+      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New final deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+    ].join("\n")
   end
 
   def valid?

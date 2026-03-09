@@ -34,14 +34,8 @@ module Extendable
   end
 
   def reset_deadline!
-    if restarted_at.present?
-      old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
-    end
-
-    old_deadline ||= @deadline_calculator.external_deadline
-
     update!(
-      external_deadline: old_deadline,
+      external_deadline: calculate_old_deadline,
       deadline_extended: false,
       extended_times: 0,
     )
@@ -59,5 +53,13 @@ module Extendable
 
   def sar_extensions
     transitions.where(event: "extend_sar_deadline").order(:id)
+  end
+
+  def calculate_old_deadline
+    if restarted_at.present?
+      calculate_old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
+    end
+
+    calculate_old_deadline || @deadline_calculator.external_deadline
   end
 end
