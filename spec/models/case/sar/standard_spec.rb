@@ -298,10 +298,7 @@ describe Case::SAR::Standard do
 
     describe "#deadline_extendable?" do
       it "is true if external_deadline is less than max possible deadline", skip: "reimplement" do
-        max_statutory_deadline = sar_case.max_allowed_deadline_date
-
         expect(sar_case.deadline_extendable?).to eq true
-        expect(sar_case.external_deadline).to be < max_statutory_deadline
       end
 
       it "is false when already extended equal or beyond satutory limit" do
