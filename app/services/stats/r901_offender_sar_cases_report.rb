@@ -56,7 +56,7 @@ module Stats
         I18n.t("helpers.label.offender_sar.subject_type.#{kase.subject_type}"),
         kase.page_count,
         kase.already_late? ? "out of time" : "in time",
-        kase.current_state.humanize,
+        case_status(kase),
         kase.num_days_taken,
         kase.data_requests_completed? ? "Yes" : "No",
         kase.case_originally_rejected ? "Yes" : "No",
@@ -85,6 +85,10 @@ module Stats
 
     def case_type(kase)
       kase.decorate.pretty_type
+    end
+
+    def case_status(kase)
+      kase.decorate.status
     end
   end
 end
