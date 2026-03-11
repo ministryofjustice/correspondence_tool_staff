@@ -47,6 +47,7 @@ describe CaseRemoveSARDeadlineExtensionService do
       it "resets SAR deadline date" do
         expect(sar_case.external_deadline).to eq initial_deadline
         expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1)
+        expect(sar_case.extended_times).to eq 0
       end
     end
 
@@ -62,6 +63,7 @@ describe CaseRemoveSARDeadlineExtensionService do
           expect(sar_case.external_deadline).to eq initial_deadline
           expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1) # Original deadline
           expect(sar_case.deadline_extended?).to be false
+          expect(sar_case.extended_times).to eq 0
         end
       end
     end

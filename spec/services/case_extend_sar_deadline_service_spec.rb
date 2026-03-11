@@ -38,6 +38,7 @@ describe CaseExtendSARDeadlineService do
 
       it "sets new SAR deadline date" do
         expect(sar_case.external_deadline).to eq get_expected_deadline(2.months.since(sar_case.received_date))
+        expect(sar_case.extended_times).to eq 1
       end
     end
 
@@ -56,6 +57,7 @@ describe CaseExtendSARDeadlineService do
           expect(sar_case.external_deadline)
             .to eq get_expected_deadline((max_extension_time_limit + 1).month.since(sar_case.received_date))
           expect(sar_case.external_deadline).to be < Time.zone.now
+          expect(sar_case.extended_times).to eq 2
         end
       end
     end
@@ -189,6 +191,25 @@ describe CaseExtendSARDeadlineService do
           expect(result).to eq :error
           expect(service.result).to eq :error
         end
+      end
+    end
+
+    context "with SAR trigger case" do
+      let(:flagged_sar_case) { freeze_time { create(:approved_sar, :flagged) } }
+
+      it "does not change the draft deadline" do
+        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 10, 31)
+        expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
+
+        result = sar_extension_service(
+          user: manager,
+          kase: flagged_sar_case,
+          extension_period: 1,
+        ).call
+
+        expect(result).to eq :ok
+        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 11, 29)
+        expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
       end
     end
   end
