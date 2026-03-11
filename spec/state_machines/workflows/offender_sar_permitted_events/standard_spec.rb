@@ -9,7 +9,6 @@ TRANSITIONS = [
       send_acknowledgement_letter
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
@@ -21,7 +20,6 @@ TRANSITIONS = [
       move_case_back
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
@@ -35,7 +33,6 @@ TRANSITIONS = [
       date_sent_to_sscl_removed
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
@@ -50,7 +47,6 @@ TRANSITIONS = [
       date_sent_to_sscl_removed
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
@@ -63,7 +59,6 @@ TRANSITIONS = [
       date_sent_to_sscl_removed
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
@@ -77,7 +72,6 @@ TRANSITIONS = [
       date_sent_to_sscl_removed
       send_day_1_email
       send_chase_email
-      extend_sar_deadline
     ],
   },
   {
