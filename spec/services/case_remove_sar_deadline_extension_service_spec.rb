@@ -3,8 +3,14 @@ require "rails_helper"
 describe CaseRemoveSARDeadlineExtensionService do
   let(:team_dacu)         { find_or_create :team_disclosure_bmt }
   let(:manager)           { find_or_create :disclosure_bmt_user }
-  let(:sar_case)          { create(:sar_case, :extended_deadline_sar) }
-  let(:initial_deadline)  { sar_case.initial_deadline }
+
+  let(:sar_case) do
+    Timecop.freeze(Time.zone.local(2025, 3, 1)) do
+      create :sar_case, :extended_deadline_sar, received_date: Date.new(2025, 3, 1)
+    end
+  end
+
+  let(:initial_deadline) { sar_case.initial_deadline }
 
   before do
     allow(sar_case.state_machine).to receive(:remove_sar_deadline_extension!)
@@ -16,6 +22,7 @@ describe CaseRemoveSARDeadlineExtensionService do
     end
 
     it { expect(sar_case.external_deadline).not_to eq initial_deadline }
+    it { expect(sar_case.external_deadline).to eq Date.new(2025, 5, 1) } # Already extended
     it { expect(sar_extension_remove_service.result).to eq :incomplete }
   end
 
@@ -33,11 +40,13 @@ describe CaseRemoveSARDeadlineExtensionService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
+            message: "Old final deadline: May 01, 2025\nNew final deadline: April 01, 2025",
           )
       end
 
       it "resets SAR deadline date" do
         expect(sar_case.external_deadline).to eq initial_deadline
+        expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1)
       end
     end
 
@@ -51,6 +60,7 @@ describe CaseRemoveSARDeadlineExtensionService do
 
           expect(result).to eq :ok
           expect(sar_case.external_deadline).to eq initial_deadline
+          expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1) # Original deadline
           expect(sar_case.deadline_extended?).to be false
         end
       end
