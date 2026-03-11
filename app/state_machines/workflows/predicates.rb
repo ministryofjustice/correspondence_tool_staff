@@ -190,6 +190,14 @@ class Workflows::Predicates
     deadline_does_not_exceed_max_deadline? && user_is_assigned_disclosure_specialist?
   end
 
+  def can_extend_offender_sar_deadline?
+    @user.team_admin? && @user.manager? && @user.responder?
+  end
+
+  def can_remove_offender_sar_deadline_extension?
+    has_sar_deadline_extension? && @user.team_admin? && @user.manager? && @user.responder?
+  end
+
   def case_extended_and_user_in_approving_team?
     has_sar_deadline_extension? && user_is_in_approving_team_for_case?
   end
