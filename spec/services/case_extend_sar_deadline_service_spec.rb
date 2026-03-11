@@ -32,7 +32,7 @@ describe CaseExtendSARDeadlineService do
             acting_team: team_disclosure_bmt,
             final_deadline: get_expected_deadline(2.months.since(sar_case.received_date)),
             original_final_deadline: initial_deadline,
-            message: "test\nDeadline extended by one calendar month\n\nOld final deadline: October 31, 2022\nNew final deadline: November 29, 2022",
+            message: "test\nDeadline extended by one calendar month\n\nOld final deadline: 31 October 2022\nNew final deadline: 29 November 2022",
           )
       end
 

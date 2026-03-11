@@ -522,6 +522,7 @@ en:
     formats:
       default: "%-d %b %Y"
       compact: "%d-%m-%Y"
+      long: "%e %B %Y"
 
   time:
     formats:
