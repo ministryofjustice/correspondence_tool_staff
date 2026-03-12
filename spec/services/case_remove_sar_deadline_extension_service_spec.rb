@@ -40,13 +40,14 @@ describe CaseRemoveSARDeadlineExtensionService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
-            message: "Old final deadline: May 01, 2025\nNew final deadline: April 01, 2025",
+            message: "Old final deadline:  1 May 2025\nNew final deadline:  1 April 2025",
           )
       end
 
       it "resets SAR deadline date" do
         expect(sar_case.external_deadline).to eq initial_deadline
         expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1)
+        expect(sar_case.extended_times).to eq 0
       end
     end
 
@@ -62,6 +63,7 @@ describe CaseRemoveSARDeadlineExtensionService do
           expect(sar_case.external_deadline).to eq initial_deadline
           expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1) # Original deadline
           expect(sar_case.deadline_extended?).to be false
+          expect(sar_case.extended_times).to eq 0
         end
       end
     end
