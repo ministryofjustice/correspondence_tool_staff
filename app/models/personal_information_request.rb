@@ -7,6 +7,7 @@
 #  last_accessed_by :integer
 #  last_accessed_at :datetime
 #  deleted          :boolean          default(FALSE)
+#  processed        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
