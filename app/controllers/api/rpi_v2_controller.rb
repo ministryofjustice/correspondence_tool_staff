@@ -3,7 +3,11 @@ module Api
     before_action :authenticate_request, only: :create
 
     def create
-      RequestPersonalInformationJob.perform_later(@body)
+      request = PersonalInformationRequest.build(@body)
+      request.save!
+
+      RequestPersonalInformationJob.perform_later(request.id)
+
       head :ok
     end
 
