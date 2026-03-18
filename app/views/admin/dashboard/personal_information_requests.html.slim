@@ -3,10 +3,15 @@
 
 = render partial: 'layouts/header'
 
+p
+  ="Shows the last 500 Api requests made to /api/rpi/v2"
+
 .grid-row
   .column-full.table-container.container
     table.report.table-font-xsmall
       colgroup
+        col
+        col
         col
         col
         col
@@ -17,10 +22,16 @@
           th scope='col'
             | Deleted
           th scope='col'
+            | Processed
+          th scope='col'
             | Created At
+          th scope='col'
+            | Updated At
       tbody
         - @personal_information_requests.each do |pir|
           tr
             td= pir.submission_id
             td= pir.deleted ? 'Yes' : 'No'
-            td= pir.created_at
+            td= pir.processed ? 'Yes' : 'No'
+            td= l(pir.created_at, format: :default)
+            td= l(pir.updated_at, format: :default)
