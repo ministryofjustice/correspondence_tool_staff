@@ -1,0 +1,26 @@
+- content_for :heading
+  = "Personal Information Requests"
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Submission ID
+          th scope='col'
+            | Deleted
+          th scope='col'
+            | Created At
+      tbody
+        - @personal_information_requests.each do |pir|
+          tr
+            td= pir.submission_id
+            td= pir.deleted ? 'Yes' : 'No'
+            td= pir.created_at

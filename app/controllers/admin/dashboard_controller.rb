@@ -31,6 +31,10 @@ class Admin::DashboardController < AdminController
     @version = Settings.git_commit
   end
 
+  def personal_information_requests
+    @personal_information_requests = PersonalInformationRequest.unscoped.select(:submission_id, :deleted, :created_at)
+  end
+
 private
 
   def count_cases_created_on(date)
