@@ -22,6 +22,10 @@ class RequestPersonalInformationJob < ApplicationJob
       request.completed
     rescue StandardError => e
       request&.failed(e)
+      submission_id = PersonalInformationRequest.submission_id(data)
+
+      # Deliberately capture separate Sentry error for individual submissions
+      Sentry.capture_message "PersonalInformationRequest job failure --- ID: #{id}, SubmissionId: #{submission_id}, Error: #{e.message}"
       Sentry.capture_exception(e)
     end
   end

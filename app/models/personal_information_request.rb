@@ -101,7 +101,7 @@ class PersonalInformationRequest < ApplicationRecord
              raise ArgumentError, "Incompatible payload format - check Submission Id attribute"
            end
 
-    request_builder.build(data) # This needs to be build first
+    request_builder.build(data) # This needs to be built first
     file_builder.build(data)
 
     self
