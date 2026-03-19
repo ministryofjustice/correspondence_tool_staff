@@ -97,4 +97,62 @@ describe Admin::DashboardController do
       expect(controller.personal_information_requests).to match_array(personal_information_requests)
     end
   end
+
+  describe "#system_logs" do
+    let!(:system_logs) do
+      [
+        create(:system_log, created_at: 1.hour.ago),
+        create(:system_log, :successful, created_at: 30.minutes.ago),
+        create(:email_log, :failed, created_at: 10.minutes.ago),
+      ]
+    end
+
+    before do
+      sign_in admin
+      get :system_logs
+    end
+
+    it "renders the system_logs view" do
+      expect(request.path).to eq("/admin/dashboard/system_logs")
+    end
+
+    it "has system logs" do
+      expect(assigns(:system_logs)).to match_array(system_logs)
+    end
+
+    it "returns logs in descending order by created_at" do
+      logs = assigns(:system_logs)
+      expect(logs.first.created_at).to be > logs.last.created_at
+    end
+  end
+
+  describe "#email_logs" do
+    let!(:email_logs) do
+      [
+        create(:email_log, created_at: 1.hour.ago),
+        create(:email_log, :successful, created_at: 30.minutes.ago),
+        create(:email_log, :failed, created_at: 10.minutes.ago),
+      ]
+    end
+
+    before do
+      create(:system_log) # Non-email log should not appear
+      sign_in admin
+      get :email_logs
+    end
+
+    it "renders the email_logs view" do
+      expect(request.path).to eq("/admin/dashboard/email_logs")
+    end
+
+    it "has email logs only" do
+      expect(assigns(:email_logs)).to match_array(email_logs)
+      expect(assigns(:email_logs)).to all(be_a(EmailLog))
+    end
+
+    it "returns logs in descending order by created_at" do
+      logs = assigns(:email_logs)
+      expect(logs.first.created_at).to be > logs.last.created_at
+    end
+  end
 end

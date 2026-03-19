@@ -1,9 +1,8 @@
-# Registers email logging interceptor and instrumentation
+# Registers email logging interceptor and instrumentation to SystemLog to ensure
+# all outgoing emails are logged, prior to sending to GovUkNotify
 Rails.application.config.after_initialize do
-  # Register interceptor to log emails before delivery
   ActionMailer::Base.register_interceptor(EmailLoggingInterceptor)
 
-  # Subscribe to delivery events to update log with success/failure
   ActiveSupport::Notifications.subscribe("deliver.action_mailer") do |*args|
     event = ActiveSupport::Notifications::Event.new(*args)
     message_id = event.payload[:message_id]
