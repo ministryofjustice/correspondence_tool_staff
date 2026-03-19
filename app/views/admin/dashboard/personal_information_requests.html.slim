@@ -18,15 +18,17 @@ p
       thead
         tr
           th scope='col'
-            | Submission ID
+            | Submission Id
           th scope='col'
             | Deleted
           th scope='col'
             | Processed
           th scope='col'
-            | Created At
+            | Created
           th scope='col'
-            | Updated At
+            | Updated
+          th scope='col'
+            | Log
       tbody
         - @personal_information_requests.each do |pir|
           tr
@@ -35,3 +37,4 @@ p
             td= pir.processed ? 'Yes' : 'No'
             td= l(pir.created_at, format: :default)
             td= l(pir.updated_at, format: :default)
+            td= pir.log

@@ -49,6 +49,8 @@ describe RequestPersonalInformationJob, type: :job do
     }
   end
 
+  let(:id) { 100 }
+
   before do
     ActiveJob::Base.queue_adapter = :test
     # attachment = instance_double CaseAttachment
@@ -64,12 +66,12 @@ describe RequestPersonalInformationJob, type: :job do
 
   describe ".perform" do
     it "sets the Sentry environment" do
-      described_class.perform_now(payload)
+      described_class.perform_now(id, payload)
       expect(SentryContextProvider).to have_received(:set_context)
     end
 
     it "queues the job" do
-      expect { described_class.perform_later(payload) }.to have_enqueued_job(described_class)
+      expect { described_class.perform_later(id, payload) }.to have_enqueued_job(described_class)
     end
 
     it "is in expected queue" do
@@ -78,7 +80,7 @@ describe RequestPersonalInformationJob, type: :job do
 
     it "executes perform" do
       expect(ActionNotificationsMailer).to receive(:rpi_email).with(PersonalInformationRequest, anything).at_least(:once).and_call_original
-      perform_enqueued_jobs { described_class.perform_later(payload) }
+      perform_enqueued_jobs { described_class.perform_later(id, payload) }
     end
   end
 end

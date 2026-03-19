@@ -1,6 +1,9 @@
 class AddProcessedToPersonalInformationRequests < ActiveRecord::Migration[7.2]
   def change
-    add_column :personal_information_requests, :processed, :boolean, default: false, null: false
+    change_table :personal_information_requests, bulk: true do |t|
+      t.column :processed, :boolean, default: false, null: false
+      t.column :log, :text
+    end
 
     reversible do |dir|
       dir.up do

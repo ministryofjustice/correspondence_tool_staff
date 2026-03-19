@@ -1215,7 +1215,8 @@ CREATE TABLE public.personal_information_requests (
     deleted boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    processed boolean DEFAULT false NOT NULL
+    processed boolean DEFAULT false NOT NULL,
+    log text
 );
 
 

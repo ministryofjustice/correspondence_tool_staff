@@ -6,10 +6,12 @@ describe Admin::DashboardController do
   let!(:search_query) { create :search_query }
   let!(:list_query)   { create :list_query }
 
-  let!(:personal_information_request) do
-    create(:personal_information_request)
-    create(:personal_information_request, :deleted)
-    create(:personal_information_request, :processed)
+  let!(:personal_information_requests) do
+    [
+      create(:personal_information_request),
+      create(:personal_information_request, :deleted),
+      create(:personal_information_request, :processed),
+    ]
   end
 
   describe "#feedback" do
@@ -92,7 +94,7 @@ describe Admin::DashboardController do
     end
 
     it "has personal information requests" do
-      expect(controller.personal_information_requests.size).to eq 3
+      expect(controller.personal_information_requests).to match_array(personal_information_requests)
     end
   end
 end

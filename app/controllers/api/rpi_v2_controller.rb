@@ -3,12 +3,20 @@ module Api
     before_action :authenticate_request, only: :create
 
     def create
-      request = PersonalInformationRequest.build(@body)
-      request.save!
+      submission_id = PersonalInformationRequest.submission_id(@body)
+      @personal_information_request = PersonalInformationRequest.create!(submission_id:)
+      @personal_information_request.build(@body)
 
-      RequestPersonalInformationJob.perform_later(request.id)
-
+      RequestPersonalInformationJob.perform_now(@personal_information_request.id, @body)
       head :ok
+    rescue StandardError => e
+      if @personal_information_request
+        @personal_information_request.update!(processed: false, log: "#{e.message}\n#{e.backtrace[0..5].join("\n")}")
+      end
+
+      Sentry.capture_exception(e)
+
+      head :unprocessable_entity
     end
 
     def render_unauthorized
