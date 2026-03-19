@@ -1429,6 +1429,45 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 
 
 --
+-- Name: system_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.system_logs (
+    id bigint NOT NULL,
+    type character varying NOT NULL,
+    status character varying DEFAULT 'pending'::character varying,
+    reference_id character varying,
+    action character varying,
+    source character varying,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    error_message text,
+    duration_ms double precision,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: system_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.system_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: system_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.system_logs_id_seq OWNED BY public.system_logs.id;
+
+
+--
 -- Name: team_correspondence_type_roles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1875,6 +1914,13 @@ ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.ses
 
 
 --
+-- Name: system_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.system_logs ALTER COLUMN id SET DEFAULT nextval('public.system_logs_id_seq'::regclass);
+
+
+--
 -- Name: team_correspondence_type_roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2146,6 +2192,14 @@ ALTER TABLE ONLY public.search_queries
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: system_logs system_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.system_logs
+    ADD CONSTRAINT system_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2492,6 +2546,34 @@ CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (update
 
 
 --
+-- Name: index_system_logs_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_system_logs_on_created_at ON public.system_logs USING btree (created_at);
+
+
+--
+-- Name: index_system_logs_on_reference_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_system_logs_on_reference_id ON public.system_logs USING btree (reference_id);
+
+
+--
+-- Name: index_system_logs_on_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_system_logs_on_type ON public.system_logs USING btree (type);
+
+
+--
+-- Name: index_system_logs_on_type_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_system_logs_on_type_and_status ON public.system_logs USING btree (type, status);
+
+
+--
 -- Name: index_team_correspondence_type_roles_on_type_id_and_team_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2696,6 +2778,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260319100000'),
 ('20260318100000'),
 ('20251217151713'),
 ('20250312113935'),
