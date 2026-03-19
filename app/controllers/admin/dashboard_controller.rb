@@ -38,6 +38,14 @@ class Admin::DashboardController < AdminController
                                       .limit(500)
   end
 
+  def system_logs
+    @system_logs = SystemLog.recent
+  end
+
+  def email_logs
+    @email_logs = EmailLog.recent
+  end
+
 private
 
   def count_cases_created_on(date)

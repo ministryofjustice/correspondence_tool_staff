@@ -305,6 +305,8 @@ Rails.application.routes.draw do
       get "/dashboard/list_queries" => "dashboard#list_queries"
       get "/dashboard/system" => "dashboard#system"
       get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
+      get "/dashboard/system_logs" => "dashboard#system_logs"
+      get "/dashboard/email_logs" => "dashboard#email_logs"
     end
   end
 

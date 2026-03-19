@@ -1,0 +1,48 @@
+- content_for :heading
+  = "Email Logs"
+
+= render partial: 'layouts/header'
+
+p Shows the last 500 email delivery attempts
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Mailer
+          th scope='col'
+            | To
+          th scope='col'
+            | Subject
+          th scope='col'
+            | Status
+          th scope='col'
+            | Duration (ms)
+          th scope='col'
+            | Created
+          th scope='col'
+            | Completed
+          th scope='col'
+            | Error
+      tbody
+        - @email_logs.each do |log|
+          tr
+            td= "#{log.mailer_class}##{log.mailer_action}"
+            td= log.to
+            td= log.subject
+            td= log.status
+            td= log.duration_ms&.round(2)
+            td= l(log.created_at, format: :default)
+            td= log.completed_at ? l(log.completed_at, format: :default) : '-'
+            td= truncate(log.error_message, length: 50)
