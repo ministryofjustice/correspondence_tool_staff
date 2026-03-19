@@ -4,16 +4,14 @@ module Api
 
     def create
       submission_id = PersonalInformationRequest.submission_id(@body)
-      @personal_information_request = PersonalInformationRequest.create!(submission_id:)
-      @personal_information_request.build(@body)
+      request = PersonalInformationRequest.create!(submission_id:)
+      request.build(@body)
 
-      RequestPersonalInformationJob.perform_now(@personal_information_request.id, @body)
+      RequestPersonalInformationJob.perform_later(request.id, @body)
+
       head :ok
     rescue StandardError => e
-      if @personal_information_request
-        @personal_information_request.update!(processed: false, log: "#{e.message}\n#{e.backtrace[0..5].join("\n")}")
-      end
-
+      request&.failed(e)
       Sentry.capture_exception(e)
 
       head :unprocessable_entity

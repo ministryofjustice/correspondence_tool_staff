@@ -19,9 +19,9 @@ class RequestPersonalInformationJob < ApplicationJob
         ActionNotificationsMailer.rpi_email(request, target).deliver_later
       end
 
-      request.update!(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{request.targets.join(', ')} emails.")
+      request.completed
     rescue StandardError => e
-      request.update!(processed: false, log: e.message) if request
+      request&.failed(e)
       Sentry.capture_exception(e)
     end
   end

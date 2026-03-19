@@ -185,6 +185,14 @@ class PersonalInformationRequest < ApplicationRecord
     update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
   end
 
+  def failed(exception)
+    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
+  end
+
+  def completed
+    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
+  end
+
 private
 
   def request_builder
