@@ -3,10 +3,13 @@ require "rails_helper"
 describe RequestPersonalInformationJob, type: :job do
   include ActiveJob::TestHelper
 
+  let(:submission_id) { "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3" }
+  let(:id) { 100 }
+
   let(:payload) do
     {
       "serviceSlug": "request-personal-information-migrate",
-      "submissionId": "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3",
+      "submissionId": submission_id,
       "submissionAnswers": {
         "requesting-own-data_radios_1": "Your own",
         "request-personal-data_text_1": "Andrew Pepler",
@@ -49,8 +52,6 @@ describe RequestPersonalInformationJob, type: :job do
     }
   end
 
-  let(:id) { 100 }
-
   before do
     ActiveJob::Base.queue_adapter = :test
     # attachment = instance_double CaseAttachment
@@ -80,7 +81,23 @@ describe RequestPersonalInformationJob, type: :job do
 
     it "executes perform" do
       expect(ActionNotificationsMailer).to receive(:rpi_email).with(PersonalInformationRequest, anything).at_least(:once).and_call_original
+
       perform_enqueued_jobs { described_class.perform_later(id, payload) }
+    end
+
+    it "loads existing request if it exists" do
+      request = PersonalInformationRequest.create!(submission_id: submission_id)
+      expect(PersonalInformationRequest).to receive(:find_by).with(id: request.id)
+
+      perform_enqueued_jobs { described_class.perform_later(request.id, payload) }
+    end
+
+    it "sets processed attribute on completion" do
+      request = PersonalInformationRequest.create!(submission_id: submission_id)
+      expect(request.processed).to eq false
+
+      described_class.perform_now(request.id, payload)
+      expect(request.reload.processed).to eq true
     end
   end
 end
