@@ -34,7 +34,6 @@ class Admin::DashboardController < AdminController
   def personal_information_requests
     @personal_information_requests = PersonalInformationRequest
                                       .unscoped
-                                      .select(:submission_id, :deleted, :processed, :created_at, :updated_at)
                                       .order(created_at: :desc)
                                       .limit(500)
   end
