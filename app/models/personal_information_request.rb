@@ -7,6 +7,7 @@
 #  last_accessed_by :integer
 #  last_accessed_at :datetime
 #  deleted          :boolean          default(FALSE)
+#  processed        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -69,18 +70,13 @@ class PersonalInformationRequest < ApplicationRecord
 
   default_scope { where(deleted: false) }
 
+  # Difference in Submission ID key between v1 and v2 data payloads
+  def self.submission_id(payload)
+    payload[:submissionId].presence || payload[:submission_id]
+  end
+
   def self.build(payload)
-    rpi = PersonalInformationRequest.new
-
-    data = if payload[:submissionId].present?
-             RequestPersonalInformation::Data.new(payload)
-           else
-             RequestPersonalInformation::DataV2.new(payload)
-           end
-
-    rpi.build_with(data)
-
-    rpi
+    PersonalInformationRequest.new.build(payload)
   end
 
   def self.valid_target?(target)
@@ -96,6 +92,21 @@ class PersonalInformationRequest < ApplicationRecord
     end
   end
 
+  def build(payload)
+    data = if RequestPersonalInformation::Data.compatible?(payload)
+             RequestPersonalInformation::Data.new(payload)
+           elsif RequestPersonalInformation::DataV2.compatible?(payload)
+             RequestPersonalInformation::DataV2.new(payload)
+           else
+             raise ArgumentError, "Incompatible payload format - check Submission Id attribute"
+           end
+
+    request_builder.build(data) # This needs to be build first
+    file_builder.build(data)
+
+    self
+  end
+
   def targets
     result = []
     if prison_service_data? || probation_service_data?
@@ -107,11 +118,6 @@ class PersonalInformationRequest < ApplicationRecord
     end
 
     result
-  end
-
-  def build_with(data)
-    request_builder.build(data) # This needs to be build first
-    file_builder.build(data)
   end
 
   def requesting_own_data?
@@ -177,6 +183,14 @@ class PersonalInformationRequest < ApplicationRecord
       CASE_UPLOADS_S3_BUCKET.object(key(target))&.delete
     end
     update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  def failed(exception)
+    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
+  end
+
+  def completed
+    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
   end
 
 private

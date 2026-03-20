@@ -298,13 +298,13 @@ Rails.application.routes.draw do
       root to: redirect("/admin/cases")
       resources :cases, only: :index
       get "users" => "users#index"
-      get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
       get "/dashboard/feedback/:year" => "dashboard#feedback_year", as: :dashboard_feedback_year
       get "/dashboard/exception" => "dashboard#exception"
       get "/dashboard/search_queries" => "dashboard#search_queries"
       get "/dashboard/list_queries" => "dashboard#list_queries"
       get "/dashboard/system" => "dashboard#system"
+      get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
     end
   end
 
