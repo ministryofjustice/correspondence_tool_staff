@@ -909,9 +909,7 @@ CREATE TABLE public.personal_information_requests (
     last_accessed_at timestamp without time zone,
     deleted boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    processed boolean DEFAULT false NOT NULL,
-    log text
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
