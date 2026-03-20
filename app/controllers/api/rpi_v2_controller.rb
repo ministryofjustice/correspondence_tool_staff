@@ -12,6 +12,9 @@ module Api
       head :ok
     rescue StandardError => e
       request&.failed(e)
+
+      # Deliberately capture separate Sentry error for individual submissions
+      Sentry.capture_message "PersonalInformationRequest API failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
       Sentry.capture_exception(e)
 
       head :unprocessable_entity
