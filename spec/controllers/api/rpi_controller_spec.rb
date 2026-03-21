@@ -73,15 +73,33 @@ RSpec.describe Api::RpiController, type: :controller do
     context "with encrypted json payload" do
       it "decrypts the body" do
         post(:create, body: encrypted_json)
-        expect(assigns(:decrypted_body)).to eq JSON.parse(unencrypted_json, symbolize_names: true)
+        expect(assigns(:body)).to eq JSON.parse(unencrypted_json, symbolize_names: true)
       end
     end
   end
 
   describe "#create" do
-    it "Creates a job to process the payload" do
+    it "creates a job to process the payload" do
       expect(RequestPersonalInformationJob).to receive(:perform_later)
       post(:create, body: encrypted_json)
+    end
+
+    context "when the data is invalid" do
+      let(:unencrypted_json) do
+        {
+          "serviceSlug": "request-personal-information-migrate",
+          "submissionId": "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3",
+          "submissionAnswers": {
+            "requesting-own-data_radios_1": "Your own",
+          },
+          "attachments": [],
+        }.to_json
+      end
+
+      it "returns unprocessable entity" do
+        post(:create, body: encrypted_json)
+        expect(response.status).to eq 422
+      end
     end
   end
 end
