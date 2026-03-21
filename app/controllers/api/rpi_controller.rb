@@ -14,7 +14,7 @@ module Api
       request&.failed(e)
 
       # Deliberately capture separate Sentry error for individual submissions
-      Sentry.capture_message "PersonalInformationRequest API (v1) failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
+      Sentry.capture_message "PersonalInformationRequest API (#{self.class.name}) failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
       Sentry.capture_exception(e)
 
       head :unprocessable_entity

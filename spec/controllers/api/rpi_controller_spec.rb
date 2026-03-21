@@ -79,12 +79,14 @@ RSpec.describe Api::RpiController, type: :controller do
   end
 
   describe "#create" do
-    it "creates a job to process the payload" do
-      expect(RequestPersonalInformationJob).to receive(:perform_later)
-      post(:create, body: encrypted_json)
+    context "with valid data" do
+      it "creates a job to process the payload" do
+        expect(RequestPersonalInformationJob).to receive(:perform_later)
+        post(:create, body: encrypted_json)
+      end
     end
 
-    context "when the data is invalid" do
+    context "with invalid data" do
       let(:unencrypted_json) do
         {
           "serviceSlug": "request-personal-information-migrate",
