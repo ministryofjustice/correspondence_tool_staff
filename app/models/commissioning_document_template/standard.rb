@@ -25,7 +25,7 @@ module CommissioningDocumentTemplate
 
     def request_additional_info
       additional_info = {
-        "security_records" => "Please provide the unredacted security data requested (including all attachments linked to Mercury) as a Microsoft Word document and follow the Mercury Dissemination Guidance.\n",
+        "security_records" => "Please provide the unredacted security data requested (including all attachments linked to the Intelligence Management Service (IMS) and follow IMS guidance.\n",
         "cctv" => "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
         "bwcf" => "When providing the footage please supply an up-to-date photograph of the data subject and confirm the data you are sending us contains that same person. We cannot proceed without you verifying this.\nIf you have access to a Teams channel, please send the footage in MP4 format where possible.\n",
         "pdp" => "All CAT A files and series 6 subs (Cross Border Transfer files).\n",

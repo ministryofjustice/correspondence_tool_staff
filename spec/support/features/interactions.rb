@@ -263,10 +263,15 @@ module Features
       cases_extend_sar_deadline_page.set_reason_for_extending(reason)
       cases_extend_sar_deadline_page.submit_button.click
 
+      old_final_deadline = kase.external_deadline
+      kase.reload
+
       expected_case_history = [
         "Extended SAR deadline",
         reason.to_s,
-        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}", # line-break character translates into a space
+        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}\n",
+        "Old final deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
+        "New final deadline: #{I18n.localize(kase.external_deadline, format: :long)}",
       ]
 
       expect(cases_show_page).to be_displayed

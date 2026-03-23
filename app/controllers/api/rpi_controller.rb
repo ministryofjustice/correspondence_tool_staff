@@ -3,8 +3,21 @@ module Api
     before_action :authenticate_request, only: :create
 
     def create
-      RequestPersonalInformationJob.perform_later(@decrypted_body)
+      submission_id = PersonalInformationRequest.submission_id(@body)
+      request = PersonalInformationRequest.create!(submission_id:)
+      request.build(@body)
+
+      RequestPersonalInformationJob.perform_later(request.id, @body)
+
       head :ok
+    rescue StandardError => e
+      request&.failed(e)
+
+      # Deliberately capture separate Sentry error for individual submissions
+      Sentry.capture_message "PersonalInformationRequest API (#{self.class.name}) failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
+      Sentry.capture_exception(e)
+
+      head :unprocessable_entity
     end
 
     def render_unauthorized
@@ -18,7 +31,7 @@ module Api
       return render_unauthorized if encrypted_payload.blank?
 
       begin
-        @decrypted_body = JSON.parse(JWE.decrypt(encrypted_payload, jwe_key), symbolize_names: true)
+        @body = JSON.parse(JWE.decrypt(encrypted_payload, jwe_key), symbolize_names: true)
       rescue JWE::DecodeError => e
         Rails.logger.info("returning unauthorized due to JWE::DecodeError '#{e}'")
         render_unauthorized

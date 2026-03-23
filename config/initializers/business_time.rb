@@ -14,6 +14,12 @@ ADDITIONAL_BANK_HOLIDAYS = [
   "2025-07-14", # Battle of the Boyne (substitute day)
   "2025-08-04", # Summer bank holiday
   "2025-12-01", # St Andrew's Day (substitute day)
+  "2026-01-02", # 2nd January"
+  "2026-03-17", # St Patrick's Day
+  "2026-07-13", # Battle of the Boyne
+  "2026-08-03", # Summer bank holiday
+  "2026-11-30", # St Andrew's Day
+  "2027-01-04", # 2nd January (substitute day)
 ].freeze
 
 ew_bank_holidays = %w[
@@ -100,6 +106,15 @@ ew_bank_holidays = %w[
   2025-08-25
   2025-12-25
   2025-12-26
+  2026-01-01
+  2026-04-03
+  2026-04-06
+  2026-05-04
+  2026-05-25
+  2026-08-31
+  2026-12-25
+  2026-12-28
+  2027-01-01
 ]
 
 hols = if Rails.env.production?

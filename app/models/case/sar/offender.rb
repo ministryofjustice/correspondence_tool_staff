@@ -66,7 +66,7 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-  # include Stoppable
+  include Stoppable
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = "data_subject".freeze
 
