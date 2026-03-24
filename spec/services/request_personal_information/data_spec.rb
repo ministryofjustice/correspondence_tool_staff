@@ -3,6 +3,24 @@ require "rails_helper"
 describe RequestPersonalInformation::Data do
   subject(:data) { described_class.new(payload) }
 
+  describe ".compatible?" do
+    context "when payload has submissionId" do
+      let(:payload) { { submissionId: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
+
+      it "returns true" do
+        expect(described_class.compatible?(payload)).to eq true
+      end
+    end
+
+    context "when payload has submission_id" do
+      let(:payload) { { submission_id: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
+
+      it "returns false" do
+        expect(described_class.compatible?(payload)).to eq false
+      end
+    end
+  end
+
   describe "#submission_id" do
     let(:value) { "id_value" }
     let(:payload) { { submissionId: value } }

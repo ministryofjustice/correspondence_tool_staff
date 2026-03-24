@@ -1079,12 +1079,12 @@ private
   def trigger_reindexing
     if (changed & indexable_fields).any? && id.present?
       self.dirty = true
-      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(id)
+      SearchIndexUpdaterJob.perform_later(id)
     end
   end
 
   def trigger_reindexing_after_creation
-    SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(id)
+    SearchIndexUpdaterJob.perform_later(id)
   end
 
   def validate_related_cases
