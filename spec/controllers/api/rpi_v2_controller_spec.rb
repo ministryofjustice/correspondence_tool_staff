@@ -1,9 +1,11 @@
 require "rails_helper"
 
 RSpec.describe Api::RpiV2Controller, type: :controller do
+  let(:submission_id) { "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3" }
+
   let(:json) do
     {
-      "submission_id": "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3",
+      "submission_id": submission_id,
       "answers": {
         "subject": "Your own",
         "full_name": "Andrew Pepler",
@@ -41,6 +43,7 @@ RSpec.describe Api::RpiV2Controller, type: :controller do
         "contact_email": "user@email.com",
         "upcoming": "Yes",
         "upcoming_text": "answer to Tell us more about your upcoming court case or hearing",
+        "upcoming_court_case": "The upcoming court case",
       },
       "attachments": [],
     }.to_json
@@ -63,9 +66,27 @@ RSpec.describe Api::RpiV2Controller, type: :controller do
   end
 
   describe "#create" do
-    it "Creates a job to process the payload" do
-      expect(RequestPersonalInformationJob).to receive(:perform_later)
-      post(:create, body: json)
+    context "with valid payload" do
+      it "creates a job to process the payload" do
+        expect(RequestPersonalInformationJob).to receive(:perform_later).with(kind_of(Integer), kind_of(Hash))
+        post(:create, body: json)
+      end
+    end
+
+    context "with invalid payload" do
+      it "logs request before processing to capture errors" do
+        guid = SecureRandom.uuid
+        bad_data = { "submission_id": guid }.to_json
+
+        expect(Sentry).to receive(:capture_exception).with(kind_of(StandardError))
+        post(:create, body: bad_data)
+
+        request = PersonalInformationRequest.find_by(submission_id: guid)
+
+        expect(request).not_to be_nil
+        expect(request.processed).to eq false
+        expect(request.log).to include("ERROR:")
+      end
     end
   end
 end

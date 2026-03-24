@@ -13,8 +13,7 @@ module Workflows
 
       @disclosure_bmt_user            = find_or_create :disclosure_bmt_user
       @disclosure_specialist          = find_or_create :disclosure_specialist
-      @disclosure_specialist_coworker = create :approver,
-                                               approving_team: @team_disclosure
+      @disclosure_specialist_coworker = create :approver, approving_team: @team_disclosure
       @press_officer                  = find_or_create :press_officer
 
       # Use by the permit_only_these_combinations matcher. Add any new case
@@ -342,6 +341,69 @@ module Workflows
         let(:user) { find_or_create :responder_and_team_admin }
 
         it { is_expected.to be true }
+      end
+    end
+
+    describe "deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case?" do
+      subject(:predicate) { described_class.new(user:, kase:).deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case? }
+
+      let(:approving_team) { find_or_create :team_disclosure }
+
+      let(:kase) do
+        create :approved_sar, :flagged_accepted, approving_team: approving_team, approver: user
+      end
+
+      context "when deadline does not exceed max deadline and user is in approving team for case" do
+        let(:user) { approving_team.approvers.first }
+
+        it { is_expected.to be true }
+      end
+
+      context "when deadline does not exceed max deadline but user is not in approving team for case" do
+        let(:user) { create :approver }
+
+        it { is_expected.to be false }
+      end
+
+      context "when deadline exceeds max deadline but user is in approving team for case" do
+        let(:user) { approving_team.approvers.first }
+
+        before { allow(kase).to receive(:deadline_extendable?).and_return(false) }
+
+        it { is_expected.to be false }
+      end
+    end
+
+    describe "deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?" do
+      subject(:predicate) { described_class.new(user:, kase:).deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist? }
+
+      let(:team_disclosure)       { find_or_create :team_dacu_disclosure }
+      let(:disclosure_specialist) { team_disclosure.approvers.first }
+
+      let(:kase) do
+        create :approved_sar, :flagged_accepted, :dacu_disclosure, approver: disclosure_specialist
+      end
+
+      context "when deadline does not exceed max deadline and user is assigned disclosure specialist" do
+        let(:user) { disclosure_specialist }
+
+        it { is_expected.to be true }
+      end
+
+      context "when deadline does not exceed max deadline but user is not assigned disclosure specialist" do
+        let(:user) { create :approver }
+
+        it { is_expected.to be false }
+      end
+
+      context "when deadline exceeds max deadline but user is assigned disclosure specialist" do
+        let(:user) { disclosure_specialist }
+
+        before do
+          allow(kase).to receive(:deadline_extendable?).and_return(false)
+        end
+
+        it { is_expected.to be false }
       end
     end
   end
