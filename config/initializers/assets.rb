@@ -8,6 +8,9 @@ Rails.application.config.assets.version = "2.0"
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join("node_modules/govuk-frontend/dist/govuk/assets")
 
+# TODO: CDPTKAN-419 Update to use latest frontend rather than incorporating parts of it manually
+# Rails.application.config.assets.paths << Rails.root.join("node_modules/@ministryofjustice/frontend/moj")
+
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.

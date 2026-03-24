@@ -203,12 +203,12 @@ module CasesHelper
       link_to I18n.t("common.case.extend_sar_deadline"),
               new_case_sar_extension_path(@case),
               id: "action--extend-deadline-for-sar",
-              class: "button-secondary"
+              class: "govuk-button moj-button-menu__item govuk-button--secondary"
     when :remove_sar_deadline_extension
       link_to I18n.t("common.case.remove_sar_deadline_extension"),
               case_sar_extensions_path(@case),
               id: "action--remove-extended-deadline-for-sar",
-              class: "button-secondary", method: :delete
+              class: "govuk-button moj-button-menu__item govuk-button--secondary", method: :delete
     when :record_data_request_area
       link_to "Record data request",
               new_case_data_request_area_path(@case),
@@ -251,6 +251,11 @@ module CasesHelper
               confirm_accepted_date_received_case_sar_offender_path(@case),
               id: "action--accepted-date-received",
               class: "button"
+    when :stop_the_clock
+      link_to "Stop the clock",
+              new_case_stop_the_clock_path(@case),
+              id: "action--stop-the-clock",
+              class: "govuk-button moj-button-menu__item govuk-button--secondary"
     end
   end
 
