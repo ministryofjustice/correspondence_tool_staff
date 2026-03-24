@@ -477,7 +477,6 @@ FactoryBot.define do
     acting_team { self.case.managing_team }
 
     message     { "Spec Stop the Clock" }
-
     details do
       {
         stop_the_clock_categories: ["To clarify something - Refine everything", "Something else - Have no data"],
