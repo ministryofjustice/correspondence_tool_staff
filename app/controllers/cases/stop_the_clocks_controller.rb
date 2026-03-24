@@ -24,7 +24,6 @@ module Cases
         redirect_to case_path(@case.id)
       when :validation_error
         @case = CaseStopTheClockDecorator.build(@case, stop_the_clock_params)
-
         render :new
       else
         flash[:alert] = I18n.t("cases.stop_the_clocks.create.failure")

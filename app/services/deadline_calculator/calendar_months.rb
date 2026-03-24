@@ -82,6 +82,18 @@ module DeadlineCalculator
       [days, 1].max
     end
 
+    def closest_working_day_after(number, date)
+      new_date = date + number.days
+      return new_date if new_date.workday?(options)
+
+      new_date += 1 until new_date.workday?(options)
+      new_date
+    end
+
+    def options
+      @options ||= { holidays: ADDITIONAL_BANK_HOLIDAYS }
+    end
+
   private
 
     def calculate_final_date_from_time_units(time_units, base_date)
