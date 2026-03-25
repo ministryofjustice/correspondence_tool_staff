@@ -12,6 +12,7 @@ class CaseRemoveSARDeadlineExtensionService
       @case.state_machine.remove_sar_deadline_extension!(
         acting_user: @user,
         acting_team: @user.case_team(@case),
+        message:,
       )
 
       @case.reset_deadline!
@@ -23,5 +24,15 @@ class CaseRemoveSARDeadlineExtensionService
     Rails.logger.error e.backtrace.join("\n\t")
     @error = e
     @result = :error
+  end
+
+private
+
+  # TODO: Refactor as this is confusing
+  def message
+    [
+      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New final deadline: #{I18n.localize(@case.calculate_old_deadline, format: :long)}",
+    ].join("\n")
   end
 end

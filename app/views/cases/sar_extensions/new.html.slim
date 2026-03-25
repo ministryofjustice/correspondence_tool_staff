@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('page_title.extend_sar_deadline', case_number: @case.number)
+  = t('page_title.extend_sar_deadline', case_type: @case.correspondence_type.shortname, case_number: @case.number)
 
 - content_for :heading
   = t('common.case.extend_sar_deadline')
@@ -30,11 +30,11 @@ br
           = t('.extension_period')
         .multiple-choice
           input type="radio" value="#{@case.extension_time_default}" checked="checked" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_default}"
-          label for="case_extension_period_#{@case.extension_time_default}" 
+          label for="case_extension_period_#{@case.extension_time_default}"
              = @case.time_period_description(@case.extension_time_default)
         .multiple-choice
           input type="radio" value="#{@case.extension_time_limit}" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_limit}"
-          label for="case_extension_period_#{@case.extension_time_limit}" 
+          label for="case_extension_period_#{@case.extension_time_limit}"
              = @case.time_period_description(@case.extension_time_limit)
   - else
     input type="hidden" value="#{@case.extension_time_default}" name="case[extension_period]"

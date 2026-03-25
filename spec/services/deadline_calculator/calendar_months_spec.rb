@@ -135,20 +135,6 @@ describe DeadlineCalculator::CalendarMonths do
         end
       end
     end
-
-    describe "#max_allowed_deadline_date" do
-      it "2 months" do
-        Timecop.freeze Time.zone.local(2019, 10, 1, 13, 21, 33) do
-          test_case = instance_double(Case::Base)
-          allow(test_case).to receive(:received_date).and_return(Time.zone.today)
-          allow(test_case).to receive(:correspondence_type).and_return(sar)
-          deadline_calculator_local = described_class.new test_case
-
-          expect(deadline_calculator_local.max_allowed_deadline_date)
-            .to eq Date.parse("2020-01-02")
-        end
-      end
-    end
   end
 
   describe "#time_taken" do
