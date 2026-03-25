@@ -2,7 +2,7 @@ module Stoppable
   extend ActiveSupport::Concern
 
   included do
-    attr_reader :stop_the_clock_date, :stop_the_clock_categories, :stop_the_clock_reason
+    attr_reader :stop_the_clock_date, :stop_the_clock_categories, :stop_the_clock_reason, :restart_the_clock_date
   end
 
   def stoppable?

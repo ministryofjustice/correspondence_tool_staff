@@ -1,6 +1,6 @@
 require "rails_helper"
 
-# rubocop:disable RSpec/BeforeAfterAll
+# rubocop:disable RSpec/BeforeAfterAll, RSpec/RepeatedExampleGroupBody
 module Workflows
   describe Predicates do
     include PermitPredicate
@@ -260,6 +260,90 @@ module Workflows
         end
       end
     end
+
+    describe "can_stop_the_clock?" do
+      subject(:predicate) { described_class.new(user:, kase:).can_stop_the_clock? }
+      let(:kase) { create :sar_case }
+
+      context "when case already stopped" do
+        let(:kase) { create :sar_case, :stopped }
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be false }
+      end
+
+      context "when case is not stopped" do
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be true }
+      end
+
+      context "when manager" do
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be true }
+      end
+
+      context "when approver" do
+        let(:user) { find_or_create :approver }
+
+        it { is_expected.to be true }
+      end
+
+      context "when responder only" do
+        let(:user) { find_or_create :responder }
+
+        it { is_expected.to be false }
+      end
+
+      context "when responder and team_admin" do
+        let(:user) { find_or_create :responder_and_team_admin }
+
+        it { is_expected.to be true }
+      end
+    end
+
+    describe "can_restart_the_clock?" do
+      subject(:predicate) { described_class.new(user:, kase:).can_restart_the_clock? }
+      let(:kase) { create :sar_case, :stopped }
+
+      context "when case already stopped" do
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be true }
+      end
+
+      context "when case is not stopped" do
+        let(:kase) { create :sar_case }
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be false }
+      end
+
+      context "when manager" do
+        let(:user) { find_or_create :manager }
+
+        it { is_expected.to be true }
+      end
+
+      context "when approver" do
+        let(:user) { find_or_create :approver }
+
+        it { is_expected.to be true }
+      end
+
+      context "when responder only" do
+        let(:user) { find_or_create :responder }
+
+        it { is_expected.to be false }
+      end
+
+      context "when responder and team_admin" do
+        let(:user) { find_or_create :responder_and_team_admin }
+
+        it { is_expected.to be true }
+      end
+    end
   end
 end
-# rubocop:enable RSpec/BeforeAfterAll
+# rubocop:enable RSpec/BeforeAfterAll, RSpec/RepeatedExampleGroupBody

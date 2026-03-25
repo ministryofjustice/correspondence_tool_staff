@@ -37,6 +37,7 @@ class CaseTransition < ApplicationRecord
   ANNOTATE_RETENTION_CHANGES = "annotate_retention_changes".freeze
   ANNOTATE_SYSTEM_RETENTION_CHANGES = "annotate_system_retention_changes".freeze
   STOP_THE_CLOCK_EVENT = "stop_the_clock".freeze
+  RESTART_THE_CLOCK_EVENT = "restart_the_clock".freeze
 
   paginates_per 20
 
@@ -95,6 +96,7 @@ private
       ANNOTATE_RETENTION_CHANGES,
       ANNOTATE_SYSTEM_RETENTION_CHANGES,
       STOP_THE_CLOCK_EVENT,
+      RESTART_THE_CLOCK_EVENT,
     ].include? event
   end
 end

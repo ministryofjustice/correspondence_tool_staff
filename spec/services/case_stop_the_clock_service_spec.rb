@@ -5,10 +5,6 @@ describe CaseStopTheClockService do
   let(:kase)    { create(:sar_case, received_date: Date.new(2025, 11, 1)) }
   let(:service) { described_class.new(user, kase, stop_the_clock_params) }
 
-  before do
-    service.call
-  end
-
   RSpec.shared_examples "invalid stop the clock service" do
     it "fails to stop the clock", :aggregate_failures do
       case_transition = kase.transitions.last
@@ -20,6 +16,10 @@ describe CaseStopTheClockService do
   end
 
   describe "#call" do
+    before do
+      service.call
+    end
+
     context "when valid" do
       let(:stop_the_clock_params) do
         {
@@ -126,7 +126,7 @@ describe CaseStopTheClockService do
       end
     end
 
-    context "when early date" do
+    context "when before received date" do
       let(:stop_the_clock_params) do
         {
           stop_the_clock_date_yyyy: 2025,
@@ -160,6 +160,54 @@ describe CaseStopTheClockService do
 
       it "has error" do
         expect(kase.errors[:stop_the_clock_date]).to eq ["cannot be in the future"]
+      end
+    end
+
+    context "when already stopped" do
+      let(:kase) { create(:sar_case, :stopped, received_date: Date.new(2025, 11, 1)) }
+      let(:stop_the_clock_params) do
+        {
+          stop_the_clock_date_yyyy: "2025",
+          stop_the_clock_date_mm: "11",
+          stop_the_clock_date_dd: "6",
+          stop_the_clock_categories: ["Category 1 - Sub Category", "Category 2 - Another Sub Category", "Category 3", "", "Category 3"],
+          stop_the_clock_reason: "Testing stopping the clock",
+        }
+      end
+
+      it "has error" do
+        expect(service.result).to eq :error
+        expect(service.error.message).to include "No event stop_the_clock for role manager and case state stopped"
+        expect(kase.errors).to be_empty
+      end
+    end
+
+    context "when before last restart" do
+      let(:kase) do
+        sar = create(:sar_case, :stopped, received_date: Date.new(2025, 11, 1))
+
+        restart_details = {
+          restart_the_clock_date: Date.new(2025, 11, 15),
+          new_status: sar.current_state,
+        }
+
+        create(:case_transition_restart_the_clock, case: sar, details: restart_details)
+
+        sar
+      end
+
+      let(:stop_the_clock_params) do
+        {
+          stop_the_clock_date_yyyy: "2025",
+          stop_the_clock_date_mm: "11",
+          stop_the_clock_date_dd: "14",
+          stop_the_clock_categories: ["Category 1 - Sub Category", "Category 2 - Another Sub Category", "Category 3", "", "Category 3"],
+          stop_the_clock_reason: "Testing stopping the clock",
+        }
+      end
+
+      it "has error" do
+        expect(kase.errors[:stop_the_clock_date]).to eq ["cannot stop prior to last unpause"]
       end
     end
   end
