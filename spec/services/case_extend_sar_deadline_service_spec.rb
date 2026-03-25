@@ -36,7 +36,7 @@ describe CaseExtendSARDeadlineService do
 
         it "sets new SAR deadline date" do
           expect(kase.external_deadline).to eq get_expected_deadline(2.months.since(kase.received_date))
-          expect(sar_case.extended_times).to eq 1
+          expect(kase.extended_times).to eq 1
         end
       end
 
@@ -55,7 +55,7 @@ describe CaseExtendSARDeadlineService do
             expect(kase.external_deadline)
               .to eq get_expected_deadline((max_extension_time_limit + 1).month.since(kase.received_date))
             expect(kase.external_deadline).to be < Time.zone.now
-            expect(sar_case.extended_times).to eq 2
+            expect(kase.extended_times).to eq 2
           end
         end
       end
@@ -188,7 +188,7 @@ describe CaseExtendSARDeadlineService do
         expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 11, 29)
         expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
       end
-      end
+    end
 
     def sar_extension_service(user:, kase:, extension_period:, reason: "Testing")
       CaseExtendSARDeadlineService.new(
@@ -204,7 +204,7 @@ describe CaseExtendSARDeadlineService do
   describe "Standard SAR case" do
     let!(:acting_team)  { find_or_create :team_disclosure_bmt }
     let!(:manager)      { find_or_create :disclosure_bmt_user }
-    let!(:kase)         { freeze_time { create(:approved_sar) } }
+    let!(:kase)         { freeze_time { create(:approved_sar, received_date: Date.new(2022, 9, 29)) } }
 
     it "is a Standard SAR case" do
       expect(kase).to be_a(Case::SAR::Standard)
@@ -216,7 +216,7 @@ describe CaseExtendSARDeadlineService do
   describe "Offender SAR case" do
     let!(:acting_team)  { find_or_create :team_disclosure_bmt }
     let!(:manager)      { find_or_create :disclosure_bmt_user }
-    let!(:kase)         { freeze_time { create(:offender_sar_case, :ready_for_vetting) } }
+    let!(:kase)         { freeze_time { create(:offender_sar_case, :ready_for_vetting, received_date: Date.new(2022, 9, 29)) } }
 
     it "is a Standard SAR case" do
       expect(kase).to be_a(Case::SAR::Offender)
