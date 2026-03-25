@@ -36,6 +36,16 @@
         margin: 0;
       }
     }
+
+    &--stop_the_clock {
+      color: #767676;
+    }
+
+    .moj-button-menu {
+      .govuk-button {
+        font-size: 1.5rem;
+      }
+    }
   }
 
   &__group {

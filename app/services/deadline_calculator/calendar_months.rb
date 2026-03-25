@@ -1,6 +1,6 @@
 # This calculator is based on the rules from ICO for SAR case type
 # - calender month for external deadline , extended external deadline (extension deadline)
-# - if non-business-day, find the closet future working day
+# - if non-business-day, find the closest future working day
 # Assumption
 #  The time unit for calculating for external deadlines is all based on calendar month.
 #  The current implementation does not handle if one type of deadline is based on days
@@ -80,6 +80,18 @@ module DeadlineCalculator
 
       days = (kase.date_responded - kase.received_date).to_i
       [days, 1].max
+    end
+
+    def closest_working_day_after(number, date)
+      new_date = date + number.days
+      return new_date if new_date.workday?(options)
+
+      new_date += 1 until new_date.workday?(options)
+      new_date
+    end
+
+    def options
+      @options ||= { holidays: ADDITIONAL_BANK_HOLIDAYS }
     end
 
   private
