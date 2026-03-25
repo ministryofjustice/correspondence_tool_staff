@@ -49,6 +49,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -70,6 +71,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 link_a_case:
                 remove_linked_case:
                 remove_sar_deadline_extension:
@@ -87,6 +89,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 link_a_case:
                 remove_linked_case:
                 remove_sar_deadline_extension:
@@ -239,7 +242,7 @@
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
@@ -265,7 +268,7 @@
                   transition_to: awaiting_dispatch
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
@@ -290,7 +293,7 @@
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email

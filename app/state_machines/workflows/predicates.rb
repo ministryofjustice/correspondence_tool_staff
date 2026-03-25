@@ -182,6 +182,14 @@ class Workflows::Predicates
     @kase.try(:deadline_extendable?)
   end
 
+  def deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case?
+    deadline_does_not_exceed_max_deadline? && user_is_in_approving_team_for_case?
+  end
+
+  def deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
+    deadline_does_not_exceed_max_deadline? && user_is_assigned_disclosure_specialist?
+  end
+
   def case_extended_and_user_in_approving_team?
     has_sar_deadline_extension? && user_is_in_approving_team_for_case?
   end
