@@ -176,4 +176,10 @@ FactoryBot.define do
   trait :flag_as_dps_missing_data do
     flag_as_dps_missing_data { true }
   end
+
+  trait :stopped do
+    after(:create) do |kase, evaluator|
+      create :case_transition_stop_the_clock, case: kase, acting_user: evaluator.manager
+    end
+  end
 end
