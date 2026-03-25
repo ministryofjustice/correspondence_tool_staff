@@ -21,6 +21,7 @@ class CaseExtendSARDeadlineService
           original_final_deadline: @case.external_deadline,
           message:,
         )
+
         new_extended_times = @extension_period.to_i + (@case.extended_times || 0)
         @case.extend_deadline!(@extension_deadline, new_extended_times)
         @result = :ok
@@ -39,11 +40,20 @@ class CaseExtendSARDeadlineService
 private
 
   def new_extension_deadline(extend_by)
-    @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
+    if @case.try(:restarted_at).present?
+      @case.deadline_calculator.extension_deadline(extend_by) { @case.external_deadline }
+    else
+      @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
+    end
   end
 
   def message
-    "#{@reason}\nDeadline extended by #{@case.time_period_description(@extension_period.to_i)}"
+    [
+      @reason,
+      "Deadline extended by #{@case.time_period_description(@extension_period.to_i)}\n",
+      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New final deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+    ].join("\n")
   end
 
   def valid?
@@ -54,17 +64,15 @@ private
   end
 
   def validate_extension_deadline
-    extension_limit = @case.max_allowed_deadline_date
-
     if @extension_period.blank?
       @case.errors.add(
         :extension_period,
         "cannot be blank",
       )
-    elsif @extension_deadline > extension_limit
+    elsif (@case.num_months_extended + @extension_period.to_i) > @case.extension_time_limit
       @case.errors.add(
         :extension_period,
-        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date",
+        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(

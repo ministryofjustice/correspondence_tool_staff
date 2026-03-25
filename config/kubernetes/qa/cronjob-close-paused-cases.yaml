@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: auto-close-paused-sar-cases
 spec:
-  schedule: "23 6 * * *"
+  schedule: "22 6 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3

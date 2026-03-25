@@ -189,6 +189,8 @@ private
   end
 
   def dequote_and_truncate(text)
+    return text if text.blank?
+
     text.tr('"', "").tr("'", "")[0..4000]
   end
 
