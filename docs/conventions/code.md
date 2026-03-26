@@ -47,7 +47,7 @@ Strings in `config/locales/`. Use `I18n.t()` for all user-facing text. Missing k
 
 ## Key Gotchas
 
-- `Case` is a reserved Ruby constant — always use `Case::FOI::Standard` etc., never `Case` alone
+- `Case` is the STI base class in this app — always use a concrete subclass such as `Case::FOI::Standard`, never `Case` directly
 - Assignments use roles: `responder`, `approver`, `manager` — check `TeamsUsersRole::ROLES`
 - Offender SAR has a separate stepped form flow — see `OffenderSarCaseForm`
 - Stats reports are append-only ETL — do not update warehouse rows in place

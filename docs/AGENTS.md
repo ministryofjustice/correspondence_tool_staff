@@ -60,6 +60,7 @@ spec/                            # RSpec suite (parallel_tests)
 
 ```bash
 bundle exec rspec spec/path/to/file_spec.rb          # single file
-bundle exec parallel_rspec spec/                     # full suite (8 CPUs)
-bundle exec rspec --format documentation spec/...   # verbose
+bundle exec parallel_rspec spec/                     # full suite (parallel; uses available cores)
+bundle exec parallel_rspec -n <workers> spec/        # full suite with explicit worker count
+bundle exec rspec --format documentation spec/...    # verbose
 ```

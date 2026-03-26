@@ -57,8 +57,8 @@ Used to record FOI/SAR closure metadata:
 
 | Concern | What it adds |
 |---------|-------------|
-| `CaseStates` | AASM state machine inclusion |
-| `Searchable` | Elasticsearch/pg_search indexing |
+| `CaseStates` | ConfigurableStateMachine-based state machine |
+| `Searchable` | pg_search/tsvector full-text search (no Elasticsearch) |
 | `Extendable` | SAR deadline extension logic |
 | `Stoppable` | Stop-the-clock logic |
 | `DraftTimeliness` | Tracks whether draft was timely |
