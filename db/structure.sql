@@ -941,7 +941,9 @@ CREATE TABLE public.personal_information_requests (
     last_accessed_at timestamp without time zone,
     deleted boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    processed boolean DEFAULT false NOT NULL,
+    log text
 );
 
 
@@ -2647,5 +2649,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160803094147'),
 ('20160802134012'),
 ('20160802130203'),
-('20160722121207');
-
+('20160722121207'),
+('20260318100000');

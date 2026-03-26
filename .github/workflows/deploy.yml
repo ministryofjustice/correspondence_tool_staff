@@ -268,6 +268,9 @@ jobs:
           
           kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/qa/cronjob-bank-holidays.yaml
 
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/auto-close-paused-sar-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
   notify-qa:
     needs: [build, deploy-qa]
     uses: ./.github/workflows/notification.yml

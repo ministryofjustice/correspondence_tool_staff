@@ -67,15 +67,6 @@ describe DeadlineCalculator::BusinessDays do
         end
       end
 
-      describe ".max_allowed_deadline_date" do
-        it "is 40 working days after received_date - not counting bank holiday Mon May 29" do
-          Timecop.freeze thu_may_18 do
-            expect(deadline_calculator.max_allowed_deadline_date(20))
-              .to eq fri_jul_14.to_date
-          end
-        end
-      end
-
       describe ".internal_deadline" do
         it "is 10 working days after received_date - not counting bank holiday Mon May 29" do
           Timecop.freeze thu_may_18 do

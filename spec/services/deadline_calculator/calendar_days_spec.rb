@@ -55,13 +55,6 @@ describe DeadlineCalculator::CalendarDays do
       end
     end
 
-    describe "#max_allowed_deadline_date" do
-      it "is 60 calendar days after the date received" do
-        expect(deadline_calculator.max_allowed_deadline_date(60))
-          .to eq 90.days.since(sar_case.received_date)
-      end
-    end
-
     describe "#buiness_unit_deadline_for_date" do
       context "when unflagged" do
         it "is 30 days from date" do

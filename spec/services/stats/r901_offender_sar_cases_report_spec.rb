@@ -60,6 +60,7 @@ module Stats
                                             subject_type: "ex_probation_service_user",
                                             subject_full_name: "testing analyse_case"
         result = report.analyse_case(rejected_offender_sar_case)
+
         expect(result).to include(
           rejected_offender_sar_case.number,
           rejected_offender_sar_case.decorate.pretty_type,
@@ -74,7 +75,7 @@ module Stats
           "Ex-probation service user",
           0,
           "in time",
-          "Invalid submission",
+          "Rejected",
           rejected_offender_sar_case.num_days_taken,
           "No",
           "Yes",

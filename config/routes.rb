@@ -192,6 +192,9 @@ Rails.application.routes.draw do
     resources :sar_extensions, only: %i[new create]
     resource :sar_extensions, only: [:destroy]
 
+    resources :stop_the_clocks, only: %i[new create]
+    resources :restart_the_clocks, only: %i[new create]
+
     resources :approvals, only: %i[new create]
 
     resource :responses, only: [:create] do
@@ -298,7 +301,6 @@ Rails.application.routes.draw do
       root to: redirect("/admin/cases")
       resources :cases, only: :index
       get "users" => "users#index"
-      get "/dashboard/cases" => "dashboard#cases"
       get "/dashboard/feedback" => "dashboard#feedback"
       get "/dashboard/feedback/:year" => "dashboard#feedback_year", as: :dashboard_feedback_year
       get "/dashboard/exception" => "dashboard#exception"
@@ -306,6 +308,7 @@ Rails.application.routes.draw do
       get "/dashboard/list_queries" => "dashboard#list_queries"
       get "/dashboard/system" => "dashboard#system"
       get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
+      get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
     end
   end
 

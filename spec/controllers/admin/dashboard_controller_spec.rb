@@ -6,6 +6,14 @@ describe Admin::DashboardController do
   let!(:search_query) { create :search_query }
   let!(:list_query)   { create :list_query }
 
+  let!(:personal_information_requests) do
+    [
+      create(:personal_information_request),
+      create(:personal_information_request, :deleted),
+      create(:personal_information_request, :processed),
+    ]
+  end
+
   describe "#feedback" do
     before do
       sign_in admin
@@ -82,6 +90,21 @@ describe Admin::DashboardController do
       get :bank_holidays
       expect(response).to have_http_status(:ok)
       expect(request.path).to eq("/admin/dashboard/bank-holidays")
+    end
+  end
+
+  describe "#personal_information_requests" do
+    before do
+      sign_in admin
+      get :personal_information_requests
+    end
+
+    it "renders the personal_information_requests view" do
+      expect(request.path).to eq("/admin/dashboard/personal_information_requests")
+    end
+
+    it "has personal information requests" do
+      expect(controller.personal_information_requests).to match_array(personal_information_requests)
     end
   end
 end

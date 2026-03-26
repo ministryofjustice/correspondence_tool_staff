@@ -130,11 +130,9 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           it "only allows permitted events" do
             expect(kase.current_state.to_sym).to eq transition[:state]
 
-            permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) +
-              (transition[:specific_events] || [])
+            permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) + (transition[:specific_events] || [])
 
-            expect(kase.state_machine.permitted_events(responder))
-              .to match_array permitted_events
+            expect(kase.state_machine.permitted_events(responder)).to match_array permitted_events
           end
 
           it "allow start_complaints when the case is open late or closed" do
@@ -155,6 +153,21 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           .to include :capture_reason_for_lateness
         expect(late_kase.state_machine.permitted_events(responder))
           .not_to include :mark_as_ready_to_dispatch
+      end
+    end
+  end
+
+  describe "extend Offender SAR deadline" do
+    context "with team_admin, manager and responder role and extended deadline" do
+      let(:user) { find_or_create :responder_and_team_admin_and_manager }
+      let(:kase) { create :offender_sar_case, :extended_deadline_offender_sar }
+
+      it "allows to extend the deadline" do
+        expect(kase.state_machine.permitted_events(user)).to include :extend_sar_deadline
+      end
+
+      it "allows to remove the extended deadline" do
+        expect(kase.state_machine.permitted_events(user)).to include :remove_sar_deadline_extension
       end
     end
   end
