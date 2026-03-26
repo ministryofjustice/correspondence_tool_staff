@@ -13,7 +13,7 @@
 | Authorization | Pundit |
 | Templating | Slim |
 | Frontend | Vanilla JS modules + SCSS |
-| PDF generation | pdf-forms / PdfMakerJob |
+| PDF generation | Libreconv + PdfMakerJob |
 | Excel reports | caxlsx |
 
 ## Key Patterns
