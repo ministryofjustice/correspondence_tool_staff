@@ -5,6 +5,17 @@
 ## What This App Is
 MoJ internal case management system for handling FOI, SAR, and related correspondence requests. Ruby on Rails monolith, PostgreSQL, Sidekiq, Redis, S3, GOV.UK Notify.
 
+## One-Line Context
+MoJ internal case management app for FOI, SAR, and related correspondence. Rails 7, PostgreSQL, Sidekiq, Pundit, Draper, configurable state machines.
+
+## Docs
+- `docs/AGENTS.md` — full index and rules (read first)
+- `docs/sessions/README.md` — in-progress work tracker (update at session end)
+- `docs/architecture/` — domain model, state machines, system overview
+- `docs/conventions/` — code, testing, git standards
+- `docs/decisions/` — ADRs for architectural choices
+
+
 ## Docs Map
 
 | File | Load when… |
@@ -27,6 +38,12 @@ MoJ internal case management system for handling FOI, SAR, and related correspon
 - **Services not fat controllers** — business logic lives in `app/services/`
 - Branch naming: `claude/<slug>` (already set by worktree)
 - PR target: `main`
+
+## Non-Negotiables
+- Run specs for any code you touch: `bundle exec rspec spec/path/to/file_spec.rb`
+- Never bypass state machines with direct DB writes
+- Always `authorize` in controllers via Pundit
+- Services for logic, decorators for presentation, policies for access
 
 ## Key Entry Points
 
