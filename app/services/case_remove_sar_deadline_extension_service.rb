@@ -28,10 +28,11 @@ class CaseRemoveSARDeadlineExtensionService
 
 private
 
+  # TODO: Refactor as this is confusing
   def message
     [
       "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
-      "New final deadline: #{I18n.localize(@case.deadline_calculator.external_deadline, format: :long)}",
+      "New final deadline: #{I18n.localize(@case.calculate_old_deadline, format: :long)}",
     ].join("\n")
   end
 end

@@ -141,8 +141,8 @@ private
                          grey: LIGHT_GREY,
                          blue: LIGHT_BLUE }.freeze
 
-  # Assumes no report spans more than 26 columns
-  SPREADSHEET_COLUMN_NAMES = ("A".."Z").to_a
+  # Assumes no report spans more than 30 columns
+  SPREADSHEET_COLUMN_NAMES = (("A".."Z").to_a + %w[AA AB AC AD]).freeze
 
   def create_spreadsheet(report)
     axlsx = Axlsx::Package.new

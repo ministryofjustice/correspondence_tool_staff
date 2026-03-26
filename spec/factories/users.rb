@@ -145,6 +145,17 @@ FactoryBot.define do
       team_admin_teams { [find_or_create(:team_for_admin_users, :empty)] }
     end
 
+    factory :responder_and_team_admin_and_manager do
+      transient do
+        identifier { "team_admin and responder and manager user" }
+      end
+
+      full_name { generate(:responder_name) }
+      responding_teams { [find_or_create(:responding_team)] }
+      team_admin_teams { [find_or_create(:team_for_admin_users, :empty)] }
+      managing_teams { [create(:managing_team)] }
+    end
+
     factory :foi_responder do
       transient do
         identifier { "foi responding user" }
