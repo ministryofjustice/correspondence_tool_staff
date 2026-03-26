@@ -5,7 +5,7 @@
 - **RSpec** — unit, request, feature specs
 - **Capybara + ChromeDriver** — JS feature tests (tagged `js: true`)
 - **FactoryBot** — `spec/factories/`
-- **parallel_tests** — full suite runs on 8 CPUs
+- **parallel_tests** — full suite in CI/CD pipeline runs on multiple instances
 
 ## Running Tests
 
