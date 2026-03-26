@@ -3,7 +3,7 @@
 ## Branch Naming
 
 ```
-claude/<short-slug>     # agentic work (auto-set by worktree)
+<agent-name>/<short-slug>     # agentic work (auto-set by worktree)
 feature/<ticket>-slug   # human feature branches
 fix/<ticket>-slug       # bug fixes
 ```
