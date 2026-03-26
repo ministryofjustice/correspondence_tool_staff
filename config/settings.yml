@@ -277,7 +277,7 @@ enabled_features:
   stop_the_clock:
     Local: true
     Host-dev: true
-    Host-staging: false
+    Host-staging: true
     Host-qa: true
     Host-prod: false
 
