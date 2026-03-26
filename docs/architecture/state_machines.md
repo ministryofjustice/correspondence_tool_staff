@@ -20,7 +20,7 @@ Each case type has a configurable YAML/Ruby-defined state machine. The `Manager`
 
 ```ruby
 # Correct: via service
-CaseClosureService.new(current_user, kase, params).call
+CaseClosureService.new(kase, current_user, params).call
 
 # Wrong: direct state call
 kase.close!
