@@ -14,6 +14,8 @@ app/state_machines/workflows/
   predicates.rb       # Boolean methods used in conditionals
 ```
 
+The actual state machine definitions live in YAML parts under config/state_machine/configs/**/*.yml and are concatenated into config/state_machine/moj.yml at boot (via StateMachineConfigConcatenator).
+
 ## How It Works
 
 Each case type has a configurable YAML/Ruby-defined state machine. The `Manager` selects the correct machine for a case type. Events are triggered via service objects — never call state transitions directly from controllers.
