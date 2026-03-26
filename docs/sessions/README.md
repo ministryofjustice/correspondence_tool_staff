@@ -18,7 +18,7 @@
 **Format for entries:**
 
 ```
-| CDPTKAN-NNN | Short description of what's being built | In Progress | 2026-03-26 | claude/worktree-name |
+| CDPTKAN-NNN | Short description of what's being built | In Progress | YYYY-MM-DD | agent/worktree-name |
 ```
 
 ## Completed Work

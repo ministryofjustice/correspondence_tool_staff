@@ -36,7 +36,7 @@ MoJ internal case management app for FOI, SAR, and related correspondence. Rails
 - **State machine** is in `app/state_machines/` — do not bypass it via direct DB writes
 - **Decorators not helpers** — presentation logic lives in `app/decorators/`
 - **Services not fat controllers** — business logic lives in `app/services/`
-- Branch naming: `claude/<slug>` (already set by worktree)
+- Branch naming: `<agent>/<slug>` (already set by worktree)
 - PR target: `main`
 
 ## Non-Negotiables
