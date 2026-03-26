@@ -7,6 +7,7 @@
 #  last_accessed_by :integer
 #  last_accessed_at :datetime
 #  deleted          :boolean          default(FALSE)
+#  processed        :boolean          default(FALSE)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -62,6 +63,14 @@ FactoryBot.define do
 
     trait :needed_for_court do
       needed_for_court { "Yes" }
+    end
+
+    trait :processed do
+      processed { true }
+    end
+
+    trait :deleted do
+      deleted { true }
     end
   end
 end

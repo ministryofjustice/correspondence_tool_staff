@@ -30,12 +30,13 @@ describe CaseExtendSARDeadlineService do
               acting_team: acting_team,
               final_deadline: get_expected_deadline(2.months.since(kase.received_date)),
               original_final_deadline: initial_deadline,
-              message: anything,
+              message: "test\nDeadline extended by one calendar month\n\nOld final deadline: 31 October 2022\nNew final deadline: 29 November 2022",
             )
         end
 
         it "sets new SAR deadline date" do
           expect(kase.external_deadline).to eq get_expected_deadline(2.months.since(kase.received_date))
+          expect(kase.extended_times).to eq 1
         end
       end
 
@@ -54,6 +55,7 @@ describe CaseExtendSARDeadlineService do
             expect(kase.external_deadline)
               .to eq get_expected_deadline((max_extension_time_limit + 1).month.since(kase.received_date))
             expect(kase.external_deadline).to be < Time.zone.now
+            expect(kase.extended_times).to eq 2
           end
         end
       end
@@ -169,6 +171,25 @@ describe CaseExtendSARDeadlineService do
       end
     end
 
+    context "with SAR trigger case" do
+      let(:flagged_sar_case) { freeze_time { create(:approved_sar, :flagged) } }
+
+      it "does not change the draft deadline" do
+        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 10, 31)
+        expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
+
+        result = sar_extension_service(
+          user: manager,
+          kase: flagged_sar_case,
+          extension_period: 1,
+        ).call
+
+        expect(result).to eq :ok
+        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 11, 29)
+        expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
+      end
+    end
+
     def sar_extension_service(user:, kase:, extension_period:, reason: "Testing")
       CaseExtendSARDeadlineService.new(
         user:,
@@ -183,7 +204,7 @@ describe CaseExtendSARDeadlineService do
   describe "Standard SAR case" do
     let!(:acting_team)  { find_or_create :team_disclosure_bmt }
     let!(:manager)      { find_or_create :disclosure_bmt_user }
-    let!(:kase)         { freeze_time { create(:approved_sar) } }
+    let!(:kase)         { freeze_time { create(:approved_sar, received_date: Date.new(2022, 9, 29)) } }
 
     it "is a Standard SAR case" do
       expect(kase).to be_a(Case::SAR::Standard)
@@ -195,7 +216,7 @@ describe CaseExtendSARDeadlineService do
   describe "Offender SAR case" do
     let!(:acting_team)  { find_or_create :team_disclosure_bmt }
     let!(:manager)      { find_or_create :disclosure_bmt_user }
-    let!(:kase)         { freeze_time { create(:offender_sar_case, :ready_for_vetting) } }
+    let!(:kase)         { freeze_time { create(:offender_sar_case, :ready_for_vetting, received_date: Date.new(2022, 9, 29)) } }
 
     it "is a Standard SAR case" do
       expect(kase).to be_a(Case::SAR::Offender)

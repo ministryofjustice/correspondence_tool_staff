@@ -1,4 +1,8 @@
 class RequestPersonalInformation::DataV2
+  def self.compatible?(payload)
+    payload[:submission_id].present?
+  end
+
   def initialize(payload)
     @payload = payload
   end
