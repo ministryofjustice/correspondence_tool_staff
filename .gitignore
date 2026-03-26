@@ -80,3 +80,6 @@ doc
 .idea/
 /config/docker-dev/shared/pgadmin/storage/
 !/config/docker-dev/shared/pgadmin/storage/cts_pgadmin.com/*
+
+# Agents
+.claude
