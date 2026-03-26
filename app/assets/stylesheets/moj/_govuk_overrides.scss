@@ -90,6 +90,11 @@ legend .heading-small{
   width: 100%;
 }
 
+/* MOJ Frontend seems to render tiny text in a govuk-inset-text unsure why  */
+.govuk-inset-text {
+  font-size: 110%;
+}
+
 @include media(mobile) {
   #search_query_search_text {
     width: calc(100% - 12px)
@@ -233,4 +238,16 @@ td {
   margin: 0;
   font-size: 1em;
   font-weight: bold
+}
+
+.edit_case__stop-the-clock-categories-error {
+  &__message + .error-message {
+    display: none;
+  }
+}
+
+.case__restart-the-clocks-summary {
+  time {
+    font-weight: bold;
+  }
 }

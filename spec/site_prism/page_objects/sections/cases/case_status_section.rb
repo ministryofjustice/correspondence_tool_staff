@@ -30,6 +30,13 @@ module PageObjects
           element :draft, ".draft .case-status__date-value"
           element :final_label, ".external .case-status__date-title"
           element :final, ".external .case-status__date-value"
+
+          section :actions, "#moj-button-menu" do
+            element :extend_sar_deadline, "#action--extend-deadline-for-sar"
+            element :remove_sar_deadline_extension, "#action--remove-extended-deadline-for-sar"
+            element :stop_the_clock, "#action--stop-the-clock"
+            element :restart_the_clock, "#action--restart-the-clock"
+          end
         end
       end
     end

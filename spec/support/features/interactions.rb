@@ -254,7 +254,7 @@ module Features
 
     def extend_sar_deadline_for(kase:, num_calendar_months:, reason: "The reason for extending")
       cases_show_page.load(id: kase.id)
-      cases_show_page.actions.extend_sar_deadline.click
+      cases_show_page.case_status.deadlines.actions.extend_sar_deadline.click
 
       expect(cases_extend_sar_deadline_page).to be_displayed
 
@@ -263,15 +263,20 @@ module Features
       cases_extend_sar_deadline_page.set_reason_for_extending(reason)
       cases_extend_sar_deadline_page.submit_button.click
 
+      old_final_deadline = kase.external_deadline
+      kase.reload
+
       expected_case_history = [
         "Extended SAR deadline",
         reason.to_s,
-        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}", # line-break character translates into a space
+        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}\n",
+        "Old final deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
+        "New final deadline: #{I18n.localize(kase.external_deadline, format: :long)}",
       ]
 
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.notice.text).to eq "Case extended for SAR"
-      expect(cases_show_page.case_history.rows.first.details.text).to eq(expected_case_history.join)
+      expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
     end
 
     def case_deadline_text_to_be(expected_value)

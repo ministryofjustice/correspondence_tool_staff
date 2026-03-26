@@ -1,16 +1,5 @@
 module Api
-  class RpiV2Controller < ApiController
-    before_action :authenticate_request, only: :create
-
-    def create
-      RequestPersonalInformationJob.perform_later(@body)
-      head :ok
-    end
-
-    def render_unauthorized
-      head :unauthorized
-    end
-
+  class RpiV2Controller < RpiController
   private
 
     def authenticate_request

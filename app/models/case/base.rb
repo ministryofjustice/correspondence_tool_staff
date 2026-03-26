@@ -119,7 +119,7 @@ class Case::Base < ApplicationRecord
 
   scope :in_open_state, -> { where.not(current_state: %w[responded closed]) }
   scope :in_open_or_responded_state, -> { where.not(current_state: %w[closed]) }
-  scope :in_stop_the_clock_state, -> { where(current_state: %w[stop_the_clock]) }
+  scope :in_stop_the_clock_state, -> { where(current_state: %w[stopped]) }
 
   scope :accepted, lambda {
                      joins(:assignments)
@@ -1079,12 +1079,12 @@ private
   def trigger_reindexing
     if (changed & indexable_fields).any? && id.present?
       self.dirty = true
-      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(id)
+      SearchIndexUpdaterJob.perform_later(id)
     end
   end
 
   def trigger_reindexing_after_creation
-    SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(id)
+    SearchIndexUpdaterJob.perform_later(id)
   end
 
   def validate_related_cases

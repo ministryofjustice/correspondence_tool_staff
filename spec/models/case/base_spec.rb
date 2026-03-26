@@ -1461,7 +1461,7 @@ RSpec.describe Case::Base, type: :model do
           Timecop.freeze(t) do
             kase.save!
           end
-        }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds)
+        }.to have_enqueued_job(SearchIndexUpdaterJob)
       end
     end
 
@@ -1495,7 +1495,7 @@ RSpec.describe Case::Base, type: :model do
             Timecop.freeze(t) do
               kase.update(name: "John Smith")
             end
-          }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds)
+          }.to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end
     end

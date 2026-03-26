@@ -182,6 +182,22 @@ class Workflows::Predicates
     @kase.try(:deadline_extendable?)
   end
 
+  def deadline_does_not_exceed_max_deadline_and_user_is_in_approving_team_for_case?
+    deadline_does_not_exceed_max_deadline? && user_is_in_approving_team_for_case?
+  end
+
+  def deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
+    deadline_does_not_exceed_max_deadline? && user_is_assigned_disclosure_specialist?
+  end
+
+  def can_extend_offender_sar_deadline?
+    @user.team_admin? && @user.manager? && @user.responder?
+  end
+
+  def can_remove_offender_sar_deadline_extension?
+    has_sar_deadline_extension? && @user.team_admin? && @user.manager? && @user.responder?
+  end
+
   def case_extended_and_user_in_approving_team?
     has_sar_deadline_extension? && user_is_in_approving_team_for_case?
   end
@@ -207,7 +223,15 @@ class Workflows::Predicates
   end
 
   def can_stop_the_clock?
-    FeatureSet.stop_the_clock.enabled? && @kase.stoppable? && !@kase.stopped?
+    FeatureSet.stop_the_clock.enabled? && @kase.stoppable? && @user.allowed_to_stop_the_clock?
+  end
+
+  def can_restart_the_clock?
+    FeatureSet.stop_the_clock.enabled? && @kase.restartable? && @user.allowed_to_stop_the_clock?
+  end
+
+  def can_auto_close_case?
+    FeatureSet.stop_the_clock.enabled? && @kase.stopped? && @kase.prolonged_stop?
   end
 
 private

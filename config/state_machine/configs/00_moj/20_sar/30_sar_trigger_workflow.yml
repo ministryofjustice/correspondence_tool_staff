@@ -49,6 +49,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -70,6 +71,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 link_a_case:
                 remove_linked_case:
                 remove_sar_deadline_extension:
@@ -87,6 +89,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 link_a_case:
                 remove_linked_case:
                 remove_sar_deadline_extension:
@@ -96,6 +99,10 @@
 
               stopped:
                 restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
+                auto_close:
+                  if: Workflows::Predicates#can_auto_close_case?
+                  transition_to: closed
 
               closed:
                 add_message_to_case:
@@ -116,10 +123,16 @@
           responder:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_responder_assignment:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: drafting
@@ -130,6 +143,9 @@
                   transition_to: unassigned
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -142,6 +158,9 @@
                   after_transition: Workflows::Hooks#reassign_user_email
 
               pending_dacu_clearance:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -150,6 +169,9 @@
                   after_transition: Workflows::Hooks#reassign_user_email
 
               awaiting_dispatch:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
@@ -166,6 +188,13 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
 
+              stopped:
+                restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
+                auto_close:
+                  if: Workflows::Predicates#can_auto_close_case?
+                  transition_to: closed
+
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
@@ -176,6 +205,9 @@
           approver:
             states:
               unassigned:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -190,6 +222,9 @@
                   switch_workflow: standard
 
               awaiting_responder:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -204,13 +239,16 @@
                   switch_workflow: standard
 
               drafting:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
@@ -223,6 +261,9 @@
                   switch_workflow: standard
 
               pending_dacu_clearance:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 accept_approver_assignment:
                   if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
                 add_message_to_case:
@@ -233,7 +274,7 @@
                   transition_to: awaiting_dispatch
                   after_transition: Workflows::Hooks#notify_responder_ready_to_send
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
@@ -251,16 +292,26 @@
                   transition_to: drafting
 
               awaiting_dispatch:
+                stop_the_clock:
+                  if: Workflows::Predicates#can_stop_the_clock?
+                  transition_to: stopped
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline_and_user_is_assigned_disclosure_specialist?
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_sar_deadline_extension:
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+
+              stopped:
+                restart_the_clock:
+                  if: Workflows::Predicates#can_restart_the_clock?
+                auto_close:
+                  if: Workflows::Predicates#can_auto_close_case?
+                  transition_to: closed
 
               closed:
                 add_message_to_case:

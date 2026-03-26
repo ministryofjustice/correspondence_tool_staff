@@ -1,6 +1,6 @@
 # This calculator is based on the rules from ICO for SAR case type
 # - calender month for external deadline , extended external deadline (extension deadline)
-# - if non-business-day, find the closet future working day
+# - if non-business-day, find the closest future working day
 # Assumption
 #  The time unit for calculating for external deadlines is all based on calendar month.
 #  The current implementation does not handle if one type of deadline is based on days
@@ -49,26 +49,21 @@ module DeadlineCalculator
     end
 
     def external_deadline
-      calculate_final_date_from_time_units(
-        kase.correspondence_type.external_time_limit, kase.received_date
-      )
+      calculate_final_date_from_time_units(kase.correspondence_type.external_time_limit, kase.received_date)
     end
 
+    # Used block rather than explicit optional parameter for `base_date` to avoid
+    # changing method signature, breaking consistency with other deadline calculators.
     def extension_deadline(time_limit)
-      calculate_final_date_from_time_units(
-        time_limit + kase.correspondence_type.external_time_limit, kase.received_date
-      )
+      if block_given?
+        calculate_final_date_from_time_units(time_limit, yield)
+      else
+        calculate_final_date_from_time_units(time_limit + kase.correspondence_type.external_time_limit, kase.received_date)
+      end
     end
 
     def business_unit_deadline_for_date(*)
       @kase.flagged? ? internal_deadline : external_deadline
-    end
-
-    def max_allowed_deadline_date(time_limit = nil)
-      time_limit ||= kase.correspondence_type.extension_time_limit || 0
-      calculate_final_date_from_time_units(
-        time_limit + kase.correspondence_type.external_time_limit, kase.received_date
-      )
     end
 
     def time_units_desc_for_deadline(time_limit = 1)
@@ -80,6 +75,18 @@ module DeadlineCalculator
 
       days = (kase.date_responded - kase.received_date).to_i
       [days, 1].max
+    end
+
+    def closest_working_day_after(number, date)
+      new_date = date + number.days
+      return new_date if new_date.workday?(options)
+
+      new_date += 1 until new_date.workday?(options)
+      new_date
+    end
+
+    def options
+      @options ||= { holidays: ADDITIONAL_BANK_HOLIDAYS }
     end
 
   private
