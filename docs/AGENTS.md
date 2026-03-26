@@ -3,10 +3,11 @@
 > **Read this file first. Load specialist docs only when the task requires it.**
 
 ## What This App Is
-MoJ internal case management system for handling FOI, SAR, and related correspondence requests. Ruby on Rails monolith, PostgreSQL, Sidekiq, Redis, S3, GOV.UK Notify.
+MoJ internal case management system for handling FOI, SAR (including Non-Offender SARs and Offender SARs), and related correspondence requests. Ruby on Rails monolith, PostgreSQL, Sidekiq, Redis, S3, GOV.UK Notify.
 
-## One-Line Context
-MoJ internal case management app for FOI, SAR, and related correspondence. Rails 7, PostgreSQL, Sidekiq, Pundit, Draper, configurable state machines.
+## Nomenclature
+- The phrase "Branston" refers to the team with permission to work on Offender SARs and Complaints for Offender SARs.
+- The phrase "London Disclosure" and "Disclosure" and "Disclosure Team" refers to the teams with permission to work on all other case types including FOIs, Standard SARs and SAR complaints.
 
 ## Docs
 - `docs/AGENTS.md` — full index and rules (read first)
