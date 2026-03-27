@@ -13,6 +13,5 @@ module BankHolidaysHelper
 
     events
       .sort_by { |ev| Date.parse(ev["date"].to_s) rescue Date.new(0) } # rubocop:disable Style/RescueModifier
-      .reverse
   end
 end
