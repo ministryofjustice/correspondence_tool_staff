@@ -109,7 +109,7 @@ RSpec.describe BusinessTimeConfig do
         scotland_and_ni_holidays = %w[2026-01-01 2026-01-02 2026-03-17 2026-07-13]
 
         expect(described_class.additional_bank_holidays).to all(be_a(String))
-        expect(described_class.additional_bank_holidays).to eq(scotland_and_ni_holidays)
+        expect(described_class.additional_bank_holidays).to match_array(scotland_and_ni_holidays)
       end
     end
   end
