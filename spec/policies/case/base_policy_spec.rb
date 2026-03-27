@@ -144,7 +144,7 @@ describe Case::BasePolicy do
       rescue StandardError
         []
       end
-      Rails.logger.debug "Failed CasePolicy checks: #{failed_checks.map(&:first).map(&:to_s).join(', ')}"
+      puts "Failed CasePolicy checks: #{failed_checks.map(&:first).map(&:to_s).join(', ')}"
     end
   end
 

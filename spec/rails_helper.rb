@@ -142,7 +142,7 @@ RSpec.configure do |config|
       renderer.sub!(/^\./, "")
       fullpath = todays_dir.join(filename)
       File.open(fullpath, "w") { |f| f.write response }
-      Rails.logger.debug "\033[0;33mrendered #{renderer} content: #{fullpath}\033[0m"
+      puts "\033[0;33mrendered #{renderer} content: #{fullpath}\033[0m"
     end
   end
 
