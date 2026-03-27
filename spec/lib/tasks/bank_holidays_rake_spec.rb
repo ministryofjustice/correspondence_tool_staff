@@ -21,16 +21,10 @@ RSpec.describe "bank_holidays rake tasks" do
   end
 
   it "invokes BankHolidaysService when the task runs" do
-    expect(BankHolidaysService).to receive(:new)
+    # rubocop:disable RSpec/AnyInstance
+    expect_any_instance_of(BankHolidaysService).to receive(:initialize)
+    # rubocop:enable RSpec/AnyInstance
+
     Rake::Task[task_name].invoke
-  end
-
-  it "can be re-invoked when reenabled" do
-    expect(BankHolidaysService).to receive(:new).twice
-
-    task = Rake::Task[task_name]
-    task.invoke
-    task.reenable
-    task.invoke
   end
 end

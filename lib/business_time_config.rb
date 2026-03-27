@@ -25,7 +25,7 @@ module_function
     # 1) Load latest record
     record = BankHoliday.order(created_at: :desc).first
 
-    # 2) If missing, try again
+    # 2) If missing, try again (new container instance may have started)
     unless record
       BankHolidaysService.new
       record = BankHoliday.order(created_at: :desc).first

@@ -6,6 +6,8 @@ class BankHolidaysService
   def initialize
     SentryContextProvider.set_context
 
+    @holidays = {}
+
     ingest
     backup
   end

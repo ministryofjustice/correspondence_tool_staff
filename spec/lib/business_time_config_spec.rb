@@ -38,10 +38,7 @@ RSpec.describe BusinessTimeConfig do
   context "with mock bank holiday data" do
     before do
       truncated_api_response = File.read(Rails.root.join("spec/fixtures/bank_holidays_response_truncated.json"))
-
-      # rubocop:disable RSpec/AnyInstance
-      allow_any_instance_of(BankHolidaysService).to receive(:fetch_holidays).and_return(truncated_api_response)
-      # rubocop:enable RSpec/AnyInstance
+      allow(Net::HTTP).to receive(:get).and_return(truncated_api_response)
 
       described_class.configure!
     end
