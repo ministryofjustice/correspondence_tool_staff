@@ -1,0 +1,49 @@
+- content_for :heading
+  = "UK Bank Holidays"
+
+- total = BankHoliday.count
+- latest_data = BankHoliday.last
+- latest_updated = BankHoliday.order(updated_at: :desc).first
+- regions_last, events_count_last = bank_holidays_summary(latest_data)
+
+= render partial: 'layouts/header'
+
+.grid-row.case-status#summary
+  .case-status__info.case-status__info--details
+    .case-status__group.status
+      .case-status__data--large
+        strong= "Summary"
+
+    .case-status__group.page-counts
+      .grid-row
+        .column-one-half
+          .case-status__heading.case-status__heading--pages
+            strong= "Total records"
+          .case-status__date-value = total
+        .column-one-half
+          .case-status__heading.case-status__heading--pages
+            strong= "Total holidays in latest record"
+          .case-status__date-value = events_count_last
+
+  .case-status__info
+    .case-status__group.draft
+      .case-status__date-title
+        strong= "Last updated"
+      .case-status__date-value
+        = l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M")
+
+.grid-row
+  .column-full
+    p.button-holder
+      a.button href='#scotland' Jump to Scotland
+      |
+      a.button href='#northern-ireland' Jump to Northern Ireland
+      |
+      a.button href='#records' Jump to Stored Data
+
+
+= render partial: 'bank_holiday_region', locals: { region: 'england-and-wales', bank_holiday: latest_data }
+= render partial: 'bank_holiday_region', locals: { region: 'scotland', bank_holiday: latest_data }
+= render partial: 'bank_holiday_region', locals: { region: 'northern-ireland', bank_holiday: latest_data }
+
+= paginate @bank_holidays

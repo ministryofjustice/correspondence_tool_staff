@@ -86,7 +86,7 @@ module DeadlineCalculator
     end
 
     def options
-      @options ||= { holidays: ADDITIONAL_BANK_HOLIDAYS }
+      @options ||= { holidays: ::BusinessTimeConfig.additional_bank_holidays }
     end
 
   private

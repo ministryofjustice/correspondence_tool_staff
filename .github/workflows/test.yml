@@ -36,7 +36,19 @@ jobs:
 
     env:
       RAILS_ENV: test
+      DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1"
+      COVERAGE: true
       CI: true
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout code
@@ -54,6 +66,9 @@ jobs:
 
       - name: Install packages
         run: yarn install --pure-lockfile
+
+      - name: Setup test database
+        run: bin/rails db:prepare
 
       - name: Javascript tests
         run: bundle exec teaspoon
@@ -118,7 +133,7 @@ jobs:
           command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
       - name: Run unit and feature tests
-        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
+        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime" --verbose
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4

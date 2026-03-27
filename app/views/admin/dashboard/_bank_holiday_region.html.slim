@@ -1,0 +1,34 @@
+- holidays = bank_holidays_for_region(bank_holiday, region)
+
+.grid-row id=region
+  .column-two-thirds.table-container.container
+    h2.heading-large
+      = region.titleize
+
+    - if holidays.any?
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+        thead
+          tr
+            th scope='col' Holiday
+            th scope='col' Date
+        tbody
+          - current_year = nil
+          - holidays.each do |holiday|
+            - date = Date.parse(holiday['date'])
+            - year = date.year
+
+            - if year != current_year
+              - current_year = year
+              tr.year-header
+                th scope='colgroup' colspan='2'= current_year
+
+            tr
+              td= holiday['title']
+              td= "#{date.day.ordinalize} #{date.strftime('%B %Y')}"
+    - else
+      p No bank holidays found for #{region.titleize}.
+    p.button-holder
+      a.button href='#top' Back to top
