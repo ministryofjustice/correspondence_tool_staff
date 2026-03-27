@@ -9,7 +9,7 @@ RSpec.describe BankHolidaysService, type: :service do
     allow(Rails.logger).to receive(:error)
   end
 
-  describe "initialisation" do
+  describe "#initialize" do
     it "fetches and parses JSON into #holidays and performs a backup" do
       allow(Net::HTTP).to receive(:get).and_return(fixture_json)
 
@@ -17,38 +17,44 @@ RSpec.describe BankHolidaysService, type: :service do
       service = described_class.new # null_store cache means it will refetch each time in test env
 
       expect(service.holidays).to be_a(Hash)
-      # spot-check a known top-level key from the fixture
-      expect(service.holidays.keys).to include("england-and-wales")
+      expect(service.holidays.keys).to match_array(%w[england-and-wales northern-ireland scotland])
       expect(service.holidays).to eq(parsed_fixture)
+    end
+
+    it "sets Sentry context" do
+      allow(Net::HTTP).to receive(:get).and_return(fixture_json)
+      allow(SentryContextProvider).to receive(:set_context)
+
+      described_class.new
+
+      expect(SentryContextProvider).to have_received(:set_context)
     end
   end
 
-  describe "loading" do
-    it "returns an empty hash and does not raise when JSON is invalid" do
-      allow(Net::HTTP).to receive(:get).and_return("not-json")
-      service = described_class.new
+  describe "#ingest" do
+    context "when endpoint is unreachable" do
+      it "returns an empty hash" do
+        allow(Net::HTTP).to receive(:get).and_raise(StandardError.new("boom"))
+        expect(Sentry).to receive(:capture_exception).with(StandardError)
 
-      expect(service.holidays).to eq({})
-      # No backup should occur if there is no data
-      expect(BankHoliday.count).to eq(0)
-      expect(Rails.logger).to have_received(:error).with(/Failed to parse bank holidays JSON/)
+        service = described_class.new
+
+        expect(service.holidays).to eq({})
+        expect(BankHoliday.count).to eq(0)
+      end
     end
 
-    it "returns an empty hash when network fetch fails" do
-      allow(Net::HTTP).to receive(:get).and_raise(StandardError.new("boom"))
-      service = described_class.new
+    context "when retrieved data is not valid JSON" do
+      it "returns an empty hash" do
+        allow(Net::HTTP).to receive(:get).and_return("not-json")
+        expect(Sentry).to receive(:capture_exception).with(JSON::ParserError)
 
-      expect(service.holidays).to eq({})
-      expect(BankHoliday.count).to eq(0)
-      expect(Rails.logger).to have_received(:error).with(/Failed to fetch bank holidays/)
-    end
+        service = described_class.new
 
-    it "returns an empty hash when remote returns blank body" do
-      allow(Net::HTTP).to receive(:get).and_return("")
-      service = described_class.new
-
-      expect(service.holidays).to eq({})
-      expect(BankHoliday.count).to eq(0)
+        expect(service.holidays).to eq({})
+        # No backup should occur if there is no data
+        expect(BankHoliday.count).to eq(0)
+      end
     end
   end
 
