@@ -14,7 +14,7 @@ module_function
     # module before the database is even created (via rails db:prepare, etc) causing CI failures.
     begin
       ActiveRecord::Base.connection.table_exists?("bank_holidays")
-    rescue StandardError
+    rescue Exception # rubocop:disable Lint/RescueException
       Rails.logger.error "Bank holidays table is not available. BusinessTimeConfig cannot be configured."
       return
     end
