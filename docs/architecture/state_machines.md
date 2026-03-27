@@ -49,5 +49,5 @@ Offender SAR has a multi-step `drafting` flow with sub-steps tracked by form mod
 ## Stop the Clock / Extensions
 
 - `Stoppable` concern — adds `stop_the_clock` / `restart_the_clock` states
-- `Extendable` concern — SAR deadline extension (limit enforced: see `CaseExtendSarDeadlineService`)
-- PIT extension — FOI-specific, via `CaseExtendForPitService`
+- `Extendable` concern — SAR deadline extension (limit enforced: see `CaseExtendSARDeadlineService`)
+- PIT extension — FOI-specific, via `CaseExtendForPITService`
