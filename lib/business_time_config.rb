@@ -13,8 +13,7 @@ module_function
     # Similary, during Github Workflows, the test suite will attempt to load this
     # module before the database is even created (via rails db:prepare, etc) causing CI failures.
     begin
-      ActiveRecord::Base.connection.table_exists?("bank_holidays")
-      BankHoliday.order(created_at: :desc).first # Force connection load
+      return unless ActiveRecord::Base.connection.table_exists?("bank_holidays")
     rescue Exception # rubocop:disable Lint/RescueException
       Rails.logger.error "Bank holidays table is not available. BusinessTimeConfig cannot be configured."
       return
