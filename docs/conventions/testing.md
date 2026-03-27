@@ -74,4 +74,4 @@ Common Pundit helpers in `spec/support/`. Use `sign_in` helper for authenticatio
 
 ## CI
 
-GitHub Actions runs: `bundle exec parallel_rspec spec/` — ensure new specs pass locally before pushing.
+GitHub Actions runs: `bundle exec parallel_rspec -n "$CI_TOTAL_JOBS" --only-group "$CI_JOB_INDEX" --group-by runtime` — ensure new specs pass locally before pushing.

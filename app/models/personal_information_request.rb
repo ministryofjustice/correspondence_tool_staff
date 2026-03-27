@@ -8,6 +8,7 @@
 #  last_accessed_at :datetime
 #  deleted          :boolean          default(FALSE)
 #  processed        :boolean          default(FALSE)
+#  log              :text
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -107,8 +108,10 @@ class PersonalInformationRequest < ApplicationRecord
     self
   end
 
+  # All unmatched requests should be sent to Disclosure team
   def targets
     result = []
+
     if prison_service_data? || probation_service_data?
       result << BRANSTON
     end
@@ -117,7 +120,7 @@ class PersonalInformationRequest < ApplicationRecord
       result << DISCLOSURE
     end
 
-    result
+    result.empty? ? [DISCLOSURE] : result
   end
 
   def requesting_own_data?
