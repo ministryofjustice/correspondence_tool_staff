@@ -49,6 +49,12 @@
     "division": "northern-ireland",
     "events": [
       {
+        "title": "Battle of the Boyne (Orangemen's Day)",
+        "date": "2026-07-13",
+        "notes": "Substitute day",
+        "bunting": false
+      },
+      {
         "title": "New Year's Day",
         "date": "2026-01-01",
         "notes": "",
@@ -59,12 +65,6 @@
         "date": "2026-03-17",
         "notes": "",
         "bunting": true
-      },
-      {
-        "title": "Battle of the Boyne (Orangemen's Day)",
-        "date": "2026-07-13",
-        "notes": "Substitute day",
-        "bunting": false
       }
     ]
   }
