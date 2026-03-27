@@ -133,7 +133,7 @@ jobs:
           command: bin/rake 'parallel:drop' && bin/rake 'parallel:setup[4]'
 
       - name: Run unit and feature tests
-        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime"
+        run: bundle exec parallel_rspec -n "${CI_TOTAL_JOBS}" --only-group "${CI_JOB_INDEX}" --group-by "runtime" --verbose
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
