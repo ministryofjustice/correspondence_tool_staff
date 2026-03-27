@@ -7,6 +7,8 @@
 #  last_accessed_by :integer
 #  last_accessed_at :datetime
 #  deleted          :boolean          default(FALSE)
+#  processed        :boolean          default(FALSE)
+#  log              :text
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -178,7 +180,7 @@ describe PersonalInformationRequest do
     end
 
     context "when only london disclosure data" do
-      it "returns only branston" do
+      it "returns only disclosure" do
         rpi = build(:personal_information_request, laa_data: "Yes")
         expect(rpi.targets).to eq [:disclosure]
       end
@@ -188,6 +190,13 @@ describe PersonalInformationRequest do
       it "returns branston and disclosure" do
         rpi = build(:personal_information_request, prison_service_data: "Yes", laa_data: "Yes")
         expect(rpi.targets).to eq %i[branston disclosure]
+      end
+    end
+
+    context "when no matching data" do
+      it "returns only disclosure" do
+        rpi = build(:personal_information_request, prison_service_data: "No", probation_service_data: "No", laa_data: "No", opg_data: "No", other_data: "No")
+        expect(rpi.targets).to eq [:disclosure]
       end
     end
   end
