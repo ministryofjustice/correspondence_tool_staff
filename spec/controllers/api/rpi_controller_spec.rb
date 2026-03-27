@@ -80,7 +80,7 @@ RSpec.describe Api::RpiController, type: :controller do
 
   describe "#create" do
     context "with valid data" do
-      it "creates a job to process the payload", skip: "Failing in CI for no obvious reason" do
+      it "creates a job to process the payload" do
         expect(RequestPersonalInformationJob).to receive(:perform_later).with(kind_of(Integer), kind_of(Hash))
         post(:create, body: encrypted_json)
       end
