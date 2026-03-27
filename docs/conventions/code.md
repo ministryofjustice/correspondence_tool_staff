@@ -51,3 +51,12 @@ Strings in `config/locales/`. Use `I18n.t()` for all user-facing text. Missing k
 - Assignments use roles: `responder`, `approver`, `manager` — see `TeamsUsersRole.roles.keys`
 - Offender SAR has a separate stepped form flow — see `OffenderSarCaseForm`
 - Stats reports are append-only ETL — do not update warehouse rows in place
+
+
+## Views
+- View output in the /app/views folder uses Slim templating
+- Use the GovUK Frontend Design System components available at https://design-system.service.gov.uk/components/ to output information
+- Use the Ministry of Justic Design System components available at https://design-patterns.service.justice.gov.uk/components/ to output information
+- Follow editor conventions specified in the root .editorconfig file
+- Keep controllers thin, move logic to service objects when appropriate
+- Use idiomatic Ruby where possible

@@ -40,7 +40,7 @@ $ cd correspondence_tool_staff
 
 > [!TIP]
 > To prevent issues with the local environment, we recommend using docker compose to run the app locally. This will ensure that the app runs in an environment similar to production.
-> 
+>
 > To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
 
 Use the following command to start the app:
@@ -50,14 +50,14 @@ make
 ```
 All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
 
-You can access PGAdmin4 at http://localhost:5050 with: 
-- Username `cts@pgadmin.com` 
+You can access PGAdmin4 at http://localhost:5050 with:
+- Username `cts@pgadmin.com`
 - Password `let-me-in`.
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **Viewing DB data**
-> 
-> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. 
+>
+> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container.
 > You will need to create a new server in PGAdmin4 with the following steps:
 > 1. Click on "Tools" in the top menu and select "Import/Export Servers".
 > 2. Select the "Import" tab.
@@ -438,3 +438,9 @@ This path can also be used on the live site when you are logged in as an admin.
 | RequestPersonalInformationJob | Builds request from API and sends email |                                                                    |
 | SearchIndexUpdaterJob         | Updates search index when case changes  |                                                                    |
 | SearchIndexBuNameUpdaterJob   | Updater when Busines Unit name changes  | Calls the SearchIndexUpdaterJob for every case linked to the BU    |
+
+
+## AGENTS
+Agentic workers read AGENTS.md first unless it has been consumed already.
+
+Copilot specific instructions are in `.github/copilot-instructions.md`.

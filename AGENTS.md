@@ -10,7 +10,7 @@ MoJ internal case management system for handling FOI, SAR (including Non-Offende
 - The phrase "London Disclosure" and "Disclosure" and "Disclosure Team" refers to the teams with permission to work on all other case types including FOIs, Standard SARs and SAR complaints.
 
 ## Docs
-- `docs/AGENTS.md` — full index and rules (read first)
+- `AGENTS.md` — full index and rules (read first)
 - `docs/sessions/README.md` — in-progress work tracker (update at session end)
 - `docs/architecture/` — domain model, state machines, system overview
 - `docs/conventions/` — code, testing, git standards

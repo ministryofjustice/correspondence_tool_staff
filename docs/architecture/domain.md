@@ -42,7 +42,7 @@ Case::Base
 |-------|---------|
 | `User` | Staff member; belongs to many teams via role |
 | `Team` | Corresponds to a business unit or specialist team |
-| `BusinessUnit` | Operational team with case handling responsibilities |
+| `BusinessUnit` | Operational team with case handling responsibilities. Cases can be assigned to a BusinessUnit. |
 | `Directorate` | Groups business units |
 | `BusinessGroup` | Top-level org unit |
 | `TeamsUsersRole` | Join: user ↔ team with a role label |
