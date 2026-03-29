@@ -96,14 +96,6 @@ class Case::BaseDecorator < Draper::Decorator
     "#{h.pluralize(errors.count, I18n.t('common.error'))} #{I18n.t('common.summary_error')}"
   end
 
-  def requester_type
-    object.requester_type.humanize
-  end
-
-  def subject_type
-    object.subject_type.humanize
-  end
-
   def requester_name_and_type
     if object.requester_type.nil?
       "#{object.name} | #{subject_type}"
