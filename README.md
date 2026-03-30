@@ -40,7 +40,7 @@ $ cd correspondence_tool_staff
 
 > [!TIP]
 > To prevent issues with the local environment, we recommend using docker compose to run the app locally. This will ensure that the app runs in an environment similar to production.
-> 
+>
 > To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
 
 Use the following command to start the app:
@@ -50,14 +50,14 @@ make
 ```
 All software and dependencies will be installed automatically, and the app will be available at http://localhost:3000.
 
-You can access PGAdmin4 at http://localhost:5050 with: 
-- Username `cts@pgadmin.com` 
+You can access PGAdmin4 at http://localhost:5050 with:
+- Username `cts@pgadmin.com`
 - Password `let-me-in`.
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **Viewing DB data**
-> 
-> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container. 
+>
+> Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container.
 > You will need to create a new server in PGAdmin4 with the following steps:
 > 1. Click on "Tools" in the top menu and select "Import/Export Servers".
 > 2. Select the "Import" tab.
@@ -374,6 +374,16 @@ $ i18n-tasks unused
 $
 ```
 
+## Assets
+
+The Stop the Clock feature makes use of a MoJ frontend moj-button-menu component. To allow the necesary CSS/JS to be incorporated into the general build, use the following command:
+
+```
+rails assets:clobber; mkdir ./public/assets; cp node_modules/@ministryofjustice/frontend/moj/moj-frontend.min.* ./public/assets; cp node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.* ./public/assets; rails assets:precompile;
+```
+
+Once migration to the latest GovUK Frontend and MoJ Frontend is completed this should no longer be nencessary.
+
 ## Keeping secrets and sensitive information secure
 
 There should be *absolutely no secure credentials* committed in this repo. Information about secret management can be found in the related confluence pages.
@@ -422,6 +432,7 @@ These are configured to run in Kubernetes. Not all jobs run in all environments.
 | send-chase-emails                    | Yes      | Sends Offender SAR data request chase emails   | Daily     |
 | rpi-delete                           | Yes      | Deletes RPI files                              | Weekly    |
 | db-anonymizer                        | No       | Dumps anonymised version of the database to S3 | N/A       |
+| bank-holidays-updater                | Yes      | Retrieves bank holiday dates from GovUK Api    | Daily     |
 
 
 ### Sidekiq
