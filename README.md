@@ -449,3 +449,9 @@ This path can also be used on the live site when you are logged in as an admin.
 | RequestPersonalInformationJob | Builds request from API and sends email |                                                                    |
 | SearchIndexUpdaterJob         | Updates search index when case changes  |                                                                    |
 | SearchIndexBuNameUpdaterJob   | Updater when Busines Unit name changes  | Calls the SearchIndexUpdaterJob for every case linked to the BU    |
+
+
+## AGENTS
+Agentic workers read AGENTS.md first unless it has been consumed already.
+
+Copilot specific instructions are in `.github/copilot-instructions.md`.
