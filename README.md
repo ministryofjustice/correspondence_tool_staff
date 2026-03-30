@@ -429,6 +429,7 @@ These are configured to run in Kubernetes. Not all jobs run in all environments.
 | ------------------------------------ | -------- | ---------------------------------------------- | --------- |
 | email-status                         | Yes      | Checks and updates data request email status   | Hourly    |
 | close-expired-rejected-offender-sars | Yes      | Closes expired rejected Offender SARs          | Daily     |
+| auto-close-paused-sar-cases          | Yes      | Closes paused SARs                             | Daily     |
 | send-chase-emails                    | Yes      | Sends Offender SAR data request chase emails   | Daily     |
 | rpi-delete                           | Yes      | Deletes RPI files                              | Weekly    |
 | db-anonymizer                        | No       | Dumps anonymised version of the database to S3 | N/A       |
