@@ -433,6 +433,7 @@ These are configured to run in Kubernetes. Not all jobs run in all environments.
 | send-chase-emails                    | Yes      | Sends Offender SAR data request chase emails   | Daily     |
 | rpi-delete                           | Yes      | Deletes RPI files                              | Weekly    |
 | db-anonymizer                        | No       | Dumps anonymised version of the database to S3 | N/A       |
+| bank-holidays-updater                | Yes      | Retrieves bank holiday dates from GovUK Api    | Daily     |
 
 
 ### Sidekiq
