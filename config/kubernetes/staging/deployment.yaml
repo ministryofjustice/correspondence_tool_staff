@@ -73,7 +73,6 @@ spec:
                   value: "on"
             initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 10
           livenessProbe:
             httpGet:
               path: /healthcheck
@@ -85,7 +84,6 @@ spec:
                   value: "on"
             initialDelaySeconds: 40
             periodSeconds: 60
-            timeoutSeconds: 10
       initContainers:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
