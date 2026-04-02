@@ -26,10 +26,10 @@ spec:
           command: ["./config/docker/entrypoint-webapp.sh"]
           resources:
             requests:
-              cpu: 100m
+              cpu: 1000m
               memory: 1Gi
             limits:
-              cpu: 800m
+              cpu: 1500m
               memory: 2Gi
           env:
             - name: DATABASE_URL
