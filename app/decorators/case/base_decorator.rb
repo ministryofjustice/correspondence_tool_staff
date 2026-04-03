@@ -97,11 +97,11 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def requester_type
-    object.requester_type.humanize
+    object.requester_type
   end
 
   def subject_type
-    object.subject_type.humanize
+    object.subject_type
   end
 
   def requester_name_and_type
