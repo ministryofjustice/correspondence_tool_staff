@@ -25,7 +25,7 @@ dc:
 	docker compose run --rm --entrypoint=/bin/sh app
 
 dc-clean:
-	rm -rf ./log* ./config/docker-dev/.setup-complete
+	docker compose exec app rm -rf ./log* ./config/docker-dev/.setup-complete
 	docker compose down -v
 	docker system prune -f
 	clear
