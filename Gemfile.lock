@@ -7,7 +7,7 @@ GIT
       rails (>= 7.2.0)
 
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     aasm (5.5.2)
       concurrent-ruby (~> 1.0)
@@ -733,4 +733,4 @@ RUBY VERSION
    ruby 3.3.6p108
 
 BUNDLED WITH
-   2.4.19
+   2.5.22
