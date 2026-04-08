@@ -124,7 +124,7 @@ module Cases
           :info_held_status,
           :outcome,
           :refusal_reason,
-          :appeal_outcome
+          :appeal_outcome,
         )
 
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
