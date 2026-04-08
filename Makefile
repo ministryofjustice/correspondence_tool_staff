@@ -6,10 +6,10 @@
 docker-shell: env dc
 
 # build the application
-build: env docker-sync dc-build servers
+build: env dc-build servers
 
 # start docker and the app server
-launch: service-check docker-sync up-daemon servers
+launch: service-check up-daemon servers
 
 # destroy everything and start again
 rebuild: dc-reset-bg servers
@@ -20,9 +20,6 @@ servers: service-check setup browser-sync server
 env:
 	@[ -f "./.env" ] || cp .env.example .env
 
-docker-sync:
-	docker-sync start
-
 dc:
 	docker compose up -d app
 	docker compose run --rm --entrypoint=/bin/sh app
@@ -30,22 +27,19 @@ dc:
 dc-clean:
 	rm -rf ./log* ./config/docker-dev/.setup-complete
 	docker compose down -v
-	docker-sync stop || true
-	docker-sync clean
 	docker system prune -f
 	clear
 
-dc-reset: dc-clean docker-sync
+dc-reset: dc-clean
 	docker compose up --build
 
-dc-reset-bg: dc-clean docker-sync
+dc-reset-bg: dc-clean
 	docker compose up -d --build
 
 dc-build: # no cleaning
 	docker compose up -d --build
 
 down:
-	docker-sync clean
 	docker compose down
 
 up: launch
@@ -71,11 +65,13 @@ sidekiq-uploads:
 browser-sync:
 	docker compose exec -d app /usr/bin/browserSync.sh
 
+db-restore:
+	docker compose exec app /usr/bin/db-restore.sh
+
 server: endpoints
 	docker compose exec app /usr/bin/app-server-start.sh
 
 restart:
-	docker-sync clean
 	docker-compose down
 	make dc
 
