@@ -37,7 +37,7 @@ class UserReassignmentService
   rescue StandardError => e
     Rails.logger.error e.to_s
     Rails.logger.error e.backtrace.join("\n\t")
-    @error_message = e
+    @error_message = e.message
     @result = :error
   end
 
