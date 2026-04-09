@@ -46,7 +46,7 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
           expect(service).to have_received(:call)
         end
 
-        it "redirects to new_user_session_path" do
+        it "redirects to case page" do
           patch(:execute_reassign_user, params:)
           expect(response).to redirect_to case_path(id: accepted_case.id)
         end
@@ -73,7 +73,7 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
           expect(service).to have_received(:call)
         end
 
-        it "redirects to new_user_session_path" do
+        it "redirects to case page" do
           patch(:execute_reassign_user, params:)
           expect(response).to redirect_to case_path(id: accepted_ico_foi_case.id)
         end
@@ -103,7 +103,7 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
           expect(service).to have_received(:call)
         end
 
-        it "redirects to new_user_session_path" do
+        it "redirects to case page" do
           patch(:execute_reassign_user, params:)
           expect(response).to redirect_to case_path(id: accepted_complaint_case.id)
         end
