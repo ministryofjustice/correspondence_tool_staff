@@ -364,9 +364,9 @@ RSpec.describe StatsController, type: :controller do
 
       # Stub spreadsheet generation to avoid needing realistic data
       axlsx_double = instance_double(Axlsx::Package, to_stream: StringIO.new("xlsx-bytes"))
-      expect(controller).to receive(:create_spreadsheet).and_return(axlsx_double)
+      allow(controller).to receive(:create_spreadsheet).and_return(axlsx_double)
 
-      expect(controller).to receive(:send_data) do |data, options|
+      expect(controller).to receive(:send_data) do |_data, options|
         expect(options[:filename]).to eq(report_type.filename(report_type.file_extension))
         expect(options[:disposition]).to eq(:attachment)
         expect(options[:type]).to eq(StatsController::SPREADSHEET_CONTENT_TYPE)
