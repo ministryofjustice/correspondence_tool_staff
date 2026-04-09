@@ -351,5 +351,32 @@ RSpec.describe StatsController, type: :controller do
       end
     end
   end
+
+  describe "#show with cached precomputed report" do
+    before do
+      create :report_type, :r005
+    end
+
+    it "serves from ReportsCache without running synchronous generation" do
+      report_type = ReportType.r005
+      fake_cache = instance_double(ReportsCache, data: { rows: [] })
+      allow(ReportsCache).to receive(:latest_for).with(report_type.abbr).and_return(fake_cache)
+
+      # Stub spreadsheet generation to avoid needing realistic data
+      axlsx_double = instance_double(Axlsx::Package, to_stream: StringIO.new("xlsx-bytes"))
+      expect(controller).to receive(:create_spreadsheet).and_return(axlsx_double)
+
+      expect(controller).to receive(:send_data) do |data, options|
+        expect(options[:filename]).to eq(report_type.filename(report_type.file_extension))
+        expect(options[:disposition]).to eq(:attachment)
+        expect(options[:type]).to eq(StatsController::SPREADSHEET_CONTENT_TYPE)
+        controller.render body: :nil
+      end
+
+      get :show, params: { id: report_type.id }
+
+      expect(ReportsCache).to have_received(:latest_for).with("R005")
+    end
+  end
 end
 # rubocop:enable RSpec/BeforeAfterAll
