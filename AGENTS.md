@@ -65,3 +65,5 @@ bundle exec parallel_rspec spec/                     # full suite (parallel; use
 bundle exec parallel_rspec -n <workers> spec/        # full suite with explicit worker count
 bundle exec rspec --format documentation spec/...    # verbose
 ```
+Docker is used in some environments. Check `docker-compose.yml` for details. You may need to prefix commands with `docker compose exec app` or similar.
+
