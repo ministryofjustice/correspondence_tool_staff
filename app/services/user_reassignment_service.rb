@@ -1,5 +1,5 @@
 class UserReassignmentService
-  attr_reader :result, :error
+  attr_reader :result, :error_message
 
   def initialize(assignment:,
                  target_user:, acting_user:,
@@ -13,6 +13,7 @@ class UserReassignmentService
     @target_team            = target_team || get_team_for_user_and_case_with_role(@assignment.team.role, @target_user)
     @acting_team            = acting_team || get_user_team(@acting_user)
     @result = :incomplete
+    @error_message = ""
   end
 
   def call
@@ -36,7 +37,7 @@ class UserReassignmentService
   rescue StandardError => e
     Rails.logger.error e.to_s
     Rails.logger.error e.backtrace.join("\n\t")
-    @error = e
+    @error_message = e
     @result = :error
   end
 

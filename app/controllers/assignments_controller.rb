@@ -191,14 +191,11 @@ class AssignmentsController < ApplicationController
 
   def execute_reassign_user
     authorize @case, :assignments_execute_reassign_user?
-
     target_user = User.find(reassign_user_params[:user_id])
-    urs = UserReassignmentService
-              .new(target_user:,
-                   acting_user: current_user,
-                   assignment: @assignment)
 
-    case urs.call
+    service = UserReassignmentService.new(target_user:, acting_user: current_user, assignment: @assignment)
+
+    case service.call
     when :ok
       flash[:notice] = "Case re-assigned to #{@assignment.user.full_name}"
       redirect_to case_path(@case)
