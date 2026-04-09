@@ -17,7 +17,7 @@ RSpec.describe Reports::CacheRefresher do
         run: true,
         background_job?: false,
         persist_results?: true,
-        results: { rows: [{ id: 1 }] }
+        results: { rows: [{ id: 1 }] },
       )
 
       allow(Stats::R900CasesReport).to receive(:new).and_return(service_double)
