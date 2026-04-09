@@ -175,6 +175,7 @@ GEM
       ostruct
     connection_pool (3.0.2)
     crass (1.0.6)
+    csv (3.3.5)
     date (3.5.1)
     debug (1.11.0)
       irb (~> 1.10)
@@ -661,6 +662,7 @@ DEPENDENCIES
   caxlsx_rails
   colorize
   config
+  csv
   debug (>= 1.0.0)
   devise
   draper (= 4.0.2)
@@ -722,6 +724,7 @@ DEPENDENCIES
   site_prism (< 5.0)
   slim-rails (~> 3.7)
   sprockets (~> 4.2.2)
+  stringio (~> 3.2)
   table_print
   teaspoon-jasmine
   terser

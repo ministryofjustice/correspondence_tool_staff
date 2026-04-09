@@ -46,6 +46,8 @@ gem "logstash-event"
 gem "loofah", ">= 2.3.1"
 gem "mail", ">= 2.8"
 gem "matrix" # required by prawn
+gem "csv"  # Added to silence Ruby 3.4 default gem warning and for httparty dependency
+gem "stringio", "~> 3.2"
 gem "notifications-ruby-client", ">= 5.4"
 gem "omniauth-azure-activedirectory-v2", "~> 1.0.0"
 gem "omniauth-rails_csrf_protection"
