@@ -1,7 +1,7 @@
 module Reports
   class CacheRefresher
     # Refreshes the JSON cache for all supported report types.
-    # - Iterates ReportType.standard (downloadable standard reports)
+    # - Iterates ReportType.standard (downloadable standard reports) and also R900
     # - Runs each report service using its default reporting period
     # - Persists results JSON to ReportsCache
     # - Logs per-report success/failure
@@ -22,7 +22,7 @@ module Reports
       successes = 0
       failures = 0
 
-      ReportType.standard.find_each do |report_type|
+      report_types_to_refresh.each do |report_type|
         refresh_one(report_type)
         successes += 1
       rescue StandardError => e
@@ -41,6 +41,20 @@ module Reports
   private
 
     attr_reader :logger
+
+    # Build the list of report types to refresh. This includes all standard reports
+    # and also explicitly includes R900 (Cases report) which is not a standard report
+    # type but should be cached.
+    def report_types_to_refresh
+      types = ReportType.standard.to_a
+      begin
+        r900 = ReportType.r900
+        types << r900 unless types.any? { |rt| rt.abbr == "R900" }
+      rescue ActiveRecord::RecordNotFound
+        # If R900 is not present in this environment, just skip it.
+      end
+      types
+    end
 
     def refresh_one(report_type)
       service_class = report_type.class_constant
