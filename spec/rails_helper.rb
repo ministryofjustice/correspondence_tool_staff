@@ -298,6 +298,8 @@ def seed_database_for_tests
   FactoryBot.find_or_create :default_private_officer
 end
 
+require "shoulda/matchers"
+
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
