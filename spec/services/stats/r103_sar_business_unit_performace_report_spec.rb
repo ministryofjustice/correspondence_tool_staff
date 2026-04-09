@@ -49,6 +49,9 @@ module Stats
       create(:sar_internal_review, original_case: case_1)
       create(:closed_sar_internal_review, original_case: case_2)
 
+      # create Stopped SAR case that is not assigned which should be ignored
+      create_case(factory_and_trait: %i[sar_case stopped], received: "20170606", responded: nil, deadline: "20170630", team: nil, responder: nil, ident: "Paused and unassigned to responding team")
+
       # create some FOI cases which should be ignored
       create :closed_case
       create :closed_case
@@ -100,10 +103,9 @@ module Stats
     describe "data" do
       context "without business unit columns" do
         # We only test that the correct cases are being selected for analysis.  The
-        # analysis work, rolling up of business group and directorate toatls and calcualtion
-        # of percentages is carried out in BasePerformanceUnitReport, and is fully testing
+        # analysis work, rolling up of business group and directorate totals and calculation
+        # of percentages is carried out in BasePerformanceUnitReport, and is fully tested
         # by the R003PerfomanceReport spec.
-        #
         describe "#scope" do
           before do
             Timecop.freeze Time.zone.local(2017, 6, 30, 12, 0, 0) do
@@ -115,12 +117,16 @@ module Stats
           end
 
           it "selects only SAR cases" do
-            expect(@scope.size).to eq 12
+            expect(@scope.size).to eq 13
             expect(@scope.map(&:type).uniq).to eq ["Case::SAR::Standard"]
           end
 
           it "excludes TMM cases" do
             expect(@scope.map(&:refusal_reason_id)).not_to include(@sar_tmm.id)
+          end
+
+          it "includes Stopped case" do
+            expect(@scope.map(&:current_state)).to include("stopped")
           end
         end
       end
@@ -308,13 +314,13 @@ module Stats
       end
     end
 
-    def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false, type: nil)
+    def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false, type: nil, factory_and_trait: [:accepted_sar])
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        factory = :accepted_sar
-        kase = create(factory, responding_team: team, responder:, identifier: ident, received_date:)
+        factory_and_trait ||= :accepted_sar
+        kase = create(*factory_and_trait, responding_team: team, responder:, identifier: ident, received_date:)
         kase.external_deadline = Date.parse(deadline)
         if flagged
           CaseFlagForClearanceService.new(user: kase.managing_team.users.first, kase:, team: @team_dacu_disclosure).call
