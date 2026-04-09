@@ -73,8 +73,6 @@ CREATE TYPE public.request_types AS ENUM (
     'nomis_contact_logs',
     'probation_records',
     'cctv_and_bwcf',
-    'cctv',
-    'bwcf',
     'telephone_recordings',
     'telephone_pin_logs',
     'probation_archive',
@@ -86,6 +84,8 @@ CREATE TYPE public.request_types AS ENUM (
     'cat_a',
     'ndelius',
     'dps',
+    'cctv',
+    'bwcf',
     'education',
     'oasys_arns',
     'dps_security',
@@ -442,6 +442,7 @@ CREATE TABLE public.cases (
     document_tsvector tsvector,
     reason_for_deletion character varying,
     user_id integer DEFAULT '-100'::integer NOT NULL,
+    date_of_birth_new date,
     reason_for_lateness_id bigint,
     reason_for_lateness_note character varying
 );
@@ -1021,6 +1022,38 @@ CREATE TABLE public.reports (
     guid character varying,
     properties jsonb
 );
+
+
+--
+-- Name: reports_caches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reports_caches (
+    id bigint NOT NULL,
+    report_type character varying NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: reports_caches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reports_caches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reports_caches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reports_caches_id_seq OWNED BY public.reports_caches.id;
 
 
 --
@@ -1621,6 +1654,13 @@ ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.repo
 
 
 --
+-- Name: reports_caches id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reports_caches ALTER COLUMN id SET DEFAULT nextval('public.reports_caches_id_seq'::regclass);
+
+
+--
 -- Name: retention_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1876,6 +1916,14 @@ ALTER TABLE ONLY public.report_types
 
 
 --
+-- Name: reports_caches reports_caches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reports_caches
+    ADD CONSTRAINT reports_caches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2105,6 +2153,13 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_u
 
 
 --
+-- Name: index_cases_users_transitions_trackers_on_case_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_cases_users_transitions_trackers_on_case_id_and_user_id ON public.cases_users_transitions_trackers USING btree (case_id, user_id);
+
+
+--
 -- Name: index_cases_users_transitions_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2228,6 +2283,27 @@ CREATE UNIQUE INDEX index_linked_cases_on_case_id_and_linked_case_id_and_type ON
 --
 
 CREATE UNIQUE INDEX index_report_types_on_abbr ON public.report_types USING btree (abbr);
+
+
+--
+-- Name: index_reports_caches_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_caches_on_created_at ON public.reports_caches USING btree (created_at);
+
+
+--
+-- Name: index_reports_caches_on_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_caches_on_data ON public.reports_caches USING gin (data);
+
+
+--
+-- Name: index_reports_caches_on_report_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reports_caches_on_report_type ON public.reports_caches USING btree (report_type);
 
 
 --
@@ -2463,6 +2539,9 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260408230000'),
+('20260327090000'),
+('20260318100000'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),
@@ -2523,6 +2602,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811154406'),
 ('20200811151902'),
 ('20200705225914'),
+('20200418084519'),
 ('20191028094210'),
 ('20191002003615'),
 ('20190912142741'),
@@ -2648,6 +2728,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160803094147'),
 ('20160802134012'),
 ('20160802130203'),
-('20160722121207'),
-('20260318100000'),
-('20260327090000');
+('20160722121207');
+
