@@ -4,8 +4,6 @@ volumes:
   redis:
   gems:
   spec-gems:
-  cts-app-sync:
-    external: true
 
 services:
 
@@ -31,7 +29,6 @@ services:
     volumes:
       - .:/usr/src/app/
       - gems:/usr/local/bundle
-      - cts-app-sync:/usr/src/app/:nocopy
 
   db:
     container_name: cts_postgres
@@ -42,7 +39,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_HOST_AUTH_METHOD: trust
 
   log:
@@ -85,7 +82,7 @@ services:
       - ./config/docker-dev/shared/pgadmin/storage:/var/lib/pgadmin/storage
     environment:
       PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com # do not change, it is used to construct a file path
-      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_DEFAULT_PASSWORD: ${PGPASSWORD}
       PGADMIN_LISTEN_PORT: 5050
     depends_on:
       - db

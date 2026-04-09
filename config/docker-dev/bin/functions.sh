@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # colours
-GREEN='\033[0;32m'
-GREEN_BOLD='\033[1;32m'
-YELLOW='\033[0;93m'
-DARK_GRAY='\033[3;90m'
-LIGHT_BLUE='\033[1;34m'
-NC='\033[0m' # No Color
+RED=$'\033[1;31m'
+GREEN=$'\033[0;32m'
+GREEN_BOLD=$'\033[1;32m'
+YELLOW=$'\033[0;93m'
+DARK_GRAY=$'\033[3;90m'
+LIGHT_BLUE=$'\033[1;34m'
+NC=$'\033[0m' # No Color
 
 CAN_RUN="false"
 if [[ "$OSTYPE" == "darwin"* ]]; then
