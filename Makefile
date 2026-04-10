@@ -68,6 +68,10 @@ browser-sync:
 db-restore:
 	docker compose exec app /usr/bin/db-restore.sh
 
+db-dump:
+	@chmod +x ./config/docker-dev/bin/db-dump.sh
+	@./config/docker-dev/bin/db-dump.sh
+
 server: endpoints
 	docker compose exec app /usr/bin/app-server-start.sh
 

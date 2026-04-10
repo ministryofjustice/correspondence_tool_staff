@@ -30,34 +30,64 @@ clear
 
 . ./config/docker-dev/bin/functions.sh
 
-
 header "D A T A B A S E   R E S T O R E"
-header_additional "${DARK_GRAY}This utility expects a TAR file (file.tar.gz) that was created using pg_dump.${NC}\n\n"
+header_additional "${DARK_GRAY}This utility expects a TAR file (file.tar or file.tar.gz) that was created using pg_dump.${NC}\n\n"
 
 restore() {
-  if [ -f "$1".tar.gz ]; then
+  if [[ -f "$1.tar.gz" || -f "$1.tar" ]]; then
     DIRECTORY="./$1-database-temp"
     mkdir "$DIRECTORY";
-    header_additional "Unpacking database from ${YELLOW}$1.tar.gz${NC}..."
+
+    if [ -f "$1.tar.gz" ]; then
+      FILE="$1.tar.gz"
+    elif [ -f "$1.tar" ]; then
+      FILE="$1.tar"
+    fi
+
+    header_additional "Unpacking database from ${YELLOW}$FILE${NC}..."
     # GNU tar supports the --directory (-C) option, which allows us to specify the
     # target directory for extraction without changing the current working directory.
     # This is more efficient and avoids potential issues with relative paths.
-    tar -xzf "$1".tar.gz -C ${DIRECTORY}
+    if [ -f "$1.tar.gz" ]; then
+      tar -xzf "$1.tar.gz" -C "$DIRECTORY"
+    elif [ -f "$1.tar" ]; then
+      tar -xf "$1.tar" -C "$DIRECTORY"
+    fi
+
+    # Check if the tar command succeeded
+    # The $? variable holds the exit status of the last command executed. A value of
+    # 0 indicates success, while a non-zero value indicates an error.
+    if [ $? -ne 0 ]; then
+      error "Failed to extract the database from ${YELLOW}$FILE${NC}."
+      rm -rf "$DIRECTORY"
+      exit 1
+    fi
 
     header_additional "${GREEN}Database extracted successfully to ${YELLOW}${DIRECTORY}${NC}.\n"
+    # Pause for 2 seconds
+    # ... allow the user to read the message before proceeding
     sleep 2
 
     header_additional "Restoring database from ${YELLOW}${DIRECTORY}${NC} to ${YELLOW}$DATABASE_NAME${NC}..."
     # The -c option tells pg_restore to clean (drop) database objects before recreating them.
+    # The -O option tells pg_restore not to restore ownership of the database objects.
     # The -U option specifies the database user (postgres in this case).
     # The -h option specifies the host (db, which is the name of the database service in our Docker Compose setup).
     # The -d option specifies the target database to restore into ($DATABASE_NAME, defined in our .env file).
-    pg_restore -c -U postgres -h db -d "$DATABASE_NAME" "$DIRECTORY" > ./tmp/pg_restore_output.log 2>&1
+    pg_restore -cO -U postgres -h db -d "$DATABASE_NAME" "$DIRECTORY" | indent | cat
 
-    header_additional "${GREEN}Database restore process completed successfully${NC}." "close"
+    # Check if the pg_restore command succeeded
+    if [ $? -ne 0 ]; then
+      error "Failed to restore the database from ${YELLOW}${DIRECTORY}${NC}."
+      rm -rf "$DIRECTORY"
+      exit 1
+    fi
+
+    # If we reach this point, the restore was successful
+    header_additional "${GREEN}Database restore completed successfully${NC}." "close"
     rm -rf "$DIRECTORY"
   else
-    header_additional "${RED}Error:${NC} Backup file ${YELLOW}$1.tar.gz${NC} not found." "close"
+    error "Backup file ${YELLOW}$FILE${NC} not found."
     exit 1
   fi
 }
@@ -66,14 +96,11 @@ restore() {
 # Using printf for proper escape and color expansion; read -p does not interpret \n or colors
 printf "           We will restore the database from a backup.\n           %sDo you want to proceed?%s (y/n) " "${GREEN}" "${NC}"
 read -r -n 1 REPLY
-echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  printf "           Please enter the name of the backup to restore (e.g., the name of your file without .tar.gz): "
+  printf "\n           Please enter the name of the backup to restore (e.g., the name of your file without .tar.gz): "
   read -r BACKUP_NAME
   echo
   restore "$BACKUP_NAME"
 else
-  header_additional "${GREEN}Database restore cancelled.${NC}" "close"
+  header_additional "\n${GREEN}Database restore cancelled.${NC}" "close"
 fi
-
-
