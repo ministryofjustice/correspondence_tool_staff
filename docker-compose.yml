@@ -30,6 +30,29 @@ services:
       - .:/usr/src/app/
       - gems:/usr/local/bundle
 
+  spec:
+    container_name: cts_spec
+    shm_size: '1g'
+    build:
+      args:
+        development_mode: "true"
+      context: .
+      dockerfile: config/docker-dev/Dockerfile
+      target: dev
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+      - log
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      REDIS_URL: redis://redis@log:6379
+      REDIS_URL_SIDEKIQ: ${REDIS_URL}/1
+    volumes:
+      - .:/usr/src/app/
+      - spec-gems:/usr/local/bundle
+
   db:
     container_name: cts_postgres
     image: postgres:17

@@ -14,19 +14,7 @@ class StatsController < ApplicationController
   end
 
   def show
-    report_type = ReportType.find(params[:id])
-
-    # Try precomputed cache first to avoid synchronous generation
-    if (cache = ReportsCache.latest_for(report_type.abbr)).present?
-      cached_report = Report.new(report_type_id: report_type.id)
-      cached_report.report_data = cache.data.to_json
-      cached_report.filename = report_type.filename(report_type.file_extension)
-      cached_report.report_format = report_type.file_extension
-      return generate_final_report(cached_report)
-    end
-
-    # Fallback to existing synchronous generation
-    report = Report.new report_type_id: report_type.id
+    report = Report.new report_type_id: params[:id]
 
     report.run_and_update!(user: current_user)
     if report.background_job?

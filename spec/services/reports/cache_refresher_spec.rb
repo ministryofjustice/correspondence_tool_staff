@@ -31,5 +31,14 @@ RSpec.describe Reports::CacheRefresher do
       expect(latest).to be_present
       expect(latest.data).to eq({ "rows" => [{ "id" => 1 }] })
     end
+
+    it "does nothing (and does not raise) when R900 is absent and there are no standard reports" do
+      # No ReportType records at all
+      result = described_class.call(logger: Logger.new(nil))
+
+      expect(result[:failures]).to eq(0)
+      expect(result[:successes]).to eq(0)
+      expect(ReportsCache.count).to eq(0)
+    end
   end
 end

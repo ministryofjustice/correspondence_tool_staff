@@ -65,5 +65,12 @@ bundle exec parallel_rspec spec/                     # full suite (parallel; use
 bundle exec parallel_rspec -n <workers> spec/        # full suite with explicit worker count
 bundle exec rspec --format documentation spec/...    # verbose
 ```
-Docker is used in some environments. Check `docker-compose.yml` for details. You may need to prefix commands with `docker compose exec app` or similar.
+### When Docker Compose is used 
+
+Check `docker-compose.yml` for details and ping the service to test it is running using `docker compose ps`. If the app is running in Docker, you need to prefix all commands with `docker compose exec spec --` to run them inside the container. For example, to run tests, you would use:
+
+```bash
+docker compose exec spec -- bundle exec rspec spec/path/to/file_spec.rb
+```
+
 

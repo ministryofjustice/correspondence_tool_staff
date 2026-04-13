@@ -42,18 +42,8 @@ module Reports
 
     attr_reader :logger
 
-    # Build the list of report types to refresh. This includes all standard reports
-    # and also explicitly includes R900 (Cases report) which is not a standard report
-    # type but should be cached.
     def report_types_to_refresh
-      types = ReportType.standard.to_a
-      begin
-        r900 = ReportType.r900
-        types << r900 unless types.any? { |rt| rt.abbr == "R900" }
-      rescue ActiveRecord::RecordNotFound
-        # If R900 is not present in this environment, just skip it.
-      end
-      types
+      (ReportType.standard.to_a << ReportType.find_by(abbr: "R900")).compact
     end
 
     def refresh_one(report_type)

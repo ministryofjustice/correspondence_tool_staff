@@ -1,5 +1,3 @@
-require "site_prism"
-
 module PageObjects
   module Pages
     class Base < SitePrism::Page
