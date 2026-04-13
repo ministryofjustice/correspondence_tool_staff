@@ -12,6 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
       SecDefaultAction "phase:2,pass,log,tag:github_team=central-digital-product-team,tag:namespace=track-a-query-staging"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600" # adds 600 to 30 seconds from elsewhere
 spec:
   ingressClassName: modsec
   tls:
