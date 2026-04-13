@@ -122,8 +122,8 @@ RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSp
       it "shows warning" do
         patch(:execute_reassign_user, params:)
 
-        expect(flash.now[:alert]).to eq "A StandardError was raised"
-        expect(response).to render_template :reassign_user
+        expect(flash[:alert]).to eq "A StandardError was raised"
+        expect(response).to redirect_to reassign_user_case_assignment_path(case_id: accepted_case.id, id: assignment.id)
       end
     end
   end
