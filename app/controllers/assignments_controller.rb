@@ -204,8 +204,8 @@ class AssignmentsController < ApplicationController
       redirect_to case_path(@case)
     else
       @case = @case.decorate
-      flash.now[:alert] = service.error_message
-      render :reassign_user
+      flash[:alert] = service.error_message
+      redirect_to action: "reassign_user"
     end
   end
 
