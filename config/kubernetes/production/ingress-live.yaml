@@ -11,6 +11,7 @@ metadata:
       SecAuditEngine On
       SecRuleEngine DetectionOnly
       SecDefaultAction "phase:2,pass,log,tag:github_team=central-digital-product-team,tag:namespace=track-a-query-production"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600" # adds 600 to 30 seconds from elsewhere
 spec:
   ingressClassName: modsec
   tls:
