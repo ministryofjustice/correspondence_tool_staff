@@ -122,6 +122,14 @@ describe DataRequestAreaDecorator, type: :model do
   end
 
   describe "#request_document" do
+    before do
+      create :commissioning_document, data_request_area:
+    end
+
+    it "displays the current request document" do
+      expect(decorated.request_document).to eq("Day 1 commissioning")
+    end
+
     it "returns the commissioning document label when the document exists" do
       expect(decorated.request_document).to eq I18n.t("helpers.label.commissioning_document.stage.day_1")
     end
@@ -134,16 +142,6 @@ describe DataRequestAreaDecorator, type: :model do
       it "falls back to the commissioning document label" do
         expect(decorated.request_document).to eq I18n.t("helpers.label.commissioning_document.stage.day_1")
       end
-    end
-  end
-
-  describe "#request_document" do
-    before do
-      create :commissioning_document, data_request_area:
-    end
-
-    it "displays the current request document" do
-      expect(decorated.request_document).to eq("Day 1 commissioning")
     end
   end
 
