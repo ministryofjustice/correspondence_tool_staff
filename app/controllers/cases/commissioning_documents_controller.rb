@@ -34,7 +34,11 @@ module Cases
     end
 
     def set_commissioning_document
-      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area).decorate
+      if @data_request_area.commissioning_document.present?
+        @commissioning_document = @data_request_area.commissioning_document.decorate
+      else
+        redirect_to case_data_request_area_path(@case, @data_request_area), flash: { alert: I18n.t("cases.commissioning_documents.not_found") }
+      end
     end
   end
 end

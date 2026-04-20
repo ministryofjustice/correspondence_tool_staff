@@ -1756,6 +1756,7 @@ en:
         email_address: Email address
         date_sent: Date sent
         status: Status
+      not_found: "The document you are looking for cannot be found. It may have been deleted or the link may be incorrect."
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
