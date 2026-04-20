@@ -96,7 +96,7 @@ GEM
       tzinfo (~> 2.0, >= 2.0.5)
     acts_as_tree (2.9.1)
       activerecord (>= 3.0.0)
-    addressable (2.8.8)
+    addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
@@ -388,13 +388,13 @@ GEM
     psych (5.3.1)
       date
       stringio
-    public_suffix (7.0.2)
+    public_suffix (7.0.5)
     puma (7.2.0)
       nio4r (~> 2.0)
     pundit (2.4.0)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (2.2.22)
+    rack (2.2.23)
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
@@ -456,7 +456,7 @@ GEM
       ostruct
     redis-client (0.23.2)
       connection_pool
-    regexp_parser (2.11.3)
+    regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
     request_store (1.6.0)
@@ -574,11 +574,13 @@ GEM
       json
       simplecov
     simplecov_json_formatter (0.1.4)
-    site_prism (4.0.3)
-      addressable (~> 2.8)
-      capybara (~> 3.27)
-      site_prism-all_there (~> 2.0)
-    site_prism-all_there (2.0.2)
+    site_prism (6.0)
+      addressable (~> 2.8, >= 2.8.4)
+      base64 (~> 0.3.0)
+      capybara (~> 3.37)
+      logger (~> 1.7)
+      site_prism-all_there (> 3, < 5)
+    site_prism-all_there (3.0.8)
     slim (5.2.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
@@ -719,7 +721,7 @@ DEPENDENCIES
   sidekiq (< 9)
   simplecov
   simplecov-json
-  site_prism (< 5.0)
+  site_prism (< 7.0)
   slim-rails (~> 3.7)
   sprockets (~> 4.2.2)
   table_print
