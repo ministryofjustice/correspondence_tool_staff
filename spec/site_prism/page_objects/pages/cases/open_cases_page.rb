@@ -14,6 +14,8 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, "input.button#search-button"
 
+        element :alert, ".error-summary-heading"
+
         section :case_filters, ".case-filters > details" do
           element :filter_cases_link, ".case-filters__summary--outer"
           element :filter_status_link, "#filter_status_content_btn"
