@@ -16,7 +16,7 @@ jobs:
       RAILS_ENV: test
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Allow tests to run
         run: |
@@ -115,7 +115,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
@@ -152,7 +152,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: 456
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@v1
@@ -160,7 +160,7 @@ jobs:
           bundler-cache: true
 
       - name: Download coverage
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: coverage
 

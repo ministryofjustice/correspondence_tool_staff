@@ -158,7 +158,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   end
 
   describe "extend Offender SAR deadline" do
-    context "with team_admin, manager and responder role and extended deadline" do
+    context "with responder, team_admin and manager role and extended deadline" do
       let(:user) { find_or_create :responder_and_team_admin_and_manager }
       let(:kase) { create :offender_sar_case, :extended_deadline_offender_sar }
 

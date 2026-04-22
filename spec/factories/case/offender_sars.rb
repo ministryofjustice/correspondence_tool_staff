@@ -190,7 +190,7 @@ FactoryBot.define do
 
   trait :stopped do
     after(:create) do |kase, evaluator|
-      create :case_transition_stop_the_clock, case: kase, acting_user: evaluator.manager
+      create :case_transition_stop_the_clock, case: kase, acting_user: evaluator.responder
     end
   end
 end
