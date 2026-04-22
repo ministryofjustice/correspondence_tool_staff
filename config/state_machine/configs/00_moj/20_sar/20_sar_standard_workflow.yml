@@ -75,6 +75,7 @@
                 auto_close:
                   if: Workflows::Predicates#can_auto_close_case?
                   transition_to: closed
+                add_message_to_case:
 
               closed:
                 add_message_to_case:
@@ -140,6 +141,8 @@
                 auto_close:
                   if: Workflows::Predicates#can_auto_close_case?
                   transition_to: closed
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               closed:
                 add_message_to_case:
@@ -184,3 +187,5 @@
                 auto_close:
                   if: Workflows::Predicates#can_auto_close_case?
                   transition_to: closed
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
