@@ -326,6 +326,16 @@ RSpec.describe DataRequestArea, type: :model do
         expect(data_request_area.commissioning_email_sent?).to be false
       end
     end
+
+    context "when the commissioning document is missing" do
+      before do
+        data_request_area.commissioning_document.destroy!
+      end
+
+      it "returns false" do
+        expect(data_request_area.commissioning_email_sent?).to be false
+      end
+    end
   end
 
   describe "#next_chase_number" do

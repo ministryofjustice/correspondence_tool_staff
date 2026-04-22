@@ -22,7 +22,7 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def request_document
-    commissioning_document.decorate.request_document
+    commissioning_document&.decorate&.request_document || I18n.t("helpers.label.commissioning_document.stage.day_1")
   end
 
   def request_dates
