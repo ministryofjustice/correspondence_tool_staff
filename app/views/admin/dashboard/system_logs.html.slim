@@ -1,0 +1,48 @@
+- content_for :heading
+  = "System Logs"
+
+= render partial: 'layouts/header'
+
+p Shows the last 500 system log entries
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Type
+          th scope='col'
+            | Source
+          th scope='col'
+            | Action
+          th scope='col'
+            | Status
+          th scope='col'
+            | Duration (ms)
+          th scope='col'
+            | Created
+          th scope='col'
+            | Completed
+          th scope='col'
+            | Error
+      tbody
+        - @system_logs.each do |log|
+          tr
+            td= log.type
+            td= log.source
+            td= log.action
+            td= log.status
+            td= log.duration_ms&.round(2)
+            td= l(log.created_at, format: :default)
+            td= log.completed_at ? l(log.completed_at, format: :default) : '-'
+            td= truncate(log.error_message, length: 50)
