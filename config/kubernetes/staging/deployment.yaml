@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: track-a-query
 spec:
-  replicas: 1
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -24,6 +24,13 @@ spec:
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 3Gi
           env:
             - name: DATABASE_URL
               valueFrom:

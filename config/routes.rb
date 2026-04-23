@@ -192,6 +192,9 @@ Rails.application.routes.draw do
     resources :sar_extensions, only: %i[new create]
     resource :sar_extensions, only: [:destroy]
 
+    resources :stop_the_clocks, only: %i[new create]
+    resources :restart_the_clocks, only: %i[new create]
+
     resources :approvals, only: %i[new create]
 
     resource :responses, only: [:create] do
@@ -307,6 +310,7 @@ Rails.application.routes.draw do
       get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
       get "/dashboard/system_logs" => "dashboard#system_logs"
       get "/dashboard/email_logs" => "dashboard#email_logs"
+      get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
     end
   end
 

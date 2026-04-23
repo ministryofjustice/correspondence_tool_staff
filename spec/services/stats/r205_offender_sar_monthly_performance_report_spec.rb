@@ -55,6 +55,9 @@ module Stats
           @rejected_offender_sar_1 = create :offender_sar_case, :rejected, identifier: "rosar-1", received_date: @period_start + 5.days
 
           @offender_sar_complaint = create :offender_sar_complaint, :ready_to_copy, identifier: "ocomp-5", received_date: @period_end + 61.minutes
+
+          @stopped_offender_sar_1 = create :offender_sar_case, :stopped, identifier: "osar-stopped-1", received_date: @period_start + 4.days
+          @stopped_offender_sar_2 = create :offender_sar_case, :stopped, identifier: "osar-stopped-2", received_date: @period_start + 23.days
         end
       end
 
@@ -64,7 +67,7 @@ module Stats
 
       it "returns only Offender SAR cases within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
-        expect(report.case_scope).to match_array([@offender_sar_2, @offender_sar_3, @offender_sar_4, @offender_sar_5])
+        expect(report.case_scope).to match_array([@offender_sar_2, @offender_sar_3, @offender_sar_4, @offender_sar_5, @stopped_offender_sar_1])
         expect(report.case_scope).not_to include [@offender_sar_complaint]
       end
 
@@ -86,7 +89,7 @@ module Stats
       end
 
       describe "stats values" do
-        it "cases in different stages" do
+        it "cases in different stages", :aggregate_failures do
           Timecop.freeze Time.zone.local(2019, 0o1, 30, 12, 0, 0) do
             @responded_in_time = create(
               :offender_sar_case,
@@ -146,14 +149,24 @@ module Stats
             expect(results[201_812][:overall_responded_in_time]).to eq(1)
             expect(results[201_812][:overall_responded_late]).to eq(2)
             expect(results[201_812][:overall_open_in_time]).to eq(1)
-            expect(results[201_812][:overall_open_late]).to eq(4)
-            expect(results[201_812][:overall_performance]).to eq(12.5)
+            expect(results[201_812][:overall_open_late]).to eq(5)
+            expect(results[201_812][:overall_performance]).to eq(11.1)
+            expect(results[201_812][:overall_max_achievable]).to eq(25.0)
+            expect(results[201_812][:overall_sar_extensions]).to eq(0)
+            expect(results[201_812][:overall_stopped]).to eq(1)
+            expect(results[201_812][:overall_total]).to eq(8)
 
             expect(results[201_901][:overall_responded_in_time]).to eq(1)
             expect(results[201_901][:overall_responded_late]).to eq(0)
             expect(results[201_901][:overall_open_in_time]).to eq(0)
-            expect(results[201_901][:overall_open_late]).to eq(0)
-            expect(results[201_901][:overall_performance]).to eq(100.0)
+            expect(results[201_901][:overall_open_late]).to eq(1)
+            expect(results[201_901][:overall_performance]).to eq(50.0)
+            expect(results[201_901][:overall_max_achievable]).to eq(100.0)
+            expect(results[201_901][:overall_sar_extensions]).to eq(0)
+            expect(results[201_901][:overall_stopped]).to eq(1)
+            expect(results[201_901][:overall_total]).to eq(1)
+
+            expect(results[:total][:overall_total]).to eq(9)
           end
         end
       end

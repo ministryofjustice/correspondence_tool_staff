@@ -1,6 +1,12 @@
 require "rails_helper"
 
 describe DeadlineCalculator::BusinessDays do
+  before do
+    allow(BusinessTimeConfig).to receive(:additional_bank_holidays).and_return([
+      Date.new(2023, 11, 30), # St Andrews Day
+    ])
+  end
+
   let(:thu_oct_19) { Date.new(2023, 10, 19) }
   let(:tue_oct_24) { Date.new(2023, 10, 24) }
 
@@ -57,15 +63,6 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze thu_may_18 do
             expect(deadline_calculator.extension_deadline(10))
               .to eq fri_jun_30.to_date
-          end
-        end
-      end
-
-      describe ".max_allowed_deadline_date" do
-        it "is 40 working days after received_date - not counting bank holiday Mon May 29" do
-          Timecop.freeze thu_may_18 do
-            expect(deadline_calculator.max_allowed_deadline_date(20))
-              .to eq fri_jul_14.to_date
           end
         end
       end
@@ -246,7 +243,7 @@ describe DeadlineCalculator::BusinessDays do
       end
 
       it "includes additional holidays" do
-        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, true, { holidays: ::BusinessTimeConfig.additional_bank_holidays })
         deadline_calculator.days_taken(thu_oct_19, tue_oct_24)
       end
     end
@@ -273,7 +270,7 @@ describe DeadlineCalculator::BusinessDays do
       end
 
       it "includes additional holidays" do
-        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ADDITIONAL_BANK_HOLIDAYS })
+        expect(thu_oct_19).to receive(:business_days_until).with(tue_oct_24, false, { holidays: ::BusinessTimeConfig.additional_bank_holidays })
         deadline_calculator.days_late(thu_oct_19, tue_oct_24)
       end
     end

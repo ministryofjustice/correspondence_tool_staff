@@ -84,9 +84,10 @@ module Stats
     def run(*)
       CaseSelector.new(case_scope)
         .cases_received_in_period(@period_start, @period_end)
-        .reject(&:unassigned?).each do |kase|
-        analyse_case(kase)
-      end
+        .reject(&:unassigned?)
+        .reject { |kase| kase.responding_team.nil? }
+        .each { |kase| analyse_case(kase) }
+
       @stats.finalise
     end
 

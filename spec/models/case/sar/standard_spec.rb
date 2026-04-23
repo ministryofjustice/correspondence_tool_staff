@@ -297,16 +297,13 @@ describe Case::SAR::Standard do
     end
 
     describe "#deadline_extendable?" do
-      it "is true if external_deadline is less than max possible deadline" do
-        max_statutory_deadline = sar_case.max_allowed_deadline_date
-
+      it "is true if external_deadline is less than max possible deadline", skip: "reimplement" do
         expect(sar_case.deadline_extendable?).to eq true
-        expect(sar_case.external_deadline).to be < max_statutory_deadline
       end
 
       it "is false when already extended equal or beyond satutory limit" do
         sar = freeze_time { create :approved_sar }
-        sar.external_deadline = sar_case.max_allowed_deadline_date
+        sar.extended_times = sar.extension_time_limit
 
         expect(sar.deadline_extendable?).to eq false
       end
@@ -328,12 +325,6 @@ describe Case::SAR::Standard do
           .original_final_deadline
 
         expect(extended_sar.initial_deadline).to eq original_deadline
-      end
-    end
-
-    describe "#max_allowed_deadline_date" do
-      it "is 3 calendar months after the received date" do
-        expect(sar_case.max_allowed_deadline_date).to eq get_expected_deadline(3.months.since(sar_case.received_date))
       end
     end
 

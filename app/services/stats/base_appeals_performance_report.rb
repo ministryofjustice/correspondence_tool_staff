@@ -32,7 +32,11 @@ module Stats
     end
 
     def run(*)
-      Case::Base.find(case_ids).reject(&:unassigned?).each { |kase| analyse_case(kase) }
+      Case::Base.find(case_ids)
+        .reject(&:unassigned?)
+        .reject { |kase| kase.responding_team.nil? }
+        .each { |kase| analyse_case(kase) }
+
       @stats.finalise
     end
 

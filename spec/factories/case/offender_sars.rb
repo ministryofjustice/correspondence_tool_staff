@@ -140,6 +140,17 @@ FactoryBot.define do
     end
   end
 
+  trait :extended_deadline_offender_sar do
+    after(:create) do |kase, evaluator|
+      create :case_transition_extend_sar_deadline_by_30_days,
+             case: kase,
+             acting_team: evaluator.managing_team,
+             acting_user: evaluator.manager
+
+      kase.extend_deadline!(kase.external_deadline + 30.days, 1)
+    end
+  end
+
   trait :closed do
     transient do
       identifier { "Closed Offender SAR" }
@@ -175,5 +186,11 @@ FactoryBot.define do
 
   trait :flag_as_dps_missing_data do
     flag_as_dps_missing_data { true }
+  end
+
+  trait :stopped do
+    after(:create) do |kase, evaluator|
+      create :case_transition_stop_the_clock, case: kase, acting_user: evaluator.responder
+    end
   end
 end

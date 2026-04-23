@@ -176,6 +176,11 @@ private
       number: params.fetch(:original_case_number),
     )
 
+    if original_case.nil?
+      @linked_case_error = ico_error("related_case_number", :missing)
+      return false
+    end
+
     if related_case == original_case
       @linked_case_error = ico_error("related_case_number", :already_linked)
       return false

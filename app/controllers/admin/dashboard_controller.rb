@@ -31,6 +31,10 @@ class Admin::DashboardController < AdminController
     @version = Settings.git_commit
   end
 
+  def bank_holidays
+    @bank_holidays = BankHoliday.order(created_at: :desc).page(params[:page]).per(50)
+  end
+
   def personal_information_requests
     @personal_information_requests = PersonalInformationRequest
                                       .unscoped

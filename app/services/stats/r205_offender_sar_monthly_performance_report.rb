@@ -33,6 +33,27 @@ module Stats
     def add_report_callbacks
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_total_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_percentages(@stats) })
+      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_max_achievable(@stats) })
+      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_sar_extensions(@stats) })
+    end
+
+    def analyse_case(kase)
+      super do |month, column_key|
+        @stats.record_stats(month, column_key)
+
+        unless kase.stopped?
+          @stats.record_stats(:total, column_key)
+        end
+
+        # TODO: Implement extend_sar_deadline event for Offender SARs
+        if kase.try(:sar_extensions)&.any?
+          @stats.record_stats(month, :overall_sar_extensions)
+        end
+
+        if kase.stopped?
+          @stats.record_stats(month, :overall_stopped)
+        end
+      end
     end
   end
 end

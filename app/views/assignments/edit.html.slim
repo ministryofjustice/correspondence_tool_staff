@@ -8,7 +8,7 @@
 
 div id="case-#{@correspondence_type_key}" class="case"
   section.case-info
-    = render partial: 'cases/case_status', locals: { case_details: @case }
+    = render partial: 'cases/case_status', locals: { case_details: @case, permitted_events: [] }
 
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: { case_details: @case }

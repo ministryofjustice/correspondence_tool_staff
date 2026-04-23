@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Assume role in Cloud Platform
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
@@ -75,10 +75,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Assume role in Cloud Platform
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
@@ -118,6 +118,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/development/cronjob-bank-holidays.yaml
 
   notify-development:
     needs: [build, deploy-development]
@@ -145,10 +147,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Assume role in Cloud Platform
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
@@ -188,6 +190,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/close-expired-rejected-offender-sars \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/staging/cronjob-bank-holidays.yaml
 
   notify-staging:
     needs: [build, deploy-staging]
@@ -215,10 +219,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Assume role in Cloud Platform
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
@@ -261,6 +265,11 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/send-chase-emails \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/qa/cronjob-bank-holidays.yaml
+
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/auto-close-paused-sar-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
   notify-qa:
     needs: [build, deploy-qa]
@@ -289,10 +298,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Assume role in Cloud Platform
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
           aws-region: ${{ vars.ECR_REGION }}
@@ -341,6 +350,8 @@ jobs:
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/rpi-delete \
             jobs="${{ vars.ECR_URL }}:$SHA"
+          
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/production/cronjob-bank-holidays.yaml
 
   notify-production:
     needs: [build, deploy-production]

@@ -53,11 +53,6 @@ module DeadlineCalculator
       calculate(kase.correspondence_type.external_time_limit + time_limit)
     end
 
-    def max_allowed_deadline_date(time_limit = nil)
-      time_limit ||= kase.correspondence_type.extension_time_limit || 0
-      extension_deadline(time_limit)
-    end
-
     def time_units_desc_for_deadline(time_limit = 1)
       "business #{'day'.pluralize(time_limit)}".freeze
     end
@@ -86,7 +81,7 @@ module DeadlineCalculator
     end
 
     def options
-      kase.all_holidays? ? { holidays: ADDITIONAL_BANK_HOLIDAYS } : {}
+      kase.all_holidays? ? { holidays: ::BusinessTimeConfig.additional_bank_holidays } : {}
     end
   end
 end

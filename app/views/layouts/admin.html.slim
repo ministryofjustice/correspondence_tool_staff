@@ -22,6 +22,8 @@
             = link_to "System Logs", admin_dashboard_system_logs_path
           li class="tab #{active_link_class('/admin/dashboard/email_logs')}"
             = link_to "Email Logs", admin_dashboard_email_logs_path
+          li class="tab #{active_link_class('/admin/dashboard/bank-holidays')}"
+            = link_to "Bank Holidays", admin_dashboard_bank_holidays_path
   = yield
 
 = render template: "layouts/application"
