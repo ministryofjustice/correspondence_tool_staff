@@ -17,6 +17,8 @@ gem "awesome_print"
 gem "aws-sdk-s3"
 # AXLSX styler - easy styling of cells based on cell references
 gem "axlsx_styler"
+# Used to try and track down N+1 query problems
+gem "bullet"
 gem "business_time"
 gem "config"
 gem "devise"
@@ -96,8 +98,6 @@ group :development, :test do
   gem "better_errors"
   gem "binding_of_caller"
   gem "brakeman"
-  # Used to try and track down N+1 query problems
-  gem "bullet"
   gem "colorize"
   gem "debug", ">= 1.0.0"
   gem "parallel_tests"

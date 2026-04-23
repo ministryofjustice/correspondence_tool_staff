@@ -116,6 +116,15 @@ module Cases
           :approver_assignments,
           :managing_team,
           :responding_team,
+          :late_team,
+          :creator,
+          :transitions,
+          :cases_exemptions,
+          :exemptions,
+          :info_held_status,
+          :outcome,
+          :refusal_reason,
+          :appeal_outcome,
         )
 
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
