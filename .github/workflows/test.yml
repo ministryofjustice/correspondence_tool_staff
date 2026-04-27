@@ -126,7 +126,7 @@ jobs:
         run: yarn install --pure-lockfile
 
       - name: Setup databases
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 1
           max_attempts: 3
