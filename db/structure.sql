@@ -833,6 +833,72 @@ ALTER SEQUENCE public.data_requests_id_seq OWNED BY public.data_requests.id;
 
 
 --
+-- Name: event_store_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_store_events (
+    id bigint NOT NULL,
+    event_id uuid NOT NULL,
+    event_type character varying NOT NULL,
+    metadata jsonb,
+    data jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    valid_at timestamp(6) without time zone
+);
+
+
+--
+-- Name: event_store_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_store_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_store_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_store_events_id_seq OWNED BY public.event_store_events.id;
+
+
+--
+-- Name: event_store_events_in_streams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.event_store_events_in_streams (
+    id bigint NOT NULL,
+    stream character varying NOT NULL,
+    "position" integer,
+    event_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: event_store_events_in_streams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.event_store_events_in_streams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: event_store_events_in_streams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.event_store_events_in_streams_id_seq OWNED BY public.event_store_events_in_streams.id;
+
+
+--
 -- Name: feedback; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1579,6 +1645,20 @@ ALTER TABLE ONLY public.data_requests ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: event_store_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_store_events ALTER COLUMN id SET DEFAULT nextval('public.event_store_events_id_seq'::regclass);
+
+
+--
+-- Name: event_store_events_in_streams id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_store_events_in_streams ALTER COLUMN id SET DEFAULT nextval('public.event_store_events_in_streams_id_seq'::regclass);
+
+
+--
 -- Name: feedback id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2203,6 +2283,62 @@ CREATE INDEX index_data_requests_on_user_id ON public.data_requests USING btree 
 
 
 --
+-- Name: index_event_store_events_in_streams_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_store_events_in_streams_on_created_at ON public.event_store_events_in_streams USING btree (created_at);
+
+
+--
+-- Name: index_event_store_events_in_streams_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_store_events_in_streams_on_event_id ON public.event_store_events_in_streams USING btree (event_id);
+
+
+--
+-- Name: index_event_store_events_in_streams_on_stream_and_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_event_store_events_in_streams_on_stream_and_event_id ON public.event_store_events_in_streams USING btree (stream, event_id);
+
+
+--
+-- Name: index_event_store_events_in_streams_on_stream_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_event_store_events_in_streams_on_stream_and_position ON public.event_store_events_in_streams USING btree (stream, "position");
+
+
+--
+-- Name: index_event_store_events_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_store_events_on_created_at ON public.event_store_events USING btree (created_at);
+
+
+--
+-- Name: index_event_store_events_on_event_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_event_store_events_on_event_id ON public.event_store_events USING btree (event_id);
+
+
+--
+-- Name: index_event_store_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_store_events_on_event_type ON public.event_store_events USING btree (event_type);
+
+
+--
+-- Name: index_event_store_events_on_valid_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_event_store_events_on_valid_at ON public.event_store_events USING btree (valid_at);
+
+
+--
 -- Name: index_letter_templates_on_abbreviation; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2441,6 +2577,14 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
+-- Name: event_store_events_in_streams fk_rails_c8d52b5857; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_store_events_in_streams
+    ADD CONSTRAINT fk_rails_c8d52b5857 FOREIGN KEY (event_id) REFERENCES public.event_store_events(event_id);
+
+
+--
 -- Name: data_requests fk_rails_e762904f02; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2463,6 +2607,9 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260429003452'),
+('20260327090000'),
+('20260318100000'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),
@@ -2651,3 +2798,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160722121207'),
 ('20260318100000'),
 ('20260327090000');
+('20160722121207');
+
