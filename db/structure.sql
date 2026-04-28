@@ -1916,6 +1916,22 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
+-- Name: event_store_events_in_streams event_store_events_in_streams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_store_events_in_streams
+    ADD CONSTRAINT event_store_events_in_streams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event_store_events event_store_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.event_store_events
+    ADD CONSTRAINT event_store_events_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: feedback feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
