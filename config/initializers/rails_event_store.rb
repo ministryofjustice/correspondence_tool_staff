@@ -2,6 +2,12 @@ require "rails_event_store"
 require "aggregate_root"
 require "arkency/command_bus"
 
+require_relative "../../app/events/subscribers/email_subscriber"
+require_relative "../../app/events/subscribers/rpi_subscriber"
+require_relative "../../app/events/email_sent"
+require_relative "../../app/events/rpi_processed"
+require_relative "../../app/events/rpi_unprocessed"
+
 Rails.configuration.to_prepare do
   Rails.configuration.event_store = RailsEventStore::JSONClient.new
   Rails.configuration.command_bus = Arkency::CommandBus.new
@@ -15,6 +21,9 @@ Rails.configuration.to_prepare do
     # store.subscribe(InvoiceReadModel.new, to: [InvoicePrinted])
     # store.subscribe(lambda { |event| SendOrderConfirmation.new.call(event) }, to: [OrderSubmitted])
     # store.subscribe_to_all_events(lambda { |event| Rails.logger.info(event.event_type) })
+
+    store.subscribe(Events::Subscribers::EmailSubscriber.new, to: [Events::EmailSent])
+    store.subscribe(Events::Subscribers::RpiSubscriber.new, to: [Events::RpiProcessed, Events::RpiUnprocessed])
 
     store.subscribe_to_all_events(RailsEventStore::LinkByEventType.new)
     store.subscribe_to_all_events(RailsEventStore::LinkByCorrelationId.new)
