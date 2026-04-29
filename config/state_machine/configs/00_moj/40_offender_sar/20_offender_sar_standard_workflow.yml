@@ -184,6 +184,8 @@
                   if: Workflows::Predicates#can_auto_close_case?
                   transition_to: closed
                 add_note_to_case:
+                add_data_received:
+                edit_case:
 
               closed:
                 add_note_to_case:
