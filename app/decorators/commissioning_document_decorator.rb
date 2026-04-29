@@ -10,6 +10,8 @@ class CommissioningDocumentDecorator < Draper::Decorator
   end
 
   def updated_at
+    return if super.blank?
+
     I18n.l(super, format: :default)
   end
 
