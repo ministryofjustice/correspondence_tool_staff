@@ -136,7 +136,7 @@ describe Admin::DashboardController do
       )
     end
     let(:event_store) { instance_double(RailsEventStore::Client) }
-    let(:reader) { instance_double("RailsEventStore::ReadSpecification") }
+    let(:reader) { instance_double(RailsEventStore::ReadSpecification) }
 
     before do
       sign_in admin

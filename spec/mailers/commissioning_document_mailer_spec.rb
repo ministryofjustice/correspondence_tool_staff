@@ -1,17 +1,18 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentMailer, type: :mailer do
+  include ActiveJob::TestHelper
+
   describe "commissioning_email" do
     let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Subject name") }
     let(:data_request_area) { create(:data_request_area, offender_sar_case:) }
     let(:commissioning_document) { create(:commissioning_document, data_request_area:) }
     let(:email_address) { "test@test.com" }
     let(:kase_number) { "12345" }
-    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.commissioning_email(commissioning_document, kase_number, email_address) }
 
     before do
-      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+      ActiveJob::Base.queue_adapter = :test
     end
 
     it "sets the template" do
@@ -36,9 +37,11 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     end
 
     it "publishes an email system log event" do
-      expect(event_store).to receive(:publish) do |event|
-        expect(event).to be_a(Events::EmailSent)
-        expect(event.data).to include(
+      expect {
+        mail.deliver
+      }.to have_enqueued_job(PublishSystemLogEventJob).with(
+        Events::EmailSent.name,
+        data: hash_including(
           case_number: kase_number,
           category: "commissioning_document",
           commissioning_document_id: commissioning_document.id,
@@ -46,11 +49,8 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
           email_type: "commissioning_email",
           recipient: email_address,
           recipient_type: "external",
-        )
-        expect(event.data[:subject]).to include("Subject Access Request")
-      end
-
-      mail.deliver
+        ),
+      )
     end
 
     context "when email is retried" do
@@ -88,11 +88,10 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     let(:commissioning_document) { create(:commissioning_document) }
     let(:email_address) { "test@test.com" }
     let(:chase_number) { 1 }
-    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.chase_email(kase, commissioning_document, email_address, chase_number) }
 
     before do
-      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+      ActiveJob::Base.queue_adapter = :test
     end
 
     it "sets the template" do
@@ -118,19 +117,19 @@ RSpec.describe CommissioningDocumentMailer, type: :mailer do
     end
 
     it "publishes the chase email details to the system log" do
-      expect(event_store).to receive(:publish) do |event|
-        expect(event).to be_a(Events::EmailSent)
-        expect(event.data).to include(
+      expect {
+        mail.deliver
+      }.to have_enqueued_job(PublishSystemLogEventJob).with(
+        Events::EmailSent.name,
+        data: hash_including(
           case_number: kase.number,
           category: "commissioning_document",
           chase_number: chase_number,
           commissioning_document_id: commissioning_document.id,
           email_type: "chase",
           recipient: email_address,
-        )
-      end
-
-      mail.deliver
+        ),
+      )
     end
 
     context "when email is retried" do

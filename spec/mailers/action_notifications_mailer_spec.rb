@@ -1,13 +1,14 @@
 require "rails_helper"
 
 RSpec.describe ActionNotificationsMailer, type: :mailer do
+  include ActiveJob::TestHelper
+
   describe "new_assignment" do
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
-    let(:event_store)     { instance_double(RailsEventStore::Client, publish: true) }
 
     before do
-      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+      ActiveJob::Base.queue_adapter = :test
     end
 
     context "when FOI case" do
@@ -49,9 +50,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
 
       it "publishes a system log email event" do
-        expect(event_store).to receive(:publish) do |event|
-          expect(event).to be_a(Events::EmailSent)
-          expect(event.data).to include(
+        expect {
+          mail.deliver
+        }.to have_enqueued_job(PublishSystemLogEventJob).with(
+          Events::EmailSent.name,
+          data: hash_including(
             category: "case_notification",
             email_type: "new_assignment",
             assignment_id: assignment.id,
@@ -60,10 +63,8 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
             recipient: responder.email,
             recipient_type: "internal_staff",
             team_id: assignment.team_id,
-          )
-        end
-
-        mail.deliver
+          ),
+        )
       end
     end
 
@@ -433,11 +434,10 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
   describe "rpi_email" do
     let(:rpi) { create :personal_information_request }
     let(:target) { :branston }
-    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.rpi_email(rpi, target) }
 
     before do
-      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+      ActiveJob::Base.queue_adapter = :test
     end
 
     it "sets the template" do
@@ -454,9 +454,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
 
     it "publishes an rpi system log event" do
-      expect(event_store).to receive(:publish) do |event|
-        expect(event).to be_a(Events::EmailSent)
-        expect(event.data).to include(
+      expect {
+        mail.deliver
+      }.to have_enqueued_job(PublishSystemLogEventJob).with(
+        Events::EmailSent.name,
+        data: hash_including(
           category: "rpi",
           email_type: "rpi_email",
           personal_information_request_id: rpi.id,
@@ -464,10 +466,8 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
           recipient_type: "team_mailbox",
           submission_id: rpi.submission_id,
           target: target,
-        )
-      end
-
-      mail.deliver
+        ),
+      )
     end
   end
 end
