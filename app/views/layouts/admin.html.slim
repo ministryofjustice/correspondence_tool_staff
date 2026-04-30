@@ -20,8 +20,8 @@
             = link_to "Bank Holidays", admin_dashboard_bank_holidays_path
           li class="tab #{active_link_class('/admin/dashboard/personal_information_requests')}"
             = link_to "RPI", admin_dashboard_personal_information_requests_path
-          li class="tab #{active_link_class('/admin/dashboard/system_logs')}"
-            = link_to "System Logs", admin_dashboard_system_logs_path
+          li class="tab #{active_link_class('/admin/dashboard/events')}"
+            = link_to "Events", admin_dashboard_events_path
   = yield
 
 = render template: "layouts/application"

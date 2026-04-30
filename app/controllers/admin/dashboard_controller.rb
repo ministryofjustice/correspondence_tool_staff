@@ -42,8 +42,8 @@ class Admin::DashboardController < AdminController
                                       .limit(500)
   end
 
-  def system_logs
-    @system_logs = RailsEventStore::Client.new.read.backward.limit(100).to_a
+  def events
+    @events = RailsEventStore::Client.new.read.backward.newer_than_or_equal(30.days.ago).to_a
   end
 
 private

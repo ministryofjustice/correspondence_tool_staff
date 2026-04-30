@@ -1,0 +1,91 @@
+- content_for :heading
+  = "System Logs"
+
+= render partial: 'layouts/header'
+
+.case-status__info.case-status__info--details
+  .case-status__group.status
+    .case-status__data--large
+      strong= "Summary"
+
+  .case-status__group.page-counts
+    .grid-row
+      .column-one-half
+        .case-status__heading.case-status__heading--pages
+          strong= "Total emails sent"
+        .case-status__date-value = 330
+      .column-one-half
+        .case-status__heading.case-status__heading--pages
+          strong= "Total rpi failed"
+        .case-status__date-value = 93
+
+.grid-row
+  .column-full
+    p.button-holder
+      a.button href='#events-email-failed' Email Failed
+      |
+      a.button href='#events-rpi-failed' RPI Failed
+      |
+      a.button href='#events-other' Other
+
+
+p Shows system events from the past 30 days only.
+.grid-row.case-status#summary
+  .grid-row
+    .column-full.table-container.container
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+          col
+        thead
+          tr
+            th scope='col'
+              | Event
+            th scope='col'
+              | Time
+            th scope='col'
+              | Data
+        tbody
+          - @events.each do |event|
+            tr
+              td= event.class.name
+              td= l(event.timestamp, format: :default)
+              td= event.data
+
+
+<div class="moj-scrollable-pane" role="region" aria-label="Historic rainfall in June" tabindex="0">
+  <table class="govuk-table">
+    <caption class="govuk-table__caption">Historic rainfall in June</caption>
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Station</th>
+        <th scope="col" class="govuk-table__header">2022</th>
+        <th scope="col" class="govuk-table__header">2021</th>
+        <th scope="col" class="govuk-table__header">2020</th>
+        <th scope="col" class="govuk-table__header">2019</th>
+        <th scope="col" class="govuk-table__header">2018</th>
+        <th scope="col" class="govuk-table__header">2017</th>
+        <th scope="col" class="govuk-table__header">2016</th>
+        <th scope="col" class="govuk-table__header">2015</th>
+        <th scope="col" class="govuk-table__header">2014</th>
+        <th scope="col" class="govuk-table__header">2013</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">Lerwick</td>
+        <td class="govuk-table__cell">13.7mm</td>
+        <td class="govuk-table__cell">13.8mm</td>
+        <td class="govuk-table__cell">13.9mm</td>
+        <td class="govuk-table__cell">12.7mm</td>
+        <td class="govuk-table__cell">13.3mm</td>
+        <td class="govuk-table__cell">13.3mm</td>
+        <td class="govuk-table__cell">12.9mm</td>
+        <td class="govuk-table__cell">11.2mm</td>
+        <td class="govuk-table__cell">13.3mm</td>
+        <td class="govuk-table__cell">12.7mm</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
