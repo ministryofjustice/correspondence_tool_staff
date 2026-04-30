@@ -3,7 +3,12 @@ require "rails_helper"
 RSpec.describe DeviseMailer, type: :mailer do
   describe "#reset_password_instructions" do
     let(:user) { create :user, full_name: "Someone" }
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.reset_password_instructions user, "nEAanath7ath7at8aWF" }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+    end
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -23,11 +28,31 @@ RSpec.describe DeviseMailer, type: :mailer do
     it "sets the To address of the email" do
       expect(mail.to).to include user.email
     end
+
+    it "publishes an account access system log event" do
+      expect(event_store).to receive(:publish) do |event|
+        expect(event).to be_a(Events::EmailSent)
+        expect(event.data).to include(
+          category: "account_access",
+          email_type: "reset_password_instructions",
+          recipient: user.email,
+          recipient_type: "internal_staff",
+          user_id: user.id,
+        )
+      end
+
+      mail.deliver
+    end
   end
 
   describe "unlock_instructions" do
     let(:user) { create :user, full_name: "Someone" }
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.unlock_instructions(user, "nEAanath7ath7at8aWF") }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+    end
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -46,6 +71,21 @@ RSpec.describe DeviseMailer, type: :mailer do
 
     it "sets the To address of the email" do
       expect(mail.to).to include user.email
+    end
+
+    it "publishes an unlock system log event" do
+      expect(event_store).to receive(:publish) do |event|
+        expect(event).to be_a(Events::EmailSent)
+        expect(event.data).to include(
+          category: "account_access",
+          email_type: "unlock_instructions",
+          recipient: user.email,
+          recipient_type: "internal_staff",
+          user_id: user.id,
+        )
+      end
+
+      mail.deliver
     end
   end
 end

@@ -1,8 +1,11 @@
 class CommissioningDocumentMailer < GovukNotifyRails::Mailer
+  include PublishesSystemLogEmail
+
   attr_reader :data_request_email
 
   before_action :setup
   after_deliver :set_notify_id
+  after_deliver :publish_email_sent_event
 
   def commissioning_email(commissioning_document, kase_number, recipient)
     set_template(Settings.commissioning_notify_template)
@@ -14,6 +17,13 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
     @data_request_email = DataRequestEmail.find_or_create_by!(
       email_address: recipient,
       data_request_area: commissioning_document.data_request_area,
+    )
+
+    set_email_event_context(
+      case_number: kase_number,
+      category: "commissioning_document",
+      commissioning_document:,
+      email_type: @data_request_email.email_type,
     )
 
     mail(to: recipient)
@@ -39,6 +49,14 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       chase_number:,
     )
 
+    set_email_event_context(
+      case_number: kase.number,
+      category: "commissioning_document",
+      chase_number:,
+      commissioning_document:,
+      email_type: @data_request_email.email_type,
+    )
+
     mail(to: recipient)
   end
 
@@ -60,6 +78,14 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       data_request_area: commissioning_document.data_request_area,
       email_type: "chase_escalation",
       chase_number:,
+    )
+
+    set_email_event_context(
+      case_number: kase.number,
+      category: "commissioning_document",
+      chase_number:,
+      commissioning_document:,
+      email_type: @data_request_email.email_type,
     )
 
     mail(to: recipient)
@@ -85,6 +111,14 @@ class CommissioningDocumentMailer < GovukNotifyRails::Mailer
       chase_number:,
     )
 
+    set_email_event_context(
+      case_number: kase.number,
+      category: "commissioning_document",
+      chase_number:,
+      commissioning_document:,
+      email_type: @data_request_email.email_type,
+    )
+
     mail(to: recipient)
   end
 
@@ -104,5 +138,26 @@ private
     return if data_request_email.nil?
 
     data_request_email.update!(notify_id: message.govuk_notify_response.id)
+  end
+
+  def email_event_context
+    @email_event_context.merge(
+      data_request_area_id: data_request_email&.data_request_area_id,
+      data_request_email_id: data_request_email&.id,
+      status: data_request_email&.status,
+      data_request_email_status: data_request_email&.status,
+    ).compact
+  end
+
+  def set_email_event_context(case_number:, category:, commissioning_document:, email_type:, chase_number: nil)
+    @email_event_context = {
+      case_id: commissioning_document.data_request_area.case_id,
+      case_number:,
+      category:,
+      commissioning_document_id: commissioning_document.id,
+      email_type:,
+      recipient_type: "external",
+      chase_number:,
+    }.compact
   end
 end

@@ -12,21 +12,12 @@
     .grid-row
       .column-one-half
         .case-status__heading.case-status__heading--pages
-          strong= "Total emails sent"
-        .case-status__date-value = 330
+          strong= "Total email events"
+        .case-status__date-value = @email_events_count
       .column-one-half
         .case-status__heading.case-status__heading--pages
-          strong= "Total rpi failed"
-        .case-status__date-value = 93
-
-.grid-row
-  .column-full
-    p.button-holder
-      a.button href='#events-email-failed' Email Failed
-      |
-      a.button href='#events-rpi-failed' RPI Failed
-      |
-      a.button href='#events-other' Other
+          strong= "Total system events"
+        .case-status__date-value = @events.count
 
 
 p Shows system events from the past 30 days only.
@@ -38,54 +29,25 @@ p Shows system events from the past 30 days only.
           col
           col
           col
+          col
+          col
         thead
           tr
             th scope='col'
               | Event
             th scope='col'
+              | Recipient
+            th scope='col'
+              | Subject
+            th scope='col'
               | Time
             th scope='col'
-              | Data
+              | Details
         tbody
           - @events.each do |event|
             tr
-              td= event.class.name
+              td= event.name
+              td= event.recipient || "-"
+              td= event.subject || "-"
               td= l(event.timestamp, format: :default)
-              td= event.data
-
-
-<div class="moj-scrollable-pane" role="region" aria-label="Historic rainfall in June" tabindex="0">
-  <table class="govuk-table">
-    <caption class="govuk-table__caption">Historic rainfall in June</caption>
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Station</th>
-        <th scope="col" class="govuk-table__header">2022</th>
-        <th scope="col" class="govuk-table__header">2021</th>
-        <th scope="col" class="govuk-table__header">2020</th>
-        <th scope="col" class="govuk-table__header">2019</th>
-        <th scope="col" class="govuk-table__header">2018</th>
-        <th scope="col" class="govuk-table__header">2017</th>
-        <th scope="col" class="govuk-table__header">2016</th>
-        <th scope="col" class="govuk-table__header">2015</th>
-        <th scope="col" class="govuk-table__header">2014</th>
-        <th scope="col" class="govuk-table__header">2013</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell">Lerwick</td>
-        <td class="govuk-table__cell">13.7mm</td>
-        <td class="govuk-table__cell">13.8mm</td>
-        <td class="govuk-table__cell">13.9mm</td>
-        <td class="govuk-table__cell">12.7mm</td>
-        <td class="govuk-table__cell">13.3mm</td>
-        <td class="govuk-table__cell">13.3mm</td>
-        <td class="govuk-table__cell">12.9mm</td>
-        <td class="govuk-table__cell">11.2mm</td>
-        <td class="govuk-table__cell">13.3mm</td>
-        <td class="govuk-table__cell">12.7mm</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+              td= event.details

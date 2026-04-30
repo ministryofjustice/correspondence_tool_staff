@@ -16,6 +16,11 @@ require "rails_helper"
 
 RSpec.describe DataRequestEmail, type: :model do
   let(:job) { class_double(EmailStatusJob) }
+  let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
+
+  before do
+    allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+  end
 
   describe ".recent" do
     it "returns email created within last 7 days" do
@@ -79,6 +84,24 @@ RSpec.describe DataRequestEmail, type: :model do
       expect(job).to receive(:perform_later)
       create(:data_request_email)
     end
+
+    it "publishes an email queued event" do
+      allow(EmailStatusJob).to receive(:set).with(wait: 15.seconds).and_return(job)
+      allow(job).to receive(:perform_later)
+
+      expect(event_store).to receive(:publish) do |event|
+        expect(event).to be_a(Events::EmailQueued)
+        expect(event.data).to include(
+          category: "commissioning_document",
+          email_type: "commissioning_email",
+          recipient: "test@user.com",
+          recipient_type: "external",
+          status: "created",
+        )
+      end
+
+      create(:data_request_email)
+    end
   end
 
   describe "#update_status_with_delay" do
@@ -106,6 +129,22 @@ RSpec.describe DataRequestEmail, type: :model do
       it "updates the status" do
         expect { email.update_status! }.to change(email, :status).to "delivered"
       end
+
+      it "publishes an email delivered event" do
+        expect(event_store).to receive(:publish) do |event|
+          expect(event).to be_a(Events::EmailDelivered)
+          expect(event.data).to include(
+            category: "commissioning_document",
+            email_type: "commissioning_email",
+            notify_id: email.notify_id,
+            previous_status: "created",
+            recipient: email.email_address,
+            status: "delivered",
+          )
+        end
+
+        email.update_status!
+      end
     end
 
     context "when email status should not be updated" do
@@ -113,6 +152,26 @@ RSpec.describe DataRequestEmail, type: :model do
 
       it "does not update the status" do
         expect { email.update_status! }.not_to(change(email, :status))
+      end
+    end
+
+    context "when email delivery fails" do
+      let(:client_response) { OpenStruct.new(status: "permanent-failure") }
+
+      it "publishes an email failed event" do
+        expect(event_store).to receive(:publish) do |event|
+          expect(event).to be_a(Events::EmailFailed)
+          expect(event.data).to include(
+            category: "commissioning_document",
+            email_type: "commissioning_email",
+            notify_id: email.notify_id,
+            previous_status: "created",
+            recipient: email.email_address,
+            status: "permanent-failure",
+          )
+        end
+
+        email.update_status!
       end
     end
   end
