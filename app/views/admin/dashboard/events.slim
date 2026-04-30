@@ -1,5 +1,5 @@
 - content_for :heading
-  = "System Logs"
+  = "System events log"
 
 = render partial: 'layouts/header'
 
@@ -16,11 +16,13 @@
         .case-status__date-value = @email_events_count
       .column-one-half
         .case-status__heading.case-status__heading--pages
-          strong= "Total system events"
+          strong= "Total system events past 30 days"
         .case-status__date-value = @events.count
 
+.grid-row
+  .column-full
+    p.summary Shows system events from the past 30 days only.
 
-p Shows system events from the past 30 days only.
 .grid-row.case-status#summary
   .grid-row
     .column-full.table-container.container
