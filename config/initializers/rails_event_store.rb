@@ -2,11 +2,11 @@ require "rails_event_store"
 require "aggregate_root"
 require "arkency/command_bus"
 
-require_relative "../../app/events/events/subscribers/email_subscriber"
-require_relative "../../app/events/events/subscribers/rpi_subscriber"
-require_relative "../../app/events/events/email_sent"
-require_relative "../../app/events/events/rpi_processed"
-require_relative "../../app/events/events/rpi_unprocessed"
+require_relative "../../app/pub_sub/events/subscribers/email_subscriber"
+require_relative "../../app/pub_sub/events/subscribers/rpi_subscriber"
+require_relative "../../app/pub_sub/events/email_sent"
+require_relative "../../app/pub_sub/events/rpi_processed"
+require_relative "../../app/pub_sub/events/rpi_unprocessed"
 
 Rails.configuration.to_prepare do
   Rails.configuration.event_store = RailsEventStore::JSONClient.new
