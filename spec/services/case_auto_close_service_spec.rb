@@ -8,7 +8,7 @@ describe CaseAutoCloseService do
     let(:user) { find_or_create :manager_approver }
 
     before do
-      test_cases = [(3.months + 1.day).ago, 3.months.ago, 2.months.ago]
+      test_cases = [91.days.ago, 3.months.ago, 2.months.ago]
 
       [kase1, kase2, kase3].each_with_index do |kase, index|
         kase.state_machine.stop_the_clock!(
