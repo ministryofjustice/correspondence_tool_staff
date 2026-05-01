@@ -4,6 +4,11 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
   describe "new_assignment" do
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
+    let(:event_store)     { instance_double(RailsEventStore::Client, publish: true) }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+    end
 
     context "when FOI case" do
       let(:assigned_case) do
@@ -41,6 +46,27 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
       it "sets the To address of the email using the provided user" do
         expect(mail.to).to include responder.email
+      end
+
+      it "publishes a system log email event" do
+        published_event = nil
+        allow(event_store).to receive(:publish) { |event| published_event = event }
+
+        mailer = described_class.new
+        mailer.new_assignment(assignment, responder.email)
+        mailer.send(:publish_email_sent_event)
+
+        expect(published_event).to be_a(Events::EmailSent)
+        expect(published_event.data).to include(
+          category: "case_notification",
+          email_type: "new_assignment",
+          assignment_id: assignment.id,
+          case_id: assigned_case.id,
+          case_number: assigned_case.number,
+          recipient: responder.email,
+          recipient_type: "internal_staff",
+          team_id: assignment.team_id,
+        )
       end
     end
 
@@ -410,7 +436,12 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
   describe "rpi_email" do
     let(:rpi) { create :personal_information_request }
     let(:target) { :branston }
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.rpi_email(rpi, target) }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+    end
 
     it "sets the template" do
       expect(mail.govuk_notify_template)
@@ -423,6 +454,26 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     it "sets the To address of the email based on the target" do
       expect(mail.to).to include PersonalInformationRequest.email_for_target(target)
+    end
+
+    it "publishes an rpi system log event" do
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      mailer = described_class.new
+      mailer.rpi_email(rpi, target)
+      mailer.send(:publish_email_sent_event)
+
+      expect(published_event).to be_a(Events::EmailSent)
+      expect(published_event.data).to include(
+        category: "rpi",
+        email_type: "rpi_email",
+        personal_information_request_id: rpi.id,
+        recipient: PersonalInformationRequest.email_for_target(target),
+        recipient_type: "team_mailbox",
+        submission_id: rpi.submission_id,
+        target: target,
+      )
     end
   end
 end

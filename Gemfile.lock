@@ -98,9 +98,13 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.8.8)
       public_suffix (>= 2.0.2, < 8.0)
+    aggregate_root (2.18.0)
+      ruby_event_store (= 2.18.0)
     annotate (3.2.0)
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
+    arkency-command_bus (0.4.1)
+      concurrent-ruby
     ast (2.4.3)
     awesome_print (1.9.2)
     aws-eventstream (1.4.0)
@@ -434,6 +438,17 @@ GEM
     rails-i18n (7.0.10)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
+    rails_event_store (2.18.0)
+      activejob (>= 6.0)
+      activemodel (>= 6.0)
+      activesupport (>= 6.0)
+      aggregate_root (= 2.18.0)
+      arkency-command_bus (>= 0.4)
+      rails_event_store_active_record (= 2.18.0)
+      ruby_event_store (= 2.18.0)
+      ruby_event_store-browser (= 2.18.0)
+    rails_event_store_active_record (2.18.0)
+      ruby_event_store-active_record (= 2.18.0)
     railties (7.2.3.1)
       actionpack (= 7.2.3.1)
       activesupport (= 7.2.3.1)
@@ -524,6 +539,14 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    ruby_event_store (2.18.0)
+      concurrent-ruby (~> 1.0, >= 1.1.6)
+    ruby_event_store-active_record (2.18.0)
+      activerecord (>= 6.0)
+      ruby_event_store (= 2.18.0)
+    ruby_event_store-browser (2.18.0)
+      rack
+      ruby_event_store (= 2.18.0)
     rubyzip (2.4.1)
     sablon (0.4.2)
       nokogiri (>= 1.8.5)
@@ -704,6 +727,7 @@ DEPENDENCIES
   rails (~> 7.0)
   rails-controller-testing
   rails-data-migrations!
+  rails_event_store (~> 2.18.0)
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails

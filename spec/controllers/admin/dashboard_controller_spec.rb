@@ -107,4 +107,50 @@ describe Admin::DashboardController do
       expect(controller.personal_information_requests).to match_array(personal_information_requests)
     end
   end
+
+  describe "#events" do
+    let(:email_sent_event) do
+      Events::EmailSent.new(
+        data: {
+          recipient: "test@test.com",
+          subject: "Subject Access Request - 12345",
+          category: "commissioning_document",
+          email_type: "commissioning_email",
+          recipient_type: "external",
+          case_number: "12345",
+        },
+      )
+    end
+
+    let(:email_failed_event) do
+      Events::EmailFailed.new(
+        data: {
+          recipient: "test@test.com",
+          subject: "Subject Access Request - 12345",
+          category: "commissioning_document",
+          email_type: "commissioning_email",
+          recipient_type: "external",
+          case_number: "12345",
+          status: "permanent-failure",
+          notify_id: "notify-123",
+        },
+      )
+    end
+
+    before do
+      Rails.configuration.event_store.publish(email_sent_event, stream_name: "email_events")
+      Rails.configuration.event_store.publish(email_failed_event, stream_name: "email_events")
+
+      sign_in admin
+      get :events
+    end
+
+    it "renders the events view" do
+      expect(request.path).to eq("/admin/dashboard/events")
+    end
+
+    it "has events" do
+      expect(controller.events).to eq 2
+    end
+  end
 end

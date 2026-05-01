@@ -1,6 +1,8 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  mount RailsEventStore::Browser => "/res" if Rails.env.development?
+
   resources :contacts, except: :show do
     get "/new_details", on: :collection, to: "contacts#new_details"
     post "/new_details", on: :collection, to: "contacts#new_details"
@@ -309,6 +311,7 @@ Rails.application.routes.draw do
       get "/dashboard/system" => "dashboard#system"
       get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
       get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
+      get "/dashboard/events" => "dashboard#events"
     end
   end
 

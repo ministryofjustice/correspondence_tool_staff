@@ -42,6 +42,17 @@ class Admin::DashboardController < AdminController
                                       .limit(500)
   end
 
+  def events
+    @events = RailsEventStore::Client.new
+      .read
+      .backward
+      .newer_than_or_equal(30.days.ago)
+      .to_a
+      .map { |event| SystemLogEventPresenter.new(event) }
+
+    @email_events_count = @events.count(&:email_event?)
+  end
+
 private
 
   def count_cases_created_on(date)
