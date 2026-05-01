@@ -2,9 +2,8 @@ module PublishesSystemLogEmail
 private
 
   def publish_email_sent_event
-    PublishSystemLogEventJob.perform_later(
-      Events::EmailSent,
-      data: email_event_payload,
+    Rails.configuration.event_store.publish(
+      Events::EmailSent.new(data: email_event_payload),
     )
   end
 

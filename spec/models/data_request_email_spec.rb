@@ -15,12 +15,11 @@
 require "rails_helper"
 
 RSpec.describe DataRequestEmail, type: :model do
-  include ActiveJob::TestHelper
-
   let(:job) { class_double(EmailStatusJob) }
+  let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
 
   before do
-    ActiveJob::Base.queue_adapter = :test
+    allow(Rails.configuration).to receive(:event_store).and_return(event_store)
   end
 
   describe ".recent" do
@@ -90,18 +89,18 @@ RSpec.describe DataRequestEmail, type: :model do
       allow(EmailStatusJob).to receive(:set).with(wait: 15.seconds).and_return(job)
       allow(job).to receive(:perform_later)
 
-      expect {
-        create(:data_request_email)
-      }.to have_enqueued_job(PublishSystemLogEventJob).with(
-        Events::EmailQueued.name,
-        data: hash_including(
+      expect(event_store).to receive(:publish) do |event|
+        expect(event).to be_a(Events::EmailQueued)
+        expect(event.data).to include(
           category: "commissioning_document",
           email_type: "commissioning_email",
           recipient: "test@user.com",
           recipient_type: "external",
           status: "created",
-        ),
-      )
+        )
+      end
+
+      create(:data_request_email)
     end
   end
 
@@ -132,19 +131,19 @@ RSpec.describe DataRequestEmail, type: :model do
       end
 
       it "publishes an email delivered event" do
-        expect {
-          email.update_status!
-        }.to have_enqueued_job(PublishSystemLogEventJob).with(
-          Events::EmailDelivered.name,
-          data: hash_including(
+        expect(event_store).to receive(:publish) do |event|
+          expect(event).to be_a(Events::EmailDelivered)
+          expect(event.data).to include(
             category: "commissioning_document",
             email_type: "commissioning_email",
             notify_id: email.notify_id,
             previous_status: "created",
             recipient: email.email_address,
             status: "delivered",
-          ),
-        )
+          )
+        end
+
+        email.update_status!
       end
     end
 
@@ -160,19 +159,19 @@ RSpec.describe DataRequestEmail, type: :model do
       let(:client_response) { OpenStruct.new(status: "permanent-failure") }
 
       it "publishes an email failed event" do
-        expect {
-          email.update_status!
-        }.to have_enqueued_job(PublishSystemLogEventJob).with(
-          Events::EmailFailed.name,
-          data: hash_including(
+        expect(event_store).to receive(:publish) do |event|
+          expect(event).to be_a(Events::EmailFailed)
+          expect(event.data).to include(
             category: "commissioning_document",
             email_type: "commissioning_email",
             notify_id: email.notify_id,
             previous_status: "created",
             recipient: email.email_address,
             status: "permanent-failure",
-          ),
-        )
+          )
+        end
+
+        email.update_status!
       end
     end
   end

@@ -78,9 +78,8 @@ private
   end
 
   def publish_email_lifecycle_event(event_class, extra_payload = {})
-    PublishSystemLogEventJob.perform_later(
-      event_class,
-      data: system_log_email_payload.merge(extra_payload).compact,
+    Rails.configuration.event_store.publish(
+      event_class.new(data: system_log_email_payload.merge(extra_payload).compact),
     )
   end
 

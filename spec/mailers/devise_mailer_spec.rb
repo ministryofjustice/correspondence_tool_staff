@@ -1,14 +1,13 @@
 require "rails_helper"
 
 RSpec.describe DeviseMailer, type: :mailer do
-  include ActiveJob::TestHelper
-
   describe "#reset_password_instructions" do
     let(:user) { create :user, full_name: "Someone" }
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.reset_password_instructions user, "nEAanath7ath7at8aWF" }
 
     before do
-      ActiveJob::Base.queue_adapter = :test
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
     end
 
     it "sets the template" do
@@ -31,27 +30,31 @@ RSpec.describe DeviseMailer, type: :mailer do
     end
 
     it "publishes an account access system log event" do
-      expect {
-        mail.deliver
-      }.to have_enqueued_job(PublishSystemLogEventJob).with(
-        Events::EmailSent.name,
-        data: hash_including(
-          category: "account_access",
-          email_type: "reset_password_instructions",
-          recipient: user.email,
-          recipient_type: "internal_staff",
-          user_id: user.id,
-        ),
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      mailer = described_class.new
+      mailer.reset_password_instructions(user, "nEAanath7ath7at8aWF")
+      mailer.send(:publish_email_sent_event)
+
+      expect(published_event).to be_a(Events::EmailSent)
+      expect(published_event.data).to include(
+        category: "account_access",
+        email_type: "reset_password_instructions",
+        recipient: user.email,
+        recipient_type: "internal_staff",
+        user_id: user.id,
       )
     end
   end
 
   describe "unlock_instructions" do
     let(:user) { create :user, full_name: "Someone" }
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
     let(:mail) { described_class.unlock_instructions(user, "nEAanath7ath7at8aWF") }
 
     before do
-      ActiveJob::Base.queue_adapter = :test
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
     end
 
     it "sets the template" do
@@ -74,17 +77,20 @@ RSpec.describe DeviseMailer, type: :mailer do
     end
 
     it "publishes an unlock system log event" do
-      expect {
-        mail.deliver
-      }.to have_enqueued_job(PublishSystemLogEventJob).with(
-        Events::EmailSent.name,
-        data: hash_including(
-          category: "account_access",
-          email_type: "unlock_instructions",
-          recipient: user.email,
-          recipient_type: "internal_staff",
-          user_id: user.id,
-        ),
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      mailer = described_class.new
+      mailer.unlock_instructions(user, "nEAanath7ath7at8aWF")
+      mailer.send(:publish_email_sent_event)
+
+      expect(published_event).to be_a(Events::EmailSent)
+      expect(published_event.data).to include(
+        category: "account_access",
+        email_type: "unlock_instructions",
+        recipient: user.email,
+        recipient_type: "internal_staff",
+        user_id: user.id,
       )
     end
   end
