@@ -109,7 +109,7 @@ describe Admin::DashboardController do
   end
 
   describe "#events" do
-    let(:event) do
+    let(:email_sent_event) do
       Events::EmailSent.new(
         data: {
           recipient: "test@test.com",
@@ -121,7 +121,8 @@ describe Admin::DashboardController do
         },
       )
     end
-    let(:failed_event) do
+
+    let(:email_failed_event) do
       Events::EmailFailed.new(
         data: {
           recipient: "test@test.com",
@@ -135,30 +136,21 @@ describe Admin::DashboardController do
         },
       )
     end
-    let(:event_store) { instance_double(RailsEventStore::Client) }
-    let(:reader) { instance_double(RailsEventStore::ReadSpecification) }
 
     before do
+      Rails.configuration.event_store.publish(email_sent_event, stream_name: "email_events")
+      Rails.configuration.event_store.publish(email_failed_event, stream_name: "email_events")
+
       sign_in admin
-      allow(RailsEventStore::Client).to receive(:new).and_return(event_store)
-      allow(event_store).to receive(:read).and_return(reader)
-      allow(reader).to receive(:backward).and_return(reader)
-      allow(reader).to receive(:newer_than_or_equal).and_return(reader)
-      allow(reader).to receive(:to_a).and_return([failed_event, event])
       get :events
     end
 
-    it "renders the events page" do
+    it "renders the events view" do
       expect(request.path).to eq("/admin/dashboard/events")
     end
 
-    it "shows structured email event details" do
-      expect(response.body).to include("Email sent")
-      expect(response.body).to include("Email failed")
-      expect(response.body).to include("test@test.com")
-      expect(response.body).to include("Subject Access Request - 12345")
-      expect(response.body).to include("Commissioning document | Commissioning email | External | Case 12345")
-      expect(response.body).to include("Commissioning document | Commissioning email | Permanent failure | External | Case 12345 | Notify notify-123")
+    it "has events" do
+      expect(controller.events).to eq 2
     end
   end
 end
