@@ -255,5 +255,25 @@ describe "cases/data_request_areas/show", type: :view do
         expect { page.commissioning_document.email_row }.to raise_error(Capybara::ElementNotFound)
       end
     end
+
+    context "when viewing legacy case before Commissioning Document was introduced" do
+      let(:current_data_request) { in_progress_data_request }
+
+      before do
+        data_request_area.data_requests << current_data_request
+        assign(:commissioning_document, commissioning_document.decorate)
+        assign(:data_request_area, data_request_area.decorate)
+        assign(:case, data_request_area.kase)
+
+        assign(:commissioning_document, nil)
+
+        render
+        data_request_area_show_page.load(rendered)
+      end
+
+      it "displays message that commissioning document is not found" do
+        expect(page.commissioning_document.not_found.text).to eq "There is no Day 1 commissioning document for this case as this case was created before this document type was introduced."
+      end
+    end
   end
 end

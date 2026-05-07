@@ -18,6 +18,8 @@ module PageObjects
                 PageObjects::Sections::Cases::DataRequestsSection, ".data-requests"
 
         section :commissioning_document, ".commissioning-document" do
+          element :not_found, "#not-found"
+
           section :row, "tbody.document tr" do
             element :request_document, "td:nth-child(1)"
             element :last_updated, "td:nth-child(2)"
