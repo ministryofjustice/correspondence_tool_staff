@@ -68,7 +68,7 @@ class Case::SAR::Standard < Case::Base
                  date_draft_compliant: :date,
                  # Deadline extension properties
                  deadline_extended: [:boolean, { default: false }],
-                 extended_times: :integer
+                 months_extended: :integer
 
   attr_accessor :missing_info
 
@@ -173,7 +173,7 @@ private
     if changed.include?("received_date") && !extended_for_pit?
       self.internal_deadline = @deadline_calculator.internal_deadline
       self.external_deadline = @deadline_calculator.external_deadline
-      self.extended_times = 0
+      self.months_extended = 0
       self.deadline_extended = false
     end
   end

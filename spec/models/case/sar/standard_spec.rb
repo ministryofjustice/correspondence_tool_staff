@@ -303,7 +303,7 @@ describe Case::SAR::Standard do
 
       it "is false when already extended equal or beyond satutory limit" do
         sar = freeze_time { create :approved_sar }
-        sar.extended_times = sar.extension_time_limit
+        sar.months_extended = sar.extension_time_limit
 
         expect(sar.deadline_extendable?).to eq false
       end
@@ -361,9 +361,9 @@ describe Case::SAR::Standard do
           .to(false)
       end
 
-      it "sets #extended_times to 0" do
+      it "sets #months_extended to 0" do
         expect { extended_sar.reset_deadline! }.to \
-          change(extended_sar, :extended_times)
+          change(extended_sar, :months_extended)
           .from(1)
           .to(0)
       end
@@ -385,7 +385,7 @@ describe Case::SAR::Standard do
           extended_sar.update!(received_date: new_received_date)
           expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
           expect(extended_sar.deadline_extended).to eq false
-          expect(extended_sar.extended_times).to eq 0
+          expect(extended_sar.months_extended).to eq 0
         end
       end
     end
@@ -399,16 +399,16 @@ describe Case::SAR::Standard do
           extended_sar.update!(received_date: new_received_date)
           expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
           expect(extended_sar.deadline_extended).to eq false
-          expect(extended_sar.extended_times).to eq 0
+          expect(extended_sar.months_extended).to eq 0
 
           extended_sar.extend_deadline!(get_expected_deadline(2.months.since(extended_sar.received_date)), 2)
           expect(extended_sar.deadline_extended).to eq true
-          expect(extended_sar.extended_times).to eq 2
+          expect(extended_sar.months_extended).to eq 2
 
           extended_sar.reset_deadline!
           expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
           expect(extended_sar.deadline_extended).to eq false
-          expect(extended_sar.extended_times).to eq 0
+          expect(extended_sar.months_extended).to eq 0
         end
       end
     end

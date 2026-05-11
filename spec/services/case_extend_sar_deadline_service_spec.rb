@@ -36,7 +36,7 @@ describe CaseExtendSARDeadlineService do
 
         it "sets new SAR deadline date" do
           expect(kase.external_deadline).to eq get_expected_deadline(2.months.since(kase.received_date))
-          expect(kase.extended_times).to eq 1
+          expect(kase.months_extended).to eq 1
         end
       end
 
@@ -55,7 +55,7 @@ describe CaseExtendSARDeadlineService do
             expect(kase.external_deadline)
               .to eq get_expected_deadline((max_extension_time_limit + 1).month.since(kase.received_date))
             expect(kase.external_deadline).to be < Time.zone.now
-            expect(kase.extended_times).to eq 2
+            expect(kase.months_extended).to eq 2
           end
         end
       end
