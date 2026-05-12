@@ -181,6 +181,53 @@ namespace :data do
       fix_invalid_standard_sar_cases
     end
 
+    desc "Duplicate SAR extended_times values into months_extended CDPTKAN-757"
+    task add_months_extended_to_sar_cases: :environment do
+      sql = <<~SQL
+        WITH updated AS (
+          UPDATE cases
+          SET
+            properties = jsonb_set(properties, '{months_extended}', properties->'extended_times', true),
+            updated_at = NOW()
+          WHERE
+            properties IS NOT NULL
+            AND properties ? 'extended_times'
+            AND NOT (properties ? 'months_extended')
+            AND type IN ('Case::SAR::Standard', 'Case::SAR::InternalReview', 'Case::SAR::Offender')
+          RETURNING id, number, type, properties->>'extended_times' AS extended_times, properties->>'months_extended' AS months_extended, updated_at
+        )
+        SELECT * FROM updated ORDER BY id;
+      SQL
+
+      begin
+        ActiveRecord::Base.transaction do
+          result = ActiveRecord::Base.connection.execute(sql)
+
+          if result.any?
+            puts sprintf("| %-6s | %-12s | %-28s | %-15s | %-15s |", "ID", "Number", "Type", "Extended Times", "Months Extended")
+            puts sprintf("|%s|%s|%s|%s|%s|", "-" * 8, "-" * 14, "-" * 30, "-" * 17, "-" * 17)
+
+            result.each do |row|
+              puts sprintf(
+                "| %-6s | %-12s | %-28s | %-15s | %-15s |",
+                row["id"],
+                row["number"],
+                row["type"],
+                row["extended_times"],
+                row["months_extended"],
+              )
+            end
+
+            puts "DONE --- months_extended migration completed."
+          else
+            puts "DONE --- months_extended migration completed. No records updated."
+          end
+        end
+      rescue StandardError => e
+        puts "ERROR --- #{e.class}: #{e.message}"
+      end
+    end
+
     namespace :import do
       desc "Import hierarchical team data"
       task teams: :environment do
