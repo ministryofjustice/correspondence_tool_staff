@@ -1,16 +1,8 @@
 module Extendable
   extend ActiveSupport::Concern
 
-  # NOTE: By using `extended_times` we are conflating the number of months a case can be extended e.g. 2
-  # with the number of times the case is extended. If the case is extended by 2 months, the extended_times == 2
-  # The `extended_times` value is also used for reporting. The actual number of months extended is not recorded
-  # explicitly in transitions, hence using `extended_times` instead.
   def deadline_extendable?
-    num_months_extended < extension_time_limit
-  end
-
-  def num_months_extended
-    extended_times.to_i
+    months_extended.to_i < extension_time_limit
   end
 
   def initial_deadline
@@ -25,11 +17,11 @@ module Extendable
     end
   end
 
-  def extend_deadline!(new_deadline, new_extended_times)
+  def extend_deadline!(new_deadline, new_months_extended)
     update!(
       external_deadline: new_deadline,
       deadline_extended: true,
-      extended_times: new_extended_times,
+      months_extended: new_months_extended,
     )
   end
 
@@ -37,7 +29,7 @@ module Extendable
     update!(
       external_deadline: calculate_old_deadline,
       deadline_extended: false,
-      extended_times: 0,
+      months_extended: 0,
     )
   end
 
