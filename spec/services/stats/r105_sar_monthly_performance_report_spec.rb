@@ -129,7 +129,6 @@ module Stats
             expect(results[201_812][:trigger_performance]).to eq(50)
             expect(results[201_812][:trigger_sar_extensions]).to eq(1)
 
-
             expect(results[201_812][:overall_performance]).to eq(40)
             expect(results[201_812][:overall_sar_extensions]).to eq(3)
           end
