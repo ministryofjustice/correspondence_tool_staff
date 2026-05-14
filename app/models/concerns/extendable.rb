@@ -47,6 +47,10 @@ module Extendable
     transitions.where(event: "extend_sar_deadline").order(:id)
   end
 
+  def active_extension?
+    transitions.where(event: %w[extend_sar_deadline remove_sar_deadline_extension]).order(id: :desc).map(&:event).first == "extend_sar_deadline"
+  end
+
   def calculate_old_deadline
     if restarted_at.present?
       calculate_old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date

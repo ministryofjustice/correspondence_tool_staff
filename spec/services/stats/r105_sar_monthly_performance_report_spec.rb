@@ -50,6 +50,8 @@ module Stats
 
           @sar_5 = create :closed_sar, :clarification_required, identifier: "sar-tmm", creation_time: @period_start,
                                                                 received_date: @period_start + 1.day, date_responded: @period_end
+
+          @sar_6 = create :accepted_sar, :extended_deadline_sar, identifier: "sar-6", creation_time: @period_start + 5.days
         end
       end
 
@@ -59,7 +61,7 @@ module Stats
 
       it "returns only SAR cases within the selected period" do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
-        expect(report.case_scope).to match_array([@sar_2, @sar_3, @sar_4])
+        expect(report.case_scope).to match_array([@sar_2, @sar_3, @sar_4, @sar_6])
       end
 
       describe "unassigned cases" do
@@ -85,22 +87,51 @@ module Stats
               external_deadline: Date.current + 10.days,
             )
 
+            trigger_extended_sar_case = create(
+              :sar_case,
+              :flagged,
+              :extended_deadline_sar,
+              identifier: "sar-extended-triggered-3",
+              creation_time: @period_start + 7.days,
+              received_date: @period_start + 7.days,
+            )
+
+            standard_extended_sar_case = create(
+              :sar_case,
+              :extended_deadline_sar,
+              identifier: "sar-extended-standard-4",
+              creation_time: @period_start + 7.days,
+              received_date: @period_start + 7.days,
+            )
+
             report = described_class.new(
               period_start: @period_start,
               period_end: @period_end,
             )
             report.run
             results = report.results
+
             expect(late_unassigned_trigger_sar_case.already_late?).to be true
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
+
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
+            expect(report.case_scope).to include(trigger_extended_sar_case)
+            expect(report.case_scope).to include(standard_extended_sar_case)
+
             expect(results[201_812][:non_trigger_open_late]).to eq(2)
+            expect(results[201_812][:non_trigger_open_in_time]).to eq(0)
             expect(results[201_812][:non_trigger_performance]).to eq(33.3)
+            expect(results[201_812][:non_trigger_sar_extensions]).to eq(2)
+
             expect(results[201_812][:trigger_open_late]).to eq(1)
             expect(results[201_812][:trigger_open_in_time]).to eq(1)
             expect(results[201_812][:trigger_performance]).to eq(50)
+            expect(results[201_812][:trigger_sar_extensions]).to eq(1)
+
+
             expect(results[201_812][:overall_performance]).to eq(40)
+            expect(results[201_812][:overall_sar_extensions]).to eq(3)
           end
         end
       end
