@@ -119,13 +119,21 @@ module Stats
     describe "stopped and extended cases" do
       it "calculates cases which are both stopped and extended in the past" do
         Timecop.freeze Time.zone.local(2019, 6, 30, 12, 0, 0) do
-          standard_extended_closed_sar_case = create(
+          standard_closed_sar_case = create( # in-time
+            :closed_sar,
+            identifier: "sar-closed-standard",
+            creation_time: @period_start,
+            received_date: @period_start + 1.day,
+            date_responded: @period_end - 1.day,
+          )
+
+          standard_extended_closed_sar_case = create( # in-time
             :closed_sar,
             :extended_deadline_sar,
             identifier: "sar-closed-extended-standard",
             creation_time: @period_start,
             received_date: @period_start + 1.day,
-            date_responded: @period_end,
+            date_responded: @period_end - 1.day,
           )
 
           standard_extended_sar_case = create(
@@ -152,12 +160,14 @@ module Stats
             creation_time: @period_start + 6.days,
           )
 
-          standard_stopped_extended_sar_case_3 = create(
-            :accepted_sar,
+          standard_closed_stopped_extended_sar_case_3 = create( # in-time
+            :closed_sar,
             :stopped,
             :extended_deadline_sar,
             identifier: "sar-stopped-extended-3",
-            creation_time: @period_start + 6.days,
+            received_date: @period_start + 1.day,
+            creation_time: @period_start + 1.day,
+            date_responded: @period_end - 1.day,
           )
 
           trigger_stopped_sar_case = create(
@@ -178,23 +188,25 @@ module Stats
             received_date: @period_start + 7.days,
           )
 
+          expect(standard_closed_sar_case.responded_in_time?).to be true
           expect(standard_stopped_extended_sar_case_1.stopped?).to be true
           expect(standard_stopped_extended_sar_case_1.active_extension?).to be true
           expect(standard_stopped_extended_sar_case_2.stopped?).to be true
           expect(standard_stopped_extended_sar_case_2.active_extension?).to be true
-          expect(standard_stopped_extended_sar_case_3.stopped?).to be true
-          expect(standard_stopped_extended_sar_case_3.active_extension?).to be true
+          expect(standard_closed_stopped_extended_sar_case_3.stopped?).to be true
+          expect(standard_closed_stopped_extended_sar_case_3.active_extension?).to be true
 
           report = described_class.new(period_start: @period_start, period_end: @period_end)
           expect(report.case_scope).to match_array([
             @sar_2, # non-trigger (standard)
             @sar_3, # non-trigger (standard)
             @sar_4, # non-trigger (standard)
+            standard_closed_sar_case,
             standard_extended_closed_sar_case,
             standard_extended_sar_case,
             standard_stopped_extended_sar_case_1,
             standard_stopped_extended_sar_case_2,
-            standard_stopped_extended_sar_case_3,
+            standard_closed_stopped_extended_sar_case_3,
             trigger_extended_sar_case,
             trigger_stopped_sar_case,
           ])
@@ -204,15 +216,21 @@ module Stats
 
           expect(results[201_812][:non_trigger_sar_extensions]).to eq(2) # Excludes standard_stopped_extended_sar_case_1 and standard_stopped_extended_sar_case_2
           expect(results[201_812][:non_trigger_stopped]).to eq(3)
-          expect(results[201_812][:non_trigger_total]).to eq(5) # Pause/Stopped cases excluded from total
+          expect(results[201_812][:non_trigger_open_in_time]).to eq(0)
+          expect(results[201_812][:non_trigger_open_late]).to eq(2)
+          expect(results[201_812][:non_trigger_responded_in_time]).to eq(2) # Excludes standard_closed_stopped_extended_sar_case_3
+          expect(results[201_812][:non_trigger_total]).to eq(6) # Pause/Stopped cases excluded from total
 
           expect(results[201_812][:trigger_sar_extensions]).to eq(1)
           expect(results[201_812][:trigger_stopped]).to eq(1)
+          expect(results[201_812][:trigger_open_late]).to eq(0)
+          expect(results[201_812][:trigger_open_in_time]).to eq(0)
+          expect(results[201_812][:trigger_responded_in_time]).to eq(0)
           expect(results[201_812][:trigger_total]).to eq(1) # Pause/Stopped cases excluded from total
 
           expect(results[201_812][:overall_sar_extensions]).to eq(3) # Exlcludes standard_stopped_extended_sar_case_1 and standard_stopped_extended_sar_case_2
           expect(results[201_812][:overall_stopped]).to eq(4)
-          expect(results[201_812][:overall_total]).to eq(6) # Pause/Stopped cases excluded from total
+          expect(results[201_812][:overall_total]).to eq(7) # Pause/Stopped cases excluded from total
         end
       end
     end
