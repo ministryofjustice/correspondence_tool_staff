@@ -442,7 +442,7 @@ describe Case::SAR::Standard do
           ActiveRecord::Base.connection.execute(sql)
         end
 
-        it "returns true" do
+        it "returns false" do
           expect(kase.reload.active_extension?).to be false
         end
       end
