@@ -8,6 +8,7 @@ describe RequestPersonalInformationJob, type: :job do
 
   let(:payload) do
     {
+      "schema": "1",
       "serviceSlug": "request-personal-information-migrate",
       "submissionId": submission_id,
       "submissionAnswers": {
