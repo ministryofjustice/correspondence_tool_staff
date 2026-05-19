@@ -17,6 +17,7 @@ require "rails_helper"
 describe PersonalInformationRequest do
   let(:valid_data) do
     {
+      "schema": "1",
       "serviceSlug": "request-personal-information-migrate",
       "submissionId": "0fc67a0a-1c58-48ee-baec-36f9f2aaebe3",
       "submissionAnswers": {
@@ -63,6 +64,7 @@ describe PersonalInformationRequest do
 
   let(:valid_data_v2) do
     {
+      "schema": "2",
       "submission_id": "57188f93-5795-44b2-8544-c5b336298c30",
       "answers": {
         "subject": "Your own",
@@ -138,6 +140,20 @@ describe PersonalInformationRequest do
       it "creates object with data from payload" do
         rpi = described_class.build(valid_data_v2)
         expect(rpi.submission_id).to eq "57188f93-5795-44b2-8544-c5b336298c30"
+      end
+    end
+
+    context "when unknown schema version" do
+      let(:invalid_data) do
+        {
+          "schema": "",
+          "submissionId": "57188f93-5795-44b2-8544-c5b336298c30",
+          "answers": {},
+        }
+      end
+
+      it "raises error" do
+        expect { described_class.build(invalid_data) }.to raise_error(ArgumentError, "Incompatible payload format - check Schema and Submission Id attribute")
       end
     end
   end

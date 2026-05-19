@@ -4,16 +4,16 @@ describe RequestPersonalInformation::DataV2 do
   subject(:data) { described_class.new(payload) }
 
   describe ".compatible?" do
-    context "when payload has submission_id" do
-      let(:payload) { { submission_id: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
+    context "when payload has submission_id and is v2" do
+      let(:payload) { { schema: "2", submission_id: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
 
       it "returns true" do
         expect(described_class.compatible?(payload)).to eq true
       end
     end
 
-    context "when payload has submissionId" do
-      let(:payload) { { submissionId: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
+    context "when payload has submissionId and is v1" do
+      let(:payload) { { schema: "1", submissionId: "0515c708-3d7d-4ffc-9649-92cd859aacaa" } }
 
       it "returns false" do
         expect(described_class.compatible?(payload)).to eq false
