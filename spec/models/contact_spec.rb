@@ -78,6 +78,17 @@ RSpec.describe Contact, type: :model do
         expect(contact_2).to be_valid
       end
 
+      it "strips surrounding whitespace from email fields before persisting" do
+        contact = create(
+          :prison,
+          data_request_emails: "  oscar@thegrouch.com  \n  big@bird.com  ",
+          escalation_emails: "  governor@prison.com  ",
+        )
+
+        expect(contact.reload.data_request_emails).to eq("oscar@thegrouch.com\nbig@bird.com")
+        expect(contact.escalation_emails).to eq("governor@prison.com")
+      end
+
       it "is invalid if an email has a trailing dot in the domain" do
         contact_2.data_request_emails = "example@example.com."
         expect(contact_2).not_to be_valid

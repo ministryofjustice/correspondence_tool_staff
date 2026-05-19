@@ -21,6 +21,8 @@ class Contact < ApplicationRecord
   # Disallow commas, extra @s, whitespace, empty domain labels, and trailing dots
   EMAIL_REGEX = /\A[^@,\s]+@[^@,\s.]+(?:\.[^@,\s.]+)*\z/
 
+  before_validation :cleanse_emails
+
   validates :name, presence: true
   validates :address_line_1, presence: true
   validates :postcode, presence: true
@@ -99,5 +101,16 @@ private
         :invalid,
       )
     end
+  end
+
+  def cleanse_emails
+    self.data_request_emails = strip(data_request_emails)
+    self.escalation_emails = strip(escalation_emails)
+  end
+
+  def strip(email_list)
+    return if email_list.blank?
+
+    email_list.split.join("\n")
   end
 end
