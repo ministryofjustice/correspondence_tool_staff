@@ -18,8 +18,9 @@
 #  escalation_emails   :string
 #
 class Contact < ApplicationRecord
-  # Disallow commas, extra @s, whitespace, empty domain labels, and trailing dots
-  EMAIL_REGEX = /\A[^@,\s]+@[^@,\s.]+(?:\.[^@,\s.]+)*\z/
+  # Pragmatic email validation for staff-entered addresses.
+  # Rejects leading/trailing/repeated dots in the local part and invalid domain labels.
+  EMAIL_REGEX = /\A(?!\.)(?!.*\.\.)[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}\z/
 
   before_validation :cleanse_emails
 
