@@ -1,7 +1,7 @@
 module Api
   class RpiController < ApiController
     before_action :authenticate_request, only: :create
-    before_action :set_schema_version, only: :create
+    before_action :set_default_schema, only: :create
 
     def create
       submission_id = PersonalInformationRequest.submission_id(@body)
@@ -46,7 +46,7 @@ module Api
       Settings.rpi_jwe_key
     end
 
-    def set_schema_version
+    def set_default_schema
       return if @body.key?(:schema)
 
       @body[:schema] = "1"
