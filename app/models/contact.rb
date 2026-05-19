@@ -18,7 +18,8 @@
 #  escalation_emails   :string
 #
 class Contact < ApplicationRecord
-  EMAIL_REGEX = /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+  # Disallow commas, extra @s, whitespace, empty domain labels, and trailing dots
+  EMAIL_REGEX = /\A[^@,\s]+@[^@,\s.]+(?:\.[^@,\s.]+)*\z/
 
   validates :name, presence: true
   validates :address_line_1, presence: true

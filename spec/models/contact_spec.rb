@@ -78,6 +78,11 @@ RSpec.describe Contact, type: :model do
         expect(contact_2).to be_valid
       end
 
+      it "is invalid if an email has a trailing dot in the domain" do
+        contact_2.data_request_emails = "example@example.com."
+        expect(contact_2).not_to be_valid
+      end
+
       it "is valid with multiple correctly formatted emails delimited by newline" do
         contact_2.data_request_emails = "oscar@grouch.com\nbig@bird.com"
         expect(contact_2).to be_valid
