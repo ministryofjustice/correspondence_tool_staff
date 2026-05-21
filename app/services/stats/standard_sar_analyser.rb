@@ -77,7 +77,7 @@ module Stats
       analyse_case_for_main_stats
       analyse_case_for_responding_business_unit
 
-      analyse_case_for_sar_extensions if @kase.sar_extensions.any?
+      analyse_case_for_sar_extensions if @kase.active_extension?
       analyse_case_for_stopped if @kase.stopped?
     end
 
