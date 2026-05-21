@@ -8,8 +8,6 @@ describe RequestPersonalInformation::FileBuilder do
   let(:branston_object) { instance_double(Aws::S3::Object, upload_file: nil) }
   let(:disclosure_object) { instance_double(Aws::S3::Object, upload_file: nil) }
 
-  let(:windows_1252_string) { "This string contains a non Windows-1252 character: \u{20AC}" }
-
   describe "#build" do
     context "with standard character set" do
       let(:rpi) { create(:personal_information_request, submission_id: "ABC123") }

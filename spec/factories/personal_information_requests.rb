@@ -93,7 +93,7 @@ FactoryBot.define do
     NONASCII
 
     submission_id { SecureRandom.uuid }
-    subject_full_name { "This string contains a non Windows-1252 character: \u{20AC}" }
+    subject_full_name { "This string contains a unicode character: \u{20AC}" }
     contact_address { non_standard_characters }
   end
 end
