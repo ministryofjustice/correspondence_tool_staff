@@ -1,4 +1,6 @@
 class RequestPersonalInformation::FileBuilder
+  LAST_RESORT_FONT_FILE = Rails.root.join("app/assets/fonts/LastResort-Regular.ttf")
+
   attr_accessor :rpi, :targets
 
   def initialize(rpi, targets)
@@ -27,12 +29,24 @@ private
     end
   end
 
+  # For /api/rpi which receives arbitrary data, must use the LastResort font from
+  # the Unicode Organisation to avoid Prawn::Errors::IncompatibleStringEncoding errors.
+  # https://github.com/unicode-org/last-resort-font
   def zip_pdf(target)
     md = rpi.to_markdown(target)
-    Prawn::Document.generate(pdf_filename) { markdown(md) }
+
+    Prawn::Document.generate(pdf_filename) do |pdf|
+      pdf.font_families.update( # rubocop:disable Rails/SaveBang
+        "LastResort" => { normal: LAST_RESORT_FONT_FILE },
+      )
+      pdf.fallback_fonts(%w[LastResort])
+      pdf.markdown(md)
+    end
+
     Zip::File.open(zip_filename) do |zip|
       zip.add(pdf_filename, pdf_filename)
     end
+
     File.delete(pdf_filename)
   end
 
