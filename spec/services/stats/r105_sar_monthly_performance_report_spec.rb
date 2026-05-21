@@ -228,7 +228,7 @@ module Stats
           expect(results[201_812][:trigger_responded_in_time]).to eq(0)
           expect(results[201_812][:trigger_total]).to eq(1) # Pause/Stopped cases excluded from total
 
-          expect(results[201_812][:overall_sar_extensions]).to eq(3) # Exlcludes standard_stopped_extended_sar_case_1 and standard_stopped_extended_sar_case_2
+          expect(results[201_812][:overall_sar_extensions]).to eq(3)
           expect(results[201_812][:overall_stopped]).to eq(4)
           expect(results[201_812][:overall_total]).to eq(7) # Pause/Stopped cases excluded from total
         end
