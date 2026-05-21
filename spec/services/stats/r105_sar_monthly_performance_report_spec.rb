@@ -214,6 +214,11 @@ module Stats
           report.run
           results = report.results
 
+          # NOTE
+          # Case that has an active extension AND is stopped/paused is NOT counted in non_trigger_sar_extensions and trigger_sar_extensions.
+          # Only cases with an active extension are counted in non_trigger_sar_extensions.
+          # Paused cases are not counted in any column except non_trigger_stopped and trigger_stopped.
+
           expect(results[201_812][:non_trigger_sar_extensions]).to eq(2) # Excludes standard_stopped_extended_sar_case_1 and standard_stopped_extended_sar_case_2
           expect(results[201_812][:non_trigger_stopped]).to eq(3)
           expect(results[201_812][:non_trigger_open_in_time]).to eq(0)
