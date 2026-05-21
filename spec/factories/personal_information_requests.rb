@@ -73,4 +73,27 @@ FactoryBot.define do
       deleted { true }
     end
   end
+
+  factory :personal_information_request_non_standard_characters, parent: :personal_information_request do
+    non_standard_characters = <<-NONASCII
+      Summation: ∑
+      Infinity: ∞
+      Not equal to: ≠
+      Greater than or equal to: ≥
+      Less than or equal to: ≤
+      Element of: ∈
+
+      Greek letters that fall outside the Windows-1252 character set supported by Prawn's built-in PDF fonts:
+
+      * **Alpha** (significance level): α = 0.05
+      * **Beta** (type II error rate): β = 0.20
+      * **Sigma** (standard deviation): σ
+      * **Mu** (population mean): μ
+      * **Delta** (change / difference): Δ
+    NONASCII
+
+    submission_id { SecureRandom.uuid }
+    subject_full_name { "This string contains a non Windows-1252 character: \u{20AC}" }
+    contact_address { non_standard_characters }
+  end
 end
