@@ -28,8 +28,8 @@ FactoryBot.define do
     transient do
       identifier      { "awaiting responder overturned ico foi case" }
 
-      _state_taken_on_by_press_or_private { "awaiting_responder" }
-      _state_taken_on_by_disclosure       { "awaiting_responder" }
+      _state_taken_on_by_press_or_private { "unassigned" }
+      _state_taken_on_by_disclosure       { "unassigned" }
     end
 
     created_at    { creation_time }
@@ -85,11 +85,42 @@ FactoryBot.define do
           parent: :accepted_ot_ico_foi do
     transient do
       identifier { "pending dacu clearance overturned ico foi case" }
+      responses  do
+        [build(:correspondence_response,
+               type: "response",
+               user_id: responder.id)]
+      end
     end
 
-    flagged_accepted
+    after(:create) do |kase, evaluator|
+      create :approver_assignment,
+             case: kase,
+             user: evaluator.approver,
+             team: evaluator.approving_team,
+             state: "accepted"
+      create :flag_case_for_clearance_transition,
+             case: kase,
+             acting_team: evaluator.managing_team,
+             acting_user: evaluator.manager,
+             target_team: evaluator.approving_team,
+             to_workflow: "trigger"
+      create :case_transition_accept_approver_assignment,
+             case: kase,
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver,
+             target_team: evaluator.approving_team,
+             target_user: evaluator.approver
 
-    _transition_to_pending_dacu_clearance
+      kase.attachments.push(*evaluator.responses)
+
+      create :case_transition_pending_dacu_clearance,
+             case: kase,
+             acting_team: evaluator.responding_team,
+             acting_user: evaluator.responder,
+             filenames: evaluator.responses.map(&:filename)
+      kase.update!(workflow: "trigger")
+      kase.reload
+    end
   end
 
   factory :approved_trigger_ot_ico_foi,
@@ -127,9 +158,42 @@ FactoryBot.define do
       identifier { "pending press clearance overturned ico foi case" }
     end
 
-    taken_on_by_press
-    flagged_accepted
-    _transition_to_pending_press_clearance
+    after(:create) do |kase, evaluator|
+      create :case_transition_take_on_for_approval,
+             case: kase,
+             acting_team: evaluator.press_office,
+             acting_user: evaluator.press_officer,
+             target_team: evaluator.press_office,
+             target_user: evaluator.press_officer
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.press_office,
+             user: evaluator.press_officer,
+             state: "accepted"
+
+      create :case_transition_take_on_for_approval,
+             case: kase,
+             acting_team: evaluator.press_office,
+             acting_user: evaluator.press_officer,
+             target_team: evaluator.private_office,
+             target_user: evaluator.private_officer
+      create :approver_assignment,
+             case: kase,
+             team: evaluator.private_office,
+             user: evaluator.private_officer,
+             state: "accepted"
+
+      kase.update!(workflow: "full_approval")
+
+      create :case_transition_approve_for_press_office,
+             case: kase,
+             acting_team: evaluator.approving_team,
+             acting_user: evaluator.approver
+      kase.assignments.approving.for_team(evaluator.approving_team).singular
+   .update!(approved: true)
+
+      kase.reload
+    end
   end
 
   factory :pending_private_clearance_ot_ico_foi,
@@ -138,7 +202,16 @@ FactoryBot.define do
       identifier { "pending private clearance overturned ico foi case" }
     end
 
-    _transition_to_pending_private_clearance
+    after(:create) do |kase, evaluator|
+      create :case_transition_approve_for_private_office,
+             case: kase,
+             acting_team: evaluator.press_office,
+             acting_user: evaluator.press_officer
+      kase.assignments.approving.for_team(evaluator.press_office).singular
+        .update!(approved: true)
+
+      kase.reload
+    end
   end
 
   factory :approved_full_approval_ot_ico_foi,
