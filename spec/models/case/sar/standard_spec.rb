@@ -376,6 +376,78 @@ describe Case::SAR::Standard do
       end
     end
 
+    describe "#active_extension?" do
+      context "when there is an active extension" do
+        let(:kase) { create(:sar_case, :extended_deadline_sar) }
+
+        it "returns true" do
+          expect(kase.reload.active_extension?).to be true
+        end
+      end
+
+      context "when there is not an active extension" do
+        let(:kase) { create(:sar_case) }
+
+        before do
+          sql = <<-SQL
+            INSERT INTO case_transitions (case_id, event, created_at, updated_at, to_state, sort_key, most_recent) VALUES
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 0, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 1, false);
+          SQL
+
+          ActiveRecord::Base.connection.execute(sql)
+        end
+
+        it "returns false" do
+          expect(kase.reload.active_extension?).to be false
+        end
+      end
+
+      context "when there are multiple extensions without removing the last extension" do
+        let(:kase) { create(:sar_case) }
+
+        before do
+          sql = <<-SQL
+            INSERT INTO case_transitions (case_id, event, created_at, updated_at, to_state, sort_key, most_recent) VALUES
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 0, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 1, false),
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 2, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 3, false),
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 4, false);
+          SQL
+
+          ActiveRecord::Base.connection.execute(sql)
+        end
+
+        it "returns true" do
+          expect(kase.reload.active_extension?).to be true
+        end
+      end
+
+      context "when there are multiple extensions with last extension removed" do
+        let(:kase) { create(:sar_case) }
+
+        before do
+          sql = <<-SQL
+            INSERT INTO case_transitions (case_id, event, created_at, updated_at, to_state, sort_key, most_recent) VALUES
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 0, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 1, false),
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 2, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 3, false),
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 4, false),
+              (#{kase.id}, 'extend_sar_deadline', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 5, false),
+              (#{kase.id}, 'remove_sar_deadline_extension', '#{Time.zone.now}', '#{Time.zone.now}', 'drafting', 6, false);
+          SQL
+
+          ActiveRecord::Base.connection.execute(sql)
+        end
+
+        it "returns false" do
+          expect(kase.reload.active_extension?).to be false
+        end
+      end
+    end
+
     describe "Update the deadline due to the change of received_date" do
       let(:extended_sar) { freeze_time { create(:sar_case, :extended_deadline_sar) } }
       let(:new_received_date) { freeze_time { 10.days.ago(extended_sar.received_date) } }
