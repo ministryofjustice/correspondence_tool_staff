@@ -33,18 +33,22 @@ div class="case"
         .column-full.commissioning-document
           h2.heading-medium
             = t('.emails_header')
-          table.report
-            thead
-              tr
-                th = t('cases.commissioning_documents.table_headings.request_document')
-                th = t('cases.commissioning_documents.table_headings.last_updated')
-                th = t('cases.commissioning_documents.table_headings.action')
-            tbody.document
-              tr
-                td = @data_request_area.request_document
-                td = @commissioning_document&.updated_at
-                td
-                  span = @commissioning_document&.download_link
+
+          - if @commissioning_document&.persisted?
+            table.report
+              thead
+                tr
+                  th = t('cases.commissioning_documents.table_headings.request_document')
+                  th = t('cases.commissioning_documents.table_headings.last_updated')
+                  th = t('cases.commissioning_documents.table_headings.action')
+              tbody.document
+                tr
+                  td = @data_request_area.request_document
+                  td = @commissioning_document&.updated_at
+                  td
+                    span = @commissioning_document&.download_link
+          - else
+            p#not-found = t('cases.commissioning_documents.not_found')
 
           - if !@data_request_area.commissioning_email_sent? && policy(@case).can_send_day_1_email?
             div.button-holder

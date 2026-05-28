@@ -59,7 +59,7 @@ module Cases
     end
 
     def set_commissioning_document
-      @commissioning_document = @data_request_area.commissioning_document.decorate
+      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request_area: @data_request_area).decorate
     end
 
     def create_params

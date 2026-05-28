@@ -95,6 +95,20 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context "when the commissioning document is missing" do
+      before do
+        data_request_area.commissioning_document.destroy!
+      end
+
+      it "builds a replacement commissioning document for the view" do
+        get(:show, params:)
+
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:commissioning_document)).to be_a CommissioningDocumentDecorator
+        expect(assigns(:commissioning_document)).not_to be_persisted
+      end
+    end
   end
 
   describe "#destroy" do
@@ -158,6 +172,20 @@ RSpec.describe Cases::DataRequestAreasController, type: :controller do
           .to receive(:recipient_emails).and_return([])
         get(:send_email, params:)
         expect(assigns(:no_email_present)).to eq(true)
+      end
+    end
+
+    context "when the commissioning document is missing" do
+      before do
+        data_request_area.commissioning_document.destroy!
+      end
+
+      it "builds a replacement commissioning document for the form" do
+        get(:send_email, params:)
+
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:commissioning_document)).to be_a CommissioningDocumentDecorator
+        expect(assigns(:commissioning_document)).not_to be_persisted
       end
     end
   end

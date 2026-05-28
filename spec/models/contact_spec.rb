@@ -73,29 +73,62 @@ RSpec.describe Contact, type: :model do
     end
 
     describe "data_request_emails" do
-      it "is valid with one correctly formatted email" do
-        contact_2.data_request_emails = "oscar@thegrouch.com"
-        expect(contact_2).to be_valid
+      it "strips surrounding whitespace from email fields before persisting" do
+        contact = create(
+          :prison,
+          data_request_emails: "  oscar@thegrouch.com  \n  big@bird.com  ",
+          escalation_emails: "  governor@prison.com  ",
+        )
+
+        expect(contact.reload.data_request_emails).to eq("oscar@thegrouch.com\nbig@bird.com")
+        expect(contact.escalation_emails).to eq("governor@prison.com")
       end
 
-      it "is valid with multiple correctly formatted emails delimited by newline" do
-        contact_2.data_request_emails = "oscar@grouch.com\nbig@bird.com"
-        expect(contact_2).to be_valid
+      it "is valid with correct emails" do
+        examples = [
+          "oscar@example.com",
+          "big@example.com",
+          "oscar@example.com\nbig@example.com",
+          "    someone@example.com   \n another@example.example.com",
+          "SOMEONE@example.gov.uk\n  SOMEONEelse+Alias2@example.gov.uk  ",
+        ]
+
+        examples.each do |example|
+          contact_prison.data_request_emails = example
+          expect(contact_prison).to be_valid
+
+          contact_prison.escalation_emails = example
+          expect(contact_prison).to be_valid
+        end
       end
 
-      it "is invalid if the only email is incorrectly formatted" do
-        contact_2.data_request_emails = "bigbird.com"
-        expect(contact_2).not_to be_valid
-      end
+      it "is invalid with incorrect emails" do
+        examples = [
+          "oscar@example.com,big@example.com",
+          "oscar@example.com\nbigexample.com",
+          "example.com",
+          "oscar@.com",
+          "example@com.",
+          "example@-example.com",
+          "example@example",
+          ".",
+          "example..example@example.com",
+          "example@.example.com",
+          ".example@example.com",
+          "example@example..com",
+          "example@example.com.",
+          "who?are-you!@example.com.",
+        ]
 
-      it "is invalid if any email is incorrectly formatted" do
-        contact_2.data_request_emails = "oscar@grouch.com\nbigbird.com"
-        expect(contact_2).not_to be_valid
-      end
+        examples.each do |example|
+          contact_prison.data_request_emails = example
+          expect(contact_prison).not_to be_valid
+          expect(contact_prison.errors.of_kind?(:data_request_emails, :invalid)).to eq(true)
 
-      it "is invalid if the wrong delimiter is used with multiple emails" do
-        contact_2.data_request_emails = "oscar@grouch.com,big@bird.com"
-        expect(contact_2).not_to be_valid
+          contact_prison.escalation_emails = example
+          expect(contact_prison).not_to be_valid
+          expect(contact_prison.errors.of_kind?(:escalation_emails, :invalid)).to eq(true)
+        end
       end
     end
   end

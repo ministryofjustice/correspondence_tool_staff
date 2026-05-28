@@ -148,7 +148,7 @@ class Case::SAR::Offender < Case::Base
                  probation_area: :string,
                  # Deadline extension properties
                  deadline_extended: [:boolean, { default: false }],
-                 extended_times: :integer
+                 months_extended: :integer
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -603,7 +603,7 @@ private
     elsif changed.include?("received_date") && !extended_for_pit?
       self.internal_deadline = @deadline_calculator.internal_deadline
       self.external_deadline = @deadline_calculator.external_deadline
-      self.extended_times = 0
+      self.months_extended = 0
       self.deadline_extended = false
     end
   end

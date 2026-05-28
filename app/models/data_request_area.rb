@@ -76,12 +76,12 @@ class DataRequestArea < ApplicationRecord
   def calculator
     @calculator ||= begin
       calculator = data_request_area_type == "mappa" ? DataRequestCalculator::Mappa : DataRequestCalculator::Standard
-      calculator.new(self, commissioning_document.sent_at || Date.current)
+      calculator.new(self, commissioning_document&.sent_at || Date.current)
     end
   end
 
   def commissioning_email_sent?
-    commissioning_document.sent_at.present?
+    commissioning_document&.sent_at.present?
   end
 
   def next_chase_number
