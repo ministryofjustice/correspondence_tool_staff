@@ -1,0 +1,55 @@
+require "rails_helper"
+
+feature "when extending an Offender SAR case deadline" do
+  include Features::Interactions::OffenderSAR
+
+  given!(:branston_team) { find_or_create :team_branston }
+  given!(:offender_sars_manager_responder_team_admin) { find_or_create :responder_and_team_admin_and_manager }
+
+  context "with a manager who is also a responder and team admin" do
+    given!(:kase) { freeze_time { create :offender_sar_case } }
+    given!(:received_date) { kase.received_date }
+
+    scenario "extending by 1 month, pausing, restarting, extending again, then confirming no further extensions" do
+      expected_first_extension_date = get_expected_deadline(2.months.since(received_date)).strftime("%-d %b %Y")
+
+      login_as offender_sars_manager_responder_team_admin
+
+      # 1. Can extend Offender SAR deadline only
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.case_status.deadlines.actions).to have_extend_sar_deadline
+      expect(cases_show_page.case_status.deadlines.actions).not_to have_remove_sar_deadline_extension
+
+      # 2. Extend by 1 month for the first time
+      extend_offender_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
+        page.extension_period_1_calendar_month.click
+      end
+
+      expect(cases_show_page.case_status.deadlines.final.text).to eq(expected_first_extension_date)
+
+      # 3. Pause the Offender SAR (stop the clock)
+      pause_offender_sar_for(kase:)
+
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.case_status.deadlines.actions).not_to have_stop_the_clock
+      expect(cases_show_page.case_status.deadlines.actions).to have_restart_the_clock
+
+      # 4. Restart the Offender SAR
+      restart_offender_sar_for(kase:)
+
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.case_status.deadlines.actions).to have_extend_sar_deadline
+      expect(cases_show_page.case_status.deadlines.actions).to have_stop_the_clock
+
+      # 5. Extend by 1 month again (second time - no extension period selector shown)
+      extend_offender_sar_deadline_for(kase:, num_calendar_months: 1, reason: "Need even more time") do |page|
+        expect(page).not_to have_extension_period_1_calendar_month
+        expect(page).to have_text("The deadline for this case will be extended by a further one calendar month.")
+      end
+
+      # 6. Confirm no further extensions are allowed
+      cases_show_page.load(id: kase.id)
+      expect(cases_show_page.case_status.deadlines.actions).not_to have_extend_sar_deadline
+    end
+  end
+end
