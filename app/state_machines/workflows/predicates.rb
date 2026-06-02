@@ -191,7 +191,7 @@ class Workflows::Predicates
   end
 
   def can_extend_offender_sar_deadline?
-    @user.team_admin? && @user.manager? && @user.responder?
+    @user.team_admin? && @user.manager? && @user.responder? && deadline_does_not_exceed_max_deadline?
   end
 
   def can_remove_offender_sar_deadline_extension?
