@@ -34,7 +34,6 @@ module Stats
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_total_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_percentages(@stats) })
       @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_max_achievable(@stats) })
-      @stats.add_callback(:before_finalise, -> { OffenderSARCalculations::Callbacks.calculate_sar_extensions(@stats) })
     end
 
     def analyse_case(kase)
