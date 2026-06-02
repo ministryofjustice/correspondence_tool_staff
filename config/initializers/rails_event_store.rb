@@ -5,6 +5,7 @@ require "arkency/command_bus"
 require_relative "../../app/pub_sub/events/subscribers/email_subscriber"
 require_relative "../../app/pub_sub/events/subscribers/rpi_subscriber"
 require_relative "../../app/pub_sub/events/email_sent"
+require_relative "../../app/pub_sub/events/rpi_received"
 require_relative "../../app/pub_sub/events/rpi_processed"
 require_relative "../../app/pub_sub/events/rpi_unprocessed"
 
@@ -23,7 +24,7 @@ Rails.configuration.to_prepare do
     # store.subscribe_to_all_events(lambda { |event| Rails.logger.info(event.event_type) })
 
     store.subscribe(Events::Subscribers::EmailSubscriber.new, to: [Events::EmailSent])
-    store.subscribe(Events::Subscribers::RpiSubscriber.new, to: [Events::RpiProcessed, Events::RpiUnprocessed])
+    store.subscribe(Events::Subscribers::RpiSubscriber.new, to: [Events::RpiReceived, Events::RpiProcessed, Events::RpiUnprocessed])
 
     store.subscribe_to_all_events(RailsEventStore::LinkByEventType.new)
     store.subscribe_to_all_events(RailsEventStore::LinkByCorrelationId.new)

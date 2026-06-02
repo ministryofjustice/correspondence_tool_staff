@@ -43,7 +43,7 @@ class Admin::DashboardController < AdminController
   end
 
   def events
-    @events = RailsEventStore::Client.new
+    @events = Rails.configuration.event_store
       .read
       .backward
       .newer_than_or_equal(30.days.ago)

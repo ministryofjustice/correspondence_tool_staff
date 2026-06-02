@@ -1,8 +1,6 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  mount RailsEventStore::Browser => "/res" if Rails.env.development?
-
   resources :contacts, except: :show do
     get "/new_details", on: :collection, to: "contacts#new_details"
     post "/new_details", on: :collection, to: "contacts#new_details"
@@ -35,6 +33,7 @@ Rails.application.routes.draw do
 
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => "/sidekiq"
+    mount RailsEventStore::Browser => "/res"
   end
 
   # Case Concerns

@@ -188,12 +188,28 @@ class PersonalInformationRequest < ApplicationRecord
     update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  def failed(exception)
+  def failed(exception, failure_stage: "processing")
     update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
+    Rails.configuration.event_store.publish(
+      Events::RpiUnprocessed.new(data: {
+        personal_information_request_id: id,
+        submission_id:,
+        failure_stage:,
+        error_class: exception.class.name,
+        error_message: exception.message,
+      }.compact),
+    )
   end
 
   def completed
     update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
+    Rails.configuration.event_store.publish(
+      Events::RpiProcessed.new(data: {
+        personal_information_request_id: id,
+        submission_id:,
+        targets: targets.map(&:to_s),
+      }),
+    )
   end
 
 private

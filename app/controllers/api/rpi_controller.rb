@@ -8,11 +8,19 @@ module Api
       request = PersonalInformationRequest.create!(submission_id:)
       request.build(@body)
 
+      Rails.configuration.event_store.publish(
+        Events::RpiReceived.new(data: {
+          personal_information_request_id: request.id,
+          submission_id:,
+          schema: @body[:schema],
+        }),
+      )
+
       RequestPersonalInformationJob.perform_later(request.id, @body)
 
       head :ok
     rescue StandardError => e
-      request&.failed(e)
+      request&.failed(e, failure_stage: "receipt")
 
       # Deliberately capture separate Sentry error for individual submissions
       Sentry.capture_message "PersonalInformationRequest API (#{self.class.name}) failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
