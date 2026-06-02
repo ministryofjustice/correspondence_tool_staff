@@ -55,6 +55,6 @@ module Extendable
   def recalculate_deadline_without_extensions
     stopped_days_total = respond_to?(:total_days_stopped) ? total_days_stopped : 0
 
-    @deadline_calculator.external_deadline + stopped_days_total.days
+    @deadline_calculator.closest_working_day_after(stopped_days_total, @deadline_calculator.external_deadline)
   end
 end

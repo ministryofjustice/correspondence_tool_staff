@@ -76,7 +76,9 @@ feature "when extending an Offender SAR case deadline" do
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.notice.text).to eq "Deadline extension removed"
-      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Nov 2022")
+
+      # 12th Nov is a Saturday, so next working day is 14th Nov
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("14 Nov 2022")
     end
   end
 end
