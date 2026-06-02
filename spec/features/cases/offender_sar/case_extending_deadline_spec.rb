@@ -66,16 +66,17 @@ feature "when extending an Offender SAR case deadline" do
         "New final deadline: 12 January 2023",
       ]
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Jan 2023")
 
       # 6. Confirm no further extensions are allowed
       cases_show_page.load(id: kase.id)
       expect(cases_show_page.case_status.deadlines.actions).not_to have_extend_sar_deadline
 
-      # 7. Remove extensions but final deadline should be based on restart date not received date
+      # 7. Remove extensions but final deadline should be based on original received date plus paused/stopped days
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.notice.text).to eq "Deadline extension removed"
-      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Dec 2022") # Resets to last restart date
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Nov 2022")
     end
   end
 end
