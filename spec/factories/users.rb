@@ -151,9 +151,9 @@ FactoryBot.define do
       end
 
       full_name { generate(:responder_name) }
-      responding_teams { [find_or_create(:responding_team)] }
-      team_admin_teams { [find_or_create(:team_for_admin_users, :empty)] }
-      managing_teams { [create(:team_branston)] }
+      responding_teams { [find_or_create(:team_branston)] }
+      team_admin_teams { [find_or_create(:team_branston)] }
+      managing_teams { [find_or_create(:team_branston)] }
     end
 
     factory :foi_responder do
