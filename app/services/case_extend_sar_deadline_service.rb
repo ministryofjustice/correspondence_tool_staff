@@ -22,8 +22,8 @@ class CaseExtendSARDeadlineService
           message:,
         )
 
-        new_extended_times = @extension_period.to_i + (@case.extended_times || 0)
-        @case.extend_deadline!(@extension_deadline, new_extended_times)
+        new_months_extended = @extension_period.to_i + (@case.months_extended || 0)
+        @case.extend_deadline!(@extension_deadline, new_months_extended)
         @result = :ok
       else
         @result = :validation_error
@@ -43,7 +43,7 @@ private
     if @case.try(:restarted_at).present?
       @case.deadline_calculator.extension_deadline(extend_by) { @case.external_deadline }
     else
-      @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
+      @case.deadline_calculator.extension_deadline((@case.months_extended || 0) + extend_by)
     end
   end
 
@@ -69,7 +69,7 @@ private
         :extension_period,
         "cannot be blank",
       )
-    elsif (@case.num_months_extended + @extension_period.to_i) > @case.extension_time_limit
+    elsif (@case.months_extended.to_i + @extension_period.to_i) > @case.extension_time_limit
       @case.errors.add(
         :extension_period,
         "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",

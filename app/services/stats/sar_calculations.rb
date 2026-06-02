@@ -42,10 +42,6 @@ module Stats
           row[:overall_max_achievable] = SARCalculations.calculate_max_achievable(row)
         end
       end
-
-      def self.calculate_sar_extensions(stats)
-        # TODO: Determine how to calculate SAR extensions
-      end
     end
 
     def self.calculate_max_achievable(row)
