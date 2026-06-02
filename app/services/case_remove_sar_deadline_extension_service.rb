@@ -32,7 +32,7 @@ private
   def message
     [
       "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
-      "New final deadline: #{I18n.localize(@case.calculate_old_deadline, format: :long)}",
+      "New final deadline: #{I18n.localize(@case.recalculate_deadline_without_extensions, format: :long)}",
     ].join("\n")
   end
 end

@@ -18,10 +18,6 @@ module Stats
           row[:overall_max_achievable] = OffenderSARCalculations.calculate_max_achievable(row)
         end
       end
-
-      def self.calculate_sar_extensions(stats)
-        # TODO: Determine how to calculate SAR extensions
-      end
     end
 
     def self.sum_all_received(prefix, row)

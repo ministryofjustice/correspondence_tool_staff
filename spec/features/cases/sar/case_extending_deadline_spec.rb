@@ -71,6 +71,54 @@ feature "when extending a SAR case deadline" do
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq("SAR deadline cannot be extended")
     end
+
+    scenario "extending a SAR case, pausing then removing extension deadline" do
+      login_as manager
+      cases_show_page.load(id: kase.id)
+      case_deadline_text_to_be("31 Oct 2022")
+
+      # Extend by 1 month for the first time
+      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
+        page.extension_period_1_calendar_month.click
+      end
+
+      case_deadline_text_to_be("29 Nov 2022")
+
+      stop_the_clock_date = received_date + 4.days
+      restart_the_clock_date = stop_the_clock_date + 4.days
+
+      # Pause the case
+      cases_show_page.case_status.deadlines.actions.stop_the_clock.click
+      expect(cases_stop_the_clock_page).to be_displayed
+      check("CCTV or BWCF requirements", allow_label_click: true)
+      cases_stop_the_clock_page.stop_the_clock_reason.set("Pausing to change final deadline")
+      cases_stop_the_clock_page.stop_the_clock_date_day.set(stop_the_clock_date.day)
+      cases_stop_the_clock_page.stop_the_clock_date_month.set(stop_the_clock_date.month)
+      cases_stop_the_clock_page.stop_the_clock_date_year.set(stop_the_clock_date.year)
+      cases_stop_the_clock_page.submit_button.click
+
+      # Restart the clock with a new date
+      cases_show_page.case_status.deadlines.actions.restart_the_clock.click
+      page.find("#case_restart_the_clock_date_dd").set(restart_the_clock_date.day)
+      page.find("#case_restart_the_clock_date_mm").set(restart_the_clock_date.month)
+      page.find("#case_restart_the_clock_date_yyyy").set(restart_the_clock_date.year)
+      click_button "Restart the clock"
+
+      case_deadline_text_to_be("5 Dec 2022")
+
+      # Remove extension should display initial deadline 31 Oct 2022 plus the 4 paused days
+      cases_show_page.load(id: kase.id)
+      cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+      expect(cases_show_page.notice.text).to eq "Deadline extension removed"
+      case_deadline_text_to_be("4 Nov 2022")
+
+      expected_case_history = [
+        "Deadline extension removed",
+        "Old final deadline: 5 December 2022 ",
+        "New final deadline: 4 November 2022",
+      ]
+      expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
+    end
   end
 
   context "with an approver" do
