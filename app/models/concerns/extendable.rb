@@ -51,7 +51,7 @@ module Extendable
     transitions.where(event: %w[extend_sar_deadline remove_sar_deadline_extension]).order(id: :desc).map(&:event).first == "extend_sar_deadline"
   end
 
-  # Re-calculates the deadline by replaying all stopped/paused days on top of the orginal deadline
+  # Re-calculates the deadline by replaying all stopped/paused days on top of the original deadline
   def recalculate_deadline_without_extensions
     stopped_days_total = respond_to?(:total_days_stopped) ? total_days_stopped : 0
 
