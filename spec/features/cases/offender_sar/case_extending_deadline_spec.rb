@@ -21,35 +21,61 @@ feature "when extending an Offender SAR case deadline" do
       expect(cases_show_page.case_status.deadlines.actions).not_to have_remove_sar_deadline_extension
 
       # 2. Extend by 1 month for the first time
-      extend_offender_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
+      extend_offender_sar_deadline_for(kase:, reason: "First Offender SAR extension") do |page|
         page.extension_period_1_calendar_month.click
       end
 
+      expected_case_history = [
+        "Extended SAR deadline",
+        "First Offender SAR extension ",
+        "Deadline extended by one calendar month\n",
+        "Old final deadline: 7 November 2022 ",
+        "New final deadline: 5 December 2022",
+      ]
+      expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
       expect(cases_show_page.case_status.deadlines.final.text).to eq(expected_first_extension_date)
 
       # 3. Pause the Offender SAR (stop the clock)
-      pause_offender_sar_for(kase:)
+      pause_offender_sar_for(kase:, date: kase.received_date + 10.days)
 
       cases_show_page.load(id: kase.id)
       expect(cases_show_page.case_status.deadlines.actions).not_to have_stop_the_clock
       expect(cases_show_page.case_status.deadlines.actions).to have_restart_the_clock
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("5 Dec 2022")
 
       # 4. Restart the Offender SAR
-      restart_offender_sar_for(kase:)
+      restart_offender_sar_for(kase:, date: kase.received_date + 15.days)
 
       cases_show_page.load(id: kase.id)
       expect(cases_show_page.case_status.deadlines.actions).to have_extend_sar_deadline
       expect(cases_show_page.case_status.deadlines.actions).to have_stop_the_clock
+      # Next working day after adding 5 days to the new final deadline of 5th December 2022
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Dec 2022")
 
       # 5. Extend by 1 month again (second time - no extension period selector shown)
-      extend_offender_sar_deadline_for(kase:, num_calendar_months: 1, reason: "Need even more time") do |page|
+      extend_offender_sar_deadline_for(kase:, reason: "Second Offender SAR extension") do |page|
         expect(page).not_to have_extension_period_1_calendar_month
         expect(page).to have_text("The deadline for this case will be extended by a further one calendar month.")
       end
 
+      expected_case_history = [
+        "Extended SAR deadline",
+        "Second Offender SAR extension ",
+        "Deadline extended by one calendar month\n",
+        "Old final deadline: 12 December 2022 ",
+        "New final deadline: 12 January 2023",
+      ]
+      expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
+
       # 6. Confirm no further extensions are allowed
       cases_show_page.load(id: kase.id)
       expect(cases_show_page.case_status.deadlines.actions).not_to have_extend_sar_deadline
+
+      # 7. Remove extensions but final deadline should be based on restart date not received date
+      cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.notice.text).to eq "Deadline extension removed"
+      expect(cases_show_page.case_status.deadlines.final.text).to eq("12 Dec 2022") # Resets to last restart date
     end
   end
 end
