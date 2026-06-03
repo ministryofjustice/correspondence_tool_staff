@@ -190,7 +190,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def failed(exception, failure_stage: "processing")
-    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
+    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}") # rubocop:disable Rails/SaveBang
 
     broadcast(
       Events::RpiUnprocessed.new(data: {
@@ -204,7 +204,7 @@ class PersonalInformationRequest < ApplicationRecord
   end
 
   def completed
-    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
+    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.") # rubocop:disable Rails/SaveBang
 
     broadcast(
       Events::RpiProcessed.new(data: {
