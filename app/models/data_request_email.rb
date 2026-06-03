@@ -95,9 +95,7 @@ private
       chase_number:,
     }.merge(extra_payload)
 
-    broadcast(
-      event_class.new(data: payload),
-    )
+    broadcast(event_class.build(**payload))
   end
 
   def kase

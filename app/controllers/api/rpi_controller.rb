@@ -11,11 +11,11 @@ module Api
       request.build(@body)
 
       broadcast(
-        Events::RpiReceived.new(data: {
+        Events::RpiReceived.build(
           personal_information_request_id: request.id,
           submission_id:,
           schema: @body[:schema],
-        }),
+        ),
       )
 
       RequestPersonalInformationJob.perform_later(request.id, @body)

@@ -193,13 +193,13 @@ class PersonalInformationRequest < ApplicationRecord
     update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}") # rubocop:disable Rails/SaveBang
 
     broadcast(
-      Events::RpiUnprocessed.new(data: {
+      Events::RpiUnprocessed.build(
         personal_information_request_id: id,
         submission_id:,
         failure_stage:,
         error_class: exception.class.name,
         error_message: exception.message,
-      }),
+      ),
     )
   end
 
@@ -207,11 +207,11 @@ class PersonalInformationRequest < ApplicationRecord
     update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.") # rubocop:disable Rails/SaveBang
 
     broadcast(
-      Events::RpiProcessed.new(data: {
+      Events::RpiProcessed.build(
         personal_information_request_id: id,
         submission_id:,
         targets: targets.map(&:to_s),
-      }),
+      ),
     )
   end
 

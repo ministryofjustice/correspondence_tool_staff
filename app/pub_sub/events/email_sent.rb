@@ -1,4 +1,4 @@
 module Events
-  class EmailSent < RailsEventStore::Event
+  class EmailSent < SystemEvent
   end
 end

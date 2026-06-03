@@ -1,4 +1,4 @@
 module Events
-  class RpiUnprocessed < RailsEventStore::Event
+  class RpiUnprocessed < SystemEvent
   end
 end

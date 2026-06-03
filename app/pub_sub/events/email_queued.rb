@@ -1,4 +1,4 @@
 module Events
-  class EmailQueued < RailsEventStore::Event
+  class EmailQueued < SystemEvent
   end
 end

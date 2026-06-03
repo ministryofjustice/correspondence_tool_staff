@@ -3,7 +3,7 @@ private
 
   def publish_email_sent_event
     Rails.configuration.event_store.publish(
-      Events::EmailSent.new(data: email_event_payload),
+      Events::EmailSent.build(email_event_payload),
     )
   end
 

@@ -4,6 +4,7 @@ require "arkency/command_bus"
 
 require_relative "../../app/pub_sub/events/subscribers/email_subscriber"
 require_relative "../../app/pub_sub/events/subscribers/rpi_subscriber"
+require_relative "../../app/pub_sub/events/system_event"
 require_relative "../../app/pub_sub/events/email_sent"
 require_relative "../../app/pub_sub/events/rpi_received"
 require_relative "../../app/pub_sub/events/rpi_processed"

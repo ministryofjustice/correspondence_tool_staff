@@ -1,4 +1,4 @@
 module Events
-  class EmailFailed < RailsEventStore::Event
+  class EmailFailed < SystemEvent
   end
 end

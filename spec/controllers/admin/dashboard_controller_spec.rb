@@ -110,30 +110,26 @@ describe Admin::DashboardController do
 
   describe "#events" do
     let(:email_sent_event) do
-      Events::EmailSent.new(
-        data: {
-          recipient: "test@test.com",
-          subject: "Subject Access Request - 12345",
-          category: "commissioning_document",
-          email_type: "commissioning_email",
-          recipient_type: "external",
-          case_number: "12345",
-        },
+      Events::EmailSent.build(
+        recipient: "test@test.com",
+        subject: "Subject Access Request - 12345",
+        category: "commissioning_document",
+        email_type: "commissioning_email",
+        recipient_type: "external",
+        case_number: "12345",
       )
     end
 
     let(:email_failed_event) do
-      Events::EmailFailed.new(
-        data: {
-          recipient: "test@test.com",
-          subject: "Subject Access Request - 12345",
-          category: "commissioning_document",
-          email_type: "commissioning_email",
-          recipient_type: "external",
-          case_number: "12345",
-          status: "permanent-failure",
-          notify_id: "notify-123",
-        },
+      Events::EmailFailed.build(
+        recipient: "test@test.com",
+        subject: "Subject Access Request - 12345",
+        category: "commissioning_document",
+        email_type: "commissioning_email",
+        recipient_type: "external",
+        case_number: "12345",
+        status: "permanent-failure",
+        notify_id: "notify-123",
       )
     end
 

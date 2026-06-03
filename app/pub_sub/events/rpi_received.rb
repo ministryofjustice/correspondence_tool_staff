@@ -1,4 +1,4 @@
 module Events
-  class RpiReceived < RailsEventStore::Event
+  class RpiReceived < SystemEvent
   end
 end
