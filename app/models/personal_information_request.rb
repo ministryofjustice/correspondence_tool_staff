@@ -14,6 +14,7 @@
 #
 class PersonalInformationRequest < ApplicationRecord
   include Rails.application.routes.url_helpers
+  include Eventing
 
   OWN_DATA = "your own".freeze
   LEGAL_REPRESENTATIVE = "legal representative".freeze
@@ -190,20 +191,22 @@ class PersonalInformationRequest < ApplicationRecord
 
   def failed(exception, failure_stage: "processing")
     update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
-    Rails.configuration.event_store.publish(
+
+    broadcast(
       Events::RpiUnprocessed.new(data: {
         personal_information_request_id: id,
         submission_id:,
         failure_stage:,
         error_class: exception.class.name,
         error_message: exception.message,
-      }.compact),
+      }),
     )
   end
 
   def completed
     update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
-    Rails.configuration.event_store.publish(
+
+    broadcast(
       Events::RpiProcessed.new(data: {
         personal_information_request_id: id,
         submission_id:,

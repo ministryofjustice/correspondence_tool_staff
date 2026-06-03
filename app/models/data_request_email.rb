@@ -14,6 +14,8 @@
 #  chase_number         :integer
 #
 class DataRequestEmail < ApplicationRecord
+  include Eventing
+
   FAILURE_STATUSES = %w[permanent-failure temporary-failure technical-failure].freeze
 
   belongs_to :data_request
@@ -78,13 +80,7 @@ private
   end
 
   def publish_email_lifecycle_event(event_class, extra_payload = {})
-    Rails.configuration.event_store.publish(
-      event_class.new(data: system_log_email_payload.merge(extra_payload).compact),
-    )
-  end
-
-  def system_log_email_payload
-    {
+    payload = {
       category: "commissioning_document",
       email_type:,
       recipient: email_address,
@@ -97,7 +93,11 @@ private
       status:,
       subject: email_subject,
       chase_number:,
-    }.compact
+    }.merge(extra_payload)
+
+    broadcast(
+      event_class.new(data: payload),
+    )
   end
 
   def kase

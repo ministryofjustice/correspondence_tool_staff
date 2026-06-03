@@ -1,5 +1,7 @@
 module Api
   class RpiController < ApiController
+    include Eventing
+
     before_action :authenticate_request, only: :create
     before_action :set_default_schema, only: :create
 
@@ -8,7 +10,7 @@ module Api
       request = PersonalInformationRequest.create!(submission_id:)
       request.build(@body)
 
-      Rails.configuration.event_store.publish(
+      broadcast(
         Events::RpiReceived.new(data: {
           personal_information_request_id: request.id,
           submission_id:,
