@@ -39,7 +39,7 @@ private
   def send_emails
     emails = data_request_area.recipient_emails
 
-    # NOTE: # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
+    # NOTE: must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
     emails.map do |email|
       CommissioningDocumentMailer.commissioning_email(
         commissioning_document,
