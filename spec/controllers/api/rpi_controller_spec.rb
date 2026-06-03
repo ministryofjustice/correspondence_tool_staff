@@ -2,6 +2,11 @@ require "rails_helper"
 
 RSpec.describe Api::RpiController, type: :controller do
   let(:encrypted_document) { JWE.encrypt(document.to_json, Settings.rpi_jwe_key, alg: "dir") }
+  let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
+
+  before do
+    allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+  end
 
   RSpec.shared_examples "RpiController#create with valid data" do
     it "creates a job to process the payload" do
@@ -14,6 +19,19 @@ RSpec.describe Api::RpiController, type: :controller do
       post(:create, body: encrypted_document)
 
       expect(assigns(:body)).to eq document
+    end
+
+    it "publishes an RpiReceived event" do
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      post(:create, body: encrypted_document)
+
+      expect(published_event).to be_a(Events::RpiReceived)
+      expect(published_event.data).to include(
+        submission_id: submission_id.to_s,
+      )
+      expect(published_event.data[:personal_information_request_id]).to be_present
     end
   end
 
@@ -29,6 +47,22 @@ RSpec.describe Api::RpiController, type: :controller do
       expect(request).not_to be_nil
       expect(request.processed).to eq false
       expect(request.log).to include("ERROR:")
+    end
+
+    it "publishes an RpiUnprocessed event with failure_stage receipt" do
+      allow(Sentry).to receive(:capture_exception)
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      post(:create, body: encrypted_document)
+
+      expect(published_event).to be_a(Events::RpiUnprocessed)
+      expect(published_event.data).to include(
+        submission_id: submission_id.to_s,
+        failure_stage: "receipt",
+      )
+      expect(published_event.data[:error_class]).to be_present
+      expect(published_event.data[:error_message]).to be_present
     end
   end
 
