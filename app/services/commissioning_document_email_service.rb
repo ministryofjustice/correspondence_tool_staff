@@ -39,12 +39,13 @@ private
   def send_emails
     emails = data_request_area.recipient_emails
 
+    # NOTE: # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
     emails.map do |email|
       CommissioningDocumentMailer.commissioning_email(
         commissioning_document,
         data_request_area.offender_sar_case.number,
         email,
-      ).deliver_later! # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
+      ).deliver_later!
     end
   end
 
@@ -52,12 +53,15 @@ private
     is_escalation_email = [DataRequestChase::OVERDUE_CHASE, DataRequestChase::ESCALATION_CHASE].include?(chase_type)
     emails = data_request_area.recipient_emails(escalated: is_escalation_email)
 
+    # NOTE: must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
     emails.map do |email|
-      CommissioningDocumentMailer.send(chase_type,
-                                       data_request_area.offender_sar_case,
-                                       commissioning_document,
-                                       email,
-                                       data_request_area.next_chase_number).deliver_later! # must use deliver_later! method or Notify ID cannot be saved due to limitations of govuk_notify_rails gem
+      CommissioningDocumentMailer.send(
+        chase_type,
+        data_request_area.offender_sar_case,
+        commissioning_document,
+        email,
+        data_request_area.next_chase_number,
+      ).deliver_later!
     end
   end
 
