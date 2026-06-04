@@ -108,3 +108,4 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "teaspoon-jasmine"
 end
+gem "rails_event_store", "~> 2.18.0"

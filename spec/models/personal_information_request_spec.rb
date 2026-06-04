@@ -702,6 +702,79 @@ describe PersonalInformationRequest do
     end
   end
 
+  describe "#completed" do
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
+    let(:rpi) { create(:personal_information_request, submission_id: "test-submission-123") }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+      allow(rpi).to receive(:targets).and_return([:branston])
+    end
+
+    it "marks the request as processed" do
+      rpi.completed
+      expect(rpi.reload.processed).to eq true
+    end
+
+    it "publishes an RpiProcessed event" do
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      rpi.completed
+
+      expect(published_event).to be_a(Events::RpiProcessed)
+      expect(published_event.data).to include(
+        personal_information_request_id: rpi.id,
+        submission_id: "test-submission-123",
+        targets: %w[branston],
+      )
+    end
+  end
+
+  describe "#failed" do
+    let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
+    let(:rpi) { create(:personal_information_request, submission_id: "test-submission-123") }
+    let(:exception) { StandardError.new("something went wrong").tap { |e| e.set_backtrace([]) } }
+
+    before do
+      allow(Rails.configuration).to receive(:event_store).and_return(event_store)
+    end
+
+    it "marks the request as unprocessed and logs the error" do
+      rpi.failed(exception)
+      expect(rpi.reload.processed).to eq false
+      expect(rpi.log).to include("something went wrong")
+    end
+
+    it "publishes an RpiUnprocessed event with default failure_stage processing" do
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      rpi.failed(exception)
+
+      expect(published_event).to be_a(Events::RpiUnprocessed)
+      expect(published_event.data).to include(
+        personal_information_request_id: rpi.id,
+        submission_id: "test-submission-123",
+        failure_stage: "processing",
+        error_class: "StandardError",
+        error_message: "something went wrong",
+      )
+    end
+
+    it "publishes an RpiUnprocessed event with failure_stage receipt when specified" do
+      published_event = nil
+      allow(event_store).to receive(:publish) { |event| published_event = event }
+
+      rpi.failed(exception, failure_stage: "receipt")
+
+      expect(published_event).to be_a(Events::RpiUnprocessed)
+      expect(published_event.data).to include(
+        failure_stage: "receipt",
+      )
+    end
+  end
+
   describe "#soft_delete" do
     let(:rpi) { build(:personal_information_request) }
     let(:s3_object_branston) { instance_double(Aws::S3::Object) }
