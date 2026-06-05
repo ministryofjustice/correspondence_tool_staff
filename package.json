@@ -16,7 +16,7 @@
   "jest": {
     "testEnvironment": "jsdom",
     "testMatch": [
-      "**/spec/javascripts/modules/**/*Spec.js"
+      "**/spec/javascripts/**/*Spec.js"
     ],
     "setupFiles": [
       "./spec/javascripts/setup.js"

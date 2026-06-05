@@ -17,16 +17,19 @@ eval(mojJs);
 
 // Load GOVUK namespace from gem
 const govukToolkitPath = path.join(process.env.GOVUK_TOOLKIT_PATH || '', 'app/assets/javascripts/govuk');
-fs.readdirSync(govukToolkitPath)
-  .filter(f => f.endsWith('.js'))
-  .forEach(f => {
-    try {
-      const govukJs = fs.readFileSync(path.join(govukToolkitPath, f), 'utf8');
-      eval(govukJs);
-    } catch (e) {
-      // skip files that fail to load in test environment
-    }
-  });
+
+if (fs.existsSync(govukToolkitPath)) {
+  fs.readdirSync(govukToolkitPath)
+    .filter(f => f.endsWith('.js'))
+    .forEach(f => {
+      try {
+        const govukJs = fs.readFileSync(path.join(govukToolkitPath, f), 'utf8');
+        eval(govukJs);
+      } catch (e) {
+        // skip files that fail to load in test environment
+      }
+    });
+}
 
 // Load application.js to get $.urlParam and other helpers
 const appJs = fs.readFileSync(path.join(__dirname, '../../app/assets/javascripts/application.js'), 'utf8');
@@ -43,5 +46,5 @@ fs.readdirSync(modulesDir)
 
 global.moj = moj;
 
-// Expose Jasmine-compatible spyOn globally
-global.spyOn = jest.spyOn;
+// Expose Jasmine-compatible spyOn globally (stub by default, like Jasmine)
+global.spyOn = (obj, methodName) => jest.spyOn(obj, methodName).mockImplementation(() => {});
