@@ -63,8 +63,7 @@ class RetentionSchedulesUpdateService
   end
 
   def prepare_case_ids
-    # check_boxes submit as { <case_id> => 1 } if selected
-    # or { <case_id> => 0 } if not
+    # check_boxes submit case_ids as an array of selected case ids
     Array(@retention_schedules_params[:case_ids])
   end
 
