@@ -21,7 +21,7 @@ section#retention-cases.govuk-tabs__panel
                          clear_params: {} }
 
   - if @global_nav_manager.current_page.tabs.present?
-    
+
 
     .grid-row
       .column-full
@@ -49,22 +49,22 @@ section#retention-cases.govuk-tabs__panel
           .column-full
             .button-holder
               = submit_tag t('retention_schedules.buttons.review'),
-                class: 'button-secondary', 
-                form: 'retention_schedules_form' 
+                class: 'button-secondary',
+                form: 'retention_schedules_form'
 
               = submit_tag t('retention_schedules.buttons.retain'),
-                class: 'button-secondary', 
-                form: 'retention_schedules_form' 
+                class: 'button-secondary',
+                form: 'retention_schedules_form'
 
               - if @global_nav_manager.current_page_or_tab.name == :pending_removal
                 = submit_tag t('retention_schedules.buttons.mark_for_destroy'),
-                    class: 'button-secondary', 
-                    form: 'retention_schedules_form' 
+                    class: 'button-secondary',
+                    form: 'retention_schedules_form'
 
               - if @global_nav_manager.current_page_or_tab.name == :ready_for_removal
                 = submit_tag t('retention_schedules.buttons.destroy'),
-                    class: 'button-secondary button-destroy', 
-                    form: 'retention_schedules_form', 
+                    class: 'button-secondary button-destroy',
+                    form: 'retention_schedules_form',
                     data: { confirm: t('retention_schedules.misc.destroy_alert_message') }
 
           .column-full.table-container.container.cases-table-container tabindex="0"
@@ -77,15 +77,15 @@ section#retention-cases.govuk-tabs__panel
                       span.visually-hidden Select all
                 th
                   = t('retention_schedules.table_headings.case_number')
-                th 
+                th
                   = t('retention_schedules.table_headings.case_type')
-                th 
+                th
                   = t('retention_schedules.table_headings.subject_name')
-                th 
+                th
                   = t('retention_schedules.table_headings.destruction_date')
-                th 
+                th
                   = t('retention_schedules.table_headings.links')
-                th 
+                th
                   = t('retention_schedules.table_headings.status')
               tbody
                 = form_with url: bulk_update_retention_schedules_path, method: :patch, id: 'retention_schedules_form' do |f|
@@ -93,20 +93,20 @@ section#retention-cases.govuk-tabs__panel
                     tr.case_row
                       td
                         .multiple-choice
-                          = f.check_box "retention_schedules[case_ids[#{kase.id}]]", id: "retention-checkbox-#{kase.id}"
+                          = check_box_tag "retention_schedules[case_ids][]", kase.id, false, id: "retention-checkbox-#{kase.id}"
                           label for="retention-checkbox-#{kase.id}"
                             span.visually-hidden Select case number #{kase.number}
-                      td 
+                      td
                         = link_to kase.number, case_path(kase.id)
-                      td 
+                      td
                         = kase.pretty_type
-                      td 
+                      td
                         = kase.subject_name
-                      td 
+                      td
                         = l(kase.retention_schedule.planned_destruction_date)
-                      td 
+                      td
                         = kase.linked_cases.present?.humanize
-                      td 
+                      td
                         = kase.retention_schedule.human_state
 
         = paginate @cases

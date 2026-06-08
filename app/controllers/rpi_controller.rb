@@ -6,7 +6,7 @@ class RpiController < ApplicationController
     @request.last_accessed_by = current_user.id
     @request.save!
 
-    redirect_to @request.temporary_url(@target)
+    redirect_to @request.temporary_url(@target), allow_other_host: true
   end
 
   def get_request
