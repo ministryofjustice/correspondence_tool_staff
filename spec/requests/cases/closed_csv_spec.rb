@@ -4,9 +4,11 @@ describe "GET /cases/closed.csv" do
   include Devise::Test::IntegrationHelpers
 
   let(:manager) { find_or_create :disclosure_specialist_bmt }
-  let!(:closed_case) { create(:closed_case) }
 
-  before { sign_in manager }
+  before do
+    create(:closed_case)
+    sign_in manager
+  end
 
   it "returns 200" do
     get closed_filter_path(format: :csv)

@@ -9,7 +9,6 @@ describe "GET /cases/my_open.csv" do
   it "downloads a csv file" do
     allow(CSVGenerator).to receive(:filename).with("my-open").and_return("abc.csv")
 
-
     get my_open_filter_path(tab: "in_time", format: :csv)
     expect(response.status).to eq 200
     expect(response.headers["Content-Disposition"]).to eq 'attachment; filename="abc.csv"'
