@@ -217,3 +217,12 @@ Style/RedundantParentheses:
 Style/TrailingCommaInArguments:
   Exclude:
     - 'spec/support/standard_setup.rb'
+
+# Offense count: 25
+# This cop supports safe autocorrection (--autocorrect).
+Rails/Presence:
+  Exclude:
+    - 'app/controllers/cases/offender_sar_complaint_controller.rb'
+    - 'db/data_migrations/20210125211859_add_performance_report_for_complaint_type.rb'
+    - 'db/data_migrations/20211115122902_remove_address_covid_letters.rb'
+    - 'db/data_migrations/20240409153433_update_report_type_names.rb'
