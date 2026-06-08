@@ -111,6 +111,6 @@ private
     headers["Content-Type"] = "text/csv; charset=utf-8"
     headers["Content-Disposition"] =
       %(attachment; filename="#{CSVGenerator.filename(action_string)}")
-    self.response_body = CSVGenerator.new(@cases, CSVExporter.new(nil))
+    self.response_body = CSVGenerator.new(@cases, CSVExporter.new(nil)).to_a.join
   end
 end

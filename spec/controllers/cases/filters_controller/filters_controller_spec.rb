@@ -184,6 +184,11 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
 
         before do
           allow(CSVGenerator).to receive(:filename).with("closed").and_return("abc.csv")
+          allow(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
+          csv_exporter = instance_double(CSVExporter)
+          allow(CSVExporter).to receive(:new).and_return(csv_exporter)
+          allow(csv_exporter).to receive(:class).and_return(CSVExporter)
+          allow(csv_exporter).to receive(:analyse_case).with(record).and_return(%w[a csv line])
           get :closed, format: "csv"
         end
 
@@ -312,6 +317,7 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
     page = instance_double(GlobalNavManager::Page, cases:)
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
     allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
+    allow(cases_by_last_transitioned_date).to receive(:each).and_return([])
     allow(cases).to receive(:includes).and_return(cases)
     allow(cases).to receive(:size).and_return(10)
     allow(cases).to receive(:count).and_return(10)

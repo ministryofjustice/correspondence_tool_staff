@@ -65,9 +65,7 @@ class RetentionSchedulesUpdateService
   def prepare_case_ids
     # check_boxes submit as { <case_id> => 1 } if selected
     # or { <case_id> => 0 } if not
-    @retention_schedules_params.to_h.filter_map do |key, value|
-      key if value == "1"
-    end
+    Array(@retention_schedules_params[:case_ids])
   end
 
 private

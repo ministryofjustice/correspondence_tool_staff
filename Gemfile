@@ -55,7 +55,7 @@ gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 7.1"
 gem "pundit", "~>2.4"
-gem "rails", "~> 7.0"
+gem "rails", "8.1.3"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 # Gem (https://github.com/anjlab/rails-data-migrations) does not support rails 7.2 so changed to this fork
@@ -92,7 +92,7 @@ group :test do
 end
 
 group :development, :test do
-  gem "annotate", "~> 3.2.0"
+  gem "annotaterb", "~> 4.0"
   gem "better_errors"
   gem "binding_of_caller"
   gem "brakeman"
