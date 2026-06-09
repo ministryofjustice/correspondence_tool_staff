@@ -984,6 +984,14 @@ private
   end
 
   def validate_received_date
+    # NOTE: gov_uk_date_fields allows 0 to be submitted as a day/month value causing unpredicatable errors
+    unless @_received_date&.valid?
+      errors.add(
+        :received_date,
+        I18n.t("activerecord.errors.models.case.attributes.received_date.invalid"),
+      )
+    end
+
     if received_date.present? && received_date > Time.zone.today
       errors.add(
         :received_date,

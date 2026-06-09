@@ -87,6 +87,7 @@ en:
             received_date:
               not_in_future: "cannot be in the future."
               past: too far in past.
+              invalid: must be a valid date
             date_draft_compliant:
               before_received: "cannot be before date received"
               not_in_future: "cannot be in the future."
