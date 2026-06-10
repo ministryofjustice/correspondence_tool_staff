@@ -159,6 +159,16 @@ RSpec.describe Api::RpiController, type: :controller do
         end
 
         it_behaves_like "RpiController#create with valid data"
+
+        it "stores the schema version in fingerprint" do
+          post(:create, body: encrypted_document)
+
+          pir = PersonalInformationRequest.find_by(submission_id:)
+
+          expect(pir.fingerprint["schema"]).to eq "1"
+          expect(pir.fingerprint["ip_address"]).to eq "0.0.0.0"
+          expect(pir.fingerprint["referrer"]).to be_nil
+        end
       end
 
       context "with invalid document" do
@@ -231,6 +241,16 @@ RSpec.describe Api::RpiController, type: :controller do
         end
 
         it_behaves_like "RpiController#create with valid data"
+
+        it "stores the fingerprint" do
+          post(:create, body: encrypted_document)
+
+          pir = PersonalInformationRequest.find_by(submission_id:)
+
+          expect(pir.fingerprint["schema"]).to eq "2"
+          expect(pir.fingerprint["ip_address"]).to eq "0.0.0.0"
+          expect(pir.fingerprint["referrer"]).to be_nil
+        end
       end
 
       context "with invalid document" do
