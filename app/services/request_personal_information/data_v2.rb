@@ -7,6 +7,10 @@ class RequestPersonalInformation::DataV2
     @payload = payload
   end
 
+  def schema
+    @payload[:schema]
+  end
+
   def submission_id
     @payload[:submission_id]
   end

@@ -9,6 +9,7 @@
 #  deleted          :boolean          default(FALSE)
 #  processed        :boolean          default(FALSE)
 #  log              :text
+#  fingerprint      :jsonb
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -65,7 +66,8 @@ class PersonalInformationRequest < ApplicationRecord
                 :contact_address,
                 :contact_email,
                 :needed_for_court,
-                :needed_for_court_information
+                :needed_for_court_information,
+                :schema
 
   scope :ready_to_delete, -> { where("created_at < ?", DELETE_AFTER.ago) }
 

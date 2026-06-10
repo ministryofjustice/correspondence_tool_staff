@@ -15,6 +15,8 @@ p
         col
         col
         col
+        col
+        col
       thead
         tr
           th scope='col'
@@ -28,7 +30,7 @@ p
           th scope='col'
             | Updated
           th scope='col'
-            | Log
+            | Log/Fingerprint
       tbody
         - @personal_information_requests.each do |pir|
           tr
@@ -37,4 +39,11 @@ p
             td= pir.processed ? 'Yes' : 'No'
             td= l(pir.created_at, format: :default)
             td= l(pir.updated_at, format: :default)
-            td= pir.log
+            td
+              - if pir.fingerprint.present?
+                ul
+                  - pir.fingerprint.each do |key, value|
+                    li
+                      strong = "#{key}: "
+                      = value
+              =pir.log
