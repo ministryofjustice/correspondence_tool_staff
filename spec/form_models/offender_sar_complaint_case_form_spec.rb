@@ -51,5 +51,42 @@ RSpec.describe OffenderSARComplaintCaseForm do
         expect(case_form.valid_attributes?(params)).to be false
       end
     end
+
+    context "when date_received entered" do
+      before { case_form.current_step = "date-received" }
+
+      context "when day is 0" do
+        let(:params) do
+          ActionController::Parameters.new(
+            received_date_dd: "0",
+            received_date_mm: "6",
+            received_date_yyyy: Time.zone.today.year.to_s,
+          ).permit!
+        end
+
+        it "returns false" do
+          expect(case_form.valid_attributes?(params)).to be false
+        end
+
+        it "adds an invalid date error on received_date" do
+          case_form.valid_attributes?(params)
+          expect(case_form.errors[:received_date]).to include("must be a valid date")
+        end
+      end
+
+      context "when received_date is valid" do
+        let(:params) do
+          ActionController::Parameters.new(
+            received_date_dd: Time.zone.today.day.to_s,
+            received_date_mm: Time.zone.today.month.to_s,
+            received_date_yyyy: Time.zone.today.year.to_s,
+          ).permit!
+        end
+
+        it "returns true" do
+          expect(case_form.valid_attributes?(params)).to be true
+        end
+      end
+    end
   end
 end
