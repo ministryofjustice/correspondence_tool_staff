@@ -71,17 +71,6 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
           expect(response).to render_template(:index)
         end
       end
-
-      # context "when csv request" do
-      #   it "downloads a csv file" do
-      #     allow(CSVGenerator).to receive(:filename).with("my-open").and_return("abc.csv")
-      #
-      #     get :my_open, params: { tab: "in_time" }, format: "csv"
-      #     expect(response.status).to eq 200
-      #     expect(response.header["Content-Disposition"]).to eq 'attachment; filename="abc.csv"'
-      #     expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
-      #   end
-      # end
     end
   end
 
@@ -177,37 +166,6 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
           expect(response).to render_template :closed
         end
       end
-
-      # context "when csv format" do
-      #   let!(:gnm) { stub_current_case_finder_for_closed_cases_with(:closed_cases_result) }
-      #   let(:record) { double }
-      #
-      #   before do
-      #     allow(CSVGenerator).to receive(:filename).with("closed").and_return("abc.csv")
-      #     allow(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
-      #     csv_exporter = CSVExporter.new(nil)
-      #     allow(CSVExporter).to receive(:new).and_return(csv_exporter)
-      #     allow(csv_exporter).to receive(:analyse_case).with(record).and_return(%w[a csv line])
-      #     get :closed, format: "csv"
-      #   end
-      #
-      #   it "returns 200" do
-      #     expect(response.status).to eq 200
-      #   end
-      #
-      #   it "generates a file and downloads it" do
-      #     allow(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
-      #     allow(record).to receive(:to_csv).and_return(%w[a csv line])
-      #
-      #     expect(response.header["Content-Disposition"]).to eq 'attachment; filename="abc.csv"'
-      #     expect(response.body).to eq "#{CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)}a,csv,line\n"
-      #   end
-      #
-      #   it "does not paginate the result set" do
-      #     expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
-      #       .not_to have_received(:page).with("our_page")
-      #   end
-      # end
     end
 
     context "when an anonymous user" do
