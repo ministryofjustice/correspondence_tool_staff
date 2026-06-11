@@ -66,8 +66,7 @@ class PersonalInformationRequest < ApplicationRecord
                 :contact_address,
                 :contact_email,
                 :needed_for_court,
-                :needed_for_court_information,
-                :schema
+                :needed_for_court_information
 
   scope :ready_to_delete, -> { where("created_at < ?", DELETE_AFTER.ago) }
 
