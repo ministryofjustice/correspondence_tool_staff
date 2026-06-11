@@ -9,6 +9,7 @@
 #  deleted          :boolean          default(FALSE)
 #  processed        :boolean          default(FALSE)
 #  log              :text
+#  fingerprint      :jsonb
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #

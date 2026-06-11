@@ -943,7 +943,8 @@ CREATE TABLE public.personal_information_requests (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     processed boolean DEFAULT false NOT NULL,
-    log text
+    log text,
+    fingerprint jsonb
 );
 
 
@@ -2463,6 +2464,9 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260610120000'),
+('20260327090000'),
+('20260318100000'),
 ('20250312113935'),
 ('20250220153650'),
 ('20250131145353'),
@@ -2648,6 +2652,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160803094147'),
 ('20160802134012'),
 ('20160802130203'),
-('20160722121207'),
-('20260318100000'),
-('20260327090000');
+('20160722121207');
