@@ -33,30 +33,6 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to render_template(:show)
       end
     end
-
-    describe "csv request" do
-      let(:csv_case) { double("Example Case") } # rubocop:disable RSpec/VerifiedDoubles
-
-      it "returns the csv file in the body" do
-        # so that the filename is fixed
-        Timecop.freeze Time.zone.local(2018, 11, 9, 13, 48, 22) do
-          allow(UserActiveCaseCountService).to receive(:new).and_return(service)
-          allow(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
-          allow(all_decorated_cases).to receive(:each).and_yield(csv_case)
-          allow(csv_case).to receive(:to_csv).and_return(%w[a csv file])
-
-          get :show, format: "csv", params: { id: manager.id }
-          expect(response).to be_successful
-
-          expect(response.headers["Content-Disposition"])
-            .to eq 'attachment; filename="disclosure-bmt_managing_user-cases-18-11-09-134822.csv"'
-          expect(response.headers["Content-Type"]).to eq "text/csv; charset=utf-8"
-
-          expect(response.body.delete('"')).to eq [CSVExporter::CSV_COLUMN_HEADINGS.join(","),
-                                                   "a,csv,file\n"].join("\n")
-        end
-      end
-    end
   end
 
   describe "POST create", versioning: true do

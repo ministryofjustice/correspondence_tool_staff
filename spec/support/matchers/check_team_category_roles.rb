@@ -1,7 +1,6 @@
 require "rspec/expectations"
 
-RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type,
-                                            *expected_methods|
+RSpec::Matchers.define :match_tcr_attrs do |expected_correspondence_type, *expected_methods|
   match do |actual_tcr|
     permissions = set_up_permissions(expected_methods)
     ct = CorrespondenceType.__send__(expected_correspondence_type)

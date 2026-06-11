@@ -60,6 +60,6 @@ private
   end
 
   def retention_schedules_params
-    params.require(:retention_schedules).require(:case_ids).permit!
+    params.require(:retention_schedules).permit(case_ids: [])
   end
 end

@@ -28,14 +28,14 @@ describe Devise::SessionsController do
       context "and four or more failed attempts" do
         it "sends unlock notification" do
           allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
-          expect(notification_double).to receive(:deliver)
+          expect(notification_double).to receive(:deliver_now)
           request.env["devise.mapping"] = Devise.mappings[:user]
           post :create, params: { user: { email: bad_user.email, password: bad_pass } }
         end
 
         it "locks the user" do
           allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
-          allow(notification_double).to receive(:deliver)
+          allow(notification_double).to receive(:deliver_now)
           request.env["devise.mapping"] = Devise.mappings[:user]
           post :create, params: { user: { email: bad_user.email, password: bad_pass } }
           bad_user.reload

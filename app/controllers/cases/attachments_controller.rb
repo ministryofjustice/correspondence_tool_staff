@@ -6,7 +6,7 @@ module Cases
     before_action :set_attachment, only: %i[destroy download show]
 
     def download
-      redirect_to @attachment.temporary_url
+      redirect_to @attachment.temporary_url, allow_other_host: true
     end
 
     def show

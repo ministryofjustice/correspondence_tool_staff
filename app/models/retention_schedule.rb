@@ -68,7 +68,7 @@ class RetentionSchedule < ApplicationRecord
     end
 
     def triagable_destroy_cases_range
-      ((Time.zone.today + 1)..)
+      (Time.zone.today + 1)..
     end
 
     def states_map
