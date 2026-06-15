@@ -35,15 +35,5 @@ fi
 
 header_additional "${GREEN}Done.${NC} Docker is running!\n" ""
 
-header_additional "Checking docker-sync can run...\n" ""
-sleep 3
-
-## Check if Docker Sync is installed
-if ! docker-sync --version >/dev/null 2>&1; then
-  header_additional "${GREEN}Hang on!${NC} docker-sync isn't here. Please install from your user root: ${YELLOW}cd ~ && gem install docker-sync${NC}"
-  header_additional "Find installation guidance at: https://docker-sync.readthedocs.io/en/latest/getting-started/installation.html" "close"
-  exit 1
-fi
-
 header_additional "${GREEN}Done.${NC} We are good to go!" "close"
 

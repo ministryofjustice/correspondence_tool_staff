@@ -3,7 +3,8 @@ FROM ruby:3.3.6-alpine AS base
 RUN set -ex
 RUN apk update
 RUN apk add libreoffice
-RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make postgresql-dev build-base git nodejs npm zip postgresql-client
+RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  \
+    postgresql-dev build-base git nodejs npm zip postgresql-client bash ncurses
 RUN apk --update add less && apk -U upgrade && apk --no-cache upgrade musl
 
 # add non-root user and group with first available uid, 1000

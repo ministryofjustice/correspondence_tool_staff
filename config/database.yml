@@ -25,6 +25,7 @@ default: &default
 development:
   <<: *default
   url: <%= ENV.fetch('DATABASE_URL', 'postgres://localhost/correspondence_platform_development') %>
+  prepared_statements: false
 
 test:
   <<: *default

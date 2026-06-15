@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reports-cache-refresh
+  namespace: track-a-query-production
+spec:
+  schedule: "0 * * * *" # At minute 0 past every hour
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: track-a-query
+          containers:
+          - name: jobs
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:production.latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - sh
+              - "-c"
+              - "bundle exec rake 'reports:refresh_cache'"
+            env:
+              - name: DATABASE_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-rds-output
+                    key: url
+            envFrom:
+              - configMapRef:
+                  name: environment-variables
+              - secretRef:
+                  name: app-secrets
+          restartPolicy: OnFailure
