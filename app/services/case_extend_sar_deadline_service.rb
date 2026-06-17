@@ -69,16 +69,34 @@ private
         :extension_period,
         "cannot be blank",
       )
-    elsif (@case.months_extended.to_i + @extension_period.to_i) > @case.extension_time_limit
-      @case.errors.add(
-        :extension_period,
-        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date",
-      )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(
         :extension_period,
         "cannot be before the final deadline",
       )
+    elsif invalid_extension_period?
+      @case.errors.add(
+        :extension_period,
+        invalid_extension_period_message,
+      )
+    end
+  end
+
+  # Fixed-extension types (Standard/Offender SAR) may only be extended by the
+  # single fixed period; legacy types are capped at a cumulative limit.
+  def invalid_extension_period?
+    if @case.fixed_extension?
+      @extension_period.to_i != @case.extension_fixed_period
+    else
+      (@case.months_extended.to_i + @extension_period.to_i) > @case.extension_time_limit
+    end
+  end
+
+  def invalid_extension_period_message
+    if @case.fixed_extension?
+      "must be #{@case.time_period_description(@case.extension_fixed_period)}"
+    else
+      "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date or last paused date"
     end
   end
 

@@ -1634,6 +1634,7 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
+        extend_fixed: The deadline for this case will be extended by %{time_period_description}.
     sar_internal_review:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR

@@ -44,7 +44,6 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
                                                                         assign_to_new_team
                                                                         destroy_case
                                                                         edit_case
-                                                                        extend_sar_deadline
                                                                         flag_for_clearance
                                                                         link_a_case
                                                                         remove_linked_case
@@ -320,7 +319,6 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
           expect(k.state_machine.permitted_events(approver.id))
             .to eq %i[
               add_message_to_case
-              extend_sar_deadline
               reassign_user
               remove_sar_deadline_extension
               stop_the_clock

@@ -158,12 +158,21 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   end
 
   describe "extend Offender SAR deadline" do
+    context "with responder, team_admin and manager role and not yet extended" do
+      let(:user) { find_or_create :responder_and_team_admin_and_manager }
+      let(:kase) { create :offender_sar_case }
+
+      it "allows to extend the deadline" do
+        expect(kase.state_machine.permitted_events(user)).to include :extend_sar_deadline
+      end
+    end
+
     context "with responder, team_admin and manager role and extended deadline" do
       let(:user) { find_or_create :responder_and_team_admin_and_manager }
       let(:kase) { create :offender_sar_case, :extended_deadline_offender_sar }
 
-      it "allows to extend the deadline" do
-        expect(kase.state_machine.permitted_events(user)).to include :extend_sar_deadline
+      it "does not allow the deadline to be extended again (single fixed extension)" do
+        expect(kase.state_machine.permitted_events(user)).not_to include :extend_sar_deadline
       end
 
       it "allows to remove the extended deadline" do

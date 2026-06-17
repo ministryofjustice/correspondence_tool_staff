@@ -23,7 +23,11 @@ div.action-copy
 br
 
 = form_for @case, as: :case, url: case_sar_extensions_path(@case), method: :post do |f|
-  - if @case.allow_extension_period_selection?
+  - if @case.fixed_extension?
+    input type="hidden" value="#{@case.extension_fixed_period}" name="case[extension_period]"
+    p
+      = t('.extend_fixed', time_period_description: @case.time_period_description(@case.extension_fixed_period))
+  - elsif @case.allow_extension_period_selection?
     fieldset.form-group
       legend
         span.form-label-bold

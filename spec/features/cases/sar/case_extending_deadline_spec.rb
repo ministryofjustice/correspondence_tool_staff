@@ -10,10 +10,9 @@ feature "when extending a SAR case deadline" do
   context "with a manager" do
     given!(:kase) { freeze_time { create :accepted_sar } }
 
-    scenario "extending a SAR case by 1 month twice then removing extension deadline" do
-      # Expected dates for display
-      expected_initial_extension_date = get_expected_deadline(2.months.since(received_date)).strftime("%-d %b %Y")
-      expected_final_extension_date = get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y")
+    scenario "extending a SAR case once by a fixed two months then removing the extension" do
+      # Expected date for display: original deadline (1 month) plus a 2 month extension
+      expected_extension_date = get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y")
 
       login_as manager
 
@@ -22,54 +21,30 @@ feature "when extending a SAR case deadline" do
       expect(cases_show_page.case_status.deadlines.actions).to have_extend_sar_deadline
       expect(cases_show_page.case_status.deadlines.actions).not_to have_remove_sar_deadline_extension
 
-      # 2. Extend by 1 month for the first time
-      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
-        page.extension_period_1_calendar_month.click
-      end
-
-      case_deadline_text_to_be(expected_initial_extension_date)
-
-      # 3. Extending again does not give you any extension periods for selection
-      extend_sar_deadline_for(kase:, num_calendar_months: 1, reason: "Need even more time") do |page|
-        expect(page).not_to have_extension_period_1_calendar_month
-        expect(page).to have_text("The deadline for this case will be extended by a further one calendar month.")
-      end
-
-      case_deadline_text_to_be(expected_final_extension_date)
-
-      # 4. No longer able to extend
-      cases_show_page.load(id: kase.id)
-      expect(cases_show_page.case_status.deadlines.actions).not_to have_extend_sar_deadline
-      expect(cases_show_page.case_status.deadlines.actions).to have_remove_sar_deadline_extension
-
-      # 5. Remove extension should display initial deadline
-      cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
-      expect(cases_show_page).to be_displayed
-      case_deadline_text_to_be(original_deadline.strftime("%-d %b %Y"))
-    end
-
-    scenario "extending a SAR case by 2 months" do
-      # Expected dates for display
-      expected_final_extension_date = get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y")
-
-      login_as manager
-
-      # 1. Extend by 2 months
+      # 2. The extension is a fixed 2 months - no period to choose
       extend_sar_deadline_for(kase:, num_calendar_months: 2) do |page|
-        page.extension_period_2_calendar_months.click
+        expect(page).not_to have_extension_period_1_calendar_month
+        expect(page).not_to have_extension_period_2_calendar_months
+        expect(page).to have_text("The deadline for this case will be extended by two calendar months.")
       end
 
-      case_deadline_text_to_be(expected_final_extension_date)
+      case_deadline_text_to_be(expected_extension_date)
 
-      # 2. No longer able to extend
+      # 3. No longer able to extend, only remove
       cases_show_page.load(id: kase.id)
       expect(cases_show_page.case_status.deadlines.actions).not_to have_extend_sar_deadline
       expect(cases_show_page.case_status.deadlines.actions).to have_remove_sar_deadline_extension
 
-      # 3. Trying to extend again displays an error message
+      # 4. Trying to extend again displays an error message
       visit new_case_sar_extension_path(kase)
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq("SAR deadline cannot be extended")
+
+      # 5. Remove extension should display initial deadline
+      cases_show_page.load(id: kase.id)
+      cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+      expect(cases_show_page).to be_displayed
+      case_deadline_text_to_be(original_deadline.strftime("%-d %b %Y"))
     end
 
     scenario "extending a SAR case, pausing then removing extension deadline" do
@@ -77,12 +52,10 @@ feature "when extending a SAR case deadline" do
       cases_show_page.load(id: kase.id)
       case_deadline_text_to_be("31 Oct 2022")
 
-      # Extend by 1 month for the first time
-      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
-        page.extension_period_1_calendar_month.click
-      end
+      # Extend by a fixed 2 months
+      extend_sar_deadline_for(kase:, num_calendar_months: 2)
 
-      case_deadline_text_to_be("29 Nov 2022")
+      case_deadline_text_to_be("29 Dec 2022")
 
       stop_the_clock_date = received_date + 4.days
       restart_the_clock_date = stop_the_clock_date + 4.days
@@ -104,7 +77,7 @@ feature "when extending a SAR case deadline" do
       page.find("#case_restart_the_clock_date_yyyy").set(restart_the_clock_date.year)
       click_button "Restart the clock"
 
-      case_deadline_text_to_be("5 Dec 2022")
+      case_deadline_text_to_be("4 Jan 2023")
 
       # Remove extension should display initial deadline 31 Oct 2022 plus the 4 paused days
       cases_show_page.load(id: kase.id)
@@ -114,7 +87,7 @@ feature "when extending a SAR case deadline" do
 
       expected_case_history = [
         "Deadline extension removed",
-        "Old final deadline: 5 December 2022 ",
+        "Old final deadline: 4 January 2023 ",
         "New final deadline: 4 November 2022",
       ]
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
@@ -136,12 +109,10 @@ feature "when extending a SAR case deadline" do
 
       cases_show_page.load(id: kase.id)
 
-      # 1. Extend by 30 days for the first time
-      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
-        page.extension_period_1_calendar_month.click
-      end
+      # 1. Extend by the fixed 2 months
+      extend_sar_deadline_for(kase:, num_calendar_months: 2)
 
-      case_deadline_text_to_be(get_expected_deadline(2.months.since(received_date)).strftime("%-d %b %Y"))
+      case_deadline_text_to_be(get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y"))
     end
   end
 
@@ -181,11 +152,9 @@ feature "when extending a SAR case deadline" do
 
       cases_show_page.load(id: kase.id)
 
-      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
-        page.extension_period_1_calendar_month.click
-      end
+      extend_sar_deadline_for(kase:, num_calendar_months: 2)
 
-      case_deadline_text_to_be(get_expected_deadline(2.months.since(received_date)).strftime("%-d %b %Y"))
+      case_deadline_text_to_be(get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y"))
     end
 
     scenario "a user who is manager, approver and responder can extend a SAR deadline" do
@@ -196,11 +165,9 @@ feature "when extending a SAR case deadline" do
 
       cases_show_page.load(id: kase.id)
 
-      extend_sar_deadline_for(kase:, num_calendar_months: 1) do |page|
-        page.extension_period_1_calendar_month.click
-      end
+      extend_sar_deadline_for(kase:, num_calendar_months: 2)
 
-      case_deadline_text_to_be(get_expected_deadline(2.months.since(received_date)).strftime("%-d %b %Y"))
+      case_deadline_text_to_be(get_expected_deadline(3.months.since(received_date)).strftime("%-d %b %Y"))
     end
   end
 end

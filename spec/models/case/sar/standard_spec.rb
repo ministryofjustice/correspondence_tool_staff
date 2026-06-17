@@ -297,13 +297,12 @@ describe Case::SAR::Standard do
     end
 
     describe "#deadline_extendable?" do
-      it "is true if external_deadline is less than max possible deadline", skip: "reimplement" do
+      it "is true when the deadline has not yet been extended" do
         expect(sar_case.deadline_extendable?).to eq true
       end
 
-      it "is false when already extended equal or beyond satutory limit" do
-        sar = freeze_time { create :approved_sar }
-        sar.months_extended = sar.extension_time_limit
+      it "is false once the deadline has been extended (single fixed extension)" do
+        sar = freeze_time { create :sar_case, :extended_deadline_sar }
 
         expect(sar.deadline_extendable?).to eq false
       end

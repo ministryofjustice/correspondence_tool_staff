@@ -7,7 +7,7 @@
 
 | Ticket | Description | Status | Last Updated | Branch |
 |--------|-------------|--------|--------------|--------|
-| — | *(none)* | — | — | — |
+| CDPTKAN-1081 | Extend SAR deadline → single fixed 2-month extension (Standard + Offender SAR; Internal Review unchanged). See [ADR 001](../decisions/001-fixed-single-sar-deadline-extension.md). | Implemented, tests pass; awaiting PR | 2026-06-17 | cdptkan-1081-alter-extend-sar-deadline-ui |
 
 ## How to Use
 

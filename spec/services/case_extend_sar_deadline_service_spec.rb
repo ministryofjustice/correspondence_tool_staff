@@ -3,7 +3,7 @@ require "rails_helper"
 describe CaseExtendSARDeadlineService do
   shared_examples "SAR Extension Service" do
     let!(:initial_deadline) { kase.initial_deadline }
-    let!(:max_extension_time_limit) { kase.correspondence_type.extension_time_limit }
+    let!(:extension_limit) { kase.extension_fixed_period }
 
     before do
       allow(kase.state_machine).to receive(:extend_sar_deadline!)
@@ -15,7 +15,7 @@ describe CaseExtendSARDeadlineService do
           sar_extension_service(
             user: manager,
             kase: kase,
-            extension_period: 1,
+            extension_period: extension_limit,
             reason: "test",
           ).call
         end
@@ -28,15 +28,15 @@ describe CaseExtendSARDeadlineService do
             .with(
               acting_user: manager,
               acting_team: acting_team,
-              final_deadline: get_expected_deadline(2.months.since(kase.received_date)),
+              final_deadline: get_expected_deadline(3.months.since(kase.received_date)),
               original_final_deadline: initial_deadline,
-              message: "test\nDeadline extended by one calendar month\n\nOld final deadline: 31 October 2022\nNew final deadline: 29 November 2022",
+              message: "test\nDeadline extended by two calendar months\n\nOld final deadline: 31 October 2022\nNew final deadline: 29 December 2022",
             )
         end
 
         it "sets new SAR deadline date" do
-          expect(kase.external_deadline).to eq get_expected_deadline(2.months.since(kase.received_date))
-          expect(kase.months_extended).to eq 1
+          expect(kase.external_deadline).to eq get_expected_deadline(3.months.since(kase.received_date))
+          expect(kase.months_extended).to eq 2
         end
       end
 
@@ -48,12 +48,12 @@ describe CaseExtendSARDeadlineService do
             result = sar_extension_service(
               user: manager,
               kase: kase,
-              extension_period: max_extension_time_limit,
+              extension_period: extension_limit,
             ).call
 
             expect(result).to eq :ok
             expect(kase.external_deadline)
-              .to eq get_expected_deadline((max_extension_time_limit + 1).month.since(kase.received_date))
+              .to eq get_expected_deadline((extension_limit + 1).month.since(kase.received_date))
             expect(kase.external_deadline).to be < Time.zone.now
             expect(kase.months_extended).to eq 2
           end
@@ -79,19 +79,19 @@ describe CaseExtendSARDeadlineService do
           end
         end
 
-        context "when it is past statutory SAR extension limit" do
+        context "when it is not the fixed extension period" do
           subject!(:extension_service_result) do
             sar_extension_service(
               user: manager,
               kase: kase,
-              extension_period: max_extension_time_limit + 1,
+              extension_period: extension_limit + 1,
             ).call
           end
 
           it { is_expected.to eq :validation_error }
 
           it "has error message" do
-            expect(kase.errors[:extension_period]).to eq ["cannot be more than two calendar months beyond the received date or last paused date"]
+            expect(kase.errors[:extension_period]).to eq ["must be two calendar months"]
           end
         end
 
@@ -116,7 +116,7 @@ describe CaseExtendSARDeadlineService do
             sar_extension_service(
               user: manager,
               kase: kase,
-              extension_period: max_extension_time_limit,
+              extension_period: extension_limit,
             ).call
           end
 
@@ -129,7 +129,7 @@ describe CaseExtendSARDeadlineService do
           sar_extension_service(
             user: manager,
             kase: kase,
-            extension_period: 1,
+            extension_period: extension_limit,
             reason: "",
           ).call
         end
@@ -151,7 +151,7 @@ describe CaseExtendSARDeadlineService do
           sar_extension_service(
             user: manager,
             kase: kase,
-            extension_period: 1,
+            extension_period: extension_limit,
           )
         end
 
@@ -181,11 +181,11 @@ describe CaseExtendSARDeadlineService do
         result = sar_extension_service(
           user: manager,
           kase: flagged_sar_case,
-          extension_period: 1,
+          extension_period: flagged_sar_case.extension_fixed_period,
         ).call
 
         expect(result).to eq :ok
-        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 11, 29)
+        expect(flagged_sar_case.external_deadline).to eq Date.new(2022, 12, 29)
         expect(flagged_sar_case.internal_deadline).to eq Date.new(2022, 10, 9)
       end
     end
