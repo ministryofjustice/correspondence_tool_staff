@@ -49,7 +49,7 @@ RSpec.describe Api::RpiController, type: :controller do
       expect(request.log).to include("ERROR:")
     end
 
-    it "publishes an RpiUnprocessed event with failure_stage receipt" do
+    it "publishes an RpiUnprocessed event with failure_stage processing" do
       allow(Sentry).to receive(:capture_exception)
       published_event = nil
       allow(event_store).to receive(:publish) { |event| published_event = event }
@@ -59,7 +59,7 @@ RSpec.describe Api::RpiController, type: :controller do
       expect(published_event).to be_a(Events::RpiUnprocessed)
       expect(published_event.data).to include(
         submission_id: submission_id.to_s,
-        failure_stage: "receipt",
+        failure_stage: "processing",
       )
       expect(published_event.data[:error_class]).to be_present
       expect(published_event.data[:error_message]).to be_present
