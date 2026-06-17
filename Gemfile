@@ -55,7 +55,7 @@ gem "pg_search", "~> 2.3.6"
 gem "prawndown"
 gem "puma", "~> 7.1"
 gem "pundit", "~>2.4"
-gem "rails", "~> 7.0"
+gem "rails", "8.1.3"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.1.0", require: false
 # Gem (https://github.com/anjlab/rails-data-migrations) does not support rails 7.2 so changed to this fork
@@ -85,14 +85,14 @@ group :test do
   gem "capybara-lockstep"
   gem "i18n-tasks"
   gem "rails-controller-testing", require: false
-  gem "shoulda-matchers", "~> 6.5"
+  gem "shoulda-matchers", "~> 8.0"
   gem "simplecov"
   gem "simplecov-json", require: false
   gem "site_prism", "< 5.0"
 end
 
 group :development, :test do
-  gem "annotate", "~> 3.2.0"
+  gem "annotaterb", "~> 4.0"
   gem "better_errors"
   gem "binding_of_caller"
   gem "brakeman"
@@ -101,11 +101,9 @@ group :development, :test do
   gem "colorize"
   gem "debug", ">= 1.0.0"
   gem "parallel_tests"
-  gem "phantomjs"
   gem "rspec-collection_matchers"
   gem "rspec-rails"
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
-  gem "teaspoon-jasmine"
 end
 gem "rails_event_store", "~> 2.18.0"

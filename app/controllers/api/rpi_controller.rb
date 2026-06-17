@@ -7,25 +7,25 @@ module Api
 
     def create
       submission_id = PersonalInformationRequest.submission_id(@body)
-      request = PersonalInformationRequest.create!(submission_id:)
-      request.build(@body)
+      pir = PersonalInformationRequest.create!(submission_id:, fingerprint: { ip_address: request.remote_ip, referrer: request.referer, schema: @body[:schema] })
+      pir.build(@body)
 
       broadcast(
         Events::RpiReceived.build(
-          personal_information_request_id: request.id,
+          personal_information_request_id: pir.id,
           submission_id:,
           schema: @body[:schema],
         ),
       )
 
-      RequestPersonalInformationJob.perform_later(request.id, @body)
+      RequestPersonalInformationJob.perform_later(pir.id, @body)
 
       head :ok
     rescue StandardError => e
-      request&.failed(e, failure_stage: "receipt")
+      pir&.failed(e)
 
       # Deliberately capture separate Sentry error for individual submissions
-      Sentry.capture_message "PersonalInformationRequest API (#{self.class.name}) failure --- ID: #{request&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
+      Sentry.capture_message "PersonalInformationRequest API (#{self.class.name}) failure --- ID: #{pir&.id}, SubmissionId: #{submission_id}, Error: #{e.message}"
       Sentry.capture_exception(e)
 
       head :unprocessable_entity

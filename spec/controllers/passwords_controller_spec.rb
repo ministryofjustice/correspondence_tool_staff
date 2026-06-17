@@ -20,7 +20,7 @@ RSpec.describe PasswordsController, type: :controller do
       it "sends reset password mail" do
         mailer = double("mailer") # rubocop:disable RSpec/VerifiedDoubles
         allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
-        expect(mailer).to receive(:deliver)
+        expect(mailer).to receive(:deliver_now)
         post(:create, params:)
 
         expect(flash[:notice]).to eq success_message
@@ -45,10 +45,10 @@ RSpec.describe PasswordsController, type: :controller do
         it "sends an email" do
           params[:user][:email] = user.email
 
-          mailer = double("mailer", deliver: nil) # rubocop:disable RSpec/VerifiedDoubles
+          mailer = double("mailer", deliver_now: nil) # rubocop:disable RSpec/VerifiedDoubles
           expect(DeviseMailer).not_to receive(:account_not_active)
           allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
-          expect(mailer).to receive(:deliver)
+          expect(mailer).to receive(:deliver_now)
           post(:create, params:)
 
           expect(flash[:notice]).to eq success_message
@@ -59,10 +59,10 @@ RSpec.describe PasswordsController, type: :controller do
         it "sends an email" do
           params[:user][:email] = user.email.upcase
 
-          mailer = double("mailer", deliver: nil) # rubocop:disable RSpec/VerifiedDoubles
+          mailer = double("mailer", deliver_now: nil) # rubocop:disable RSpec/VerifiedDoubles
           expect(DeviseMailer).not_to receive(:account_not_active)
           allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
-          expect(mailer).to receive(:deliver)
+          expect(mailer).to receive(:deliver_now)
           post(:create, params:)
 
           expect(flash[:notice]).to eq success_message
