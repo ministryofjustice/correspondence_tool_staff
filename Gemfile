@@ -61,6 +61,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 # Gem (https://github.com/anjlab/rails-data-migrations) does not support rails 7.2 so changed to this fork
 # TODO: Move back to original version when it is updated
 gem "rails-data-migrations", git: "https://github.com/notarize/rails-data-migrations.git", ref: "1ec8bf9"
+gem "rails_event_store", "~> 2.18.0"
 gem "recursive-open-struct"
 gem "sablon"
 gem "sass-rails", "~> 6.0"
