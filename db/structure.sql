@@ -2624,7 +2624,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260429003452'),
+('20260617003452'),
 ('20260610120000'),
 ('20260327090000'),
 ('20260318100000'),
