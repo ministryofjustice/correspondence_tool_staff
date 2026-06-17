@@ -106,4 +106,3 @@ group :development, :test do
   gem "rubocop-govuk", require: false
   gem "selenium-webdriver"
 end
-gem "rails_event_store", "~> 2.18.0"
