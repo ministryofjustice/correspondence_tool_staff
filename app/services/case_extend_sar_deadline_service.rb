@@ -6,7 +6,7 @@ class CaseExtendSARDeadlineService
     @case = kase
     @case = CaseExtendSARDeadlineDecorator.decorate @case
     @extension_period = extension_period
-    @extension_deadline = new_extension_deadline(@extension_period.to_i)
+    @extension_deadline = @case.new_extension_deadline(@extension_period.to_i)
     @reason = reason
     @result = :incomplete
   end
@@ -38,14 +38,6 @@ class CaseExtendSARDeadlineService
   end
 
 private
-
-  def new_extension_deadline(extend_by)
-    if @case.try(:restarted_at).present?
-      @case.deadline_calculator.extension_deadline(extend_by) { @case.external_deadline }
-    else
-      @case.deadline_calculator.extension_deadline((@case.months_extended || 0) + extend_by)
-    end
-  end
 
   def message
     [

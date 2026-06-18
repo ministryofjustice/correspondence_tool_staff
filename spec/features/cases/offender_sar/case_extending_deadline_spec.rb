@@ -24,7 +24,9 @@ feature "when extending an Offender SAR case deadline" do
       extend_offender_sar_deadline_for(kase:, reason: "Offender SAR extension") do |page|
         expect(page).not_to have_extension_period_1_calendar_month
         expect(page).not_to have_extension_period_2_calendar_months
-        expect(page).to have_text("The deadline for this case will be extended by two calendar months.")
+        expect(page).to have_text("This will extend the deadline by 2 calendar months.")
+        expect(page).to have_text("Current deadline: 7 November 2022")
+        expect(page).to have_text("New deadline: 5 January 2023")
       end
 
       expected_case_history = [

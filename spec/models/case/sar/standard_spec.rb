@@ -308,6 +308,14 @@ describe Case::SAR::Standard do
       end
     end
 
+    describe "#new_extension_deadline" do
+      it "returns the external deadline after applying the fixed extension" do
+        expected = get_expected_deadline((sar_case.extension_fixed_period + 1).months.since(sar_case.received_date))
+
+        expect(sar_case.new_extension_deadline).to eq expected
+      end
+    end
+
     describe "#initial_deadline" do
       it "uses current external_deadline if not yet extended" do
         expect(sar_case.initial_deadline).to eq sar_case.external_deadline

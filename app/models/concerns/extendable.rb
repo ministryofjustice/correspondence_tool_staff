@@ -21,6 +21,17 @@ module Extendable
     end
   end
 
+  # The external deadline that would apply if the case were extended now.
+  # Defaults to the fixed extension period; callers (e.g. the extension service)
+  # may pass the submitted period explicitly.
+  def new_extension_deadline(extend_by = extension_fixed_period)
+    if try(:restarted_at).present?
+      deadline_calculator.extension_deadline(extend_by) { external_deadline }
+    else
+      deadline_calculator.extension_deadline((months_extended || 0) + extend_by)
+    end
+  end
+
   def initial_deadline
     sar_extensions = transitions
       .where(event: "extend_sar_deadline")

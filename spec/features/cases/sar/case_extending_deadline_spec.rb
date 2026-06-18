@@ -25,7 +25,12 @@ feature "when extending a SAR case deadline" do
       extend_sar_deadline_for(kase:, num_calendar_months: 2) do |page|
         expect(page).not_to have_extension_period_1_calendar_month
         expect(page).not_to have_extension_period_2_calendar_months
-        expect(page).to have_text("The deadline for this case will be extended by two calendar months.")
+        expect(page).to have_text("This will extend the deadline by 2 calendar months.")
+        expect(page).to have_text("Current deadline: 31 October 2022")
+        expect(page).to have_text("New deadline: 29 December 2022")
+        expect(page).to have_css("strong", text: "Current deadline:")
+        expect(page).to have_css("strong", text: "New deadline:")
+        expect(page).to have_text("Add your reasons for extending the deadline")
       end
 
       case_deadline_text_to_be(expected_extension_date)

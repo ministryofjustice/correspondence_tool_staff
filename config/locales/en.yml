@@ -755,6 +755,7 @@ en:
         add_to_conversation: Add to conversation
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
+        reason_for_extending: Add your reasons for extending the deadline
       contact:
         escalation_name: Prison governor
         escalation_emails: Prison governor email
@@ -1634,7 +1635,9 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
-        extend_fixed: The deadline for this case will be extended by %{time_period_description}.
+        extend_fixed: This will extend the deadline by 2 calendar months.
+        current_deadline_html: "<strong>Current deadline:</strong> %{date}"
+        new_deadline_html: "<strong>New deadline:</strong> %{date}"
     sar_internal_review:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
