@@ -643,7 +643,7 @@ FactoryBot.define do
   end
 
   trait :clean do
-    after(:create, &:mark_as_clean!)
+    after(:create, &:mark_as_clean)
   end
 
   trait :indexed do
