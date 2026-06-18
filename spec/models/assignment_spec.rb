@@ -262,7 +262,7 @@ RSpec.describe Assignment, type: :model do
         let(:assignment) { create :assignment, :responding, case_id: kase.id }
 
         before do
-          assignment.case.mark_as_clean!
+          assignment.case.mark_as_clean
         end
 
         context "and state changed to rejected" do
@@ -324,7 +324,7 @@ RSpec.describe Assignment, type: :model do
       context "and updated assignment" do
         it "does not mark the case as dirty" do
           assignment = create :assignment, :managing, case_id: kase.id
-          kase.mark_as_clean!
+          kase.mark_as_clean
           assignment.update!(state: "accepted")
           expect(kase.reload).to be_clean
         end
@@ -367,7 +367,7 @@ RSpec.describe Assignment, type: :model do
       context "and updated assignment" do
         it "does not mark the case as dirty" do
           assignment = create :assignment, :approving, case_id: kase.id
-          kase.mark_as_clean!
+          kase.mark_as_clean
           assignment.update!(state: "accepted")
           expect(kase.reload).to be_clean
         end

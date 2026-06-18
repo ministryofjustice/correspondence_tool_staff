@@ -809,12 +809,14 @@ class Case::Base < ApplicationRecord
     update!(workflow: new_workflow_name)
   end
 
-  def mark_as_clean!
-    update!(dirty: false)
+  # `dirty` flag do does need to re-trigger all validations as it is only used by
+  # SearchIndexUpdaterJob to perform text indexing of the case.
+  def mark_as_clean
+    update_column(:dirty, false)
   end
 
-  def mark_as_dirty!
-    update!(dirty: true)
+  def mark_as_dirty
+    update_column(:dirty, true)
   end
 
   def clean?
