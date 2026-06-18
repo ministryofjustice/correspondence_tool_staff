@@ -127,7 +127,7 @@ UNIVERSAL_EVENTS_LITIGATION = %i[
   reassign_user
 ].freeze
 
-describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
+describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
   describe "with litigation workflow Offender SAR Complaint case" do
     context "with responder" do
       let(:responder) { find_or_create :branston_user }
