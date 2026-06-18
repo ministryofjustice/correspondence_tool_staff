@@ -1438,10 +1438,64 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe "#mark_as_clean!" do
+  describe "#mark_as_clean" do
     it "update index and flag is clean afer creation" do
       kase = create :case
       expect(kase).not_to be_dirty
+    end
+
+    it "clears the dirty flag" do
+      kase = create :case
+      kase.mark_as_dirty
+      kase.mark_as_clean
+      expect(kase.reload).not_to be_dirty
+    end
+
+    context "when the case is otherwise invalid" do
+      # Mimics an auto-closed case left with a blank date_responded, which would
+      # fail ClosedCaseValidator if the dirty flag were saved with validations.
+      let(:kase) { create :sar_case, :clean }
+
+      before do
+        kase.assign_attributes(current_state: "closed", date_responded: nil)
+        kase.save!(validate: false)
+        kase.mark_as_dirty
+      end
+
+      it "is not valid" do
+        expect(kase.reload).not_to be_valid
+      end
+
+      it "persists the clean flag without running validations" do
+        expect { kase.mark_as_clean }.not_to raise_error
+        expect(kase.reload).not_to be_dirty
+      end
+    end
+  end
+
+  describe "#mark_as_dirty" do
+    it "sets the dirty flag" do
+      kase = create :case, :clean
+      kase.mark_as_dirty
+      expect(kase.reload).to be_dirty
+    end
+
+    context "when the case is otherwise invalid" do
+      let(:kase) { create :sar_case, :clean }
+
+      before do
+        kase.assign_attributes(current_state: "closed", date_responded: nil)
+        kase.save!(validate: false)
+      end
+
+      it "is not valid" do
+        expect(kase.reload).not_to be_valid
+      end
+
+      it "persists the dirty flag without running validations" do
+        expect { kase.mark_as_dirty }.not_to raise_error
+        expect(kase.reload).to be_dirty
+      end
     end
   end
 

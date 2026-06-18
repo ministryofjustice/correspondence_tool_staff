@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/FilePath
+describe Cases::FiltersController, type: :controller do # rubocop:disable Rails/FilePath
   let(:manager)               { find_or_create :disclosure_specialist_bmt }
   let(:responder)             { find_or_create :foi_responder }
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }

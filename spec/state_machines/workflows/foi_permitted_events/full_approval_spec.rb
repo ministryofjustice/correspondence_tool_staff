@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
+describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
   let(:press_officer) { find_or_create :press_officer }
 
   describe "full_approval workflow" do
