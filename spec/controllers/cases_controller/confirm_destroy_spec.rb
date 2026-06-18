@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
+describe CasesController, type: :controller do # rubocop:disable Rails/FilePath
   describe "GET confirm_destroy" do
     let(:manager)           { create :manager }
     let(:unassigned_case)   { create :case }

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
+describe CasesController, type: :controller do # rubocop:disable Rails/FilePath
   describe "#select_type" do
     context "when a manager" do
       let(:manager) { find_or_create :disclosure_bmt_user }

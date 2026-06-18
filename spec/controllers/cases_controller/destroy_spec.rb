@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
+describe CasesController, type: :controller do # rubocop:disable Rails/FilePath
   describe "GET destroy_case" do
     let(:manager)           { create :manager }
     let(:params)            { { id: kase.id, case: { reason_for_deletion: "I was told to" } } }
