@@ -15,8 +15,8 @@ class DummyCaseCSVExporter
 end
 
 describe "CSVGenerator" do
-  describe "#to_csv" do
-    it "returns an array of arrays with default csv exporter" do
+  describe "#each" do
+    it "yields csv lines with default csv exporter" do
       k1_fields = ["an", "array", "of", "text", "fields", "for", "case 1"]
       k2_fields = ["an", "array", "of", "text", "fields", "for", "case 2"]
       kase1 = instance_double Case::Base, to_csv: k1_fields
@@ -26,12 +26,13 @@ describe "CSVGenerator" do
       expected = ["#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
                   "#{k1_fields.join(',')}\n",
                   "#{k2_fields.join(',')}\n"]
-      results = generator.to_a
+      results = []
+      generator.each { |line| results << line }
       results[0] = results[0].delete('"')
       expect(results).to eq expected
     end
 
-    it "returns an array of arrays with injected case-csv exporter" do
+    it "yields csv lines with injected case-csv exporter" do
       kase1 = instance_double Case::Base, number: 1
       kase2 = instance_double Case::Base, number: 2
 
@@ -40,7 +41,9 @@ describe "CSVGenerator" do
       expected = ["#{DummyCaseCSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
                   "1\n",
                   "2\n"]
-      expect(generator.to_a).to eq expected
+      results = []
+      generator.each { |line| results << line }
+      expect(results).to eq expected
     end
   end
 

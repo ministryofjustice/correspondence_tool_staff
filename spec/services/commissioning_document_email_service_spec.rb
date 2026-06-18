@@ -120,5 +120,18 @@ RSpec.describe CommissioningDocumentEmailService do
         service.send_chase!(chase_type)
       end
     end
+
+    describe "when Offender SAR is stopped/paused" do
+      let(:chase_type) { DataRequestChase::STANDARD_CHASE }
+      let(:four_emails) { "test999@test.com\ntest998@test.com\ntest997@test.com\ntest996@test.com" }
+      let(:kase) { create(:offender_sar_case, :stopped, responder:) }
+      let(:contact) { create(:contact, data_request_emails: four_emails, escalation_emails: "escalation800@test.com") }
+
+      it "sends email" do
+        expect(CommissioningDocumentMailer).to receive(chase_type).exactly(4).times.and_return(mailer)
+        expect(mailer).to receive(:deliver_later!).exactly(4).times
+        service.send_chase!(chase_type)
+      end
+    end
   end
 end

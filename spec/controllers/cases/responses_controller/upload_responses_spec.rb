@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpec/FilePath
+describe Cases::ResponsesController, type: :controller do # rubocop:disable Rails/FilePath
   let(:responder)     { find_or_create :foi_responder }
   let(:accepted_case) { create(:accepted_case) }
 

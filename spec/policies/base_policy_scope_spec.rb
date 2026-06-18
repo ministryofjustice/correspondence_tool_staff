@@ -1,7 +1,7 @@
 require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
-describe Case::BasePolicy::Scope do # rubocop:disable RSpec/FilePath
+describe Case::BasePolicy::Scope do # rubocop:disable Rails/FilePath
   describe "case scope policy" do
     before(:all) do
       @responding_team              = find_or_create :foi_responding_team

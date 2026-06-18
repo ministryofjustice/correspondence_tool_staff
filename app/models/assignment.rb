@@ -92,7 +92,7 @@ private
 
   def mark_case_as_dirty_for_responding_assignments
     if responding? && (new_record? || state_changed_to_rejected_or_bypassed?)
-      self.case.mark_as_dirty!
+      self.case.mark_as_dirty
       SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.case.id)
     end
   end

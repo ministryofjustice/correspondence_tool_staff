@@ -29,7 +29,7 @@ module_function # makes all instance methods become module methods as well
   # Returns a SQL LIKE condition to be used to match the given field and
   # value in the serialized `object_changes`.
   def where_object_changes_condition(*)
-    raise <<-STR.squish.freeze
+    raise <<~STR.squish.freeze
       where_object_changes no longer supports reading YAML from a text
       column. The old implementation was inaccurate, returning more records
       than you wanted. This feature was deprecated in 8.1.0 and removed in

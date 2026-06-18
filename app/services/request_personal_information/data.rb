@@ -1,10 +1,14 @@
 class RequestPersonalInformation::Data
   def self.compatible?(payload)
-    payload[:submissionId].present?
+    payload[:schema].present? && payload[:schema].to_i == 1
   end
 
   def initialize(payload)
     @payload = payload
+  end
+
+  def schema
+    @payload[:schema]
   end
 
   def submission_id

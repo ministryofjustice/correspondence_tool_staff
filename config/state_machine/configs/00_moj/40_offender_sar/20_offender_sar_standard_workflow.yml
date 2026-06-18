@@ -186,6 +186,7 @@
                 add_note_to_case:
                 add_data_received:
                 edit_case:
+                send_chase_email:
 
               closed:
                 add_note_to_case:

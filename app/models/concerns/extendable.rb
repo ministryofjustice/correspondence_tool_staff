@@ -27,7 +27,7 @@ module Extendable
 
   def reset_deadline!
     update!(
-      external_deadline: calculate_old_deadline,
+      external_deadline: recalculate_deadline_without_extensions,
       deadline_extended: false,
       months_extended: 0,
     )
@@ -47,11 +47,14 @@ module Extendable
     transitions.where(event: "extend_sar_deadline").order(:id)
   end
 
-  def calculate_old_deadline
-    if restarted_at.present?
-      calculate_old_deadline = last_restart_the_clock_transition&.details&.fetch("new_external_deadline", nil)&.to_date
-    end
+  def active_extension?
+    transitions.where(event: %w[extend_sar_deadline remove_sar_deadline_extension]).order(id: :desc).map(&:event).first == "extend_sar_deadline"
+  end
 
-    calculate_old_deadline || @deadline_calculator.external_deadline
+  # Re-calculates the deadline by replaying all stopped/paused days on top of the original deadline
+  def recalculate_deadline_without_extensions
+    stopped_days_total = respond_to?(:total_days_stopped) ? total_days_stopped : 0
+
+    @deadline_calculator.closest_working_day_after(stopped_days_total, @deadline_calculator.external_deadline)
   end
 end

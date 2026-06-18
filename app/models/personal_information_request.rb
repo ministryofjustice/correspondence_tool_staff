@@ -9,6 +9,7 @@
 #  deleted          :boolean          default(FALSE)
 #  processed        :boolean          default(FALSE)
 #  log              :text
+#  fingerprint      :jsonb
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
@@ -99,7 +100,7 @@ class PersonalInformationRequest < ApplicationRecord
            elsif RequestPersonalInformation::DataV2.compatible?(payload)
              RequestPersonalInformation::DataV2.new(payload)
            else
-             raise ArgumentError, "Incompatible payload format - check Submission Id attribute"
+             raise ArgumentError, "Incompatible payload format - check Schema and Submission Id attribute"
            end
 
     request_builder.build(data) # This needs to be built first

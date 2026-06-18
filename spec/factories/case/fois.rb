@@ -643,7 +643,7 @@ FactoryBot.define do
   end
 
   trait :clean do
-    after(:create, &:mark_as_clean!)
+    after(:create, &:mark_as_clean)
   end
 
   trait :indexed do
@@ -693,8 +693,7 @@ FactoryBot.define do
   # this way.
   trait :_taken_on_by_press_or_private_in_current_state do
     after(:create) do |kase, evaluator|
-      if evaluator.taken_on_by_press == kase.current_state ||
-          evaluator.taken_on_by_private == kase.current_state
+      if evaluator.taken_on_by_press || evaluator.taken_on_by_private
 
         if evaluator.taken_on_by_press
           acting_team = evaluator.press_office
@@ -801,8 +800,7 @@ FactoryBot.define do
   # flagged when created.
   trait :_taken_on_by_disclosure do
     after(:create) do |kase, evaluator|
-      if evaluator.flagged &&
-          evaluator.taken_on_by_disclosure == kase.current_state
+      if evaluator.flagged && evaluator.taken_on_by_disclosure
 
         kase.assignments.for_team(evaluator.approving_team).singular.update!(
           user: evaluator.approver,

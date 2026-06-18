@@ -18,7 +18,11 @@
 #  escalation_emails   :string
 #
 class Contact < ApplicationRecord
-  EMAIL_REGEX = /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+  # Pragmatic email validation for staff-entered addresses.
+  # Rejects leading/trailing/repeated dots in the local part and invalid domain labels.
+  EMAIL_REGEX = /\A(?!\.)(?!.*\.\.)[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}\z/
+
+  before_validation :cleanse_emails
 
   validates :name, presence: true
   validates :address_line_1, presence: true
@@ -98,5 +102,16 @@ private
         :invalid,
       )
     end
+  end
+
+  def cleanse_emails
+    self.data_request_emails = strip(data_request_emails)
+    self.escalation_emails = strip(escalation_emails)
+  end
+
+  def strip(email_list)
+    return if email_list.blank?
+
+    email_list.split.join("\n")
   end
 end

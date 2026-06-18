@@ -212,6 +212,23 @@ When you have set `CHROME_DEBUG`, you should notice chrome start up and appear o
 taskbar. You can now click on chrome and watch it run through your tests.
 If you have a `debugger`  in your tests the browser will stop at that point.
 
+## JavaScript Tests
+
+JavaScript tests use [Jest](https://jestjs.io/) and can be found in `spec/javascripts/modules/`.
+
+### Running JavaScript tests locally
+
+Ensure you have the required packages installed:
+
+```bash
+yarn install
+```
+
+Run the tests:
+
+```bash
+GOVUK_TOOLKIT_PATH=$(bundle show govuk_frontend_toolkit) yarn test:js
+```
 
 #### Emails
 

@@ -169,7 +169,7 @@ RSpec.describe RetentionSchedule, type: :model do
 
       it 'returns a range that is correct to view triagable "destroy" cases' do
         class_range = described_class.triagable_destroy_cases_range
-        expected_range = ((Time.zone.today + 1)..)
+        expected_range = ((Time.zone.today + 1)..) # rubocop:disable Style/RedundantParentheses
 
         expect(class_range).to be_a(Range)
         expect(class_range.begin).to match(expected_range.begin)

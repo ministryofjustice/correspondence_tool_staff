@@ -809,12 +809,14 @@ class Case::Base < ApplicationRecord
     update!(workflow: new_workflow_name)
   end
 
-  def mark_as_clean!
-    update!(dirty: false)
+  # `dirty` flag do does need to re-trigger all validations as it is only used by
+  # SearchIndexUpdaterJob to perform text indexing of the case.
+  def mark_as_clean
+    update_column(:dirty, false)
   end
 
-  def mark_as_dirty!
-    update!(dirty: true)
+  def mark_as_dirty
+    update_column(:dirty, true)
   end
 
   def clean?
@@ -984,6 +986,14 @@ private
   end
 
   def validate_received_date
+    # NOTE: gov_uk_date_fields allows 0 to be submitted as a day/month value causing unpredicatable errors
+    unless @_received_date&.valid?
+      errors.add(
+        :received_date,
+        I18n.t("activerecord.errors.models.case.attributes.received_date.invalid"),
+      )
+    end
+
     if received_date.present? && received_date > Time.zone.today
       errors.add(
         :received_date,

@@ -30,11 +30,10 @@ describe RetentionSchedulesUpdateService do
 
   let(:selected_cases_params) do
     ActiveSupport::HashWithIndifferentAccess.new(
-      {
-        not_set_timely_kase.id => "1",
-        reviewable_timely_kase.id => "1",
-        retain_timely_kase.id => "0",
-      },
+      case_ids: [
+        not_set_timely_kase.id.to_s,
+        reviewable_timely_kase.id.to_s,
+      ],
     )
   end
 
@@ -83,8 +82,8 @@ describe RetentionSchedulesUpdateService do
   describe "#prepare_case_ids" do
     it "returns case ids that have been selected" do
       ids = [
-        not_set_timely_kase.id,
-        reviewable_timely_kase.id,
+        not_set_timely_kase.id.to_s,
+        reviewable_timely_kase.id.to_s,
       ]
 
       expect(service.prepare_case_ids).to eq ids
