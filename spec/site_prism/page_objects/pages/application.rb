@@ -108,6 +108,7 @@ module PageObjects
         confirm_destroy: "Cases::ConfirmDestroyPage",
         cases_extend_for_pit: "Cases::ExtendForPITPage",
         cases_extend_sar_deadline: "Cases::ExtendSARDeadlinePage",
+        cases_remove_sar_deadline_extension: "Cases::RemoveSARDeadlineExtensionPage",
         cases_stop_the_clock: "Cases::StopTheClockPage",
         data_request: "Cases::DataRequestPage",
         data_request_area: "Cases::DataRequestAreaPage",

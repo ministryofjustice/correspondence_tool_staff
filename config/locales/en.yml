@@ -756,6 +756,7 @@ en:
         add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
         reason_for_extending: Add your reasons for extending the deadline
+        reason_for_removing_extension: Add your reasons for removing the deadline extension
       contact:
         escalation_name: Prison governor
         escalation_emails: Prison governor email
@@ -1632,6 +1633,10 @@ en:
       destroy:
         success: Deadline extension removed
         error: Unable to remove %{case_type} deadline extension
+      edit:
+        summary: This will take 2 calendar months off the deadline.
+        current_deadline_html: "<strong>Current deadline:</strong> %{date}"
+        new_deadline_html: "<strong>New deadline:</strong> %{date}"
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.

@@ -61,10 +61,16 @@ feature "when extending an Offender SAR case deadline" do
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq("SAR deadline cannot be extended")
 
-      # 6. Remove extension but final deadline should be based on original received date plus paused/stopped days
+      # 6. Removing shows the interstitial with the current and reverted deadlines
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
-      expect(cases_show_page).to be_displayed
+      expect(cases_remove_sar_deadline_extension_page).to be_displayed
+      expect(page).to have_text("Current deadline: 10 January 2023")
+      expect(page).to have_text("New deadline: 14 November 2022")
+
+      # 7. Submitting reverts to the deadline based on original received date plus paused/stopped days
+      cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("Extension no longer needed")
+      cases_remove_sar_deadline_extension_page.submit_button.click
       expect(cases_show_page.notice.text).to eq "Deadline extension removed"
 
       # 12th Nov is a Saturday, so next working day is 14th Nov

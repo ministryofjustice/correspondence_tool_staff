@@ -40,7 +40,7 @@ describe CaseRemoveSARDeadlineExtensionService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
-            message: "Old final deadline:  1 May 2025\nNew final deadline:  1 April 2025",
+            message: "Testing\nOld final deadline:  1 May 2025\nNew final deadline:  1 April 2025",
           )
       end
 
@@ -48,6 +48,27 @@ describe CaseRemoveSARDeadlineExtensionService do
         expect(sar_case.external_deadline).to eq initial_deadline
         expect(sar_case.external_deadline).to eq Date.new(2025, 4, 1)
         expect(sar_case.months_extended).to eq 0
+      end
+    end
+
+    context "when the reason is blank" do
+      let!(:sar_extension_remove_service_result) do
+        remove_sar_extension_service(manager, sar_case, reason: "").call
+      end
+
+      it { expect(sar_extension_remove_service_result).to eq :validation_error }
+
+      it "has an error message" do
+        expect(sar_case.errors[:reason_for_removing_extension]).to eq ["cannot be blank"]
+      end
+
+      it "does not reset the deadline" do
+        expect(sar_case.external_deadline).to eq Date.new(2025, 5, 1)
+        expect(sar_case.deadline_extended?).to be true
+      end
+
+      it "does not transition the case" do
+        expect(sar_case.state_machine).not_to have_received(:remove_sar_deadline_extension!)
       end
     end
 
@@ -95,10 +116,11 @@ describe CaseRemoveSARDeadlineExtensionService do
 
 private
 
-  def remove_sar_extension_service(user, kase)
+  def remove_sar_extension_service(user, kase, reason: "Testing")
     CaseRemoveSARDeadlineExtensionService.new(
       user,
       kase,
+      reason:,
     )
   end
 end

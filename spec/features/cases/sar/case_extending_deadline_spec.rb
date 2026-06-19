@@ -45,9 +45,19 @@ feature "when extending a SAR case deadline" do
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq("SAR deadline cannot be extended")
 
-      # 5. Remove extension should display initial deadline
+      # 5. Removing shows an interstitial page with the current and reverted deadlines
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+      expect(cases_remove_sar_deadline_extension_page).to be_displayed
+      expect(page).to have_text("Current deadline: 29 December 2022")
+      expect(page).to have_text("New deadline: 31 October 2022")
+      expect(page).to have_css("strong", text: "Current deadline:")
+      expect(page).to have_css("strong", text: "New deadline:")
+      expect(page).to have_text("Add your reasons for removing the deadline extension")
+
+      # 6. Submitting removes the extension and reverts to the initial deadline
+      cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("No longer required")
+      cases_remove_sar_deadline_extension_page.submit_button.click
       expect(cases_show_page).to be_displayed
       case_deadline_text_to_be(original_deadline.strftime("%-d %b %Y"))
     end
@@ -87,12 +97,18 @@ feature "when extending a SAR case deadline" do
       # Remove extension should display initial deadline 31 Oct 2022 plus the 4 paused days
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+      expect(cases_remove_sar_deadline_extension_page).to be_displayed
+      expect(page).to have_text("Current deadline: 4 January 2023")
+      expect(page).to have_text("New deadline: 4 November 2022")
+      cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("Paused for too long")
+      cases_remove_sar_deadline_extension_page.submit_button.click
       expect(cases_show_page.notice.text).to eq "Deadline extension removed"
       case_deadline_text_to_be("4 Nov 2022")
 
       expected_case_history = [
         "Deadline extension removed",
-        "Old final deadline: 4 January 2023 ",
+        "Paused for too long",
+        " Old final deadline: 4 January 2023 ",
         "New final deadline: 4 November 2022",
       ]
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
