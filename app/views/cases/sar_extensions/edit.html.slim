@@ -24,7 +24,14 @@ p
     p
       = t('.current_deadline_html', date: l(@case.external_deadline, format: :long))
     p
-      = t('.new_deadline_html', date: l(@case.recalculate_deadline_without_extensions, format: :long))
+      = t('.new_deadline_html', date: l(@case.reverted_deadline, format: :long))
+
+  - if @case.removal_makes_case_late?
+    .govuk-warning-text
+      .govuk-warning-text__icon, aria-hidden="true" !
+      strong.govuk-warning-text__text
+        .govuk-visually-hidden Warning
+        = t('.late_notice')
 
   .form-group
     = f.text_area :reason_for_removing_extension

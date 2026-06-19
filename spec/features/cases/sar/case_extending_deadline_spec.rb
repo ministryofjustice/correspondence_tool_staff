@@ -113,6 +113,19 @@ feature "when extending a SAR case deadline" do
       ]
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
     end
+
+    scenario "warns on the remove page when reverting will make the case late" do
+      freeze_time do
+        late_kase = create :accepted_sar, :extended_deadline_sar, received_date: Date.new(2022, 6, 1)
+        login_as manager
+
+        cases_show_page.load(id: late_kase.id)
+        cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
+
+        expect(cases_remove_sar_deadline_extension_page).to be_displayed
+        expect(page).to have_text("This will make the case late as the new deadline is in the past.")
+      end
+    end
   end
 
   context "with an approver" do

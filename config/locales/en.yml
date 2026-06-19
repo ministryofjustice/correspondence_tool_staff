@@ -1637,6 +1637,7 @@ en:
         summary: This will take 2 calendar months off the deadline.
         current_deadline_html: "<strong>Current deadline:</strong> %{date}"
         new_deadline_html: "<strong>New deadline:</strong> %{date}"
+        late_notice: This will make the case late as the new deadline is in the past.
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
