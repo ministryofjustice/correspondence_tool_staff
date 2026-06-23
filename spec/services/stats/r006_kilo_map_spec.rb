@@ -66,11 +66,11 @@ module Stats
     end
 
     def disclosure_line_0
-      /"","",Branston Registry,Deputy Director \d{1,5},Hammersmith,branston@localhost/
+      /"","",Branston Registry,Deputy Director \d{1,5},Hammersmith,branston@example.gov.uk/
     end
 
     def disclosure_line_1
-      %("","",Disclosure,David Gauke,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk)
+      %("","",Disclosure,David Gauke,Hammersmith,dacu.disclosure@example.gov.uk,David Cameron,dc@pm.gov.uk)
     end
 
     def disclosure_line_2
@@ -82,7 +82,7 @@ module Stats
     end
 
     def dacu_line
-      /"","",Disclosure BMT,Deputy Director \d{1,5},Hammersmith,dacu@localhost,disclosure-bmt managing user,/
+      /"","",Disclosure BMT,Deputy Director \d{1,5},Hammersmith,dacu@example.gov.uk,disclosure-bmt managing user,/
     end
 
     def press_office_directorate_line
@@ -90,8 +90,8 @@ module Stats
     end
 
     def press_office_line
-      # /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,Press Officer \d{1,5},/
-      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@localhost,press-office approving user,/
+      # /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@example.gov.uk,Press Officer \d{1,5},/
+      /"","",Press Office,Deputy Director \d{1,5},Hammersmith,press.office@example.gov.uk,press-office approving user,/
     end
 
     def press_office_second_user_line
@@ -99,8 +99,8 @@ module Stats
     end
 
     def private_office_line
-      # /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,Private Officer \d{1,5},/
-      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@localhost,private-office approving user,/
+      # /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@example.gov.uk,Private Officer \d{1,5},/
+      /"","",Private Office,Deputy Director \d{1,5},Hammersmith,private.office@example.gov.uk,private-office approving user,/
     end
 
     def private_office_second_user_line

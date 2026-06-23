@@ -26,7 +26,7 @@ RSpec.describe BusinessUnit, type: :model do
 
   it "can be created" do
     bu = described_class.create! name: "Busy Units",
-                                 email: "busy.units@localhost",
+                                 email: "busy.units@example.gov.uk",
                                  parent_id: 1,
                                  role: "responder",
                                  correspondence_type_ids: [foi.id]

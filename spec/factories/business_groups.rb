@@ -22,7 +22,7 @@ FactoryBot.define do
     end
 
     sequence(:name) { |n| "Business Group #{n}" }
-    email { "#{name.downcase.gsub(/\W/, '_')}@localhost" }
+    email { "#{name.downcase.gsub(/\W/, '_')}@example.gov.uk" }
 
     after(:create) do |bg, evaluator|
       bg.properties << evaluator.lead
@@ -31,11 +31,11 @@ FactoryBot.define do
 
   factory :operations_business_group, parent: :business_group do
     name  { "Operations" }
-    email { "operations@localhost" }
+    email { "operations@example.gov.uk" }
   end
 
   factory :responder_business_group, parent: :business_group do
     name  { "Responder Business Group" }
-    email { "responder-bg@localhost" }
+    email { "responder-bg@example.gov.uk" }
   end
 end

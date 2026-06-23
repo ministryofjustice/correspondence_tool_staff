@@ -21,7 +21,7 @@ RSpec.describe Team, type: :model do
   let(:team) { build_stubbed :team }
 
   it "can be created" do
-    bu = described_class.create! name: "Busy Units", email: "busy.units@localhost"
+    bu = described_class.create! name: "Busy Units", email: "busy.units@example.gov.uk"
     expect(bu).to be_valid
   end
 
@@ -39,8 +39,8 @@ RSpec.describe Team, type: :model do
 
   describe "email" do
     it "considers team emails to be case-insensitive" do
-      team = described_class.create! name: "test", email: "TEST@localhost"
-      expect(described_class.find_by(email: "test@localhost")).to eq team
+      team = described_class.create! name: "test", email: "TEST@example.gov.uk"
+      expect(described_class.find_by(email: "test@example.gov.uk")).to eq team
     end
   end
 

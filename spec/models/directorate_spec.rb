@@ -20,7 +20,7 @@ require "rails_helper"
 RSpec.describe Directorate, type: :model do
   it "can be created" do
     di = described_class.create! name: "The Directors",
-                                 email: "the.directors@localhost",
+                                 email: "the.directors@example.gov.uk",
                                  parent_id: 1
     expect(di).to be_valid
   end

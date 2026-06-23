@@ -22,7 +22,7 @@ FactoryBot.define do
     end
 
     sequence(:name) { |n| "Directorate #{n}" }
-    email { "#{name.downcase.gsub(/\W/, '_')}@localhost" }
+    email { "#{name.downcase.gsub(/\W/, '_')}@example.gov.uk" }
     business_group { find_or_create :business_group }
 
     after(:create) do |dir, evaluator|
@@ -32,31 +32,31 @@ FactoryBot.define do
 
   factory :responder_directorate, parent: :directorate do
     name           { "Responder Directorate" }
-    email          { "responder-dir@localhost" }
+    email          { "responder-dir@example.gov.uk" }
     business_group { find_or_create :responder_business_group }
   end
 
   factory :dacu_directorate, parent: :directorate do
     name           { "DACU Directorate" }
-    email          { "dacu@localhost" }
+    email          { "dacu@example.gov.uk" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :press_office_directorate, parent: :directorate do
     name           { "Press Office Directorate" }
-    email          { "press_office@localhost" }
+    email          { "press_office@example.gov.uk" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :private_office_directorate, parent: :directorate do
     name           { "Private Office Directorate" }
-    email          { "private_office@localhost" }
+    email          { "private_office@example.gov.uk" }
     business_group { find_or_create :operations_business_group }
   end
 
   factory :deactivated_directorate, parent: :directorate do
     name           { "Deactivated Directorate" }
-    email          { "deactivated-dir@localhost" }
+    email          { "deactivated-dir@example.gov.uk" }
     business_group { find_or_create :responder_business_group }
     deleted_at     { Time.zone.now }
   end
