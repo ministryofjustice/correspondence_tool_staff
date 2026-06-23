@@ -17,8 +17,10 @@
 
 class Team < ApplicationRecord
   include Warehousable
+  include EmailValidatable
 
   validates :name, uniqueness: { scope: :type }
+  validates_emails_for :email
   validate :valid_role
   validate :deletion_validation
 

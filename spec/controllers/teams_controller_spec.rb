@@ -275,7 +275,7 @@ RSpec.describe TeamsController, type: :controller do
         { id: business_unit.id,
           team: {
             name: "New Name",
-            email: "n00b@localhost",
+            email: "n00b@example.gov.uk",
             team_lead: "New Team Lead",
           } }
       end
@@ -338,7 +338,7 @@ RSpec.describe TeamsController, type: :controller do
 
         business_unit.reload
         expect(business_unit.name).to  eq "New Name"
-        expect(business_unit.email).to eq "n00b@localhost"
+        expect(business_unit.email).to eq "n00b@example.gov.uk"
         expect(business_unit.team_lead).to eq "New Team Lead"
       end
 
@@ -358,7 +358,7 @@ RSpec.describe TeamsController, type: :controller do
           patch :update, params: { id: directorate.id,
                                    team: {
                                      name: "New Name",
-                                     email: "n00b@localhost",
+                                     email: "n00b@example.gov.uk",
                                      team_lead: "New Team Lead",
                                    } }
           expect(flash[:notice]).to eq "Team details updated"
@@ -369,7 +369,7 @@ RSpec.describe TeamsController, type: :controller do
           patch :update, params: { id: bg.id,
                                    team: {
                                      name: "New Name",
-                                     email: "n00b@localhost",
+                                     email: "n00b@example.gov.uk",
                                      team_lead: "New Team Lead",
                                    } }
           expect(flash[:notice]).to eq "Team details updated"

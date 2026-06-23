@@ -20,7 +20,7 @@ require "rails_helper"
 RSpec.describe BusinessGroup, type: :model do
   it "can be created" do
     bg = described_class.create! name: "Group Hugs",
-                                 email: "group.hugs@localhost"
+                                 email: "group.hugs@example.gov.uk"
     expect(bg).to be_valid
   end
 
