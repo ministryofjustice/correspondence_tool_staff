@@ -447,6 +447,22 @@ RSpec.describe Cases::ClearancesController, type: :controller do
             patch(:unflag_for_clearance, params:)
             expect(response).to have_http_status :found
           end
+
+          context "when the case is a SAR" do
+            let(:flagged_case) do
+              create(
+                :accepted_sar,
+                :flagged,
+                responding_team:,
+                approving_team: dacu_disclosure,
+              )
+            end
+
+            it "redirects to the incoming cases list" do
+              patch(:unflag_for_clearance, params:)
+              expect(response).to redirect_to(incoming_filter_path)
+            end
+          end
         end
       end
     end
