@@ -42,6 +42,30 @@ RSpec.describe Team, type: :model do
       team = described_class.create! name: "test", email: "TEST@example.gov.uk"
       expect(described_class.find_by(email: "test@example.gov.uk")).to eq team
     end
+
+    it "is valid with a well-formed email address" do
+      team = build_stubbed :team, email: "valid.address@example.gov.uk"
+      expect(team).to be_valid
+    end
+
+    it "is valid when no email address is present" do
+      team = build_stubbed :team, email: nil
+      expect(team).to be_valid
+    end
+
+    it "is invalid with a malformed email address" do
+      [
+        "not-an-email",
+        "missing@domain",
+        "@example.gov.uk",
+        "spaces in@example.gov.uk",
+        "trailing.dot.@example.gov.uk",
+      ].each do |bad_email|
+        team = build_stubbed :team, email: bad_email
+        expect(team).not_to be_valid
+        expect(team.errors[:email]).to include("is invalid")
+      end
+    end
   end
 
   context "when validate uniqueness of name" do
