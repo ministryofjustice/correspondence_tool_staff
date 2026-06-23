@@ -256,7 +256,7 @@ def update_development_users
     "approver" => ["App Rover", "correspondence-staff-dev+app.rover@digital.justice.gov.uk"],
   }
   %w[drafter approver assigner].each do |role|
-    email = "#{role}@localhost"
+    email = "#{role}@example.gov.uk"
     user = User.where(email:).first
     if user.nil?
       puts "Unable to find user with email #{email}"

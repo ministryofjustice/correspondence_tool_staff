@@ -18,9 +18,7 @@
 #  escalation_emails   :string
 #
 class Contact < ApplicationRecord
-  # Pragmatic email validation for staff-entered addresses.
-  # Rejects leading/trailing/repeated dots in the local part and invalid domain labels.
-  EMAIL_REGEX = /\A(?!\.)(?!.*\.\.)[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?\^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}\z/
+  include EmailValidatable
 
   before_validation :cleanse_emails
 
@@ -30,7 +28,8 @@ class Contact < ApplicationRecord
   validates :contact_type, presence: true
   validates :escalation_name, presence: true, if: :prison?
   validates :escalation_emails, presence: true, if: :prison?
-  validate :validate_emails
+  validates_emails_for :data_request_emails, multiple: true
+  validates_emails_for :escalation_emails, multiple: true, if: :prison?
 
   belongs_to :contact_type, class_name: "CategoryReference", inverse_of: :contacts
 
@@ -80,28 +79,6 @@ private
     ].compact
      .reject(&:empty?)
      .join(separator)
-  end
-
-  def validate_emails
-    if prison? && escalation_emails.present?
-      escalation_emails.split.each do |email|
-        next if email =~ EMAIL_REGEX
-
-        errors.add(
-          :escalation_emails,
-          :invalid,
-        )
-      end
-    end
-
-    data_request_emails.present? && data_request_emails.split.each do |email|
-      next if email =~ EMAIL_REGEX
-
-      errors.add(
-        :data_request_emails,
-        :invalid,
-      )
-    end
   end
 
   def cleanse_emails

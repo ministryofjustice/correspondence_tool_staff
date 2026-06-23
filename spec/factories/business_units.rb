@@ -34,7 +34,7 @@ FactoryBot.define do
     end
 
     sequence(:name)     { |n| "Business Unit #{n}" }
-    email               { "#{name.downcase.gsub(/\W/, '_')}@localhost" }
+    email               { "#{name.downcase.gsub(/\W/, '_')}@example.gov.uk" }
     role                { "responder" }
     correspondence_types do
       [
@@ -110,7 +110,7 @@ FactoryBot.define do
 
   factory :team_disclosure_bmt, aliases: [:team_dacu], parent: :managing_team do
     name { "Disclosure BMT" }
-    email { "dacu@localhost" }
+    email { "dacu@example.gov.uk" }
     code { Settings.foi_cases.default_managing_team }
     directorate { find_or_create :dacu_directorate }
     managers { [find_or_create(:disclosure_bmt_user, :orphan)] }
@@ -118,7 +118,7 @@ FactoryBot.define do
 
   factory :team_branston, parent: :business_unit do
     name { "Branston Registry" }
-    email { "branston@localhost" }
+    email { "branston@example.gov.uk" }
     code { "BRANSTON" }
     directorate { find_or_create :dacu_directorate }
     responders { [find_or_create(:branston_user, :orphan)] }
@@ -133,7 +133,7 @@ FactoryBot.define do
 
   factory :team_sscl, parent: :business_unit do
     name { "SSCL" }
-    email { "sscl@localhost" }
+    email { "sscl@example.gov.uk" }
     code { "SSCL" }
     directorate { find_or_create :dacu_directorate }
     responders { [find_or_create(:sscl_user, :orphan)] }
@@ -148,7 +148,7 @@ FactoryBot.define do
 
   factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
     name { "Disclosure" }
-    email { "dacu.disclosure@localhost" }
+    email { "dacu.disclosure@example.gov.uk" }
     code { Settings.foi_cases.default_clearance_team }
     directorate { find_or_create :dacu_directorate }
     approvers { [find_or_create(:disclosure_specialist, :orphan)] }
@@ -162,7 +162,7 @@ FactoryBot.define do
 
   factory :team_press_office, aliases: [:press_office], parent: :approving_team do
     name        { "Press Office" }
-    email       { "press.office@localhost" }
+    email       { "press.office@example.gov.uk" }
     code        { Settings.press_office_team_code }
     directorate { find_or_create :press_office_directorate }
     approvers   { [find_or_create(:press_officer, :orphan)] }
@@ -170,7 +170,7 @@ FactoryBot.define do
 
   factory :team_private_office, parent: :approving_team do
     name        { "Private Office" }
-    email       { "private.office@localhost" }
+    email       { "private.office@example.gov.uk" }
     code        { Settings.private_office_team_code }
     directorate { find_or_create :press_office_directorate }
     approvers   { [find_or_create(:private_officer, :orphan)] }
