@@ -50,7 +50,8 @@ class Admin::DashboardController < AdminController
       .to_a
       .map { |event| SystemLogEventPresenter.new(event) }
 
-    @email_events_count = @events.count(&:email_event?)
+    @email_failed_events_count = @events.count(&:email_failed_event?)
+    @rpi_failed_events_count = @events.count(&:rpi_failed_event?)
   end
 
 private

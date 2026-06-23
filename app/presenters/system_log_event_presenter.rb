@@ -29,8 +29,12 @@ class SystemLogEventPresenter
     formatted_data
   end
 
-  def email_event?
-    event_type.start_with?("Events::Email")
+  def email_failed_event?
+    event_type.start_with?("Events::EmailFailed")
+  end
+
+  def rpi_failed_event?
+    event_type.start_with?("Events::RpiUnprocessed")
   end
 
 private
