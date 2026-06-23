@@ -114,7 +114,7 @@ UNIVERSAL_EVENTS = %i[
   edit_case
 ].freeze
 
-describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
+describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
   describe "with standard workflow Offender SAR case" do
     def offender_sar_case(with_state:)
       create :offender_sar_case, with_state

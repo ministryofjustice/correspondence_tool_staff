@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
+describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
   describe "with standard workflow Offender SAR Complaint case" do
     def universal_events_standards
       %i[

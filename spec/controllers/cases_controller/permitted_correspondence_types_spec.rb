@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
+describe CasesController, type: :controller do # rubocop:disable Rails/FilePath
   let(:manager)       { find_or_create :disclosure_bmt_user }
   let(:responder)     { find_or_create :branston_user }
   let(:controller)    { described_class.new }
