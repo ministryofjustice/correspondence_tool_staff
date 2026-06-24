@@ -42,6 +42,54 @@ RSpec.describe Team, type: :model do
       team = described_class.create! name: "test", email: "TEST@example.gov.uk"
       expect(described_class.find_by(email: "test@example.gov.uk")).to eq team
     end
+
+    it "is valid with a well-formed email address" do
+      team = build_stubbed :team, email: "valid.address@example.gov.uk"
+      expect(team).to be_valid
+    end
+
+    it "is valid when no email address is present" do
+      team = build_stubbed :team, email: nil
+      expect(team).to be_valid
+    end
+
+    it "is invalid with a malformed email address" do
+      [
+        # Structurally malformed
+        "not-an-email",
+        "missing@domain",                  # no TLD
+        "@example.gov.uk",                 # no local part
+        "user@@example.gov.uk",            # double @
+        "user..name@example.gov.uk",       # consecutive dots in local part
+        ".leading.dot@example.gov.uk",     # leading dot in local part
+        "trailing.dot.@example.gov.uk",    # trailing dot in local part
+        "user@-example.gov.uk",            # domain label starts with hyphen
+        "user@example..gov.uk",            # empty domain label
+
+        # Whitespace, visible and otherwise
+        "spaces in@example.gov.uk",        # ASCII space
+        " user@example.gov.uk",            # leading space
+        "user@example.gov.uk ",            # trailing space
+        "user@example.gov.uk\t",           # tab
+        "user@example.gov.uk\n",           # newline (header-injection style)
+
+        # Non-visible / deceptive Unicode
+        "user​@example.gov.uk",       # zero-width space in local part
+        "user name@example.gov.uk",   # non-breaking space
+        "user﻿@example.gov.uk",       # zero-width no-break space (BOM)
+        "user‮@example.gov.uk",       # right-to-left override
+        "usеr@example.gov.uk",        # Cyrillic 'е' homoglyph (looks like 'e')
+        "user@exam​ple.gov.uk",       # zero-width space in domain
+
+        # Other non-ASCII
+        "usér@example.gov.uk",             # accented Latin character
+        "user😀@example.gov.uk",            # emoji
+      ].each do |bad_email|
+        team = build_stubbed :team, email: bad_email
+        expect(team).not_to be_valid, "expected #{bad_email.inspect} to be invalid"
+        expect(team.errors[:email]).to include("is invalid")
+      end
+    end
   end
 
   context "when validate uniqueness of name" do
