@@ -1,0 +1,59 @@
+- content_for :heading
+  = "System events log"
+
+= render partial: 'layouts/header'
+
+.case-status__info.case-status__info--details
+  .case-status__group.status
+    .case-status__data--large
+      strong= "Summary past 30 days"
+
+  div class="case-status__group page-counts govuk-!-margin-top-6"
+    .grid-row
+      div class="column-one-third govuk-!-padding-bottom-4"
+        .case-status__heading.case-status__heading--pages
+          strong= "Email failed events"
+        .case-status__date-value = @email_failed_events_count
+      div class="column-one-third govuk-!-padding-bottom-4"
+        .case-status__heading.case-status__heading--pages
+          strong= "RPI failed events"
+        .case-status__date-value = @rpi_failed_events_count
+      div class="column-one-third govuk-!-padding-bottom-4"
+        .case-status__heading.case-status__heading--pages
+          strong= "All events"
+        .case-status__date-value = @events.count
+
+.grid-row
+  .column-full
+    p.summary Shows system events from the past 30 days only.
+
+.grid-row.case-status#summary
+  .grid-row
+    .column-full.table-container.container
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+          col
+          col
+          col
+        thead
+          tr
+            th scope='col'
+              | Event
+            th scope='col'
+              | Recipient
+            th scope='col'
+              | Subject
+            th scope='col'
+              | Time
+            th scope='col'
+              | Details
+        tbody
+          - @events.each do |event|
+            tr
+              td= event.name
+              td= event.recipient || "-"
+              td= event.subject || "-"
+              td= l(event.timestamp, format: :default)
+              td= event.details

@@ -33,6 +33,7 @@ Rails.application.routes.draw do
 
   authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => "/sidekiq"
+    mount RailsEventStore::Browser => "/res"
   end
 
   # Case Concerns
@@ -309,6 +310,7 @@ Rails.application.routes.draw do
       get "/dashboard/system" => "dashboard#system"
       get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
       get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
+      get "/dashboard/events" => "dashboard#events"
     end
   end
 
