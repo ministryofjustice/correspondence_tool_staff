@@ -133,9 +133,19 @@ describe Admin::DashboardController do
       )
     end
 
+    let(:rpi_failed_event) do
+      Events::RpiUnprocessed.build(
+        personal_information_request_id: 1,
+        submission_id: "submission-123",
+        schema: "1",
+        error_message: "Failed to process RPI",
+      )
+    end
+
     before do
       Rails.configuration.event_store.publish(email_sent_event, stream_name: "email_events")
       Rails.configuration.event_store.publish(email_failed_event, stream_name: "email_events")
+      Rails.configuration.event_store.publish(rpi_failed_event, stream_name: "rpi_events")
 
       sign_in admin
       get :events
@@ -146,7 +156,8 @@ describe Admin::DashboardController do
     end
 
     it "has events" do
-      expect(controller.events).to eq 2
+      expect(assigns(:email_failed_events_count)).to eq 1
+      expect(assigns(:rpi_failed_events_count)).to eq 1
     end
   end
 end
