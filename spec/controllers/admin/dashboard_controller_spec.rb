@@ -93,6 +93,28 @@ describe Admin::DashboardController do
     end
   end
 
+  describe "#load_bank_holidays" do
+    before { sign_in admin }
+
+    context "when the service succeeds" do
+      it "redirects to bank holidays page with a notice" do
+        allow(BankHolidaysService).to receive(:new)
+        post :load_bank_holidays
+        expect(response).to redirect_to(admin_dashboard_bank_holidays_path)
+        expect(flash[:notice]).to eq("Bank holidays loaded successfully.")
+      end
+    end
+
+    context "when the service raises an error" do
+      it "redirects to bank holidays page with an alert" do
+        allow(BankHolidaysService).to receive(:new).and_raise(StandardError, "connection failed")
+        post :load_bank_holidays
+        expect(response).to redirect_to(admin_dashboard_bank_holidays_path)
+        expect(flash[:alert]).to eq("Failed to load bank holidays: connection failed")
+      end
+    end
+  end
+
   describe "#personal_information_requests" do
     before do
       sign_in admin

@@ -35,6 +35,15 @@ class Admin::DashboardController < AdminController
     @bank_holidays = BankHoliday.order(created_at: :desc).page(params[:page]).per(50)
   end
 
+  def load_bank_holidays
+    BankHolidaysService.new
+    flash[:notice] = "Bank holidays loaded successfully."
+  rescue StandardError => e
+    flash[:alert] = "Failed to load bank holidays: #{e.message}"
+  ensure
+    redirect_to admin_dashboard_bank_holidays_path
+  end
+
   def personal_information_requests
     @personal_information_requests = PersonalInformationRequest
                                       .unscoped

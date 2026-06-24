@@ -309,6 +309,7 @@ Rails.application.routes.draw do
       get "/dashboard/list_queries" => "dashboard#list_queries"
       get "/dashboard/system" => "dashboard#system"
       get "/dashboard/bank-holidays" => "dashboard#bank_holidays"
+      post "/dashboard/bank-holidays/load" => "dashboard#load_bank_holidays", as: :dashboard_load_bank_holidays
       get "/dashboard/personal_information_requests" => "dashboard#personal_information_requests"
       get "/dashboard/events" => "dashboard#events"
     end
