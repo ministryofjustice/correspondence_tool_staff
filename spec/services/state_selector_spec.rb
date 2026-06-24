@@ -64,7 +64,7 @@ describe StateSelector do
     it "raises method missing if unknown state is queried" do
       expect {
         ss.awaiting_drafting
-      }.to raise_error NoMethodError, /undefined method `awaiting_drafting'/
+      }.to raise_error NoMethodError, /undefined method 'awaiting_drafting'/
     end
   end
 
