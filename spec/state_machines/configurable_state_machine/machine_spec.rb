@@ -546,7 +546,7 @@ module ConfigurableStateMachine
       it "raises NoMethodError for methods not ending in a bang" do
         expect {
           machine.dummy_method
-        }.to raise_error NoMethodError, /undefined method `dummy_method' for/
+        }.to raise_error NoMethodError, /undefined method 'dummy_method' for/
       end
     end
 
@@ -704,7 +704,7 @@ module ConfigurableStateMachine
       it "raises an error for an invalid method" do
         expect {
           machine.method(:xxxxxx)
-        }.to raise_error NameError, %(undefined method `xxxxxx' for class `ConfigurableStateMachine::Machine')
+        }.to raise_error NameError, %(undefined method 'xxxxxx' for class 'ConfigurableStateMachine::Machine')
       end
     end
 
@@ -808,7 +808,7 @@ module ConfigurableStateMachine
           it "raises" do
             expect {
               machine.dummy_event!({ acting_team: "abdb" })
-            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {:acting_team=>"abdb"})
+            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {acting_team: "abdb"})
           end
         end
 
@@ -816,7 +816,7 @@ module ConfigurableStateMachine
           it "raises" do
             expect {
               machine.dummy_event!({ acting_user: "abdb" })
-            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {:acting_user=>"abdb"})
+            }.to raise_error ConfigurableStateMachine::ArgumentError, %(Invalid params when triggering dummy_event on case #{kase.id}: {acting_user: "abdb"})
           end
         end
       end

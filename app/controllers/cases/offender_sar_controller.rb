@@ -364,7 +364,7 @@ module Cases
     # maybe worthy having another class for handling such thing together in a more abstract way
     def build_case_from_session(correspondence_type)
       # regarding the `{ date_of_birth: nil }` below...
-      # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
+      # this is needed to prevent "NoMethodError undefined method 'dd' for nil:NilClass"
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
       # in the list of instance variables in the model at the point that the gov_uk_date_fields
       # is adding its magic methods. This manifests when running tests or after rails server restart

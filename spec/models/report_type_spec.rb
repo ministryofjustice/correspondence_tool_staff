@@ -88,7 +88,7 @@ RSpec.describe ReportType, type: :model do
       it "raises NoMethodError" do
         expect {
           described_class.rogue_method
-        }.to raise_error NoMethodError, /undefined method `rogue_method' for/
+        }.to raise_error NoMethodError, /undefined method 'rogue_method' for/
       end
     end
 
