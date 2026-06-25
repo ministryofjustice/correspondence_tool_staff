@@ -41,6 +41,9 @@
       |
       a.button href='#records' Jump to Stored Data
 
+    = form_with url: admin_dashboard_load_bank_holidays_path, method: :post, local: true do |f|
+      = f.submit "Get latest bank holidays", class: "button"
+
 
 = render partial: 'bank_holiday_region', locals: { region: 'england-and-wales', bank_holiday: latest_data }
 = render partial: 'bank_holiday_region', locals: { region: 'scotland', bank_holiday: latest_data }
