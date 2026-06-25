@@ -30,7 +30,10 @@
       .case-status__date-title
         strong= "Last updated"
       .case-status__date-value
-        = l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M")
+        - if latest_updated
+          = l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M")
+        - else
+          | No data loaded yet
 
 .grid-row
   .column-full
@@ -42,7 +45,7 @@
       a.button href='#records' Jump to Stored Data
 
     = form_with url: admin_dashboard_load_bank_holidays_path, method: :post, local: true do |f|
-      = f.submit "Get latest bank holidays", class: "button"
+      = f.submit "Force get latest bank holidays", class: "button"
 
 
 = render partial: 'bank_holiday_region', locals: { region: 'england-and-wales', bank_holiday: latest_data }

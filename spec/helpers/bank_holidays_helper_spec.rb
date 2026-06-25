@@ -13,6 +13,10 @@ RSpec.describe BankHolidaysHelper, type: :helper do
     it "returns an array of regions and total number of holidays" do
       expect(bank_holidays_summary(bank_holiday)).to match_array([%w[england-and-wales scotland northern-ireland], 9])
     end
+
+    it "returns empty regions and zero count when bank_holiday is nil" do
+      expect(bank_holidays_summary(nil)).to eq([[], 0])
+    end
   end
 
   describe "#bank_holidays_for_region" do
@@ -62,6 +66,12 @@ RSpec.describe BankHolidaysHelper, type: :helper do
 
       it "returns an empty array if the region is not found in data" do
         expect(bank_holidays_for_region(bank_holiday, "wales")).to eq([])
+      end
+    end
+
+    context "when bank_holiday is nil" do
+      it "returns an empty array" do
+        expect(bank_holidays_for_region(nil, "england-and-wales")).to eq([])
       end
     end
   end
