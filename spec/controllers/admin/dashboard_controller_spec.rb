@@ -159,5 +159,73 @@ describe Admin::DashboardController do
       expect(assigns(:email_failed_events_count)).to eq 1
       expect(assigns(:rpi_failed_events_count)).to eq 1
     end
+
+    describe "the presented events (SystemLogEventPresenter)" do
+      let(:events) { assigns(:events) }
+
+      def presenter_for(name)
+        events.find { |event| event.name == name }
+      end
+
+      it "presents every published event" do
+        expect(events).to all(be_a(SystemLogEventPresenter))
+        expect(events.map(&:name))
+          .to contain_exactly("Email sent", "Email failed", "Rpi unprocessed")
+      end
+
+      context "with an email failed event" do
+        subject(:presenter) { presenter_for("Email failed") }
+
+        it "flags it as an email failed event" do
+          expect(presenter.email_failed_event?).to be true
+        end
+
+        it "exposes the recipient" do
+          expect(presenter.recipient).to eq "test@test.com"
+        end
+
+        it "exposes the subject" do
+          expect(presenter.subject).to eq "Subject Access Request - 12345"
+        end
+
+        it "humanises the failure details into a pipe-separated summary" do
+          expect(presenter.details).to eq(
+            "Commissioning document | Commissioning email | Permanent failure | " \
+            "External | Case 12345 | Notify notify-123",
+          )
+        end
+      end
+
+      context "with an email sent event" do
+        subject(:presenter) { presenter_for("Email sent") }
+
+        it "is not treated as an email failed event" do
+          expect(presenter.email_failed_event?).to be false
+        end
+
+        it "does not expose a recipient or subject" do
+          expect(presenter.recipient).to be_nil
+          expect(presenter.subject).to be_nil
+        end
+
+        it "renders the raw event data as JSON for the details" do
+          expect(presenter.details)
+            .to include("test@test.com")
+            .and include("commissioning_document")
+        end
+      end
+
+      context "with an rpi unprocessed event" do
+        subject(:presenter) { presenter_for("Rpi unprocessed") }
+
+        it "flags it as an rpi failed event" do
+          expect(presenter.rpi_failed_event?).to be true
+        end
+
+        it "renders the raw event data as JSON for the details" do
+          expect(presenter.details).to include("submission-123")
+        end
+      end
+    end
   end
 end

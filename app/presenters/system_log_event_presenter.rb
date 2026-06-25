@@ -12,19 +12,19 @@ class SystemLogEventPresenter
   end
 
   def recipient
-    return unless email_event?
+    return unless email_failed_event?
 
     data[:recipient]
   end
 
   def subject
-    return unless email_event?
+    return unless email_failed_event?
 
     data[:subject]
   end
 
   def details
-    return email_details if email_event?
+    return email_details if email_failed_event?
 
     formatted_data
   end
