@@ -3,25 +3,28 @@ class BankHolidaysService
 
   attr_reader :holidays
 
-  def initialize
+  def initialize(force: false)
     SentryContextProvider.set_context
 
+    @force = force
     @holidays = {}
 
     ingest
     backup
   end
 
-  # Persist the latest snapshot of holidays if it has changed
+  # Persist the latest snapshot of holidays if it has changed.
+  # Pass force: true to write a new record even when the data is unchanged.
   def backup
     return unless holidays.is_a?(Hash)
     return if holidays.empty?
 
     hash_value = Digest::MD5.hexdigest(JSON.generate(holidays))
 
-    # Avoid writing duplicate records when the data hasn't changed
-    record = BankHoliday.last
-    return if record&.hash_value == hash_value
+    unless @force
+      record = BankHoliday.last
+      return if record&.hash_value == hash_value
+    end
 
     ::BankHoliday.create!(data: holidays, hash_value: hash_value)
   end

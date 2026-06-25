@@ -36,7 +36,7 @@ class Admin::DashboardController < AdminController
   end
 
   def load_bank_holidays
-    BankHolidaysService.new
+    BankHolidaysService.new(force: true)
     flash[:notice] = "Bank holidays loaded successfully."
   rescue StandardError => e
     flash[:alert] = "Failed to load bank holidays: #{e.message}"

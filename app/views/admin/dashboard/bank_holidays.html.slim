@@ -30,7 +30,10 @@
       .case-status__date-title
         strong= "Last updated"
       .case-status__date-value
-        = l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M")
+        - if latest_updated
+          = l(latest_updated.updated_at, format: "%B %d, %Y at %H:%M")
+        - else
+          | No data loaded yet
 
 .grid-row
   .column-full

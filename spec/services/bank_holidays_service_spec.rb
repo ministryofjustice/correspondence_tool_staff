@@ -77,5 +77,14 @@ RSpec.describe BankHolidaysService, type: :service do
 
       expect { described_class.new }.to change(BankHoliday, :count).by(1)
     end
+
+    it "creates a new record even when data is unchanged when force: true" do
+      allow(Net::HTTP).to receive(:get).and_return(fixture_json)
+      described_class.new
+      expect(BankHoliday.count).to eq(1)
+
+      allow(Net::HTTP).to receive(:get).and_return(fixture_json)
+      expect { described_class.new(force: true) }.to change(BankHoliday, :count).by(1)
+    end
   end
 end
