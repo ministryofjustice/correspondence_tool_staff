@@ -1,5 +1,7 @@
 module BankHolidaysHelper
   def bank_holidays_summary(bank_holiday)
+    return [[], 0] if bank_holiday.nil?
+
     regions = bank_holiday.data.keys
     num_holidays = regions.sum { |region| bank_holiday.data.dig(region, "events")&.size.to_i }
 
@@ -8,6 +10,8 @@ module BankHolidaysHelper
 
   # Invalid/missing dates sink to bottom of sorted events list
   def bank_holidays_for_region(bank_holiday, region)
+    return [] if bank_holiday.nil?
+
     events = bank_holiday.data.dig(region, "events")
     return [] unless events
 
