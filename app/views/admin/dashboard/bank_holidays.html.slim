@@ -52,4 +52,4 @@
 = render partial: 'bank_holiday_region', locals: { region: 'scotland', bank_holiday: latest_data }
 = render partial: 'bank_holiday_region', locals: { region: 'northern-ireland', bank_holiday: latest_data }
 
-= paginate @bank_holidays
+= render partial: 'stored_data', locals: { bank_holidays: @bank_holidays }

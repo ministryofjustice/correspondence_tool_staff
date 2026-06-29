@@ -25,6 +25,7 @@ class SystemLogEventPresenter
 
   def details
     return email_details if email_failed_event?
+    return bank_holiday_ingest_failed_details if bank_holiday_ingest_failed_event?
 
     formatted_data
   end
@@ -35,6 +36,10 @@ class SystemLogEventPresenter
 
   def rpi_failed_event?
     event_type.start_with?("Events::RpiUnprocessed")
+  end
+
+  def bank_holiday_ingest_failed_event?
+    event_type.start_with?("Events::BankHolidayIngestFailed")
   end
 
 private
@@ -62,5 +67,13 @@ private
 
   def formatted_data
     data.to_json
+  end
+
+  def bank_holiday_ingest_failed_details
+    [
+      data[:reason],
+      data[:error_class].presence && data[:error_class].to_s,
+      data[:failed_at].presence && "at #{data[:failed_at]}",
+    ].compact.join(" | ")
   end
 end

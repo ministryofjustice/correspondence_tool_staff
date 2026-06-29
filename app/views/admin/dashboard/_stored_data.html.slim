@@ -1,0 +1,28 @@
+.grid-row id='records'
+  .column-full
+    h2.heading-large Stored Data
+
+    - if bank_holidays.any?
+      table.report.table-font-xsmall
+        colgroup
+          col
+          col
+          col
+          col
+        thead
+          tr
+            th scope='col' ID
+            th scope='col' Hash
+            th scope='col' Created At
+            th scope='col' Updated At
+        tbody
+          - bank_holidays.each do |bh|
+            tr
+              td= bh.id
+              td= bh.hash_value
+              td= l(bh.created_at, format: "%B %d, %Y at %H:%M")
+              td= l(bh.updated_at, format: "%B %d, %Y at %H:%M")
+    - else
+      p No stored bank holiday data found.
+
+    = paginate bank_holidays
