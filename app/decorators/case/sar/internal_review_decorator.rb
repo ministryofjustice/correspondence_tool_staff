@@ -22,11 +22,9 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
   end
 
   def subject_with_original_case_reference
-    if subject =~ /IR of ([0-9]+)\s-/
-      subject
-    else
-      "IR of #{original_case.number} - #{subject}"
-    end
+    return subject if original_case.nil? || subject =~ /IR of ([0-9]+)\s-/
+
+    "IR of #{original_case.number} - #{subject}"
   end
 
   def pretty_outcome_reasons
