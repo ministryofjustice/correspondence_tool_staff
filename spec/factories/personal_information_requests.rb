@@ -90,6 +90,8 @@ FactoryBot.define do
       * **Sigma** (standard deviation): σ
       * **Mu** (population mean): μ
       * **Delta** (change / difference): Δ
+      "شهادة ميلاد خاتمة الانجليزي .pdf
+      IMG_٢٠٢٦٠٦٢٩_٠٧٤٠٣٩_٦٢٩~2.jpeg
     NONASCII
 
     submission_id { SecureRandom.uuid }
