@@ -88,15 +88,15 @@ RSpec.describe Cases::OffenderSARController, type: :controller do
       before do
         session[:offender_sar_state] = {
           "subject_full_name" => "A. N. Other",
-          "date_of_birth_dd" => "1",
+          "date_of_birth_dd" => "",
           "date_of_birth_mm" => "2",
           "date_of_birth_yyyy" => "1990",
         }
       end
 
-      it "preserves the entered date_of_birth rather than clobbering it" do
+      it "sets date_of_birth to nil" do
         get :new, params: params.merge(step: "subject-details")
-        expect(assigns(:case).object.date_of_birth).to eq Date.new(1990, 2, 1)
+        expect(assigns(:case).object.date_of_birth).to be nil
       end
     end
 
