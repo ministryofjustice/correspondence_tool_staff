@@ -71,7 +71,7 @@ feature "when extending an Offender SAR case deadline" do
       # 7. Submitting reverts to the deadline based on original received date plus paused/stopped days
       cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("Extension no longer needed")
       cases_remove_sar_deadline_extension_page.submit_button.click
-      expect(cases_show_page.notice.text).to eq "Deadline extension removed"
+      expect(cases_show_page.notice.text).to eq "The deadline extension has been removed."
 
       # 12th Nov is a Saturday, so next working day is 14th Nov
       expect(cases_show_page.case_status.deadlines.final.text).to eq("14 Nov 2022")

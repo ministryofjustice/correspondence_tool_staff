@@ -44,12 +44,11 @@ private
     @case.errors.empty?
   end
 
-  # TODO: Refactor as this is confusing
   def message
     [
-      @reason,
-      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
-      "New final deadline: #{I18n.localize(@case.recalculate_deadline_without_extensions, format: :long)}",
+      "Previous deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New deadline: #{I18n.localize(@case.recalculate_deadline_without_extensions, format: :long)}",
+      "Reason: #{@reason}",
     ].join("\n")
   end
 end

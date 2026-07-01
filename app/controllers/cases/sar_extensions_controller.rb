@@ -21,7 +21,7 @@ module Cases
 
       case service.result
       when :ok
-        flash[:notice] = t(".success", case_type: @case.correspondence_type.shortname)
+        flash[:notice] = t(".success")
         redirect_to case_path(@case.id)
       when :validation_error
         @case = CaseExtendSARDeadlineDecorator.decorate @case

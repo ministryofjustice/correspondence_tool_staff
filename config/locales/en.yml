@@ -1628,10 +1628,10 @@ en:
         close_date:  Date response sent
     sar_extensions:
       create:
-        success: Case extended for %{case_type}
+        success: The deadline has been extended by 2 months.
         error: Unable to perform %{case_type} extension on case %{case_number}
       destroy:
-        success: Deadline extension removed
+        success: The deadline extension has been removed.
         error: Unable to remove %{case_type} deadline extension
       edit:
         summary: This will take 2 calendar months off the deadline.

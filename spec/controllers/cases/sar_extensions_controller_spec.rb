@@ -66,7 +66,7 @@ describe Cases::SARExtensionsController, type: :controller do
       end
 
       it "notifies the user of the success" do
-        expect(request.flash[:notice]).to eq "Case extended for SAR"
+        expect(request.flash[:notice]).to eq "The deadline has been extended by 2 months."
       end
     end
 
@@ -156,7 +156,7 @@ describe Cases::SARExtensionsController, type: :controller do
       end
 
       it "notifies the user of the success" do
-        expect(request.flash[:notice]).to eq "Deadline extension removed"
+        expect(request.flash[:notice]).to eq "The deadline extension has been removed."
       end
     end
 
