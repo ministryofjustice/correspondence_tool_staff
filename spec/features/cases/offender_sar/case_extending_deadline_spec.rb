@@ -24,16 +24,18 @@ feature "when extending an Offender SAR case deadline" do
       extend_offender_sar_deadline_for(kase:, reason: "Offender SAR extension") do |page|
         expect(page).not_to have_extension_period_1_calendar_month
         expect(page).not_to have_extension_period_2_calendar_months
-        expect(page).to have_text("The deadline for this case will be extended by two calendar months.")
+        expect(page).to have_text("This will extend the deadline by 2 calendar months.")
+        expect(page).to have_text("Current deadline: 7 November 2022")
+        expect(page).to have_text("New deadline: 5 January 2023")
       end
 
       expected_case_history = [
-        "Extended SAR deadline",
-        "Offender SAR extension ",
-        "Deadline extended by two calendar months\n",
-        "Old final deadline: 7 November 2022 ",
-        "New final deadline: 5 January 2023",
+        "Deadline extended by 2 months",
+        "Previous deadline: 7 November 2022 ",
+        "New deadline: 5 January 2023 ",
+        "Reason: Offender SAR extension",
       ]
+
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
       expect(cases_show_page.case_status.deadlines.final.text).to eq(expected_extension_date)
 
@@ -59,11 +61,17 @@ feature "when extending an Offender SAR case deadline" do
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq("SAR deadline cannot be extended")
 
-      # 6. Remove extension but final deadline should be based on original received date plus paused/stopped days
+      # 6. Removing shows the interstitial with the current and reverted deadlines
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.remove_sar_deadline_extension.click
-      expect(cases_show_page).to be_displayed
-      expect(cases_show_page.notice.text).to eq "Deadline extension removed"
+      expect(cases_remove_sar_deadline_extension_page).to be_displayed
+      expect(page).to have_text("Current deadline: 10 January 2023")
+      expect(page).to have_text("New deadline: 14 November 2022")
+
+      # 7. Submitting reverts to the deadline based on original received date plus paused/stopped days
+      cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("Extension no longer needed")
+      cases_remove_sar_deadline_extension_page.submit_button.click
+      expect(cases_show_page.notice.text).to eq "The deadline extension has been removed."
 
       # 12th Nov is a Saturday, so next working day is 14th Nov
       expect(cases_show_page.case_status.deadlines.final.text).to eq("14 Nov 2022")

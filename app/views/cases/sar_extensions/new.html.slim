@@ -15,18 +15,17 @@
     "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
     ""
 
-div.action-copy
-  p
-    = "You are extending the time on:"
-    strong.strong-block
-      = @case.subject
-br
-
 = form_for @case, as: :case, url: case_sar_extensions_path(@case), method: :post do |f|
   - if @case.fixed_extension?
     input type="hidden" value="#{@case.extension_fixed_period}" name="case[extension_period]"
     p
-      = t('.extend_fixed', time_period_description: @case.time_period_description(@case.extension_fixed_period))
+      = t('.extend_fixed')
+
+    div.govuk-inset-text
+      p
+        = t('.current_deadline_html', date: l(@case.external_deadline, format: :long))
+      p
+        = t('.new_deadline_html', date: l(@case.new_extension_deadline, format: :long))
   - elsif @case.allow_extension_period_selection?
     fieldset.form-group
       legend
@@ -49,7 +48,5 @@ br
     = f.text_area :reason_for_extending
 
   .button-holder
-    = submit_tag 'Extend deadline', class: 'button'
-    = link_to('Cancel',
-        case_path(@case),
-        class: 'acts-like-button button-left-spacing')
+    = f.submit 'Extend deadline', { class: 'button', role: 'button' }
+    = link_to('Cancel', case_path(@case), class: 'acts-like-button moj-style-link button-left-spacing')

@@ -6,7 +6,7 @@ class CaseExtendSARDeadlineService
     @case = kase
     @case = CaseExtendSARDeadlineDecorator.decorate @case
     @extension_period = extension_period
-    @extension_deadline = new_extension_deadline(@extension_period.to_i)
+    @extension_deadline = @case.new_extension_deadline(@extension_period.to_i)
     @reason = reason
     @result = :incomplete
   end
@@ -39,20 +39,11 @@ class CaseExtendSARDeadlineService
 
 private
 
-  def new_extension_deadline(extend_by)
-    if @case.try(:restarted_at).present?
-      @case.deadline_calculator.extension_deadline(extend_by) { @case.external_deadline }
-    else
-      @case.deadline_calculator.extension_deadline((@case.months_extended || 0) + extend_by)
-    end
-  end
-
   def message
     [
-      @reason,
-      "Deadline extended by #{@case.time_period_description(@extension_period.to_i)}\n",
-      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
-      "New final deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+      "Previous deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+      "Reason: #{@reason}",
     ].join("\n")
   end
 
