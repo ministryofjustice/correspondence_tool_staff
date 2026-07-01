@@ -31,6 +31,11 @@ en:
 
   activerecord:
     attributes:
+      team:
+        email: "Team email address"
+      contact:
+        data_request_emails: "Data request email address"
+        escalation_emails: "Escalation email address"
       business_unit:
         correspondence_type_ids: "Correspondence types"
       case/base:

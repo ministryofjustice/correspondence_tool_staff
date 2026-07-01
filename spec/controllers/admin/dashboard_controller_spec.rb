@@ -93,6 +93,28 @@ describe Admin::DashboardController do
     end
   end
 
+  describe "#load_bank_holidays" do
+    before { sign_in admin }
+
+    context "when the service succeeds" do
+      it "redirects to bank holidays page with a notice" do
+        allow(BankHolidaysService).to receive(:new)
+        post :load_bank_holidays
+        expect(response).to redirect_to(admin_dashboard_bank_holidays_path)
+        expect(flash[:notice]).to eq("Bank holidays loaded successfully.")
+      end
+    end
+
+    context "when the service raises an error" do
+      it "redirects to bank holidays page with an alert" do
+        allow(BankHolidaysService).to receive(:new).and_raise(StandardError, "connection failed")
+        post :load_bank_holidays
+        expect(response).to redirect_to(admin_dashboard_bank_holidays_path)
+        expect(flash[:alert]).to eq("Failed to load bank holidays: connection failed")
+      end
+    end
+  end
+
   describe "#personal_information_requests" do
     before do
       sign_in admin
@@ -105,6 +127,127 @@ describe Admin::DashboardController do
 
     it "has personal information requests" do
       expect(controller.personal_information_requests).to match_array(personal_information_requests)
+    end
+  end
+
+  describe "#events" do
+    let(:email_sent_event) do
+      Events::EmailSent.build(
+        recipient: "test@test.com",
+        subject: "Subject Access Request - 12345",
+        category: "commissioning_document",
+        email_type: "commissioning_email",
+        recipient_type: "external",
+        case_number: "12345",
+      )
+    end
+
+    let(:email_failed_event) do
+      Events::EmailFailed.build(
+        recipient: "test@test.com",
+        subject: "Subject Access Request - 12345",
+        category: "commissioning_document",
+        email_type: "commissioning_email",
+        recipient_type: "external",
+        case_number: "12345",
+        status: "permanent-failure",
+        notify_id: "notify-123",
+      )
+    end
+
+    let(:rpi_failed_event) do
+      Events::RpiUnprocessed.build(
+        personal_information_request_id: 1,
+        submission_id: "submission-123",
+        schema: "1",
+        error_message: "Failed to process RPI",
+      )
+    end
+
+    before do
+      Rails.configuration.event_store.publish(email_sent_event, stream_name: "email_events")
+      Rails.configuration.event_store.publish(email_failed_event, stream_name: "email_events")
+      Rails.configuration.event_store.publish(rpi_failed_event, stream_name: "rpi_events")
+
+      sign_in admin
+      get :events
+    end
+
+    it "renders the events view" do
+      expect(request.path).to eq("/admin/dashboard/events")
+    end
+
+    it "has events" do
+      expect(assigns(:email_failed_events_count)).to eq 1
+      expect(assigns(:rpi_failed_events_count)).to eq 1
+    end
+
+    describe "the presented events (SystemLogEventPresenter)" do
+      let(:events) { assigns(:events) }
+
+      def presenter_for(name)
+        events.find { |event| event.name == name }
+      end
+
+      it "presents every published event" do
+        expect(events).to all(be_a(SystemLogEventPresenter))
+        expect(events.map(&:name))
+          .to contain_exactly("Email sent", "Email failed", "Rpi unprocessed")
+      end
+
+      context "with an email failed event" do
+        subject(:presenter) { presenter_for("Email failed") }
+
+        it "flags it as an email failed event" do
+          expect(presenter.email_failed_event?).to be true
+        end
+
+        it "exposes the recipient" do
+          expect(presenter.recipient).to eq "test@test.com"
+        end
+
+        it "exposes the subject" do
+          expect(presenter.subject).to eq "Subject Access Request - 12345"
+        end
+
+        it "humanises the failure details into a pipe-separated summary" do
+          expect(presenter.details).to eq(
+            "Commissioning document | Commissioning email | Permanent failure | " \
+            "External | Case 12345 | Notify notify-123",
+          )
+        end
+      end
+
+      context "with an email sent event" do
+        subject(:presenter) { presenter_for("Email sent") }
+
+        it "is not treated as an email failed event" do
+          expect(presenter.email_failed_event?).to be false
+        end
+
+        it "does not expose a recipient or subject" do
+          expect(presenter.recipient).to be_nil
+          expect(presenter.subject).to be_nil
+        end
+
+        it "renders the raw event data as JSON for the details" do
+          expect(presenter.details)
+            .to include("test@test.com")
+            .and include("commissioning_document")
+        end
+      end
+
+      context "with an rpi unprocessed event" do
+        subject(:presenter) { presenter_for("Rpi unprocessed") }
+
+        it "flags it as an rpi failed event" do
+          expect(presenter.rpi_failed_event?).to be true
+        end
+
+        it "renders the raw event data as JSON for the details" do
+          expect(presenter.details).to include("submission-123")
+        end
+      end
     end
   end
 end

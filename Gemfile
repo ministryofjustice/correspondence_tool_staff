@@ -24,7 +24,7 @@ gem "draper", "4.0.2"
 gem "dropzonejs-rails"
 gem "factory_bot_rails", "~> 6.5.1"
 gem "faker", "~> 3.6"
-gem "foreman", "~> 0.87.1"
+gem "foreman", "~> 0.90.0"
 gem "gov_uk_date_fields", "~> 3.1"
 gem "govuk_elements_form_builder", "~> 1.3.0"
 gem "govuk_elements_rails",   ">= 3.1.2"
@@ -61,6 +61,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 # Gem (https://github.com/anjlab/rails-data-migrations) does not support rails 7.2 so changed to this fork
 # TODO: Move back to original version when it is updated
 gem "rails-data-migrations", git: "https://github.com/notarize/rails-data-migrations.git", ref: "1ec8bf9"
+gem "rails_event_store", "~> 2.18.0"
 gem "recursive-open-struct"
 gem "sablon"
 gem "sass-rails", "~> 6.0"

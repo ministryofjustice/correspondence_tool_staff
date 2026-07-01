@@ -1,9 +1,24 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
+  include PublishesSystemLogEmail
+
+  after_deliver :publish_email_sent_event
+
   def new_assignment(assignment, recipient)
     SentryContextProvider.set_context
     @assignment = assignment
     kase = @assignment.case
     return unless kase
+
+    set_email_event_context(
+      category: "case_notification",
+      email_type: "new_assignment",
+      kase:,
+      recipient_type: recipient_type(recipient, assignment.team&.email),
+      extra: {
+        assignment_id: assignment.id,
+        team_id: assignment.team_id,
+      },
+    )
 
     set_template(Settings.new_assignment_notify_template)
     set_personalisation(
@@ -25,6 +40,16 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     kase = assignment.case
     recipient = assignment.user
+
+    set_email_event_context(
+      category: "case_notification",
+      email_type: "ready_for_press_or_private_review",
+      kase:,
+      recipient_type: "internal_staff",
+      extra: {
+        assignment_id: assignment.id,
+      },
+    )
 
     set_template(Settings.ready_for_press_or_private_review_notify_template)
 
@@ -48,6 +73,16 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     recipient = kase.assignments.responding.accepted.first&.user
     return unless recipient
 
+    set_email_event_context(
+      category: "case_notification",
+      email_type: type.parameterize.underscore,
+      kase:,
+      recipient_type: "internal_staff",
+      extra: {
+        notification_type: type,
+      },
+    )
+
     find_template(type)
 
     set_personalisation(
@@ -69,6 +104,17 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   def notify_team(team, kase, notification_type)
     SentryContextProvider.set_context
 
+    set_email_event_context(
+      category: "case_notification",
+      email_type: notification_type.parameterize.underscore,
+      kase:,
+      recipient_type: "team_mailbox",
+      extra: {
+        notification_type:,
+        team_id: team.id,
+      },
+    )
+
     find_template(notification_type)
 
     set_personalisation(
@@ -87,6 +133,13 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def case_assigned_to_another_user(kase, recipient)
     SentryContextProvider.set_context
+
+    set_email_event_context(
+      category: "case_notification",
+      email_type: "case_assigned_to_another_user",
+      kase:,
+      recipient_type: "internal_staff",
+    )
 
     set_template(Settings.assigned_to_another_user_template)
 
@@ -107,6 +160,17 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   def rpi_email(rpi, target)
     SentryContextProvider.set_context
 
+    set_email_event_context(
+      category: "rpi",
+      email_type: "rpi_email",
+      recipient_type: "team_mailbox",
+      extra: {
+        personal_information_request_id: rpi.id,
+        submission_id: rpi.submission_id,
+        target:,
+      },
+    )
+
     find_template("RPI")
     set_personalisation(content: rpi.attachment_url(target))
 
@@ -114,6 +178,10 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   end
 
 private
+
+  def email_event_context
+    @email_event_context || {}
+  end
 
   def format_subject(kase)
     translation_key = "state.#{kase.current_state}"
@@ -139,5 +207,19 @@ private
     when "RPI"
       set_template(Settings.rpi_template)
     end
+  end
+
+  def set_email_event_context(category:, email_type:, recipient_type:, kase: nil, extra: {})
+    @email_event_context = {
+      category:,
+      email_type:,
+      recipient_type:,
+      case_id: kase&.id,
+      case_number: kase&.number,
+    }.merge(extra).compact
+  end
+
+  def recipient_type(recipient, team_email)
+    recipient == team_email ? "team_mailbox" : "internal_staff"
   end
 end

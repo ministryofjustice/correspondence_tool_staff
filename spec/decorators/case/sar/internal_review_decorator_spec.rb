@@ -59,5 +59,10 @@ describe Case::SAR::InternalReviewDecorator do
       kase = sar_ir_case_with_orignal_case_referenced_in_subject.decorate
       expect(kase.subject_with_original_case_reference).to eq subject_with_reference
     end
+
+    it "returns subject as-is when original case is not yet linked" do
+      kase = Case::SAR::InternalReview.new(subject: "some subject").decorate
+      expect(kase.subject_with_original_case_reference).to eq "some subject"
+    end
   end
 end

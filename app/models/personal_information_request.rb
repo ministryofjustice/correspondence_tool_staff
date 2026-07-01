@@ -15,6 +15,7 @@
 #
 class PersonalInformationRequest < ApplicationRecord
   include Rails.application.routes.url_helpers
+  include Eventing
 
   OWN_DATA = "your own".freeze
   LEGAL_REPRESENTATIVE = "legal representative".freeze
@@ -189,12 +190,30 @@ class PersonalInformationRequest < ApplicationRecord
     update_attribute(:deleted, true) # rubocop:disable Rails/SkipsModelValidations
   end
 
-  def failed(exception)
-    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}")
+  def failed(exception, failure_stage: "processing")
+    update(processed: false, log: "ERROR: #{exception.message}\n#{exception.backtrace[0..5].join("\n")}") # rubocop:disable Rails/SaveBang
+
+    broadcast(
+      Events::RpiUnprocessed.build(
+        personal_information_request_id: id,
+        submission_id:,
+        failure_stage:,
+        error_class: exception.class.name,
+        error_message: exception.message,
+      ),
+    )
   end
 
   def completed
-    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.")
+    update(processed: true, log: "Completed #{Time.current}. Check GovUkNotify for #{targets.join(', ')} emails.") # rubocop:disable Rails/SaveBang
+
+    broadcast(
+      Events::RpiProcessed.build(
+        personal_information_request_id: id,
+        submission_id:,
+        targets: targets.map(&:to_s),
+      ),
+    )
   end
 
 private

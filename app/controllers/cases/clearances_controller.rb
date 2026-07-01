@@ -70,7 +70,7 @@ module Cases
         format.html do
           flash[:notice] = "Case has been de-escalated. #{get_de_escalated_undo_link}".html_safe
           if @case.type_abbreviation == "SAR"
-            redirect_to incoming_cases_path
+            redirect_to incoming_filter_path
           else
             redirect_to case_path(@case)
           end

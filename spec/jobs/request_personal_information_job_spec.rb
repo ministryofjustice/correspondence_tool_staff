@@ -53,12 +53,15 @@ describe RequestPersonalInformationJob, type: :job do
     }
   end
 
+  let(:event_store) { instance_double(RailsEventStore::Client, publish: true) }
+
   before do
     ActiveJob::Base.queue_adapter = :test
     # attachment = instance_double CaseAttachment
     allow(SentryContextProvider).to receive(:set_context)
     # allow(CaseAttachment).to receive(:find).with(123).and_return(attachment)
     # allow(attachment).to receive(:make_preview)
+    allow(Rails.configuration).to receive(:event_store).and_return(event_store)
   end
 
   after do
@@ -99,6 +102,48 @@ describe RequestPersonalInformationJob, type: :job do
 
       described_class.perform_now(request.id, payload)
       expect(request.reload.processed).to eq true
+    end
+
+    it "publishes an RpiProcessed event on success" do
+      request = PersonalInformationRequest.create!(submission_id: submission_id)
+      published_events = []
+      allow(event_store).to receive(:publish) { |event| published_events << event }
+
+      described_class.perform_now(request.id, payload)
+
+      rpi_processed = published_events.find { |e| e.is_a?(Events::RpiProcessed) }
+      expect(rpi_processed).to be_present
+      expect(rpi_processed.data).to include(
+        personal_information_request_id: request.id,
+        submission_id: submission_id,
+      )
+      expect(rpi_processed.data[:targets]).to be_an(Array).and be_present
+    end
+
+    context "when the job fails" do
+      before do
+        allow(ActionNotificationsMailer).to receive(:rpi_email).and_raise(StandardError, "notify error")
+        allow(Sentry).to receive(:capture_exception)
+        allow(Sentry).to receive(:capture_message)
+      end
+
+      it "publishes an RpiUnprocessed event with failure_stage processing" do
+        request = PersonalInformationRequest.create!(submission_id: submission_id)
+        published_events = []
+        allow(event_store).to receive(:publish) { |event| published_events << event }
+
+        described_class.perform_now(request.id, payload)
+
+        rpi_unprocessed = published_events.find { |e| e.is_a?(Events::RpiUnprocessed) }
+        expect(rpi_unprocessed).to be_present
+        expect(rpi_unprocessed.data).to include(
+          personal_information_request_id: request.id,
+          submission_id: submission_id,
+          failure_stage: "processing",
+          error_class: "StandardError",
+          error_message: "notify error",
+        )
+      end
     end
   end
 end

@@ -1,5 +1,7 @@
 module Api
   class RpiController < ApiController
+    include Eventing
+
     before_action :authenticate_request, only: :create
     before_action :set_default_schema, only: :create
 
@@ -7,6 +9,14 @@ module Api
       submission_id = PersonalInformationRequest.submission_id(@body)
       pir = PersonalInformationRequest.create!(submission_id:, fingerprint: { ip_address: request.remote_ip, referrer: request.referer, schema: @body[:schema] })
       pir.build(@body)
+
+      broadcast(
+        Events::RpiReceived.build(
+          personal_information_request_id: pir.id,
+          submission_id:,
+          schema: @body[:schema],
+        ),
+      )
 
       RequestPersonalInformationJob.perform_later(pir.id, @body)
 

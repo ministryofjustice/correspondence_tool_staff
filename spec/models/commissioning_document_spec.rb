@@ -97,7 +97,7 @@ RSpec.describe CommissioningDocument, type: :model do
           commissioning_document = described_class.new(data_request_area:)
           commissioning_document.template_name = template_type
           number = offender_sar_case.number
-          expect(commissioning_document.filename).to eq "Day1_prison_#{number}_Robert-Badson_20221031T0920.docx"
+          expect(commissioning_document.filename).to eq "Day1_prison_#{number}_Robert-Badson_#{data_request_area.id}_20221031T0920.docx"
         end
       end
     end
