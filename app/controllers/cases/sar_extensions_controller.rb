@@ -2,7 +2,7 @@ module Cases
   class SARExtensionsController < ApplicationController
     include SetupCase
 
-    before_action :set_case, only: %i[new create destroy]
+    before_action :set_case, only: %i[new create edit destroy]
 
     def new
       authorize @case, :extend_sar_deadline?
@@ -21,7 +21,7 @@ module Cases
 
       case service.result
       when :ok
-        flash[:notice] = t(".success", case_type: @case.correspondence_type.shortname)
+        flash[:notice] = t(".success")
         redirect_to case_path(@case.id)
       when :validation_error
         @case = CaseExtendSARDeadlineDecorator.decorate @case
@@ -33,18 +33,33 @@ module Cases
       end
     end
 
+    def edit
+      authorize @case, :remove_sar_deadline_extension?
+      @case = CaseRemoveSARDeadlineExtensionDecorator.decorate @case
+    end
+
     def destroy
       authorize @case, :remove_sar_deadline_extension?
 
-      service = CaseRemoveSARDeadlineExtensionService.new(current_user, @case)
+      service = CaseRemoveSARDeadlineExtensionService.new(
+        current_user,
+        @case,
+        reason: params.dig(:case, :reason_for_removing_extension),
+      )
       service.call
 
-      if service.result == :ok
+      case service.result
+      when :ok
         flash[:notice] = t(".success", case_type: @case.correspondence_type.shortname)
+        redirect_to case_path(@case.id)
+      when :validation_error
+        @case = CaseRemoveSARDeadlineExtensionDecorator.decorate @case
+        @case.reason_for_removing_extension = params.dig(:case, :reason_for_removing_extension)
+        render :edit
       else
         flash[:alert] = t(".error", case_type: @case.correspondence_type.shortname)
+        redirect_to case_path(@case.id)
       end
-      redirect_to case_path(@case.id)
     end
   end
 end

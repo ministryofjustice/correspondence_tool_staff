@@ -1,8 +1,35 @@
 module Extendable
   extend ActiveSupport::Concern
 
+  # Standard and Offender SARs may only be extended once, by a single fixed
+  # period (see CorrespondenceType#extension_fixed_period). Other extendable
+  # types (e.g. SAR Internal Review) retain the legacy behaviour of multiple
+  # extensions up to a cumulative limit.
+  def fixed_extension?
+    extension_fixed_period.present?
+  end
+
+  def extension_fixed_period
+    correspondence_type.extension_fixed_period
+  end
+
   def deadline_extendable?
-    months_extended.to_i < extension_time_limit
+    if fixed_extension?
+      !deadline_extended?
+    else
+      months_extended.to_i < extension_time_limit
+    end
+  end
+
+  # The external deadline that would apply if the case were extended now.
+  # Defaults to the fixed extension period; callers (e.g. the extension service)
+  # may pass the submitted period explicitly.
+  def new_extension_deadline(extend_by = extension_fixed_period)
+    if try(:restarted_at).present?
+      deadline_calculator.extension_deadline(extend_by) { external_deadline }
+    else
+      deadline_calculator.extension_deadline((months_extended || 0) + extend_by)
+    end
   end
 
   def initial_deadline

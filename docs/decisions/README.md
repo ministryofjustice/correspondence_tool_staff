@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Date |
 |----|-------|--------|------|
-| — | *(no decisions recorded yet)* | — | — |
+| [001](001-fixed-single-sar-deadline-extension.md) | Fixed single SAR deadline extension | Accepted | 2026-06-17 |
 
 ## Template
 
