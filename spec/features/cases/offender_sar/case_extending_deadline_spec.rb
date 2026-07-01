@@ -30,12 +30,12 @@ feature "when extending an Offender SAR case deadline" do
       end
 
       expected_case_history = [
-        "Extended SAR deadline",
-        "Offender SAR extension ",
-        "Deadline extended by two calendar months\n",
-        "Old final deadline: 7 November 2022 ",
-        "New final deadline: 5 January 2023",
+        "Deadline extended by 2 months",
+        "Previous deadline: 7 November 2022 ",
+        "New deadline: 5 January 2023 ",
+        "Reason: Offender SAR extension",
       ]
+
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
       expect(cases_show_page.case_status.deadlines.final.text).to eq(expected_extension_date)
 

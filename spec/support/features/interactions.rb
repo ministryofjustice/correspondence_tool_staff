@@ -252,7 +252,7 @@ module Features
       rus.upload!
     end
 
-    def extend_sar_deadline_for(kase:, _num_calendar_months:, reason: "The reason for extending")
+    def extend_sar_deadline_for(kase:, num_calendar_months:, reason: "The reason for extending") # rubocop:disable Lint/UnusedMethodArgument
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.extend_sar_deadline.click
 
