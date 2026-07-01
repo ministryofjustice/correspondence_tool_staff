@@ -67,6 +67,39 @@ RSpec.describe Cases::OffenderSARController, type: :controller do
       expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender]
     end
 
+    # CDPTKAN-1079: date_of_birth is a virtual jsonb attribute, so gov_uk_date_fields does not
+    # populate its shadow FormDate on after_initialize. When the wizard session holds partial data
+    # without any date_of_birth, rendering `f.gov_uk_date_field :date_of_birth` used to raise
+    # "undefined method 'dd' for nil". See #build_case_from_session.
+    context "when the session holds partial data without a date_of_birth" do
+      before do
+        session[:offender_sar_state] = { "subject_full_name" => "A. N. Other" }
+      end
+
+      it "builds a case whose date_of_birth field can be rendered without raising" do
+        get :new, params: params.merge(step: "subject-details")
+
+        expect(response).to render_template(:new)
+        expect { assigns(:case).object.date_of_birth_dd }.not_to raise_error
+      end
+    end
+
+    context "when the session holds a partially entered date_of_birth" do
+      before do
+        session[:offender_sar_state] = {
+          "subject_full_name" => "A. N. Other",
+          "date_of_birth_dd" => "1",
+          "date_of_birth_mm" => "2",
+          "date_of_birth_yyyy" => "1990",
+        }
+      end
+
+      it "preserves the entered date_of_birth rather than clobbering it" do
+        get :new, params: params.merge(step: "subject-details")
+        expect(assigns(:case).object.date_of_birth).to eq Date.new(1990, 2, 1)
+      end
+    end
+
     context "when starting a rejected offender sar case" do
       let(:params) do
         {
