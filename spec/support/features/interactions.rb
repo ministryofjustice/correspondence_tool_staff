@@ -252,7 +252,7 @@ module Features
       rus.upload!
     end
 
-    def extend_sar_deadline_for(kase:, num_calendar_months:, reason: "The reason for extending")
+    def extend_sar_deadline_for(kase:, num_calendar_months:, reason: "The reason for extending") # rubocop:disable Lint/UnusedMethodArgument
       cases_show_page.load(id: kase.id)
       cases_show_page.case_status.deadlines.actions.extend_sar_deadline.click
 
@@ -267,15 +267,14 @@ module Features
       kase.reload
 
       expected_case_history = [
-        "Extended SAR deadline",
-        reason.to_s,
-        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}\n",
-        "Old final deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
-        "New final deadline: #{I18n.localize(kase.external_deadline, format: :long)}",
+        "Deadline extended by 2 months",
+        "Previous deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
+        "New deadline: #{I18n.localize(kase.external_deadline, format: :long)} ",
+        "Reason: #{reason}",
       ]
 
       expect(cases_show_page).to be_displayed
-      expect(cases_show_page.notice.text).to eq "Case extended for SAR"
+      expect(cases_show_page.notice.text).to eq "The deadline has been extended by 2 months."
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
     end
 

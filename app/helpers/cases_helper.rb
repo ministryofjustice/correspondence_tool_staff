@@ -206,9 +206,9 @@ module CasesHelper
               class: "govuk-button moj-button-menu__item govuk-button--secondary"
     when :remove_sar_deadline_extension
       link_to I18n.t("common.case.remove_sar_deadline_extension"),
-              case_sar_extensions_path(@case),
+              edit_case_sar_extensions_path(@case),
               id: "action--remove-extended-deadline-for-sar",
-              class: "govuk-button moj-button-menu__item govuk-button--secondary", method: :delete
+              class: "govuk-button moj-button-menu__item govuk-button--secondary"
     when :record_data_request_area
       link_to "Record data request",
               new_case_data_request_area_path(@case),

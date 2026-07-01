@@ -13,7 +13,7 @@ module Features
         cases_extend_sar_deadline_page.submit_button.click
 
         expect(cases_show_page).to be_displayed
-        expect(cases_show_page.notice.text).to eq "Case extended for Offender SAR"
+        expect(cases_show_page.notice.text).to eq "The deadline has been extended by 2 months."
       end
 
       def pause_offender_sar_for(kase:, reason: "Pausing to gather more information", date: Time.zone.today)

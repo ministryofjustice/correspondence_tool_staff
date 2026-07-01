@@ -190,7 +190,7 @@ Rails.application.routes.draw do
     resource :pit_extensions, only: [:destroy]
 
     resources :sar_extensions, only: %i[new create]
-    resource :sar_extensions, only: [:destroy]
+    resource :sar_extensions, only: %i[edit destroy]
 
     resources :stop_the_clocks, only: %i[new create]
     resources :restart_the_clocks, only: %i[new create]
