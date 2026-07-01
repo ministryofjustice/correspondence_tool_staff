@@ -380,10 +380,11 @@ module Cases
     end
 
     # date_of_birth is stored in the session as its date-part keys (date_of_birth_dd/mm/yyyy),
-    # but may also arrive as a whole value. Treat any of them as "present".
+    # but may also arrive as a whole value. Treat any of them as "present". Keys may be strings
+    # (serialised session) or symbols (passed directly in tests), so compare on string form.
     def date_of_birth_present_in?(values)
-      %w[date_of_birth date_of_birth_dd date_of_birth_mm date_of_birth_yyyy]
-        .any? { |key| values.key?(key) }
+      dob_keys = %w[date_of_birth date_of_birth_dd date_of_birth_mm date_of_birth_yyyy]
+      values.keys.any? { |key| dob_keys.include?(key.to_s) }
     end
 
     def rejected_set_current_state(values)
