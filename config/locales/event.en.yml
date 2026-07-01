@@ -22,7 +22,7 @@ en:
     destroy: Destroyed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
-    extend_sar_deadline: Extended SAR deadline
+    extend_sar_deadline: Deadline extended by 2 months
     flag_for_clearance: Clearance level added
     link_a_case: Case linked
     move_to_team_member: Assign responder

@@ -41,10 +41,9 @@ private
 
   def message
     [
-      @reason,
-      "Deadline extended by #{@case.time_period_description(@extension_period.to_i)}\n",
-      "Old final deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
-      "New final deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+      "Previous deadline: #{I18n.localize(@case.external_deadline, format: :long)}",
+      "New deadline: #{I18n.localize(@extension_deadline, format: :long)}",
+      "Reason: #{@reason}",
     ].join("\n")
   end
 

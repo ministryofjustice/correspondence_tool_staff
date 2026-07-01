@@ -102,14 +102,14 @@ feature "when extending a SAR case deadline" do
       expect(page).to have_text("New deadline: 4 November 2022")
       cases_remove_sar_deadline_extension_page.set_reason_for_removing_extension("Paused for too long")
       cases_remove_sar_deadline_extension_page.submit_button.click
-      expect(cases_show_page.notice.text).to eq "Deadline extension removed"
+      expect(cases_show_page.notice.text).to eq "The deadline extension has been removed."
       case_deadline_text_to_be("4 Nov 2022")
 
       expected_case_history = [
         "Deadline extension removed",
-        "Paused for too long",
-        " Old final deadline: 4 January 2023 ",
-        "New final deadline: 4 November 2022",
+        "Previous deadline: 4 January 2023 ",
+        "New deadline: 4 November 2022 ",
+        "Reason: Paused for too long",
       ]
       expect(cases_show_page.case_history.rows.first.details.text).to include(expected_case_history.join)
     end
