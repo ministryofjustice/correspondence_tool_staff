@@ -363,12 +363,12 @@ module Cases
     # @todo the following are all related to session data (case) cross different page
     # maybe worthy having another class for handling such thing together in a more abstract way
     def build_case_from_session(correspondence_type)
-      # regarding the `{ date_of_birth: nil }` below...
-      # this is needed to prevent "NoMethodError undefined method 'dd' for nil:NilClass"
-      # when a new Case::SAR::Offender is being created from scratch, because the field is not
-      # in the list of instance variables in the model at the point that the gov_uk_date_fields
-      # is adding its magic methods. This manifests when running tests or after rails server restart
-      values = session[session_state] || { date_of_birth: nil }
+      values = session[session_state] || {}
+
+      # Prevent NoMethodError from gov_uk_date_fields
+      unless date_of_birth_present_in?(values)
+        values["date_of_birth"] = nil
+      end
 
       # similar workaround needed for request dated
       request_dated_exists = values.fetch("request_dated", false)
@@ -377,6 +377,14 @@ module Cases
       rejected_set_current_state(values)
 
       correspondence_type.new(values).decorate
+    end
+
+    # date_of_birth is stored in the session as its date-part keys (date_of_birth_dd/mm/yyyy),
+    # but may also arrive as a whole value. Treat any of them as "present". Keys may be strings
+    # (serialised session) or symbols (passed directly in tests), so compare on string form.
+    def date_of_birth_present_in?(values)
+      dob_keys = %w[date_of_birth date_of_birth_dd date_of_birth_mm date_of_birth_yyyy]
+      values.keys.any? { |key| dob_keys.include?(key.to_s) }
     end
 
     def rejected_set_current_state(values)
