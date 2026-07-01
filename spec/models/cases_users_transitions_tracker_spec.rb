@@ -56,6 +56,19 @@ describe CasesUsersTransitionsTracker do
         end
       end
     end
+
+    context "when called concurrently for the same case and user" do
+      before do
+        create :case_transition_add_message_to_case, case: kase
+      end
+
+      it "does not create duplicate trackers" do
+        described_class.sync_for_case_and_user(kase, user)
+        described_class.sync_for_case_and_user(kase, user)
+
+        expect(kase.users_transitions_trackers.where(user:).count).to eq 1
+      end
+    end
   end
 
   context "when tracker does not exists for given case and user" do
