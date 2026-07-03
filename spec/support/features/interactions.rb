@@ -268,8 +268,8 @@ module Features
 
       expected_case_history = [
         "Deadline extended by 2 months",
-        "Previous deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
-        "New deadline: #{I18n.localize(kase.external_deadline, format: :long)} ",
+        "Old final deadline: #{I18n.localize(old_final_deadline, format: :long)} ",
+        "New final deadline: #{I18n.localize(kase.external_deadline, format: :long)} ",
         "Reason: #{reason}",
       ]
 
