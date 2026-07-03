@@ -121,6 +121,10 @@ jobs:
           
           kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/development/cronjob-bank-holidays.yaml
 
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/development/cronjob-reindex-dirty-cases.yaml
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/reindex-dirty-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
   notify-development:
     needs: [build, deploy-development]
     uses: ./.github/workflows/notification.yml
@@ -192,6 +196,10 @@ jobs:
             jobs="${{ vars.ECR_URL }}:$SHA"
           
           kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/staging/cronjob-bank-holidays.yaml
+
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/staging/cronjob-reindex-dirty-cases.yaml
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/reindex-dirty-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
   notify-staging:
     needs: [build, deploy-staging]
@@ -269,6 +277,10 @@ jobs:
           kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/qa/cronjob-bank-holidays.yaml
 
           kubectl set image -n ${KUBE_NAMESPACE} cronjobs/auto-close-paused-sar-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
+
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/qa/cronjob-reindex-dirty-cases.yaml
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/reindex-dirty-cases \
             jobs="${{ vars.ECR_URL }}:$SHA"
 
   notify-qa:
@@ -352,6 +364,10 @@ jobs:
             jobs="${{ vars.ECR_URL }}:$SHA"
           
           kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/production/cronjob-bank-holidays.yaml
+
+          kubectl -n ${KUBE_NAMESPACE} apply -f config/kubernetes/production/cronjob-reindex-dirty-cases.yaml
+          kubectl set image -n ${KUBE_NAMESPACE} cronjobs/reindex-dirty-cases \
+            jobs="${{ vars.ECR_URL }}:$SHA"
 
   notify-production:
     needs: [build, deploy-production]

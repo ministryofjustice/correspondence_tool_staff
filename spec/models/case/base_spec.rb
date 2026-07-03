@@ -1439,9 +1439,11 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#mark_as_clean" do
-    it "update index and flag is clean afer creation" do
+    it "is cleared by the search index job after creation" do
       kase = create :case
-      expect(kase).not_to be_dirty
+      expect(kase).to be_dirty
+      SearchIndexUpdaterJob.perform_now(kase.id)
+      expect(kase.reload).not_to be_dirty
     end
 
     it "clears the dirty flag" do
@@ -1503,10 +1505,10 @@ RSpec.describe Case::Base, type: :model do
     context "when creating a new record" do
       let(:kase) { build :case }
 
-      it "sets the dirty flag" do
+      it "sets the dirty flag until the index job has run" do
         expect(kase).not_to be_dirty
         kase.save!
-        expect(kase).not_to be_dirty
+        expect(kase.reload).to be_dirty
       end
 
       it "queues the job" do
@@ -1550,6 +1552,21 @@ RSpec.describe Case::Base, type: :model do
               kase.update(name: "John Smith")
             end
           }.to have_enqueued_job(SearchIndexUpdaterJob)
+        end
+
+        it "does not queue the job until the transaction commits" do
+          kase
+          queue_adapter = ActiveJob::Base.queue_adapter
+          queue_adapter.enqueued_jobs.clear
+
+          jobs_queued_mid_transaction = nil
+          ActiveRecord::Base.transaction do
+            kase.update!(name: "John Smith")
+            jobs_queued_mid_transaction = queue_adapter.enqueued_jobs.count { |job| job[:job] == SearchIndexUpdaterJob }
+          end
+
+          expect(jobs_queued_mid_transaction).to eq 0
+          expect(queue_adapter.enqueued_jobs.count { |job| job[:job] == SearchIndexUpdaterJob }).to eq 1
         end
       end
     end

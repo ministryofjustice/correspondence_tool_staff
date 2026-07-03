@@ -431,9 +431,10 @@ class Case::Base < ApplicationRecord
                 :set_deadlines
   before_update :update_deadlines
   before_save :prevent_number_change,
-              :trigger_reindexing
+              :mark_for_reindexing
 
-  after_create :create_init_transition, :trigger_reindexing_after_creation
+  after_create :create_init_transition
+  after_commit :trigger_reindexing, on: %i[create update]
 
   delegate :available_events, to: :state_machine
 
@@ -1086,15 +1087,20 @@ private
     uploader.process_files(uploaded_request_files, :request)
   end
 
-  def trigger_reindexing
-    if (changed & indexable_fields).any? && id.present?
+  # The dirty flag is persisted in the same transaction as the change so that
+  # a case whose SearchIndexUpdaterJob never runs can be found and reindexed
+  # (see the search:reindex_dirty_cases rake task).
+  def mark_for_reindexing
+    if new_record? || (changed & indexable_fields).any?
       self.dirty = true
-      SearchIndexUpdaterJob.perform_later(id)
     end
   end
 
-  def trigger_reindexing_after_creation
-    SearchIndexUpdaterJob.perform_later(id)
+  # Enqueued after commit, not before save: the job reads the case back from
+  # the database, so enqueueing it mid-transaction lets it index the
+  # pre-commit state (e.g. an Offender SAR's old "R" case number).
+  def trigger_reindexing
+    SearchIndexUpdaterJob.perform_later(id) if dirty?
   end
 
   def validate_related_cases
