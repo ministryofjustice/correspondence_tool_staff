@@ -40,7 +40,7 @@ describe CaseRemoveSARDeadlineExtensionService do
           .with(
             acting_user: manager,
             acting_team: team_dacu,
-            message: "Previous deadline:  1 May 2025\nNew deadline:  1 April 2025\nReason: Testing",
+            message: "Old final deadline:  1 May 2025\nNew final deadline:  1 April 2025\nReason: Testing",
           )
       end
 

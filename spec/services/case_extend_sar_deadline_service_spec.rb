@@ -30,7 +30,7 @@ describe CaseExtendSARDeadlineService do
               acting_team: acting_team,
               final_deadline: get_expected_deadline(3.months.since(kase.received_date)),
               original_final_deadline: initial_deadline,
-              message: "Previous deadline: 31 October 2022\nNew deadline: 29 December 2022\nReason: test",
+              message: "Old final deadline: 31 October 2022\nNew final deadline: 29 December 2022\nReason: test",
             )
         end
 

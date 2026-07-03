@@ -31,8 +31,8 @@ feature "when extending an Offender SAR case deadline" do
 
       expected_case_history = [
         "Deadline extended by 2 months",
-        "Previous deadline: 7 November 2022 ",
-        "New deadline: 5 January 2023 ",
+        "Old final deadline: 7 November 2022 ",
+        "New final deadline: 5 January 2023 ",
         "Reason: Offender SAR extension",
       ]
 
