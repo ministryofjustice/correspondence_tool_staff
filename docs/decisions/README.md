@@ -7,7 +7,7 @@
 
 | ID | Title | Status | Date |
 |----|-------|--------|------|
-| — | *(no decisions recorded yet)* | — | — |
+| [001](001-denormalise-location-for-metabase-reporting.md) | Denormalise location onto DataRequestArea and DataRequest for Metabase reporting | Accepted | 2026-07-07 |
 
 ## Template
 
