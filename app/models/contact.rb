@@ -91,11 +91,12 @@ private
   # the contact name; both must be updated here because update_all skips the
   # DataRequestArea callback that would otherwise cascade the change. Runs in
   # the same transaction as the rename so the tables can never disagree.
-  def sync_denormalised_locations
-    areas = DataRequestArea.where(contact_id: id)
-    areas.update_all(location: name)
-    DataRequest.where(data_request_area_id: areas.select(:id)).update_all(location: name)
-  end
+def sync_denormalised_locations
+  now = Time.current
+  areas = DataRequestArea.where(contact_id: id)
+  areas.update_all(location: name, updated_at: now)
+  DataRequest.where(data_request_area_id: areas.select(:id)).update_all(location: name, updated_at: now)
+end
 
   def strip(email_list)
     return if email_list.blank?
