@@ -3,14 +3,16 @@ namespace :data_request_areas do
   task backfill_blank_locations: :environment do
     areas_updated = ActiveRecord::Base.connection.exec_update(<<~SQL)
       UPDATE data_request_areas
-      SET location = contacts.name
+      SET location = contacts.name,
+          updated_at = NOW()
       FROM contacts
       WHERE contacts.id = data_request_areas.contact_id
         AND (data_request_areas.location IS NULL OR data_request_areas.location = '')
     SQL
     requests_updated = ActiveRecord::Base.connection.exec_update(<<~SQL)
       UPDATE data_requests
-      SET location = data_request_areas.location
+      SET location = data_request_areas.location,
+          updated_at = NOW()
       FROM data_request_areas
       WHERE data_request_areas.id = data_requests.data_request_area_id
         AND (data_requests.location IS NULL OR data_requests.location = '')
@@ -25,13 +27,15 @@ namespace :data_request_areas do
   task force_sync_locations: :environment do
     areas_updated = ActiveRecord::Base.connection.exec_update(<<~SQL)
       UPDATE data_request_areas
-      SET location = contacts.name
+      SET location = contacts.name,
+          updated_at = NOW()
       FROM contacts
       WHERE contacts.id = data_request_areas.contact_id
     SQL
     requests_updated = ActiveRecord::Base.connection.exec_update(<<~SQL)
       UPDATE data_requests
-      SET location = data_request_areas.location
+      SET location = data_request_areas.location,
+          updated_at = NOW()
       FROM data_request_areas
       WHERE data_request_areas.id = data_requests.data_request_area_id
         AND data_request_areas.location IS NOT NULL
