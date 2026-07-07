@@ -18,7 +18,7 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def location
-    data_request_area&.location.presence || data_request_area&.contact&.name
+    super.presence || data_request_area&.location.presence || data_request_area&.contact&.name
   end
 
   def data_required

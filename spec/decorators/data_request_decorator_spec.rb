@@ -58,6 +58,31 @@ describe DataRequestDecorator, type: :model do
         expect(decorated.location).to eq "Test Organisation"
       end
     end
+
+    context "with a denormalised location" do
+      it "reads the data request's own cached column without traversing associations" do
+        data_request.update_column(:location, "Cached value")
+        expect(decorated.location).to eq "Cached value"
+      end
+    end
+
+    context "with a blank cached location (pre-backfill record)" do
+      before do
+        data_request.update_column(:location, nil)
+      end
+
+      it "falls back to the data request area location" do
+        expect(decorated.location).to eq "Original Location"
+      end
+
+      it "falls back to the contact name when the area location is also blank" do
+        data_request_area.update!(contact: create(:contact, name: "Test Organisation"))
+        data_request_area.update_column(:location, nil)
+        data_request.update_column(:location, nil)
+
+        expect(decorated.location).to eq "Test Organisation"
+      end
+    end
   end
 
   describe "#data_required" do
