@@ -38,6 +38,7 @@ class DataRequest < ApplicationRecord
   validate :validate_cached_date_received
 
   before_validation :clean_attributes
+  before_validation :set_location_from_data_request_area
 
   scope :completed, -> { where(completed: true) }
   scope :in_progress, -> { where(completed: false) }
@@ -179,5 +180,13 @@ private
 
   def clean_attributes
     self.request_type_note = request_type_note&.strip&.upcase_first
+  end
+
+  # location is denormalised from the data request area so it can be read
+  # (e.g. by Metabase) without joining data_request_areas or contacts;
+  # DataRequestArea#sync_data_request_locations and
+  # Contact#sync_denormalised_locations keep it up to date
+  def set_location_from_data_request_area
+    self.location = data_request_area.location if data_request_area&.location.present?
   end
 end

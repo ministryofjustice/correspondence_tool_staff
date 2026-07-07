@@ -12,7 +12,7 @@ describe DataRequestUpdateService do
     )
   end
   let(:offender_sar_case) { create :offender_sar_case }
-  let(:data_request_area) { create :data_request_area, location: "HMP Brixton" }
+  let(:data_request_area) { create :data_request_area, contact: nil, location: "HMP Brixton" }
   let(:params) do
     {
       request_type: "all_prison_records",

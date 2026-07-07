@@ -23,6 +23,24 @@ describe DataRequestAreaDecorator, type: :model do
       it "returns the contacts name" do
         expect(decorated.location).to eq "Test Contact"
       end
+
+      it "prefers the denormalised location over the live contact name" do
+        contact.update_column(:name, "Renamed Without Sync")
+        expect(data_request_area.reload.decorate.location).to eq "Test Contact"
+      end
+    end
+
+    context "with a linked contact but a blank location (pre-backfill record)" do
+      let(:contact) { create(:contact, name: "Test Contact") }
+
+      before do
+        data_request_area.update!(contact:)
+        data_request_area.update_column(:location, nil)
+      end
+
+      it "falls back to the contact name" do
+        expect(decorated.location).to eq "Test Contact"
+      end
     end
   end
 

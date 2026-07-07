@@ -21,6 +21,7 @@ class Contact < ApplicationRecord
   include EmailValidatable
 
   before_validation :cleanse_emails
+  after_update :sync_denormalised_locations, if: :saved_change_to_name?
 
   validates :name, presence: true
   validates :address_line_1, presence: true
@@ -84,6 +85,16 @@ private
   def cleanse_emails
     self.data_request_emails = strip(data_request_emails)
     self.escalation_emails = strip(escalation_emails)
+  end
+
+  # DataRequestArea#location and DataRequest#location are denormalised from
+  # the contact name; both must be updated here because update_all skips the
+  # DataRequestArea callback that would otherwise cascade the change. Runs in
+  # the same transaction as the rename so the tables can never disagree.
+  def sync_denormalised_locations
+    areas = DataRequestArea.where(contact_id: id)
+    areas.update_all(location: name)
+    DataRequest.where(data_request_area_id: areas.select(:id)).update_all(location: name)
   end
 
   def strip(email_list)
