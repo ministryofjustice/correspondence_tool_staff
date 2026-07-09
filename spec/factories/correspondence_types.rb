@@ -29,8 +29,7 @@ FactoryBot.define do
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
     external_time_limit { 1 }
-    extension_time_limit { 2 }
-    extension_time_default { 1 }
+    extension_fixed_period { 2 }
     deadline_calculator_class { "CalendarMonths" }
     report_category_name { "SAR report" }
 
@@ -58,7 +57,7 @@ FactoryBot.define do
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
     external_time_limit { 1 }
-    extension_time_limit { 2 }
+    extension_fixed_period { 2 }
     deadline_calculator_class { "CalendarMonths" }
     report_category_name { "Offender SAR report" }
 

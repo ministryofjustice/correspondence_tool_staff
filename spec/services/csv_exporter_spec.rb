@@ -200,6 +200,7 @@ describe CSVExporter do
             CaseRemoveSARDeadlineExtensionService.new(
               k.transitions.last.acting_user,
               k,
+              reason: "Extension no longer required",
             ).call
           end
         end

@@ -25,17 +25,13 @@ class CasesUsersTransitionsTracker < ApplicationRecord
   class << self
     def sync_for_case_and_user(kase, user)
       latest_transition = kase.message_transitions.last
-      if latest_transition.present?
-        tracker = find_by(case: kase, user:)
-        if tracker
-          # Pretty sure this can't fail, but its a good pattern to use ! methods
-          tracker.update! case_transition_id: latest_transition.id
-        else
-          create! case: kase,
-                  user:,
-                  case_transition_id: latest_transition.id
-        end
-      end
+      return if latest_transition.blank?
+
+      upsert(
+        { case_id: kase.id, user_id: user.id, case_transition_id: latest_transition.id },
+        unique_by: %i[case_id user_id],
+        update_only: %i[case_transition_id],
+      )
     end
   end
 

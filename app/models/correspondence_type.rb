@@ -27,6 +27,7 @@ class CorrespondenceType < ApplicationRecord
                  report_category_name: [:string, { default: "" }],
                  extension_time_limit: :integer,
                  extension_time_default: :integer,
+                 extension_fixed_period: :integer,
                  show_on_menu: [:boolean, { default: true }],
                  display_order: [:integer, { default: nil }]
 

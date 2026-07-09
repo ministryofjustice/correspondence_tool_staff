@@ -66,7 +66,7 @@ describe Cases::SARExtensionsController, type: :controller do
       end
 
       it "notifies the user of the success" do
-        expect(request.flash[:notice]).to eq "Case extended for SAR"
+        expect(request.flash[:notice]).to eq "The deadline has been extended by 2 months."
       end
     end
 
@@ -104,17 +104,91 @@ describe Cases::SARExtensionsController, type: :controller do
     end
   end
 
-  describe "#destroy" do
+  describe "#edit" do
     it "authorizes" do
       expect {
-        delete :destroy,
-               params: {
-                 case_id: extended_sar_case.id,
-               }
-      }.to require_permission(:remove_sar_deadline_extension?).with_args(
-        manager,
-        extended_sar_case,
-      )
+        get :edit, params: {
+          case_id: extended_sar_case.id,
+        }
+      }.to require_permission(:remove_sar_deadline_extension?).with_args(manager, extended_sar_case)
+      expect(assigns(:case)).to be_a CaseRemoveSARDeadlineExtensionDecorator
+    end
+  end
+
+  describe "#destroy" do
+    let(:remove_service) do
+      instance_double(CaseRemoveSARDeadlineExtensionService, call: :ok, result: :ok)
+    end
+
+    let(:delete_params) do
+      {
+        case_id: extended_sar_case.id,
+        case: {
+          reason_for_removing_extension: "no longer needed",
+        },
+      }
+    end
+
+    before do
+      allow(CaseRemoveSARDeadlineExtensionService).to receive(:new).and_return(remove_service)
+    end
+
+    it "authorizes" do
+      expect { delete :destroy, params: delete_params }
+        .to require_permission(:remove_sar_deadline_extension?).with_args(manager, extended_sar_case)
+    end
+
+    context "with valid params" do
+      before do
+        delete :destroy, params: delete_params
+      end
+
+      it "calls the CaseRemoveSARDeadlineExtensionService" do
+        expect(CaseRemoveSARDeadlineExtensionService).to(
+          have_received(:new).with(
+            manager,
+            extended_sar_case,
+            reason: "no longer needed",
+          ),
+        )
+
+        expect(remove_service).to have_received(:call)
+      end
+
+      it "notifies the user of the success" do
+        expect(request.flash[:notice]).to eq "The deadline extension has been removed."
+      end
+    end
+
+    context "with invalid params" do
+      let(:remove_service) do
+        instance_double(
+          CaseRemoveSARDeadlineExtensionService,
+          call: :validation_error,
+          result: :validation_error,
+        )
+      end
+
+      it "renders the edit page" do
+        delete :destroy, params: delete_params
+        expect(request).to have_rendered(:edit)
+      end
+    end
+
+    context "when failed request" do
+      let(:remove_service) do
+        instance_double(
+          CaseRemoveSARDeadlineExtensionService,
+          call: :error,
+          result: :error,
+        )
+      end
+
+      it "notifies the user of the failure" do
+        delete :destroy, params: delete_params
+        expect(request.flash[:alert]).to eq "Unable to remove SAR deadline extension"
+        expect(request).to redirect_to(case_path(extended_sar_case.id))
+      end
     end
   end
 end

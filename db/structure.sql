@@ -2237,6 +2237,13 @@ CREATE INDEX index_contacts_on_contact_type_id ON public.contacts USING btree (c
 
 
 --
+-- Name: index_cutt_on_case_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_cutt_on_case_id_and_user_id ON public.cases_users_transitions_trackers USING btree (case_id, user_id);
+
+
+--
 -- Name: index_data_request_areas_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2624,6 +2631,7 @@ ALTER TABLE ONLY public.data_request_areas
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260630090000'),
 ('20260617003452'),
 ('20260610120000'),
 ('20260327090000'),
@@ -2814,3 +2822,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20160802134012'),
 ('20160802130203'),
 ('20160722121207');
+
