@@ -1,0 +1,43 @@
+- content_for :page_title do
+  = t('page_title.remove_sar_deadline_extension', case_type: @case.correspondence_type.shortname, case_number: @case.number)
+
+- content_for :heading
+  = t('common.case.remove_sar_deadline_extension')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+p
+    = t('.summary')
+
+= form_for @case, as: :case, url: case_sar_extensions_path(@case), method: :delete do |f|
+
+  div.govuk-inset-text
+    p
+      = t('.current_deadline_html', date: l(@case.external_deadline, format: :long))
+    p
+      = t('.new_deadline_html', date: l(@case.reverted_deadline, format: :long))
+
+  - if @case.removal_makes_case_late?
+    .govuk-warning-text
+      .govuk-warning-text__icon aria-hidden="true" !
+      strong.govuk-warning-text__text.govuk-body-l
+        .govuk-visually-hidden Warning
+        = t('.late_notice')
+
+  .form-group
+    = f.text_area :reason_for_removing_extension
+
+  .button-holder
+    = submit_tag 'Remove extension', class: 'button'
+    = link_to('Cancel',
+        case_path(@case),
+        class: 'acts-like-button button-left-spacing')
