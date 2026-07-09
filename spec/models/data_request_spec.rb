@@ -442,4 +442,29 @@ RSpec.describe DataRequest, type: :model do
       it { expect(data_request.request_dates_absent?).to eq false }
     end
   end
+
+  describe "#location" do
+    let(:contact) { create(:contact, name: "HMP Leeds") }
+    let(:data_request_area) { create(:data_request_area, contact:) }
+
+    it "is denormalised from the data request area on create" do
+      data_request = create(:data_request, data_request_area:)
+      expect(data_request.location).to eq "HMP Leeds"
+    end
+
+    it "overwrites a stale value from the data request area on save" do
+      data_request = create(:data_request, data_request_area:)
+      data_request.update_column(:location, "Out of date")
+
+      data_request.save!
+      expect(data_request.reload.location).to eq "HMP Leeds"
+    end
+
+    it "is updated when the data request area location changes" do
+      data_request = create(:data_request, data_request_area:)
+      data_request_area.update!(contact: create(:contact, name: "HMP York"))
+
+      expect(data_request.reload.location).to eq "HMP York"
+    end
+  end
 end

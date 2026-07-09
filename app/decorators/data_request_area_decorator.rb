@@ -18,7 +18,7 @@ class DataRequestAreaDecorator < Draper::Decorator
   end
 
   def location
-    contact&.name || super
+    super.presence || contact&.name
   end
 
   def request_document

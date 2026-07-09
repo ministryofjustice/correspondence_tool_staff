@@ -192,4 +192,42 @@ RSpec.describe Contact, type: :model do
       expect(contact).not_to be_prison
     end
   end
+
+  describe "syncing denormalised data request area locations" do
+    let(:named_contact) { create(:contact, name: "HMP Original") }
+    let!(:data_request_area) { create(:data_request_area, contact: named_contact) }
+
+    it "updates the location of associated data request areas when renamed" do
+      named_contact.update!(name: "HMP Renamed")
+      expect(data_request_area.reload.location).to eq "HMP Renamed"
+    end
+
+    it "updates the location of data requests under the associated areas when renamed" do
+      data_request = create(:data_request, data_request_area:)
+
+      named_contact.update!(name: "HMP Renamed")
+      expect(data_request.reload.location).to eq "HMP Renamed"
+    end
+
+    it "does not update data requests under other contacts' areas" do
+      other_request = create(:data_request, data_request_area: create(:data_request_area, contact: create(:contact, name: "HMP Other")))
+
+      named_contact.update!(name: "HMP Renamed")
+      expect(other_request.reload.location).to eq "HMP Other"
+    end
+
+    it "does not update data request areas belonging to other contacts" do
+      other_area = create(:data_request_area, contact: create(:contact, name: "HMP Other"))
+
+      named_contact.update!(name: "HMP Renamed")
+      expect(other_area.reload.location).to eq "HMP Other"
+    end
+
+    it "does not update locations when other attributes change" do
+      data_request_area.update_column(:location, "Untouched")
+
+      named_contact.update!(postcode: "AB1 2CD")
+      expect(data_request_area.reload.location).to eq "Untouched"
+    end
+  end
 end

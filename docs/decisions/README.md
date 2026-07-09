@@ -8,6 +8,7 @@
 | ID | Title | Status | Date |
 |----|-------|--------|------|
 | [001](001-fixed-single-sar-deadline-extension.md) | Fixed single SAR deadline extension | Accepted | 2026-06-17 |
+| [002](001-denormalise-location-for-metabase-reporting.md) | Denormalise location onto DataRequestArea and DataRequest for Metabase reporting | Accepted | 2026-07-07 |
 
 ## Template
 

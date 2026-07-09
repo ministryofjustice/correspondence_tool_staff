@@ -63,7 +63,7 @@ RSpec.describe DataRequestArea, type: :model do
 
     it "requires contact when there is no location" do
       data_request_area.location = nil
-      data_request_area.contact_id = nil
+      data_request_area.contact = nil
       expect(data_request_area.valid?).to be false
     end
 
@@ -120,6 +120,42 @@ RSpec.describe DataRequestArea, type: :model do
         data_request_area = build_stubbed(:data_request_area, contact: nil, location: nil)
         expect(data_request_area).not_to be_valid
         expect(data_request_area.errors[:location]).to eq ["cannot be blank"]
+      end
+    end
+
+    context "when denormalised from the contact" do
+      let(:contact) { create(:contact, name: "HMP Leeds") }
+
+      it "is set from the contact name on create" do
+        data_request_area = create(:data_request_area, contact:, location: nil)
+        expect(data_request_area.location).to eq "HMP Leeds"
+      end
+
+      it "overwrites a stale value with the contact name on save" do
+        data_request_area = create(:data_request_area, contact:)
+        data_request_area.update_column(:location, "Out of date")
+
+        data_request_area.save!
+        expect(data_request_area.reload.location).to eq "HMP Leeds"
+      end
+
+      it "is updated when the contact is changed" do
+        data_request_area = create(:data_request_area, contact:)
+        data_request_area.update!(contact: create(:contact, name: "HMP York"))
+
+        expect(data_request_area.location).to eq "HMP York"
+      end
+
+      it "is retained when the contact is removed" do
+        data_request_area = create(:data_request_area, contact:)
+        data_request_area.update!(contact: nil)
+
+        expect(data_request_area.reload.location).to eq "HMP Leeds"
+      end
+
+      it "keeps a free-text location when there is no contact" do
+        data_request_area = create(:data_request_area, contact: nil, location: "somewhere")
+        expect(data_request_area.location).to eq "Somewhere"
       end
     end
   end
