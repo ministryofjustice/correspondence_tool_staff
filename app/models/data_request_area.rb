@@ -19,8 +19,7 @@ class DataRequestArea < ApplicationRecord
   has_one :commissioning_document, dependent: :destroy
   has_many :data_request_emails
 
-  validate :validate_location
-
+  validates :location, presence: true
   validates :data_request_area_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
@@ -28,6 +27,8 @@ class DataRequestArea < ApplicationRecord
   attribute :data_request_default_area, default: ""
 
   before_validation :clean_attributes
+  before_validation :set_location_from_contact
+  after_update :sync_data_request_locations, if: :saved_change_to_location?
   after_create do
     template_name = data_request_area_type == "mappa" ? "mappa" : "standard"
     create_commissioning_document(template_name:)
@@ -114,18 +115,20 @@ private
     contact&.data_request_emails&.split(" ") || []
   end
 
-  def validate_location
-    if contact_id.present?
-      nil
-    elsif location.blank?
-      errors.add(
-        :location,
-        :blank,
-      )
-    end
-  end
-
   def clean_attributes
     self.location = location&.strip&.upcase_first
+  end
+
+  # location is denormalised from the contact so it can be read (e.g. by
+  # Metabase) without joining contacts; Contact#sync_denormalised_locations
+  # keeps it up to date when a contact is renamed
+  def set_location_from_contact
+    self.location = contact.name if contact
+  end
+
+  # push the denormalised location down to data_requests in the same
+  # transaction so the two tables can never disagree
+  def sync_data_request_locations
+    data_requests.update_all(location:)
   end
 end

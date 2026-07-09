@@ -7,7 +7,7 @@
 
 | Ticket | Description | Status | Last Updated | Branch |
 |--------|-------------|--------|--------------|--------|
-| — | *(none)* | — | — | — |
+| CDPTKAN-1083 | SAR deadline extension UI overhaul (also covers CDPTKAN-1081 extend work): (1) single fixed 2-month extension for Standard + Offender SAR, Internal Review unchanged — see [ADR 001](../decisions/001-fixed-single-sar-deadline-extension.md); (2) extend interstitial — fixed copy, bold current/new deadlines, relabelled reason field; (3) new "Remove deadline extension" interstitial — confirm page with current/reverted deadlines + required reason. | Implemented, specs pass; awaiting PR | 2026-06-19 | cdptkan-1083-alter-remove-sar-deadline-ui |
 
 ## How to Use
 
