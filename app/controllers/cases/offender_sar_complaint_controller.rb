@@ -103,7 +103,7 @@ module Cases
     end
 
     def back_link_url
-      if has_optional_flags? && @case.current_step == "confirm-offender-sar"
+      if has_optional_flags? && @case.current_step == "confirm-offender-sar" && @case.original_case
         case_path @case.original_case.id
       else
         super

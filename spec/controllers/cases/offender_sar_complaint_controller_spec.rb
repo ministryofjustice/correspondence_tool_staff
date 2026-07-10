@@ -65,6 +65,20 @@ RSpec.describe Cases::OffenderSARComplaintController, type: :controller do
       expect(response).to render_template(:new)
       expect(assigns(:case_types)).to match_array %w[Case::SAR::OffenderComplaint]
     end
+
+    context "when navigating directly to confirm-offender-sar without an original case in session" do
+      let(:params) do
+        {
+          step: "confirm-offender-sar",
+          flag_for_creation_from_sar_page: "true",
+        }
+      end
+
+      it "does not raise a NoMethodError and renders the new template" do
+        expect { get(:new, params:) }.not_to raise_error
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "#create" do
