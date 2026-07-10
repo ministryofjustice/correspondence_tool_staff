@@ -41,7 +41,7 @@ $ cd correspondence_tool_staff
 > [!TIP]
 > To prevent issues with the local environment, we recommend using docker compose to run the app locally. This will ensure that the app runs in an environment similar to production.
 >
-> To run the app using docker compose, you will need to have Docker installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
+> To run the app using docker compose, you will need to have Docker and `docker-sync` installed on your machine. You can follow the instructions on the [Docker website](https://docs.docker.com/get-docker/) to install Docker.
 
 Use the following command to start the app:
 
@@ -58,15 +58,14 @@ You can access PGAdmin4 at http://localhost:5050 with:
 > **Viewing DB data**
 >
 > Additional setup is required to connect PGAdmin4 to the Postgres database running in the Docker container.
-> You will need to create a new server in PGAdmin4 with the following steps:
-> 1. Click on "Tools" in the top menu and select "Import/Export Servers".
-> 2. Select the "Import" tab.
-> 3. Click on the directory button alongside the Filename field.
-> 4. Click `server.json` in the file browser and click "Select".
-> 5. Click "Next" to proceed.
-> 6. Check the "Servers" checkbox and click "Next".
-> 7. Click "Finish" to complete the import process.
-> 8. When promoted, enter the password `postgres` to connect to the Postgres database.
+> There is no checked-in PGAdmin server export file in this repository, so create the connection manually with the following settings:
+> 1. In PGAdmin4, right-click "Servers" and choose "Register" then "Server...".
+> 2. On the "General" tab, enter any name, for example `cts_postgres`.
+> 3. On the "Connection" tab, set Host name/address to `db`.
+> 4. Set Port to `5432`.
+> 5. Set Maintenance database to `postgres`.
+> 6. Set Username to `postgres`.
+> 7. Set Password to `postgres` and save the server.
 
 ### Manual setup - using rbenv and Homebrew
 
@@ -324,7 +323,7 @@ To create a data migration you need to run:
 and this will create a `migration_name.rb` file in `db/data_migrations` folder with the following content:
 
 ```
-class MigrationName < DataMigration
+class MigrationName < ActiveRecord::DataMigration
   def up
     # put your code here
   end
