@@ -52,7 +52,7 @@ All software and dependencies will be installed automatically, and the app will 
 
 You can access PGAdmin4 at http://localhost:5050 with:
 - Username `cts@pgadmin.com`
-- Password `let-me-in`.
+- Password `postgres`.
 
 > [!IMPORTANT]
 > **Viewing DB data**
