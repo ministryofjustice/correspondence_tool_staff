@@ -7,6 +7,7 @@ class SearchIndexUpdaterJob < ApplicationJob
     if kase
       kase.update_index
       kase.mark_as_clean if kase.dirty? && !kase.readonly?
+      Rails.logger.info("Search index updated for case #{kase.id}")
     end
   end
 end
