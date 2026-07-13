@@ -5,6 +5,5 @@ namespace :search do
     case_ids.each do |case_id|
       SearchIndexUpdaterJob.perform_later(case_id)
     end
-    puts "Enqueued search reindexing for #{case_ids.size} dirty case(s)"
   end
 end

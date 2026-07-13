@@ -4,9 +4,10 @@ class SearchIndexUpdaterJob < ApplicationJob
   def perform(case_id)
     SentryContextProvider.set_context
     kase = Case::Base.find(case_id)
-    if kase
+
+    if kase && kase.editable?
       kase.update_index
-      kase.mark_as_clean if kase.dirty? && !kase.readonly?
+      kase.mark_as_clean if kase.dirty?
     end
   end
 end
