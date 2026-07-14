@@ -30,7 +30,7 @@ module Searchable
       )
       total_reindexed = 0
 
-      Case::Base.in_batches(of: 1000).map do |batch|
+      in_batches(of: 1000) do |batch|
         vectors = batch.map { |kase| [kase.id, kase.tsvector] }
 
         update_sql = <<~EOSQL
@@ -38,7 +38,7 @@ module Searchable
             document_tsvector = c.document_tsvector,
             last_indexed_at = NOW()
           FROM (VALUES
-            #{vectors.map { |id, vector| "(#{id}, #{vector})" }.join(",\n").chomp(',')}
+            #{vectors.map { |id, vector| "(#{id}, #{vector})" }.join(",\n")}
           ) AS c(id, document_tsvector)
           WHERE c.id = t.id;
         EOSQL
