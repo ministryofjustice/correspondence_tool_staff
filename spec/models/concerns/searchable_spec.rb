@@ -1,4 +1,5 @@
 require "rails_helper"
+require "ruby_event_store/rspec"
 
 # rubocop:disable RSpec/InstanceVariable
 RSpec.describe Searchable do
@@ -64,7 +65,8 @@ RSpec.describe Searchable do
     it "updates all cases" do
       @searchable.class.update_all_indexes
 
-      expect(@searchable.class.all).to all have_received :update_index
+      expect(Rails.configuration.event_store).to have_published(an_event(Events::ReindexStarted)).in_stream("ReindexCases")
+      expect(Rails.configuration.event_store).to have_published(an_event(Events::ReindexCompleted)).in_stream("ReindexCases")
     end
   end
 
@@ -81,9 +83,10 @@ RSpec.describe Searchable do
 
       update_sql = <<~EOSQL
         UPDATE searchable
-               SET document_tsvector=setweight(to_tsvector('english', 'foobar'), 'A') || setweight(to_tsvector('english', 'barfoo'), 'B')
-               WHERE id=1;
+        SET document_tsvector=setweight(to_tsvector('english', 'foobar'), 'A') || setweight(to_tsvector('english', 'barfoo'), 'B'), last_indexed_at = NOW()
+        WHERE id=1;
       EOSQL
+
       expect(connection).to have_received(:execute).with(update_sql)
     end
   end

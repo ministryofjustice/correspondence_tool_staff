@@ -6,4 +6,9 @@ namespace :search do
       SearchIndexUpdaterJob.perform_later(case_id)
     end
   end
+
+  desc "Re-index all cases"
+  task reindex_all_cases: :environment do
+    Case::Base.update_all_indexes
+  end
 end

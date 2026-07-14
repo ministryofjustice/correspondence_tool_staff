@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: reindex-dirty-cases
+  name: reindex-all-cases
   namespace: track-a-query-production
 spec:
-  schedule: "60 * * * *"
+  schedule: "0 2 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -20,7 +20,7 @@ spec:
             command:
               - sh
               - "-c"
-              - "bundle exec rake 'search:reindex_dirty_cases'"
+              - "bundle exec rake 'search:reindex_all_cases'"
             env:
               - name: DATABASE_URL
                 valueFrom:
