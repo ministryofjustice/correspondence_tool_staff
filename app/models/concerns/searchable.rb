@@ -2,7 +2,6 @@ module Searchable
   extend ActiveSupport::Concern
 
   include SearchHelper
-  include Eventing
 
   included do
     include PgSearch::Model
