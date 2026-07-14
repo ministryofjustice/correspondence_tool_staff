@@ -378,6 +378,29 @@
       "note": "False positive - see commit message"
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "e862a138d501fa181a10f135a4fdc22753d56c9d2bf0a968fae33a39aa4a2f58",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/searchable.rb",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "connection.execute(\"UPDATE #{table_name} AS t SET\\n  document_tsvector = c.document_tsvector,\\n  last_indexed_at = NOW()\\nFROM (VALUES\\n  #{batch.map do\n [kase.id, kase.tsvector]\n end.map do\n \"(#{id}, #{vector})\"\n end.join(\",\\n\").chomp(\",\")}\\n) AS c(id, document_tsvector)\\nWHERE c.id = t.id;\\n\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Searchable",
+        "method": "update_all_indexes"
+      },
+      "user_input": "batch.map do\n [kase.id, kase.tsvector]\n end.map do\n \"(#{id}, #{vector})\"\n end.join(\",\\n\")",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Remote Code Execution",
       "warning_code": 24,
       "fingerprint": "ebef895897b45d36e3ba01ffb7087e30bf21387b71814d99b5fc937f357a4a61",
@@ -424,5 +447,5 @@
       "note": ""
     }
   ],
-  "brakeman_version": "8.0.4"
+  "brakeman_version": "8.0.5"
 }
