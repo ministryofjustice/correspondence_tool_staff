@@ -124,6 +124,22 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
+    context "when a user who is both a manager and a member of the responding team" do
+      let(:manager_responder) do
+        create :user,
+               managing_teams: [kase.managing_team],
+               responding_teams: [kase.responding_team]
+      end
+
+      before { sign_in manager_responder }
+
+      it "deletes the attachment acting as the responding team" do
+        delete :destroy, params: { case_id: kase.id, id: attachment.id }
+        expect(kase.reload.attachments).not_to include(attachment)
+        expect(kase.transitions.last.acting_team).to eq kase.responding_team
+      end
+    end
+
     context "when a responder who has marked the case as responded" do
       let(:kase) { create(:responded_case) }
 

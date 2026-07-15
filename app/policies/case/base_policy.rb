@@ -228,7 +228,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_remove_attachment?
     clear_failed_checks
-    check_can_trigger_event(:remove_response)
+    check_can_trigger_event_from_users_team(:remove_response)
   end
 
   def can_upload_request_attachment?
@@ -560,6 +560,14 @@ private
       event_name:,
       metadata: { acting_user: user },
     )
+  end
+
+  # Unlike :can_trigger_event, which passes if any of the user's roles across
+  # all their teams permits the event, this only passes if one of the teams
+  # the user would actually act for on this case can trigger it - mirroring
+  # how the acting team is chosen when the event is fired.
+  check :can_trigger_event_from_users_team do |event_name|
+    user.case_team_for_event(self.case, event_name).present?
   end
 end
 # rubocop:enable Metrics/ClassLength

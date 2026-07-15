@@ -32,7 +32,8 @@ module CaseStates
 
   def remove_response(current_user, attachment, acting_team: nil)
     attachment.destroy!
-    acting_team ||= current_user.case_team(self)
+    acting_team ||= current_user.case_team_for_event(self, :remove_response) || current_user.case_team(self)
+
     state_machine.remove_response! acting_user: current_user,
                                    acting_team:,
                                    filenames: attachment.filename,
