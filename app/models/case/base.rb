@@ -30,7 +30,7 @@
 #  user_id                  :integer          default(-100), not null
 #  reason_for_lateness_id   :bigint
 #  reason_for_lateness_note :string
-#
+#  last_indexed_at          :datetime
 
 class Case::Base < ApplicationRecord
   TRIGGER_WORKFLOWS = %w[trigger full_approval].freeze

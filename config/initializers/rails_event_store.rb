@@ -9,6 +9,8 @@ require_relative "../../app/pub_sub/events/email_sent"
 require_relative "../../app/pub_sub/events/rpi_received"
 require_relative "../../app/pub_sub/events/rpi_processed"
 require_relative "../../app/pub_sub/events/rpi_unprocessed"
+require_relative "../../app/pub_sub/events/reindex_started"
+require_relative "../../app/pub_sub/events/reindex_completed"
 
 Rails.configuration.to_prepare do
   Rails.configuration.event_store = RailsEventStore::JSONClient.new

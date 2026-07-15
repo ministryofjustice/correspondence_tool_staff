@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: reindex-dirty-cases
-  namespace: track-a-query-staging
+  name: reindex-all-cases
+  namespace: track-a-query-development
 spec:
-  schedule: "0 * * * *"
+  schedule: "0 2 * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -15,12 +15,12 @@ spec:
           serviceAccountName: track-a-query
           containers:
           - name: jobs
-            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:staging.latest
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:development.latest
             imagePullPolicy: IfNotPresent
             command:
               - sh
               - "-c"
-              - "bundle exec rake 'search:reindex_dirty_cases'"
+              - "bundle exec rake 'search:reindex_all_cases'"
             env:
               - name: DATABASE_URL
                 valueFrom:
