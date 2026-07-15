@@ -309,6 +309,18 @@ describe Case::BasePolicy do
     it { is_expected.not_to permit(responder,              new_case) }
     it { is_expected.not_to permit(disclosure_specialist,  assigned_trigger_case) }
     it { is_expected.to     permit(manager,                new_case) }
+
+    context "when the case is in a state that permits the destroy_case event" do
+      let(:sar_being_drafted) { create :sar_being_drafted }
+
+      it { is_expected.to permit(manager, sar_being_drafted) }
+    end
+
+    context "when the case is in a state that does not permit the destroy_case event" do
+      let(:stopped_sar_case) { create :accepted_sar, :stopped }
+
+      it { is_expected.not_to permit(manager, stopped_sar_case) }
+    end
   end
 
   permissions :can_assign_case? do

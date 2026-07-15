@@ -94,7 +94,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def destroy?
     clear_failed_checks
-    user.manager?
+    user.manager? && check_can_trigger_event(:destroy_case)
   end
 
   def destroy_case?

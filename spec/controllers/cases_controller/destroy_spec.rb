@@ -58,5 +58,21 @@ describe CasesController, type: :controller do # rubocop:disable Rails/FilePath
         expect(kase.deleted?).to be true
       end
     end
+
+    context "when the case is in a state that does not permit deletion" do
+      let(:kase) { create :accepted_sar, :stopped }
+
+      it "does not mark the case as deleted" do
+        delete(:destroy, params:)
+        kase.reload
+        expect(kase.deleted?).to be false
+      end
+
+      it "redirects with an unauthorised message" do
+        delete(:destroy, params:)
+        expect(flash[:alert]).to eq "You are not authorised to delete this case."
+        expect(response).to redirect_to root_path
+      end
+    end
   end
 end
