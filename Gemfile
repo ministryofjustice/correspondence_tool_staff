@@ -86,6 +86,7 @@ group :test do
   gem "capybara-lockstep"
   gem "i18n-tasks"
   gem "rails-controller-testing", require: false
+  gem "ruby_event_store-rspec", require: false
   gem "shoulda-matchers", "~> 8.0"
   gem "simplecov"
   gem "simplecov-json", require: false
