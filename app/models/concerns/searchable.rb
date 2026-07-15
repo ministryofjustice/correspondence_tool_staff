@@ -29,7 +29,7 @@ module Searchable
       )
       total_reindexed = 0
 
-      in_batches(of: 1000) do |batch|
+      Case::Base.in_batches(of: 1000) do |batch|
         vectors = batch.map { |kase| [kase.id, kase.tsvector] }
 
         update_sql = <<~EOSQL
