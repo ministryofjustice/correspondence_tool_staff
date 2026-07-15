@@ -90,7 +90,7 @@ group :test do
   gem "shoulda-matchers", "~> 8.0"
   gem "simplecov"
   gem "simplecov-json", require: false
-  gem "site_prism", "< 5.0"
+  gem "site_prism", "< 7.0"
 end
 
 group :development, :test do
