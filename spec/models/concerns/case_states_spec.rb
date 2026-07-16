@@ -99,6 +99,24 @@ RSpec.describe Case, type: :model do
           expect(kase.current_state).to eq "awaiting_dispatch"
         end
       end
+
+      context "when the user is both a manager and a member of the responding team" do
+        let(:manager_responder) do
+          create :user,
+                 managing_teams: [kase.managing_team],
+                 responding_teams: [kase.responding_team]
+        end
+
+        before do
+          allow(attachment).to receive(:remove_from_storage_bucket)
+        end
+
+        it "acts with the responding team rather than the managing team" do
+          kase.remove_response(manager_responder, attachment)
+          expect(kase.current_state).to eq "drafting"
+          expect(kase.transitions.last.acting_team).to eq kase.responding_team
+        end
+      end
     end
 
     describe "#remove_response from SAR case" do

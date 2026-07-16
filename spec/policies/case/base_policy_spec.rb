@@ -340,6 +340,31 @@ describe Case::BasePolicy do
       it { is_expected.not_to permit(another_responder, responded_case) }
       it { is_expected.not_to permit(manager,           responded_case) }
     end
+
+    context "when the user is both a manager and a member of the responding team" do
+      let(:manager_responder) do
+        create :user,
+               managing_teams: [managing_team],
+               responding_teams: [responding_team]
+      end
+      let(:kase) do
+        create :case_with_response,
+               responding_team:,
+               responder: manager_responder
+      end
+
+      it { is_expected.to permit(manager_responder, kase) }
+    end
+
+    context "when the user is a manager and a responder in a team not assigned to the case" do
+      let(:manager_other_responder) do
+        create :user,
+               managing_teams: [managing_team],
+               responding_teams: [create(:responding_team)]
+      end
+
+      it { is_expected.not_to permit(manager_other_responder, case_with_response) }
+    end
   end
 
   permissions :can_respond? do
