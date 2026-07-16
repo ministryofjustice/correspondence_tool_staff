@@ -10,18 +10,25 @@ class CaseDeletionService
 
   def call
     if @kase.related_case_links.present?
-      @kase.errors.add(:related_case_links,
-                       I18n.t("activerecord.errors.models.case.attributes.related_case_links.not_empty"))
+      @kase.errors.add(:related_case_links, I18n.t("activerecord.errors.models.case.attributes.related_case_links.not_empty"))
       @result = :error
-    elsif @kase.update(@update_parameters.merge(deleted: true))
-      clear_up_linked_cases
-      @kase.state_machine.destroy_case!(acting_user: @user, acting_team: @kase.managing_team)
-      @result = :ok
     else
-      @result = :error
+      ActiveRecord::Base.transaction do
+        if @kase.update(@update_parameters.merge(deleted: true))
+          clear_up_linked_cases
+          @kase.state_machine.destroy_case!(acting_user: @user, acting_team: @kase.managing_team)
+          @result = :ok
+        else
+          @result = :error
+        end
+      end
     end
 
     @result
+  rescue ConfigurableStateMachine::InvalidEventError
+    @kase.reload
+    @kase.errors.add(:base, I18n.t("activerecord.errors.models.case.attributes.base.invalid_deletion_state"))
+    @result = :error
   end
 
 private

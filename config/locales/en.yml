@@ -101,6 +101,8 @@ en:
               not_in_future: "cannot be in the future."
             related_case_links:
               not_empty: "are not empty. Please remove all linked cases in order to delete this case."
+            base:
+              invalid_deletion_state: "This case cannot be deleted in its current state."
             number_final_pages:
               not_whole_number: 'must be a positive whole number'
             number_exempt_pages:
@@ -475,6 +477,8 @@ en:
       can_remove_attachment?: 'You are not authorised to remove attachments from this case.'
       can_view_case_details?: 'You are not authorised to view this case.'
       delete?: You are not authorised to delete this case.
+      destroy?: You are not authorised to delete this case.
+      confirm_destroy?: You are not authorised to delete this case.
       edit?: You are not authorised to edit this case.
       new_case_link?: You are not authorised to link other cases to this case.
       show?: You are not authorised to view this case.
