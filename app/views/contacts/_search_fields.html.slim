@@ -23,7 +23,7 @@ ul.report-list role="list"
         button.button.use-address-button
           =  "Use " + contact.name
 
-javascript:
-  moj.Modules.Contacts.search_results_loaded();
-  moj.Modules.Contacts.attach_address_selection_button_events();
-  moj.Modules.Contacts.set_search_filters();
+script nonce=content_security_policy_nonce
+  | moj.Modules.Contacts.search_results_loaded();
+  | moj.Modules.Contacts.attach_address_selection_button_events();
+  | moj.Modules.Contacts.set_search_filters();
