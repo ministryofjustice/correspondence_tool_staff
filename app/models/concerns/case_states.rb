@@ -31,13 +31,18 @@ module CaseStates
   end
 
   def remove_response(current_user, attachment, acting_team: nil)
-    attachment.destroy!
-    acting_team ||= current_user.case_team_for_event(self, :remove_response) || current_user.case_team(self)
+    ActiveRecord::Base.transaction do
+      attachment.destroy!
 
-    state_machine.remove_response! acting_user: current_user,
-                                   acting_team:,
-                                   filenames: attachment.filename,
-                                   num_attachments: reload.attachments.size
+      acting_team ||= current_user.case_team_for_event(self, :remove_response) || current_user.case_team(self)
+
+      state_machine.remove_response!(
+        acting_user: current_user,
+        acting_team: acting_team,
+        filenames: attachment.filename,
+        num_attachments: reload.attachments.size,
+      )
+    end
   end
 
   def response_attachments

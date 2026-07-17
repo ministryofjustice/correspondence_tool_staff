@@ -11,6 +11,7 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
     shared_examples "unauthorized user" do
       it "redirect to the login or root page" do
         get :download, params: { case_id: kase.id, id: attachment.id }
+
         if subject.current_user
           if subject.current_user.manager?
             expect(response).to redirect_to manager_root_path
@@ -84,6 +85,7 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
     shared_examples "unauthorized user" do
       it "redirect to the login or root page" do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
+
         if subject.current_user
           if subject.current_user.manager?
             expect(response).to redirect_to manager_root_path
@@ -121,6 +123,22 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       it "deletes the attachment from the case" do
         delete :destroy, params: { case_id: kase.id, id: attachment.id }
         expect(kase.reload.attachments).not_to include(attachment)
+      end
+
+      context "when removing the attachment fails" do
+        before do
+          allow_any_instance_of(Case::Base) # rubocop:disable RSpec/AnyInstance
+            .to receive(:remove_response)
+            .and_raise(ActiveRecord::RecordNotDestroyed.new("remove failed", attachment))
+        end
+
+        it "redirects back to the case with an alert" do
+          delete :destroy, params: { case_id: kase.id, id: attachment.id }
+
+          expect(response).to redirect_to(case_path(kase))
+          expect(flash[:alert]).to eq(I18n.t("notices.remove_response_failed"))
+          expect(kase.reload.attachments).to include(attachment)
+        end
       end
     end
 
