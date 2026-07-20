@@ -117,6 +117,29 @@ RSpec.describe Case, type: :model do
           expect(kase.transitions.last.acting_team).to eq kase.responding_team
         end
       end
+
+      context "when state transition fails" do
+        before do
+          allow(attachment).to receive(:remove_from_storage_bucket)
+          allow(kase.state_machine).to receive(:remove_response!).and_raise(
+            ConfigurableStateMachine::InvalidEventError.new(
+              role: responder.responding_teams.first.role,
+              kase:,
+              user: responder,
+              event: :remove_response,
+              message: "No event remove_response for role manager and case state awaiting_dispatch",
+            ),
+          )
+        end
+
+        it "rolls back the attachment deletion" do
+          expect {
+            kase.remove_response(responder, attachment)
+          }.to raise_error(ConfigurableStateMachine::InvalidEventError)
+
+          expect(kase.reload.attachments).to include(attachment)
+        end
+      end
     end
 
     describe "#remove_response from SAR case" do

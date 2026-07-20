@@ -19,7 +19,11 @@ module Cases
     def destroy
       authorize @case, :can_remove_attachment?
 
-      @case.remove_response(current_user, @attachment)
+      begin
+        @case.remove_response(current_user, @attachment)
+      rescue StandardError
+        flash[:alert] = t("notices.remove_response_failed")
+      end
 
       if @case.attachments.empty? && request.format == :js
         render js: "window.location = '#{case_path(@case)}'"
