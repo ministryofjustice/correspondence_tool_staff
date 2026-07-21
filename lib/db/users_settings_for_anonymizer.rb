@@ -77,18 +77,15 @@ class UsersSettingsForAnonymizer
 private
 
   def generate_new_users(new_user_list)
-    # The user is only for getting the encrypted password
-    user = User.new(full_name: "anonymizeruser")
     new_user_list.each do |record|
       next unless new_user?(record["email"])
 
-      timestamp = Time.zone.today.strftime("%Y-%m-%d")
-      user.password = record["password"]
-      query1 = "insert into users (full_name, email, encrypted_password, created_at, updated_at)
-                values ('#{record['full_name']}', '#{record['email']}', '#{user.encrypted_password}',
-                '#{timestamp}', '#{timestamp}');"
       begin
-        ActiveRecord::Base.connection.execute(query1)
+        User.create!(
+          full_name: record["full_name"],
+          email: record["email"],
+          password: record["password"],
+        )
       rescue StandardError => e
         puts e.message
       end
@@ -106,9 +103,8 @@ private
       team = Team.find_by_name(record["team_name"])
       next unless user.present? && team.present?
 
-      query2 = "insert into teams_users_roles (team_id, user_id, role) values ('#{team.id}', #{user.id}, '#{record['role']}');"
       begin
-        ActiveRecord::Base.connection.execute(query2)
+        TeamsUsersRole.create!(team: team, user: user, role: record["role"])
       rescue StandardError => e
         puts e.message
       end
