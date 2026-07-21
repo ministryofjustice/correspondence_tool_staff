@@ -138,6 +138,15 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
       end
     end
 
+    context "when event matches mark_as_*" do
+      it "generates HTML that links to the transition action with double-click protection" do
+        @case = create(:offender_sar_case, :ready_for_vetting).decorate
+        expect(action_button_for(:mark_as_vetting_in_progress)).to eq(
+          "<a id=\"action--mark-as-vetting-in-progress\" class=\"button state-action-button\" data-disable-with=\"Mark as vetting in progress\" rel=\"nofollow\" data-method=\"patch\" href=\"/cases/offender_sars/#{@case.id}/transitions/mark_as_vetting_in_progress\">Mark as vetting in progress</a>",
+        )
+      end
+    end
+
     context "when event == :progress_for_clearance" do
       it "generates HTML that links to the progress_for_clearance case action" do
         @case = create(:accepted_sar, :flagged)

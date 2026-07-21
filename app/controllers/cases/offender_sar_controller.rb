@@ -108,7 +108,10 @@ module Cases
         @case.state_machine.send("#{params[:transition_name]}!", params_for_transition)
         reload_case_page_on_success
       else
-        raise ArgumentError, "Bad transition, the action #{params[:transition_name]}is not allowed."
+        # The event is no longer available - typically a double-click or a stale
+        # case page where the case has already been moved on
+        flash[:alert] = t("cases.update.transition_unavailable", action: I18n.t("event.#{params[:transition_name]}"))
+        redirect_to case_path(@case)
       end
     end
 

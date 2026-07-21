@@ -1520,6 +1520,7 @@ en:
     update:
       case_updated: Case updated
       case_partial_flag_updated: Case updated
+      transition_unavailable: "Your request to %{action} was not successful. Case was already updated prior."
     filters:
       index:
         <<: *cases_list

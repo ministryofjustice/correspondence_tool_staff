@@ -77,7 +77,8 @@ module CasesHelper
               action_url,
               id: "action--#{link_text.parameterize}",
               class: "button state-action-button",
-              method: "patch"
+              method: "patch",
+              data: { disable_with: link_text }
     when :move_case_back
       link_to t("common.case/offender_sar.move_case_back"),
               move_case_back_case_sar_offender_path(@case),
