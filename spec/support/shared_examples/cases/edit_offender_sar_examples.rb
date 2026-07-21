@@ -40,5 +40,20 @@ RSpec.shared_examples "edit offender sar spec" do |current_state, event_name|
         expect(offender_sar.current_state).not_to eq current_state
       end
     end
+
+    context "when the transition is no longer available" do
+      before do
+        2.times { patch :transition, params: }
+      end
+
+      it "flashes an alert" do
+        expect(controller.flash[:alert])
+          .to eq "Your request to #{I18n.t("event.#{event_name}")} was not successful. Case was already updated prior."
+      end
+
+      it "redirects to case details page" do
+        expect(response).to redirect_to(case_path(offender_sar))
+      end
+    end
   end
 end
