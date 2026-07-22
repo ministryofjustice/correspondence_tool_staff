@@ -28,6 +28,8 @@
 
         = render partial: 'cases/offender_sar_complaint/date_received', locals: { case_details: case_details, allow_editing: allow_editing }
 
+        = render partial: 'cases/offender_sar_complaint/acknowledgement_deadline', locals: { case_details: case_details, allow_editing: allow_editing }
+
         = render partial: 'cases/offender_sar_complaint/case_deadlines', locals: { case_details: case_details, allow_editing: allow_editing }
 
         - if case_details.has_date_draft_compliant?

@@ -1,0 +1,5 @@
+- if case_details.standard_complaint? && case_details.object.acknowledgement_deadline.present?
+  tr.section.case-acknowledgement-deadline.section-acknowledgement-deadline
+    th = t('common.case.acknowledgement_deadline')
+    td = case_details.acknowledgement_deadline
+    td

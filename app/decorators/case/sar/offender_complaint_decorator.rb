@@ -17,6 +17,12 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
     h.t "helpers.label.offender_sar_complaint.complaint_type.#{object.complaint_type}"
   end
 
+  def acknowledgement_deadline
+    return nil if object.acknowledgement_deadline.blank?
+
+    I18n.l(object.acknowledgement_deadline, format: :default)
+  end
+
   def highlight_flag
     if object.high?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-priority_flag" do
