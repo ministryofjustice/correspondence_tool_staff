@@ -6,8 +6,8 @@ div.form-group.bg-selector
     = t('teams.labels.select_business_group')
   = form_tag join_teams_team_path(@team), method: :get
     = select_tag :business_group_id, options_from_collection_for_select(BusinessGroup.all.order(:name), :id, :name, params[:business_group_id]),
-      onchange: 'this.form.submit();', include_blank: t('common.choose'),
-      class: 'form-control'
+      include_blank: t('common.choose'),
+      class: 'form-control js-auto-submit'
 
 div.form-group.directorate-selector
   - if defined?(@directorates)
@@ -16,8 +16,8 @@ div.form-group.directorate-selector
     = form_tag join_teams_team_path(@team), method: :get
       = hidden_field_tag :business_group_id, params[:business_group_id]
       = select_tag :directorate_id, options_from_collection_for_select(@directorates, :id, :name, params[:directorate_id]),
-        onchange: 'this.form.submit();', include_blank: t('common.choose'),
-        class: 'form-control'
+        include_blank: t('common.choose'),
+        class: 'form-control js-auto-submit'
 
 - if defined?(@business_units)
   ul.teams
