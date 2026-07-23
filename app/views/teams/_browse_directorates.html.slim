@@ -17,8 +17,8 @@ div.bg-selector
     = t('teams.labels.select_business_group')
   = form_tag move_to_directorate_team_path(@team), method: :get
     = select_tag :business_group_id, options_from_collection_for_select(BusinessGroup.all.order(:name), :id, :name, params[:business_group_id]),
-      onchange: 'this.form.submit();', include_blank: "Choose...",
-      class: "form-control"
+      include_blank: "Choose...",
+      class: "form-control js-auto-submit"
 
 - if params[:business_group_id]
   h2.heading-medium

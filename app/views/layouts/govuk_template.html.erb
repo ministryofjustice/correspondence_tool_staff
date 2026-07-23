@@ -40,8 +40,8 @@
     <script type="module" src="/assets/govuk-frontend.min.js"></script>
     <script type="module" src="/assets/moj-frontend.min.js"></script>
 
-    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-    <script>document.body.className += ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+    <script nonce="<%= content_security_policy_nonce %>">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <script nonce="<%= content_security_policy_nonce %>">document.body.className += ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
 
     <%= yield :body_start %>
 
@@ -131,9 +131,9 @@
     <%= yield :body_end %>
 
     <%# if no GOVUK-namespaced module has loaded we can assume JS has failed and remove the class %>
-    <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
+    <script nonce="<%= content_security_policy_nonce %>">if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
 
-    <script type="module">
+    <script type="module" nonce="<%= content_security_policy_nonce %>">
       import * as GOVUKFrontend from '/assets/govuk-frontend.min.js'
       import * as MOJFrontend from '/assets/moj-frontend.min.js'
 
