@@ -84,6 +84,9 @@ private
     if [nil, "standard_complaint"].include? object["complaint_type"]
       params.merge!(external_deadline: object.deadline_calculator.external_deadline)
     end
+    if object["complaint_type"] == "standard_complaint"
+      params.merge!(acknowledgement_deadline: object.calculate_acknowledgement_deadline)
+    end
     params
   end
 
