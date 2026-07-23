@@ -35,9 +35,11 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   include LinkableOriginalCase
 
   validates :original_case, presence: true
+  before_create :set_acknowledgement_deadline, if: :standard_complaint?
   after_create :stamp_on_original_case
 
   jsonb_accessor :properties,
+                 acknowledgement_deadline: :date,
                  complaint_type: :string,
                  complaint_subtype: :string,
                  ico_contact_name: :string,
@@ -109,6 +111,25 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   def validate_external_deadline
     validate_external_deadline_required
     validate_external_deadline_within_valid_range
+  end
+
+  def calculate_acknowledgement_deadline
+    return nil if received_date.blank?
+
+    # Day 1 is the next weekday after received_date. Bank holidays count as
+    # working days for the 10-day count, but if day 10 is a bank holiday we
+    # advance to the next non-bank-holiday weekday.
+    day = received_date + 1
+    day += 1 while day.saturday? || day.sunday?
+
+    9.times do
+      day += 1
+      day += 1 while day.saturday? || day.sunday?
+    end
+
+    day += 1 while england_and_wales_bank_holiday?(day) || day.saturday? || day.sunday?
+
+    day
   end
 
   def normal_priority?
@@ -277,6 +298,14 @@ private
 
   def has_total_cost?
     total_cost.present? && total_cost.positive?
+  end
+
+  def set_acknowledgement_deadline
+    self.acknowledgement_deadline = calculate_acknowledgement_deadline
+  end
+
+  def england_and_wales_bank_holiday?(date)
+    BankHoliday.bank_holiday?(date, regions: :england_and_wales)
   end
 
   # 'Q' denotes a complaint in the legacy system, carried into new system

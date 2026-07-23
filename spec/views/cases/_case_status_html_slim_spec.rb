@@ -12,6 +12,7 @@ describe "cases/case_status.html.slim", type: :view do
                              who_its_with: "DACU",
                              type_of_offender_sar?: false,
                              offender_sar?: false,
+                             offender_sar_complaint?: false,
                              stopped?: false
 
     render partial: "cases/case_status", locals: { case_details: unassigned_case }
@@ -43,6 +44,7 @@ describe "cases/case_status.html.slim", type: :view do
                          who_its_with: "",
                          type_of_offender_sar?: false,
                          offender_sar?: false,
+                         offender_sar_complaint?: false,
                          stopped?: false
 
     render partial: "cases/case_status",
@@ -70,6 +72,7 @@ describe "cases/case_status.html.slim", type: :view do
                               who_its_with: "DACU",
                               type_of_offender_sar?: false,
                               offender_sar?: false,
+                              offender_sar_complaint?: false,
                               stopped?: false
 
     render partial: "cases/case_status",
@@ -99,6 +102,7 @@ describe "cases/case_status.html.slim", type: :view do
              who_its_with: "DACU",
              type_of_offender_sar?: false,
              offender_sar?: false,
+             offender_sar_complaint?: false,
              stopped?: false
     end
 
@@ -113,6 +117,7 @@ describe "cases/case_status.html.slim", type: :view do
                                 who_its_with: "DACU",
                                 type_of_offender_sar?: false,
                                 offender_sar?: false,
+                                offender_sar_complaint?: false,
                                 stopped?: false
 
       render partial: "cases/case_status",
@@ -144,6 +149,7 @@ describe "cases/case_status.html.slim", type: :view do
                         who_its_with: "DACU",
                         type_of_offender_sar?: false,
                         offender_sar?: false,
+                        offender_sar_complaint?: false,
                         stopped?: false
 
       render partial: "cases/case_status",
@@ -174,6 +180,7 @@ describe "cases/case_status.html.slim", type: :view do
         who_its_with: "Branston Registry",
         type_of_offender_sar?: false,
         offender_sar_complaint?: false,
+        standard_complaint?: false,
         offender_sar?: false,
         rejected?: false,
         page_count: "500",
@@ -240,6 +247,7 @@ describe "cases/case_status.html.slim", type: :view do
                         who_its_with: "DACU",
                         type_of_offender_sar?: false,
                         offender_sar?: false,
+                        offender_sar_complaint?: false,
                         stopped?: false
 
       render partial: "cases/case_status",
@@ -258,6 +266,60 @@ describe "cases/case_status.html.slim", type: :view do
       expect(partial.details.ico_ref_number_label.text)
         .to eq "ICO case reference number"
       expect(partial.details.ico_ref_number.text).to eq "123456789ABC"
+    end
+  end
+
+  describe "acknowledgement deadline" do
+    let(:base_params) do
+      {
+        status: "To be assessed",
+        ico?: false,
+        internal_deadline: nil,
+        external_deadline: (Time.zone.now + 20.days).strftime(Settings.default_date_format),
+        current_state: "to_be_assessed",
+        type_abbreviation: "OFFENDER_SAR_COMPLAINT",
+        who_its_with: "Branston Registry",
+        type_of_offender_sar?: false,
+        offender_sar?: false,
+        offender_sar_complaint?: true,
+        stopped?: false,
+      }
+    end
+
+    it "displays the acknowledgement deadline above the final deadline for standard complaints" do
+      complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
+                         base_params.merge(
+                           standard_complaint?: true,
+                           acknowledgement_deadline: "05 Aug 2026",
+                           object: double(acknowledgement_deadline: Date.new(2026, 8, 5)), # rubocop:disable RSpec/VerifiedDoubles
+                         )
+
+      render partial: "cases/case_status", locals: { case_details: complaint }
+
+      expect(rendered).to have_css(".case-status__group.acknowledgement")
+      expect(rendered).to include("Acknowledgement deadline")
+      expect(rendered).to include("05 Aug 2026")
+    end
+
+    it "does not display the acknowledgement deadline when it is blank" do
+      complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
+                         base_params.merge(
+                           standard_complaint?: true,
+                           object: double(acknowledgement_deadline: nil), # rubocop:disable RSpec/VerifiedDoubles
+                         )
+
+      render partial: "cases/case_status", locals: { case_details: complaint }
+
+      expect(rendered).to have_no_css(".case-status__group.acknowledgement")
+    end
+
+    it "does not display the acknowledgement deadline for non-standard complaints" do
+      complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
+                         base_params.merge(standard_complaint?: false)
+
+      render partial: "cases/case_status", locals: { case_details: complaint }
+
+      expect(rendered).to have_no_css(".case-status__group.acknowledgement")
     end
   end
 

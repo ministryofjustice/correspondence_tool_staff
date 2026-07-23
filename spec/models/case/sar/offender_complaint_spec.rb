@@ -908,4 +908,91 @@ describe Case::SAR::OffenderComplaint do
       expect(complaint.has_costs?).to eq true
     end
   end
+
+  describe "#calculate_acknowledgement_deadline" do
+    context "when received_date is nil" do
+      it "returns nil" do
+        kase = build(:offender_sar_complaint, received_date: nil)
+        expect(kase.calculate_acknowledgement_deadline).to be_nil
+      end
+    end
+
+    context "when received on a Tuesday (mid-week)" do
+      it "returns 10 weekdays later on a Tuesday" do
+        # Received Tue 21 Jul → Day 1 Wed 22 Jul → Day 10 Tue 4 Aug
+        kase = build(:offender_sar_complaint, received_date: Date.new(2026, 7, 21))
+        expect(kase.calculate_acknowledgement_deadline).to eq(Date.new(2026, 8, 4))
+      end
+    end
+
+    context "when received on a Friday" do
+      it "starts Day 1 on the following Monday" do
+        # Received Fri 17 Jul → Day 1 Mon 20 Jul → Day 10 Fri 31 Jul
+        kase = build(:offender_sar_complaint, received_date: Date.new(2026, 7, 17))
+        expect(kase.calculate_acknowledgement_deadline).to eq(Date.new(2026, 7, 31))
+      end
+    end
+
+    context "when received on a Thursday whose Day 10 spans a weekend" do
+      it "skips over weekends in the count" do
+        # Received Mon 17 Aug → Day 1 Tue 18 Aug → Day 10 Mon 31 Aug
+        # (bank holiday on Aug 31 stubbed away for this case)
+        kase = build(:offender_sar_complaint, received_date: Date.new(2026, 8, 17))
+        allow(BankHoliday).to receive(:bank_holiday?).and_return(false)
+        expect(kase.calculate_acknowledgement_deadline).to eq(Date.new(2026, 8, 31))
+      end
+    end
+
+    context "when Day 10 falls on a bank holiday" do
+      it "advances to the next working day" do
+        # Received Mon 17 Aug → Day 10 = Mon 31 Aug (bank holiday in fixture)
+        # Expected result: Tue 1 Sep
+        kase = build(:offender_sar_complaint, received_date: Date.new(2026, 8, 17))
+        allow(BankHoliday).to receive(:bank_holiday?)
+          .with(Date.new(2026, 8, 31), regions: :england_and_wales)
+          .and_return(true)
+        allow(BankHoliday).to receive(:bank_holiday?)
+          .with(Date.new(2026, 9, 1), regions: :england_and_wales)
+          .and_return(false)
+        expect(kase.calculate_acknowledgement_deadline).to eq(Date.new(2026, 9, 1))
+      end
+    end
+
+    context "when received on a Saturday" do
+      it "starts Day 1 on the following Monday" do
+        # Received Sat 18 Jul → Day 1 Mon 20 Jul → Day 10 Fri 31 Jul
+        kase = build(:offender_sar_complaint, received_date: Date.new(2026, 7, 18))
+        expect(kase.calculate_acknowledgement_deadline).to eq(Date.new(2026, 7, 31))
+      end
+    end
+  end
+
+  describe "before_create :set_acknowledgement_deadline" do
+    context "when complaint type is standard" do
+      it "persists acknowledgement_deadline on create" do
+        kase = create(:offender_sar_complaint,
+                      complaint_type: "standard_complaint",
+                      received_date: Date.new(2026, 7, 21))
+        expect(kase.acknowledgement_deadline).to eq(Date.new(2026, 8, 4))
+      end
+    end
+
+    context "when complaint type is ico" do
+      it "does not set acknowledgement_deadline" do
+        kase = create(:offender_sar_complaint,
+                      complaint_type: "ico_complaint",
+                      received_date: Date.new(2026, 7, 21))
+        expect(kase.acknowledgement_deadline).to be_nil
+      end
+    end
+
+    context "when complaint type is litigation" do
+      it "does not set acknowledgement_deadline" do
+        kase = create(:offender_sar_complaint,
+                      complaint_type: "litigation_complaint",
+                      received_date: Date.new(2026, 7, 21))
+        expect(kase.acknowledgement_deadline).to be_nil
+      end
+    end
+  end
 end
