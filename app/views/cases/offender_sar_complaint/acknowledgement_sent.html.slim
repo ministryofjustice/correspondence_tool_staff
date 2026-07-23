@@ -1,0 +1,19 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar_complaint.acknowledgement_sent_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case, url: confirm_acknowledgement_sent_case_sar_offender_complaint_path(@case), as: :offender_sar_complaint, method: :patch do |f|
+
+  .form-group
+    = f.gov_uk_date_field :acknowledgement_sent_at, { \
+        legend_text: t('cases.offender_sar_complaint.acknowledgement_sent_legend'),
+        form_hint_text: t('helpers.hint.shared.date_example'),
+        today_button: { class: '' } \
+      }
+
+  = f.submit 'Continue', class: 'button'
+  = link_to 'Cancel', case_path(@case), class: 'acts-as-link'

@@ -1,0 +1,5 @@
+- if case_details.standard_complaint? && case_details.object.acknowledgement_sent_at.present?
+  tr.section.case-acknowledgement-sent.section-acknowledgement-sent
+    th = t('common.case.acknowledgement_sent')
+    td = case_details.acknowledgement_sent_at
+    td = link_to t('common.links.change'), acknowledgement_sent_case_sar_offender_complaint_path(case_details)

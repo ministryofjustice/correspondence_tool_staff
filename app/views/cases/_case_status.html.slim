@@ -45,6 +45,13 @@
         .case-status__date-value
           = case_details.internal_deadline
 
+    - if case_details.offender_sar_complaint? && case_details.standard_complaint? && case_details.object.acknowledgement_deadline.present?
+      .case-status__group.acknowledgement
+        .case-status__date-title
+          = t('common.case.acknowledgement_deadline')
+        .case-status__date-value
+          = case_details.acknowledgement_deadline
+
     .case-status__group.external
       .case-status__date-title
         = t("common.case.external_deadline#{case_details.stopped? ? '_paused' : ''}")

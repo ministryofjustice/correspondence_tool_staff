@@ -345,6 +345,9 @@ en:
 
         case/sar/offender_complaint:
           attributes:
+            acknowledgement_sent_at:
+              in_future: "cannot be in the future"
+              before_received: "cannot be before the date received"
             ico_contact_name:
               blank: cannot be blank
             ico_contact_email:
@@ -1176,6 +1179,8 @@ en:
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
+      acknowledgement_deadline: Acknowledgement deadline
+      acknowledgement_sent: Acknowledgement sent
       external_deadline: Final deadline
       external_deadline_paused: Final deadline (paused)
       filename: File name
@@ -1699,6 +1704,8 @@ en:
           sub_heading: Create valid Offender SAR case
           rejected: Create valid Offender SAR case
     offender_sar_complaint:
+      acknowledgement_sent_heading: "Date acknowledgement sent"
+      acknowledgement_sent_legend: "Date acknowledgement sent to requestor?"
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
       external_deadline_heading: Set a deadline for this complaint

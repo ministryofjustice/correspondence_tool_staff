@@ -115,6 +115,8 @@ Rails.application.routes.draw do
       post "/offender_sar/(:number)", on: :collection, to: "offender_sar_complaint#start_complaint", as: "start_complaint"
       get "/reopen", on: :member, to: "offender_sar_complaint#reopen", as: "reopen"
       patch "/reopen", on: :member, to: "offender_sar_complaint#confirm_reopen", as: "confirm_reopen"
+      get "/acknowledgement_sent", on: :member, to: "offender_sar_complaint#acknowledgement_sent", as: "acknowledgement_sent"
+      patch "/acknowledgement_sent", on: :member, to: "offender_sar_complaint#confirm_acknowledgement_sent", as: "confirm_acknowledgement_sent"
       get "/edit/:step", on: :member, to: "offender_sar_complaint#edit", as: "edit_step"
       post "/update", on: :member, to: "offender_sar_complaint#update", as: "update_step"
       member do

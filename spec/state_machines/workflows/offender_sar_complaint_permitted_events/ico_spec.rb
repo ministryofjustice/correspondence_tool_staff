@@ -8,6 +8,7 @@ TRANSITIONS_ICO = [
       mark_as_require_data_review
       mark_as_data_to_be_requested
       mark_as_require_response
+      record_acknowledgement_sent
       send_acknowledgement_letter
       reset_to_initial_state
     ],
@@ -21,6 +22,7 @@ TRANSITIONS_ICO = [
       send_acknowledgement_letter
       reset_to_initial_state
       add_data_received
+      record_acknowledgement_sent
     ],
   },
   {
@@ -30,6 +32,7 @@ TRANSITIONS_ICO = [
       mark_as_waiting_for_data
       send_acknowledgement_letter
       add_data_received
+      record_acknowledgement_sent
       reset_to_initial_state
     ],
   },
@@ -41,6 +44,7 @@ TRANSITIONS_ICO = [
       send_acknowledgement_letter
       preview_cover_page
       add_data_received
+      record_acknowledgement_sent
       reset_to_initial_state
     ],
   },

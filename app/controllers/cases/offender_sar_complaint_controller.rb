@@ -1,7 +1,10 @@
 module Cases
   class OffenderSARComplaintController < OffenderSARController
     before_action -> { set_decorated_case(params[:id]) }, only: %i[
-      reopen confirm_reopen
+      reopen
+      confirm_reopen
+      acknowledgement_sent
+      confirm_acknowledgement_sent
     ]
 
     include OffenderSARComplaintCasesParams
@@ -49,6 +52,33 @@ module Cases
         end
       end
       render :reopen
+    end
+
+    def acknowledgement_sent
+      authorize @case, :can_edit_case?
+      # gov_uk_date_fields workaround — field must be self-assigned to show correctly on edit
+      @case.acknowledgement_sent_at = @case.acknowledgement_sent_at || Time.zone.today
+    end
+
+    def confirm_acknowledgement_sent
+      authorize @case, :can_edit_case?
+      service = CaseUpdateAcknowledgementSentService.new(
+        user: current_user,
+        kase: @case,
+        params: acknowledgement_sent_params,
+      )
+      service.call
+
+      case service.result
+      when :error
+        flash.now[:alert] = service.message if service.message.present?
+        render :acknowledgement_sent and return
+      when :ok
+        flash[:notice] = t("cases.update.case_updated")
+      when :no_changes
+        flash[:alert] = "No changes were made"
+      end
+      redirect_to case_path(@case) and return
     end
 
     def set_case_types

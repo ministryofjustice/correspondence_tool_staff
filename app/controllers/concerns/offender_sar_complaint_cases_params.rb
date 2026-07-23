@@ -81,4 +81,12 @@ module OffenderSARComplaintCasesParams
       :external_deadline_yyyy,
     )
   end
+
+  def acknowledgement_sent_params
+    params.require(:offender_sar_complaint).permit(
+      :acknowledgement_sent_at_dd,
+      :acknowledgement_sent_at_mm,
+      :acknowledgement_sent_at_yyyy,
+    )
+  end
 end
