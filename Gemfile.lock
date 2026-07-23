@@ -179,7 +179,7 @@ GEM
       deep_merge (~> 1.2, >= 1.2.1)
       ostruct
     connection_pool (3.0.2)
-    crass (1.0.6)
+    crass (1.0.7)
     csv (3.3.5)
     date (3.5.1)
     debug (1.11.1)
@@ -317,7 +317,7 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    loofah (2.25.1)
+    loofah (2.25.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.9.1)
