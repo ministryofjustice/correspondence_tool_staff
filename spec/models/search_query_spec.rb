@@ -68,6 +68,8 @@ describe SearchQuery do
         external_deadline_to
         internal_deadline_from
         internal_deadline_to
+        acknowledgement_deadline_from
+        acknowledgement_deadline_to
         planned_destruction_date_from
         planned_destruction_date_to
         filter_case_type
@@ -117,6 +119,8 @@ describe SearchQuery do
           external_deadline_to: Date.new(2018, 5, 30),
           internal_deadline_from: nil,
           internal_deadline_to: nil,
+          acknowledgement_deadline_from: nil,
+          acknowledgement_deadline_to: nil,
           filter_timeliness: %w[in-time],
           exemption_ids: [21],
           common_exemption_ids: [21],
@@ -184,6 +188,8 @@ describe SearchQuery do
           external_deadline_to: Date.new(2018, 5, 30),
           internal_deadline_from: nil,
           internal_deadline_to: nil,
+          acknowledgement_deadline_from: nil,
+          acknowledgement_deadline_to: nil,
           filter_timeliness: %w[in-time],
           exemption_ids: [21],
           common_exemption_ids: [21],
@@ -232,6 +238,8 @@ describe SearchQuery do
         external_deadline_to
         internal_deadline_from
         internal_deadline_to
+        acknowledgement_deadline_from
+        acknowledgement_deadline_to
         planned_destruction_date_from
         planned_destruction_date_to
         filter_case_type
@@ -627,6 +635,7 @@ describe SearchQuery do
           CaseFilter::CaseTypeFilter,
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
+          CaseFilter::AcknowledgementDeadlineFilter,
           CaseFilter::CaseHighProfileFilter,
           CaseFilter::CaseDpsMissingDataFilter,
           CaseFilter::CaseComplaintTypeFilter,

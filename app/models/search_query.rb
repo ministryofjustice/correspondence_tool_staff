@@ -28,6 +28,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::InternalDeadlineFilter,
+      CaseFilter::AcknowledgementDeadlineFilter,
       CaseFilter::CaseHighProfileFilter,
       CaseFilter::CaseDpsMissingDataFilter,
       CaseFilter::CaseComplaintTypeFilter,
@@ -106,7 +107,8 @@ class SearchQuery < ApplicationRecord
     CaseFilter::DateRespondedFilter.date_fields +
     CaseFilter::ExternalDeadlineFilter.date_fields +
     CaseFilter::InternalDeadlineFilter.date_fields +
-    CaseFilter::CaseRetentionDeadlineFilter.date_fields
+    CaseFilter::CaseRetentionDeadlineFilter.date_fields +
+    CaseFilter::AcknowledgementDeadlineFilter.date_fields
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 

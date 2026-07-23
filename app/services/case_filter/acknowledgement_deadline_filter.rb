@@ -1,0 +1,42 @@
+module CaseFilter
+  class AcknowledgementDeadlineFilter < CaseDateRangeFilterBase
+    def self.date_field_name
+      "acknowledgement_deadline"
+    end
+
+    def available_choices
+      {
+        today: {
+          name: "Today",
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
+          to: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
+        },
+        three_days: {
+          name: "In the next 3 days",
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
+          to: { day: 3.business_days.from_now.strftime("%d"), month: 3.business_days.from_now.strftime("%m"), year: 3.business_days.from_now.strftime("%Y") }.to_json,
+        },
+        ten_days: {
+          name: "In the next 10 days",
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
+          to: { day: 10.business_days.from_now.strftime("%d"), month: 10.business_days.from_now.strftime("%m"), year: 10.business_days.from_now.strftime("%Y") }.to_json,
+        },
+      }
+    end
+
+    def is_permitted_for_user?
+      @user.permitted_correspondence_types.any? { |c_type| c_type.abbreviation == "OFFENDER_SAR_COMPLAINT" }
+    end
+
+    def call
+      if presented?
+        @records.acknowledgement_deadline_within(
+          @query.acknowledgement_deadline_from,
+          @query.acknowledgement_deadline_to,
+        )
+      else
+        @records
+      end
+    end
+  end
+end

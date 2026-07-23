@@ -19,6 +19,7 @@ en:
         <<: *list_filter_type
       external_deadline: "Deadline %{from_date} - %{to_date}"
       internal_deadline: "Draft deadline %{from_date} - %{to_date}"
+      acknowledgement_deadline: "Acknowledgement deadline %{from_date} - %{to_date}"
       received_date: "Received date %{from_date} - %{to_date}"
       date_responded: "Date responded %{from_date} - %{to_date}"
       planned_destruction_date: "Destruction due %{from_date} - %{to_date}"
@@ -58,6 +59,7 @@ en:
       filter_timeliness: Filter by timeliness
       filter_external_deadline: Filter by final deadline
       filter_internal_deadline: Filter by draft deadline
+      filter_acknowledgement_deadline: Filter by acknowledgement deadline
       filter_received_date: Filter by date case was received
       filter_date_responded: Filter by date of case response
       filter_exemption: Filter by exemptions
@@ -76,6 +78,7 @@ en:
         filter_date_responded: 'Responded between'
         filter_external_deadline: 'Due'
         filter_internal_deadline: 'Due'
+        filter_acknowledgement_deadline: 'Acknowledgement deadline between'
         filter_planned_destruction_date: 'Destruction'
     date_range:
       planned_destruction_date:
