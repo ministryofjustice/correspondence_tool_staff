@@ -34,12 +34,18 @@
 class Case::SAR::OffenderComplaint < Case::SAR::Offender
   include LinkableOriginalCase
 
+  attr_accessor :acknowledgement_sent_at_dd,
+                :acknowledgement_sent_at_mm,
+                :acknowledgement_sent_at_yyyy
+
   validates :original_case, presence: true
   before_create :set_acknowledgement_deadline, if: :standard_complaint?
   after_create :stamp_on_original_case
+  after_initialize :populate_acknowledgement_sent_at_components
 
   jsonb_accessor :properties,
                  acknowledgement_deadline: :date,
+                 acknowledgement_sent_at: :date,
                  complaint_type: :string,
                  complaint_subtype: :string,
                  ico_contact_name: :string,
@@ -58,6 +64,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true
   validates :priority, presence: true
+  validate :validate_acknowledgement_sent_at
   validate :validate_ico_contact_name
   validate :validate_ico_contact_details
   validate :validate_ico_reference
@@ -251,6 +258,28 @@ private
       ),
     )
   end
+
+  def validate_acknowledgement_sent_at
+    return if acknowledgement_sent_at.blank?
+
+    if acknowledgement_sent_at > Time.zone.today
+      errors.add(:acknowledgement_sent_at,
+                 I18n.t("activerecord.errors.models.case/sar/offender_complaint.attributes.acknowledgement_sent_at.in_future"))
+    elsif received_date.present? && acknowledgement_sent_at < received_date
+      errors.add(:acknowledgement_sent_at,
+                 I18n.t("activerecord.errors.models.case/sar/offender_complaint.attributes.acknowledgement_sent_at.before_received"))
+    end
+  end
+
+  # rubocop:disable Naming/MemoizedInstanceVariableName
+  def populate_acknowledgement_sent_at_components
+    return if acknowledgement_sent_at.blank?
+
+    @acknowledgement_sent_at_dd ||= acknowledgement_sent_at.day.to_s
+    @acknowledgement_sent_at_mm ||= acknowledgement_sent_at.month.to_s
+    @acknowledgement_sent_at_yyyy ||= acknowledgement_sent_at.year.to_s
+  end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 
   def set_deadlines
     # For this case type's deadlines are manually set and don't need to be automatically

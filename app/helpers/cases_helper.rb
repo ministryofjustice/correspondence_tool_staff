@@ -235,6 +235,14 @@ module CasesHelper
               new_case_letters_path(@case.id, "dispatch"),
               id: "action--send-dispatch-letter",
               class: "button-secondary"
+    when :record_acknowledgement_sent
+      return unless @case.object.standard_complaint?
+      return if @case.acknowledgement_sent_at.present?
+
+      link_to "Acknowledgement sent",
+              acknowledgement_sent_case_sar_offender_complaint_path(@case),
+              id: "action--record-acknowledgement-sent",
+              class: "button-secondary"
     when :record_sent_to_sscl
       return if @case.sent_to_sscl_at.present?
 

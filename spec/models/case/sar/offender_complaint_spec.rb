@@ -995,4 +995,75 @@ describe Case::SAR::OffenderComplaint do
       end
     end
   end
+
+  describe "#validate_acknowledgement_sent_at" do
+    let(:kase) do
+      create(:offender_sar_complaint,
+             complaint_type: "standard_complaint",
+             received_date: Date.new(2026, 1, 5))
+    end
+
+    context "when acknowledgement_sent_at is blank" do
+      it "is valid" do
+        kase.acknowledgement_sent_at = nil
+        expect(kase).to be_valid
+      end
+    end
+
+    context "when acknowledgement_sent_at is in the future" do
+      it "adds an error" do
+        kase.acknowledgement_sent_at = Time.zone.today + 1.day
+        expect(kase).not_to be_valid
+        expect(kase.errors[:acknowledgement_sent_at]).to be_present
+      end
+    end
+
+    context "when acknowledgement_sent_at is before received_date" do
+      it "adds an error" do
+        kase.acknowledgement_sent_at = Date.new(2026, 1, 4)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:acknowledgement_sent_at]).to be_present
+      end
+    end
+
+    context "when acknowledgement_sent_at is today" do
+      it "is valid" do
+        Timecop.freeze(Date.new(2026, 1, 10)) do
+          kase.acknowledgement_sent_at = Time.zone.today
+          expect(kase).to be_valid
+        end
+      end
+    end
+
+    context "when acknowledgement_sent_at is between received_date and today" do
+      it "is valid" do
+        Timecop.freeze(Date.new(2026, 1, 10)) do
+          kase.acknowledgement_sent_at = Date.new(2026, 1, 6)
+          expect(kase).to be_valid
+        end
+      end
+    end
+  end
+
+  describe "#populate_acknowledgement_sent_at_components" do
+    context "when acknowledgement_sent_at is present" do
+      it "populates the day, month, year component attributes" do
+        kase = build(:offender_sar_complaint, complaint_type: "standard_complaint")
+        kase.acknowledgement_sent_at = Date.new(2026, 3, 15)
+        kase.send(:populate_acknowledgement_sent_at_components)
+        expect(kase.acknowledgement_sent_at_dd).to eq "15"
+        expect(kase.acknowledgement_sent_at_mm).to eq "3"
+        expect(kase.acknowledgement_sent_at_yyyy).to eq "2026"
+      end
+    end
+
+    context "when acknowledgement_sent_at is nil" do
+      it "leaves the component attributes blank" do
+        kase = build(:offender_sar_complaint, complaint_type: "standard_complaint")
+        expect(kase.acknowledgement_sent_at_dd).to be_nil
+        expect(kase.acknowledgement_sent_at_mm).to be_nil
+        expect(kase.acknowledgement_sent_at_yyyy).to be_nil
+      end
+    end
+  end
 end
