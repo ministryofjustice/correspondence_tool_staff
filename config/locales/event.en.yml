@@ -28,6 +28,8 @@ en:
     move_to_team_member: Assign responder
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
+    record_acknowledgement_sent: Acknowledgement of complaint sent
+    acknowledgement_sent_date_updated: "Acknowledgement of complaint sent date has been updated\nOld Acknowledgement sent date: %{old_date}\nNew Acknowledgement sent date: %{new_date}"
     record_sent_to_sscl: Sent to SSCL for Vetting
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed

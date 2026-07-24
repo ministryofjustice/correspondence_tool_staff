@@ -34,10 +34,18 @@
 class Case::SAR::OffenderComplaint < Case::SAR::Offender
   include LinkableOriginalCase
 
+  attr_accessor :acknowledgement_sent_at_dd,
+                :acknowledgement_sent_at_mm,
+                :acknowledgement_sent_at_yyyy
+
   validates :original_case, presence: true
+  before_create :set_acknowledgement_deadline, if: :standard_complaint?
   after_create :stamp_on_original_case
+  after_initialize :populate_acknowledgement_sent_at_components
 
   jsonb_accessor :properties,
+                 acknowledgement_deadline: :date,
+                 acknowledgement_sent_at: :date,
                  complaint_type: :string,
                  complaint_subtype: :string,
                  ico_contact_name: :string,
@@ -56,6 +64,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true
   validates :priority, presence: true
+  validate :validate_acknowledgement_sent_at
   validate :validate_ico_contact_name
   validate :validate_ico_contact_details
   validate :validate_ico_reference
@@ -109,6 +118,25 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   def validate_external_deadline
     validate_external_deadline_required
     validate_external_deadline_within_valid_range
+  end
+
+  def calculate_acknowledgement_deadline
+    return nil if received_date.blank?
+
+    # Day 1 is the next weekday after received_date. Bank holidays count as
+    # working days for the 10-day count, but if day 10 is a bank holiday we
+    # advance to the next non-bank-holiday weekday.
+    day = received_date + 1
+    day += 1 while day.saturday? || day.sunday?
+
+    9.times do
+      day += 1
+      day += 1 while day.saturday? || day.sunday?
+    end
+
+    day += 1 while england_and_wales_bank_holiday?(day) || day.saturday? || day.sunday?
+
+    day
   end
 
   def normal_priority?
@@ -231,6 +259,28 @@ private
     )
   end
 
+  def validate_acknowledgement_sent_at
+    return if acknowledgement_sent_at.blank?
+
+    if acknowledgement_sent_at > Time.zone.today
+      errors.add(:acknowledgement_sent_at,
+                 I18n.t("activerecord.errors.models.case/sar/offender_complaint.attributes.acknowledgement_sent_at.in_future"))
+    elsif received_date.present? && acknowledgement_sent_at < received_date
+      errors.add(:acknowledgement_sent_at,
+                 I18n.t("activerecord.errors.models.case/sar/offender_complaint.attributes.acknowledgement_sent_at.before_received"))
+    end
+  end
+
+  # rubocop:disable Naming/MemoizedInstanceVariableName
+  def populate_acknowledgement_sent_at_components
+    return if acknowledgement_sent_at.blank?
+
+    @acknowledgement_sent_at_dd ||= acknowledgement_sent_at.day.to_s
+    @acknowledgement_sent_at_mm ||= acknowledgement_sent_at.month.to_s
+    @acknowledgement_sent_at_yyyy ||= acknowledgement_sent_at.year.to_s
+  end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
+
   def set_deadlines
     # For this case type's deadlines are manually set and don't need to be automatically
     # calculated. So this method called by a before_update hook in Case::Base
@@ -277,6 +327,14 @@ private
 
   def has_total_cost?
     total_cost.present? && total_cost.positive?
+  end
+
+  def set_acknowledgement_deadline
+    self.acknowledgement_deadline = calculate_acknowledgement_deadline
+  end
+
+  def england_and_wales_bank_holiday?(date)
+    BankHoliday.bank_holiday?(date, regions: :england_and_wales)
   end
 
   # 'Q' denotes a complaint in the legacy system, carried into new system

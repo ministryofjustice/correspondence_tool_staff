@@ -8,6 +8,7 @@ TRANSITIONS_LITIGATION = [
       mark_as_require_data_review
       mark_as_data_to_be_requested
       mark_as_require_response
+      record_acknowledgement_sent
       send_acknowledgement_letter
       reset_to_initial_state
     ],
@@ -19,6 +20,7 @@ TRANSITIONS_LITIGATION = [
       mark_as_vetting_in_progress
       mark_as_require_response
       add_data_received
+      record_acknowledgement_sent
       send_acknowledgement_letter
       reset_to_initial_state
     ],
@@ -30,6 +32,7 @@ TRANSITIONS_LITIGATION = [
       mark_as_waiting_for_data
       send_acknowledgement_letter
       add_data_received
+      record_acknowledgement_sent
       reset_to_initial_state
     ],
   },
@@ -40,6 +43,7 @@ TRANSITIONS_LITIGATION = [
       send_acknowledgement_letter
       preview_cover_page
       add_data_received
+      record_acknowledgement_sent
       reset_to_initial_state
     ],
   },

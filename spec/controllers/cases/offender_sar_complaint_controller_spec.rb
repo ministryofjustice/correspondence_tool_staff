@@ -558,6 +558,94 @@ RSpec.describe Cases::OffenderSARComplaintController, type: :controller do
     end
   end
 
+  describe "#acknowledgement_sent" do
+    let(:kase) do
+      create(:offender_sar_complaint,
+             complaint_type: "standard_complaint",
+             received_date: 3.weeks.ago.to_date).decorate
+    end
+
+    before { sign_in responder }
+
+    it "renders the acknowledgement_sent template" do
+      get :acknowledgement_sent, params: { id: kase.id }
+      expect(response).to render_template(:acknowledgement_sent)
+    end
+
+    it "pre-populates today if no date stored" do
+      get :acknowledgement_sent, params: { id: kase.id }
+      expect(assigns(:case).object.acknowledgement_sent_at).to eq Time.zone.today
+    end
+
+    it "preserves existing date if already set" do
+      stored_date = 2.weeks.ago.to_date
+      kase.object.update!(acknowledgement_sent_at: stored_date)
+      get :acknowledgement_sent, params: { id: kase.id }
+      expect(assigns(:case).object.acknowledgement_sent_at).to eq stored_date
+    end
+  end
+
+  describe "#confirm_acknowledgement_sent" do
+    let(:kase) do
+      create(:offender_sar_complaint,
+             complaint_type: "standard_complaint",
+             received_date: 3.weeks.ago.to_date).decorate
+    end
+    let(:sent_date) { Time.zone.today - 1.week }
+    let(:valid_params) do
+      {
+        id: kase.id,
+        offender_sar_complaint: {
+          acknowledgement_sent_at_dd: sent_date.day.to_s,
+          acknowledgement_sent_at_mm: sent_date.month.to_s,
+          acknowledgement_sent_at_yyyy: sent_date.year.to_s,
+        },
+      }
+    end
+
+    before { sign_in responder }
+
+    context "when the date is valid" do
+      it "redirects to the case page" do
+        patch :confirm_acknowledgement_sent, params: valid_params
+        expect(response).to redirect_to(case_path(kase))
+      end
+
+      it "sets a success flash" do
+        patch :confirm_acknowledgement_sent, params: valid_params
+        expect(flash[:notice]).to eq I18n.t("cases.update.case_updated")
+      end
+    end
+
+    context "when nothing changes" do
+      before { kase.object.update!(acknowledgement_sent_at: sent_date) }
+
+      it "redirects to the case page with an alert" do
+        patch :confirm_acknowledgement_sent, params: valid_params
+        expect(response).to redirect_to(case_path(kase))
+        expect(flash[:alert]).to eq "No changes were made"
+      end
+    end
+
+    context "when the date is invalid" do
+      let(:invalid_params) do
+        {
+          id: kase.id,
+          offender_sar_complaint: {
+            acknowledgement_sent_at_dd: "31",
+            acknowledgement_sent_at_mm: "02",
+            acknowledgement_sent_at_yyyy: "2026",
+          },
+        }
+      end
+
+      it "re-renders the acknowledgement_sent template" do
+        patch :confirm_acknowledgement_sent, params: invalid_params
+        expect(response).to render_template(:acknowledgement_sent)
+      end
+    end
+  end
+
   # Utility methods
 
   def third_party_validations_found(errors)

@@ -21,6 +21,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
             mark_as_data_to_be_requested
             mark_as_require_response
             preview_cover_page
+            record_acknowledgement_sent
             send_acknowledgement_letter
             reset_to_initial_state
           ],
@@ -33,6 +34,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
             send_acknowledgement_letter
             preview_cover_page
             add_data_received
+            record_acknowledgement_sent
             reset_to_initial_state
           ],
         },
@@ -43,6 +45,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
             send_acknowledgement_letter
             preview_cover_page
             add_data_received
+            record_acknowledgement_sent
             reset_to_initial_state
           ],
         },
@@ -54,6 +57,7 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable Rails/FilePath
             send_acknowledgement_letter
             preview_cover_page
             reset_to_initial_state
+            record_acknowledgement_sent
             add_data_received
           ],
         },
