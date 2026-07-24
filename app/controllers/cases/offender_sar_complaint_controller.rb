@@ -56,8 +56,11 @@ module Cases
 
     def acknowledgement_sent
       authorize @case, :can_edit_case?
-      # gov_uk_date_fields workaround — field must be self-assigned to show correctly on edit
-      @case.acknowledgement_sent_at = @case.acknowledgement_sent_at || Time.zone.today
+      date = @case.object.acknowledgement_sent_at || Time.zone.today
+      @case.object.acknowledgement_sent_at      = date
+      @case.object.acknowledgement_sent_at_dd   = date.day.to_s
+      @case.object.acknowledgement_sent_at_mm   = date.month.to_s
+      @case.object.acknowledgement_sent_at_yyyy = date.year.to_s
     end
 
     def confirm_acknowledgement_sent

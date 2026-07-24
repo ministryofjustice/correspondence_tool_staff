@@ -49,6 +49,8 @@ class CSVExporter
     "Original internal deadline",
     "Original external deadline",
     "Number of days late against original deadline",
+    "Acknowledgement deadline",
+    "Acknowledgement sent",
   ].freeze
 
   CSV_COLUMN_FIELDS = %w[
@@ -97,6 +99,8 @@ class CSVExporter
     original_internal_deadline
     original_external_deadline
     num_days_late_against_original_deadline
+    acknowledgement_deadline
+    acknowledgement_sent_at
   ].freeze
 
   def initialize(kase)
@@ -158,6 +162,8 @@ class CSVExporter
       @kase.respond_to?(:original_internal_deadline) ? @kase.original_internal_deadline&.to_s : nil,
       @kase.respond_to?(:original_external_deadline) ? @kase.original_external_deadline&.to_s : nil,
       @kase.respond_to?(:original_external_deadline) ? @kase.num_days_late_against_original_deadline : nil,
+      standard_complaint_field(@kase, :acknowledgement_deadline),
+      standard_complaint_field(@kase, :acknowledgement_sent_at),
     ]
   rescue StandardError => e
     raise CSVExporterError, "Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{e.class} #{e.message}"
@@ -169,6 +175,15 @@ class CSVExporter
   end
 
 private
+
+  def standard_complaint_field(kase, field)
+    return nil unless kase.respond_to?(:offender_sar_complaint?) &&
+      kase.offender_sar_complaint? &&
+      kase.respond_to?(:standard_complaint?) &&
+      kase.standard_complaint?
+
+    kase.send(field)&.to_s
+  end
 
   def extension_count(kase)
     pit_count = 0

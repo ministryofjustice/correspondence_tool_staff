@@ -20,6 +20,8 @@ module Stats
       "Days open",
       "Data requests completed?",
       "Case originally rejected",
+      "Acknowledgement deadline",
+      "Acknowledgement sent",
     ].freeze
 
     def self.title
@@ -60,6 +62,8 @@ module Stats
         kase.num_days_taken,
         kase.data_requests_completed? ? "Yes" : "No",
         kase.case_originally_rejected ? "Yes" : "No",
+        kase.offender_sar_complaint? && kase.standard_complaint? ? kase.acknowledgement_deadline&.to_s : nil,
+        kase.offender_sar_complaint? && kase.standard_complaint? ? kase.acknowledgement_sent_at&.to_s : nil,
       ]
     end
 

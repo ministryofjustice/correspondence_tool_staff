@@ -107,6 +107,40 @@ module Stats
           "No",
         )
       end
+
+      it "returns acknowledgement deadline and sent date for standard complaint" do
+        report = described_class.new
+        received = 3.weeks.ago.to_date
+        deadline = received + 1.day
+        sent = received + 1.day
+        offender_sar_complaint = create :accepted_complaint_case, :waiting_for_data,
+                                        complaint_type: "standard_complaint",
+                                        received_date: received
+        offender_sar_complaint.update_columns(
+          properties: offender_sar_complaint.properties.merge(
+            "acknowledgement_deadline" => deadline.to_s,
+            "acknowledgement_sent_at" => sent.to_s,
+          ),
+        )
+        offender_sar_complaint.reload
+
+        result = report.analyse_case(offender_sar_complaint)
+        expect(result.last(2)).to eq([deadline.to_s, sent.to_s])
+      end
+
+      it "returns nil acknowledgement columns for non-standard complaint types" do
+        report = described_class.new
+        ico_complaint = create :accepted_complaint_case, :waiting_for_data, complaint_type: "ico_complaint"
+        result = report.analyse_case(ico_complaint)
+        expect(result.last(2)).to eq([nil, nil])
+      end
+
+      it "returns nil acknowledgement columns for offender sar (non-complaint)" do
+        report = described_class.new
+        offender_sar = create :offender_sar_case, :waiting_for_data
+        result = report.analyse_case(offender_sar)
+        expect(result.last(2)).to eq([nil, nil])
+      end
     end
 
     describe "#case_scope" do

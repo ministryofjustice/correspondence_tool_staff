@@ -2,7 +2,7 @@ class CaseUpdateAcknowledgementSentService
   attr_accessor :result, :message
 
   def initialize(user:, kase:, params:)
-    @case = kase
+    @case = kase.respond_to?(:object) ? kase.object : kase
     @user = user
     @params = params
     @message = nil

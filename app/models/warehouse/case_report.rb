@@ -79,6 +79,8 @@
 #  case_originally_rejected                    :string
 #  other_rejected_reason                       :string
 #  rejected_reasons                            :json
+#  acknowledgement_deadline                    :date
+#  acknowledgement_sent_at                     :date
 #
 module Warehouse
   class CaseReport < ApplicationRecord
@@ -299,6 +301,10 @@ module Warehouse
         case_report.priority = kase.priority.humanize
         case_report.total_cost = kase.total_cost
         case_report.settlement_cost = kase.settlement_cost
+        if kase.standard_complaint?
+          case_report.acknowledgement_deadline = kase.acknowledgement_deadline
+          case_report.acknowledgement_sent_at = kase.acknowledgement_sent_at
+        end
       end
 
       def process_ico(kase, case_report)

@@ -129,6 +129,8 @@ describe CSVExporter do
           "Original internal deadline" => nil,
           "Original external deadline" => nil,
           "Number of days late against original deadline" => nil,
+          "Acknowledgement deadline" => nil,
+          "Acknowledgement sent" => nil,
         })
       end
     end
@@ -269,6 +271,8 @@ describe CSVExporter do
           "Original internal deadline" => nil,
           "Original external deadline" => nil,
           "Number of days late against original deadline" => nil,
+          "Acknowledgement deadline" => nil,
+          "Acknowledgement sent" => nil,
         })
       end
     end
@@ -327,6 +331,8 @@ describe CSVExporter do
           "Original internal deadline" => "2018-09-10",
           "Original external deadline" => "2018-09-24",
           "Number of days late against original deadline" => nil,
+          "Acknowledgement deadline" => nil,
+          "Acknowledgement sent" => nil,
         })
       end
     end
